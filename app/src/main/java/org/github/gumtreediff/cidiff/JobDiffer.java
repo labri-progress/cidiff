@@ -1,28 +1,12 @@
 package org.github.gumtreediff.cidiff;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.github.gumtreediff.cidiff.DiffInputProducer.Type;
 
 public class JobDiffer {
-    final String leftLogFile;
-    final String rightLogFile;
-    final Map<String, List<String>> leftSteps;
-    final Map<String, List<String>> rightSteps;
-
-    final static String GITHUB_ACTION_DEBUG = "##[debug]";
-    final static Pattern LOG_LINE_REGEXP = Pattern.compile("([^\\t]+)\\t([^\\t]+)\\t(.*)");
-
-    final static double MIN_REWRITE_SIM = 0.5;
+    final DiffInputProducer input;
+    final boolean displayUpdated = false;
 
     final static String RED_FONT = "\033[0;31m";
     final static String GREEN_FONT = "\033[0;32m";
@@ -30,30 +14,22 @@ public class JobDiffer {
     final static String BOLD_FONT = "\033[1m";
     final static String REGULAR_FONT = "\033[0m";
 
-    final static String TOKEN_SEPARATORS = "\\s+|=|:";
-
-    public static void diff(String leftLogFile, String rightLogFile) throws IOException {
-        JobDiffer d = new JobDiffer(leftLogFile, rightLogFile);
-        d.launch();
+    public JobDiffer(String leftLogFile, String rightLogFile, DiffInputProducer.Type inputType) {
+        if (inputType == Type.GITHUB)
+            input = new DiffInputProducer.GithubDiffInputProducer(leftLogFile, rightLogFile);
+        else
+            input = new DiffInputProducer.ClassicDiffInputProducer(leftLogFile, rightLogFile);
+        launch();
     }
 
-    public JobDiffer(String leftLogFile, String rightLogFile) {
-        this.leftLogFile = leftLogFile;
-        this.rightLogFile = rightLogFile;
-        this.leftSteps = new LinkedHashMap<>();
-        this.rightSteps = new LinkedHashMap<>();
-    }
-
-    public void launch() throws IOException {
-        loadLog(leftLogFile, leftSteps);
-        loadLog(rightLogFile, rightSteps);
+    public void launch() {
         analyzeLeftSteps();
         analyzeRightSteps();
     }
 
     private void analyzeLeftSteps() {
-        for (String leftStep : leftSteps.keySet()) {
-            if (!rightSteps.containsKey(leftStep))
+        for (String leftStep : input.leftSteps.keySet()) {
+            if (!input.rightSteps.containsKey(leftStep))
                 System.out.println(RED_FONT + BOLD_FONT + "Deleted step [" + leftStep + "]" + REGULAR_FONT + NO_COLOR_FONT);
             else
                 diffStep(leftStep);
@@ -61,107 +37,35 @@ public class JobDiffer {
     }
 
     private void analyzeRightSteps() {
-        for (String rightStep : rightSteps.keySet())
-            if (!leftSteps.containsKey(rightStep))
+        for (String rightStep : input.rightSteps.keySet())
+            if (!input.leftSteps.containsKey(rightStep))
                 System.out.println(GREEN_FONT + BOLD_FONT + "Added step [" + rightStep + "]" + REGULAR_FONT + NO_COLOR_FONT);
     }
 
     public void diffStep(String step) {
         System.out.println(BOLD_FONT + "Diffing step [" + step + "]" + REGULAR_FONT);
-        pruneSeeds(step);
-        findActions(step);
-    }
-
-    private void findActions(String step) {
-        final List<String> leftLines = leftSteps.get(step);
-        final List<String> rightLines = rightSteps.get(step);
-        Set<Integer> mappedLeftLines = new HashSet<>();
-        Set<Integer> mappedRightLines = new HashSet<>();
-        Map<Integer, Integer> mappings = new LinkedHashMap<>();
-        for (int i = 0; i < leftLines.size(); i++) {
-            for (int j = 0; j < rightLines.size(); j++) {
-                final String leftLine = leftLines.get(i);
-                final String rightLine = rightLines.get(j);
-                final double sim = rewriteSim(leftLine, rightLine);
-                if (sim >= MIN_REWRITE_SIM && !mappedRightLines.contains(j)) {
-                    mappedLeftLines.add(i);
-                    mappedRightLines.add(j);
-                    mappings.put(i, j);
-                    break;
-                }
+        final List<String> leftLines = input.leftSteps.get(step);
+        final List<String> rightLines = input.rightSteps.get(step);
+        LogDiffer logDiffer = new LogDiffer(leftLines, rightLines);
+        for (Action action : logDiffer.getLeftActions()) {
+            if (action.type == ActionType.UPDATED && displayUpdated) {
+                final String leftOutput = String.format("\tUpd (%d): %s", action.leftLocation + 1, leftLines.get(action.leftLocation));
+                System.out.println(leftOutput);
+                final String rightOutput = String.format("\t    (%d): %s", action.rightLocation + 1, rightLines.get(action.rightLocation));
+                System.out.println(rightOutput);
             }
-        }
-
-        for (int i = 0; i < leftLines.size(); i++) {
-            if (!mappedLeftLines.contains(i)) {
-                final String output = String.format("%s\tDel (%d): %s%s", GREEN_FONT, i, leftLines.get(i), NO_COLOR_FONT);
+            else if (action.type == ActionType.DELETED) {
+                final String output = String.format("%s\tDel (%d): %s%s", RED_FONT, action.leftLocation + 1,
+                    leftLines.get(action.leftLocation), NO_COLOR_FONT);
                 System.out.println(output);
             }
         }
-
-        for (int i = 0; i < rightLines.size(); i++) {
-            if (!mappedRightLines.contains(i)) {
-                final String output = String.format("%s\tAdd (%d): %s%s", RED_FONT, i, rightLines.get(i), NO_COLOR_FONT);
+        for (Action action : logDiffer.getRightActions()) {
+            if (action.type == ActionType.ADDED) {
+                final String output = String.format("%s\tAdd (%d): %s%s", GREEN_FONT, action.rightLocation + 1,
+                    rightLines.get(action.rightLocation), NO_COLOR_FONT);
                 System.out.println(output);
             }
         }
-
-        for (int i : mappings.keySet()) {
-            final String leftOutput = String.format("\tUpd (%d): %s", i, leftLines.get(i));
-            System.out.println(leftOutput);
-            int j = mappings.get(i);
-            final String rightOutput = String.format("\t    (%d): %s", j, rightLines.get(j));
-            System.out.println(rightOutput);
-        }
-    }
-
-    private void pruneSeeds(String step) {
-        final List<String> leftLines = leftSteps.get(step);
-        final List<String> rightLines = rightSteps.get(step);
-        Iterator<String> leftLinesIt = leftLines.iterator();
-        while (leftLinesIt.hasNext()) {
-            final String leftLine = leftLinesIt.next();
-            Iterator<String> rightLinesIt = rightLines.iterator();
-            while (rightLinesIt.hasNext()) {
-                final String rightLine = rightLinesIt.next();
-                if (leftLine.equals(rightLine)) {
-                    leftLinesIt.remove();
-                    rightLinesIt.remove();
-                    break;
-                }
-            }
-        }
-    }
-
-    static void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
-        Files.lines(Paths.get(logFile)).forEach(
-            line -> {
-                final Matcher m = LOG_LINE_REGEXP.matcher(line);
-                m.matches();
-                // final String job = m.group(1);
-                final String step = m.group(2);
-                final String content = m.group(3);
-                if (content.length() < 29)
-                    throw new IllegalArgumentException("Illegal log format: " + line);
-                
-                logSteps.putIfAbsent(step, new ArrayList<>());
-                logSteps.get(step).add(content.substring(29)); // GITHUB has a 29 character timestamp
-            }
-        );
-    }
-
-    static double rewriteSim(String leftLine, String rightLine) {
-        final String[] leftTokens = leftLine.split(TOKEN_SEPARATORS);
-        final String[] rightTokens = rightLine.split(TOKEN_SEPARATORS);
-        
-        if (leftTokens.length != rightTokens.length)
-            return 0.0;
-        
-        int dist = 0;
-        for (int i = 0; i < leftTokens.length; i++)
-            if (!leftTokens[i].equals(rightTokens[i]))
-                dist++;
-
-        return (double) (leftTokens.length - dist) / (double) leftTokens.length;
     }
 }

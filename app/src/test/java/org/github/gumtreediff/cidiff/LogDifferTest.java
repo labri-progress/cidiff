@@ -28,28 +28,36 @@ class LogDifferTest {
     
     @Test
     void rewriteSimTest() {
-        assertEquals(0.0, JobDiffer.rewriteSim("A B C", "A B C D"), 0.001);
-        assertEquals(0.666, JobDiffer.rewriteSim("A B C", "A E C"), 0.001);
-        assertEquals(0.333, JobDiffer.rewriteSim("A B C", "A E F"), 0.001);
-        assertEquals(0.0, JobDiffer.rewriteSim("A B C", "G E F"), 0.001);
+        assertEquals(0.0, LogDiffer.rewriteSim("A B C", "A B C D"), 0.001);
+        assertEquals(0.666, LogDiffer.rewriteSim("A B C", "A E C"), 0.001);
+        assertEquals(0.333, LogDiffer.rewriteSim("A B C", "A E F"), 0.001);
+        assertEquals(0.0, LogDiffer.rewriteSim("A B C", "G E F"), 0.001);
     }
 
     @Test
-    void testParsing() throws IOException {
-        JobDiffer d = new JobDiffer("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv");
-        d.launch();
-        assertEquals(1, d.leftSteps.keySet().size());
-        assertTrue(d.leftSteps.containsKey("Set up job"));
-        assertEquals(1, d.rightSteps.keySet().size());
-        assertTrue(d.rightSteps.containsKey("Set up job"));
-        assertEquals("Current runner version: '2.283.2'", d.leftSteps.get("Set up job").get(0));
+    void testGithubParsingMock() throws IOException {
+        JobDiffer d = new JobDiffer("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", DiffInputProducer.Type.GITHUB);
+        assertEquals(1, d.input.leftSteps.keySet().size());
+        assertTrue(d.input.leftSteps.containsKey("Set up job"));
+        assertEquals(1, d.input.rightSteps.keySet().size());
+        assertTrue(d.input.rightSteps.containsKey("Set up job"));
+        assertEquals(4, d.input.leftSteps.get("Set up job").size());
+        assertEquals(4, d.input.rightSteps.get("Set up job").size());
     }
 
     @Test
-    void testPruneSeeds() throws IOException {
-        JobDiffer d = new JobDiffer("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv");
-        d.launch();
-        assertEquals(2, d.leftSteps.get("Set up job").size());
-        assertEquals(2, d.rightSteps.get("Set up job").size());
+    void testGithubParsing() throws IOException {
+        JobDiffer d = new JobDiffer("../data/1359329694.log.csv", "../data/1379038139.log.csv", DiffInputProducer.Type.GITHUB);
+        assertEquals(14, d.input.leftSteps.keySet().size());
+        assertTrue(d.input.leftSteps.containsKey("Set up job"));
+        assertEquals(14, d.input.rightSteps.keySet().size());
+        assertTrue(d.input.rightSteps.containsKey("Set up job"));
+    }
+
+    @Test
+    void testClassicParsing() throws IOException {
+        JobDiffer d = new JobDiffer("../data/astor_399.log.csv", "../data/astor_400.log.csv", DiffInputProducer.Type.CLASSIC);
+        assertEquals(1, d.input.leftSteps.keySet().size());
+        assertEquals(1, d.input.rightSteps.keySet().size());
     }
 }
