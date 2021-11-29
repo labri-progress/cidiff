@@ -12,8 +12,11 @@ dependencies {
 
 application {
     mainClass = 'org.github.gumtreediff.cidiff.CiDiff'
+    distTar.enabled = false
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+build.finalizedBy installDist
