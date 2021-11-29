@@ -14,23 +14,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JobDiffer {
-    private final String leftLogFile;
-    private final String rightLogFile;
-    private final Map<String, List<String>> leftSteps;
-    private final Map<String, List<String>> rightSteps;
+    final String leftLogFile;
+    final String rightLogFile;
+    final Map<String, List<String>> leftSteps;
+    final Map<String, List<String>> rightSteps;
 
-    private final static String GITHUB_ACTION_DEBUG = "##[debug]";
-    private final static Pattern LOG_LINE_REGEXP = Pattern.compile("([^\\t]+)\\t([^\\t]+)\\t(.*)");
+    final static String GITHUB_ACTION_DEBUG = "##[debug]";
+    final static Pattern LOG_LINE_REGEXP = Pattern.compile("([^\\t]+)\\t([^\\t]+)\\t(.*)");
 
-    private final static double MIN_REWRITE_SIM = 0.5;
+    final static double MIN_REWRITE_SIM = 0.5;
 
-    private final static String RED_FONT = "\033[0;31m";
-    private final static String GREEN_FONT = "\033[0;32m";
-    private final static String NO_COLOR_FONT = "\033[0m";
-    private final static String BOLD_FONT = "\033[1m";
-    private final static String REGULAR_FONT = "\033[0m";
+    final static String RED_FONT = "\033[0;31m";
+    final static String GREEN_FONT = "\033[0;32m";
+    final static String NO_COLOR_FONT = "\033[0m";
+    final static String BOLD_FONT = "\033[1m";
+    final static String REGULAR_FONT = "\033[0m";
 
-    private final static String TOKEN_SEPARATORS = "\\s+|=|:";
+    final static String TOKEN_SEPARATORS = "\\s+|=|:";
 
     public static void diff(String leftLogFile, String rightLogFile) throws IOException {
         JobDiffer d = new JobDiffer(leftLogFile, rightLogFile);
@@ -140,15 +140,12 @@ public class JobDiffer {
                 m.matches();
                 // final String job = m.group(1);
                 final String step = m.group(2);
-                    String content = m.group(3);
+                final String content = m.group(3);
                 if (content.length() < 29)
-                    return;
+                    throw new IllegalArgumentException("Illegal log format: " + line);
                 
-                content = content.substring(29);
-                if (!content.startsWith(GITHUB_ACTION_DEBUG)) {
-                    logSteps.putIfAbsent(step, new ArrayList<>());
-                    logSteps.get(step).add(content);
-                }
+                logSteps.putIfAbsent(step, new ArrayList<>());
+                logSteps.get(step).add(content.substring(29)); // GITHUB has a 29 character timestamp
             }
         );
     }
