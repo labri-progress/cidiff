@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
 
@@ -28,17 +27,9 @@ class LogDifferTest {
         System.setOut(originalOut);
         System.setErr(originalErr);
     }
-    
-    @Test
-    void rewriteSimTest() {
-        assertEquals(0.0, StepDiffer.rewriteSim("A B C", "A B C D"), 0.001);
-        assertEquals(0.666, StepDiffer.rewriteSim("A B C", "A E C"), 0.001);
-        assertEquals(0.333, StepDiffer.rewriteSim("A B C", "A E F"), 0.001);
-        assertEquals(0.0, StepDiffer.rewriteSim("A B C", "G E F"), 0.001);
-    }
 
     @Test
-    void testGithubParsingMock() throws IOException {
+    void testGithubParsingMock() {
         final Properties options = new Properties();
         options.setProperty("parser", "GITHUB");
         LogDiffer d = new LogDiffer("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", options);
@@ -51,18 +42,20 @@ class LogDifferTest {
     }
 
     @Test
-    void testDiffer() throws IOException {
+    void testOutput() {
         final Properties options = new Properties();
-        options.setProperty("parser", "GITHUB");
+        options.setProperty(Options.PARSER, "GITHUB");
+        options.setProperty(Options.DIFFER_UPDATED, "true");
         LogDiffer d = new LogDiffer("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", options);
-        System.out.println("yup");
-        System.out.println(outContent.toString());
+        System.out.println(outContent);
         assertTrue(outContent.toString().contains("D[3] Foo"));
         assertTrue(outContent.toString().contains("A[4] Bar"));
+        assertTrue(outContent.toString().contains("U[2] Current runner version: '2.283.2'"));
+        assertTrue(outContent.toString().contains(" [2] Current runner version: '2.283.3'"));
     }
 
     @Test
-    void testGithubParsing() throws IOException {
+    void testGithubParsing() {
         final Properties options = new Properties();
         options.setProperty("parser", "GITHUB");
         LogDiffer d = new LogDiffer("../data/gumtree_1359329694.log.csv", "../data/gumtree_1379038139.log.csv", options);
@@ -73,7 +66,7 @@ class LogDifferTest {
     }
 
     @Test
-    void testClassicParsing() throws IOException {
+    void testClassicParsing() {
         final Properties options = new Properties();
         options.setProperty("parser", "DEFAULT");
         LogDiffer d = new LogDiffer("../data/astor_399.log.csv", "../data/astor_400.log.csv", options);
