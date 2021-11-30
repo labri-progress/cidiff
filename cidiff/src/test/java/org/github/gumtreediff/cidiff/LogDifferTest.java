@@ -65,7 +65,7 @@ class LogDifferTest {
     void testGithubParsing() throws IOException {
         final Properties options = new Properties();
         options.setProperty("parser", "GITHUB");
-        LogDiffer d = new LogDiffer("../data/1359329694.log.csv", "../data/1379038139.log.csv", options);
+        LogDiffer d = new LogDiffer("../data/gumtree_1359329694.log.csv", "../data/gumtree_1379038139.log.csv", options);
         assertEquals(14, d.parser.leftSteps.keySet().size());
         assertTrue(d.parser.leftSteps.containsKey("Set up job"));
         assertEquals(14, d.parser.rightSteps.keySet().size());
