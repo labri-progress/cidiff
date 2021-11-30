@@ -3,25 +3,24 @@ package org.github.gumtreediff.cidiff;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class DiffInputProducer {
-    public static enum Type {
+public abstract class LogParser {
+    public enum Type {
         GITHUB,
-        CLASSIC
+        DEFAULT
     }
 
     public final String leftLogFile;
     public final String rightLogFile;
     public final Map<String, List<String>> leftSteps;
     public final Map<String, List<String>> rightSteps;
+    private final Properties options;
 
-    public DiffInputProducer(String leftLogFile, String rightLogFile) {
+    private LogParser(String leftLogFile, String rightLogFile, Properties options) {
+        this.options = options;
         this.leftLogFile = leftLogFile;
         this.rightLogFile = rightLogFile;
         this.leftSteps = new LinkedHashMap<>();
@@ -29,7 +28,7 @@ public abstract class DiffInputProducer {
         parse();
     }
     
-    public void parse() {
+    protected void parse() {
         try {
             loadLog(leftLogFile, leftSteps);
             loadLog(rightLogFile, rightSteps);
@@ -39,19 +38,29 @@ public abstract class DiffInputProducer {
         }
     }
 
-    public abstract void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException;
+    protected abstract void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException;
 
-    public final static class ClassicDiffInputProducer  extends DiffInputProducer {
-        final static String DEFAULT_STEP = "default";
-        final int timestampSize;
-
-        public ClassicDiffInputProducer(String leftLogFile, String rightLogFile) {
-            this(leftLogFile, rightLogFile, 0);
+    public static LogParser getParser(String leftLogFile, String rightLogFile, Properties options) {
+        Type type = Type.valueOf(options.getProperty(Options.PARSER, "DEFAULT"));
+        switch (type) {
+            case GITHUB:
+                return new GithubLogParser(leftLogFile, rightLogFile, options);
+            case DEFAULT:
+                return new DefaultLogParser(leftLogFile, rightLogFile, options);
         }
 
-        public ClassicDiffInputProducer(String leftLogFile, String rightLogFile, int timestampSize) {
-            super(leftLogFile, rightLogFile);
-            this.timestampSize = timestampSize;
+        throw new IllegalArgumentException("Unable to create parser");
+    }
+
+    public final static class DefaultLogParser extends LogParser {
+        final static String DEFAULT_STEP = "default";
+        final static String DEFAULT_TIMESTAMP_SIZE = "0";
+        final int timestampSize;
+
+        public DefaultLogParser(String leftLogFile, String rightLogFile, Properties options) {
+            super(leftLogFile, rightLogFile, options);
+            this.timestampSize = Integer.parseInt(options.getProperty(
+                    Options.PARSER_DEFAULT_TIMESTAMPSIZE, DEFAULT_TIMESTAMP_SIZE));
         }
 
         public void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
@@ -67,20 +76,22 @@ public abstract class DiffInputProducer {
         }
     }
 
-    public final static class GithubDiffInputProducer  extends DiffInputProducer {
+    public final static class GithubLogParser extends LogParser {
         final static Pattern LOG_LINE_REGEXP = Pattern.compile("([^\\t]+)\\t([^\\t]+)\\t(.*)");
         final static int TIMESTAMP_SIZE = 29;
 
-        public GithubDiffInputProducer(String leftLogFile, String rightLogFile) {
-            super(leftLogFile, rightLogFile);
+        public GithubLogParser(String leftLogFile, String rightLogFile, Properties options) {
+            super(leftLogFile, rightLogFile, options);
         }
 
         public void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
             Files.lines(Paths.get(logFile)).forEach(
                 line -> {
                     final Matcher m = LOG_LINE_REGEXP.matcher(line);
-                    m.matches();
-                    // final String job = m.group(1);
+                    final boolean isMatching = m.matches();
+                    if (!isMatching)
+                        throw new IllegalArgumentException("Illegal log format: " + line);
+                    // final String job = m.group(1); in case of multiple jobs
                     final String step = m.group(2);
                     final String content = m.group(3);
                     if (content.length() < TIMESTAMP_SIZE)

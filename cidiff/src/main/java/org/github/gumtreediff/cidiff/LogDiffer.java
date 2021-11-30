@@ -1,91 +1,80 @@
 package org.github.gumtreediff.cidiff;
 
 import java.util.List;
+import java.util.Properties;
 
 public class LogDiffer {
-    final List<String> leftLines;
-    final List<String> rightLines;
-    final Action[] leftActions;
-    final Action[] rightActions;
+    final LogParser parser;
+    final Properties options;
+    final boolean displayUpdated;
+    final boolean displayAdded;
+    final boolean displayDeleted;
 
-    final static String TOKEN_SEPARATORS = "\\s+|=|:";
-    final static double MIN_REWRITE_SIM = 0.5;
+    final static String RED_FONT = "\033[0;31m";
+    final static String GREEN_FONT = "\033[0;32m";
+    final static String NO_COLOR_FONT = "\033[0m";
+    final static String BOLD_FONT = "\033[1m";
+    final static String REGULAR_FONT = "\033[0m";
 
-    public LogDiffer(List<String> leftLines, List<String> rightLines) {
-        this.leftLines = leftLines;
-        this.rightLines = rightLines;
-        this.leftActions = new Action[leftLines.size()];
-        this.rightActions = new Action[rightLines.size()];
+    public LogDiffer(String leftLogFile, String rightLogFile, Properties options) {
+        this.options = options;
+        this.parser = LogParser.getParser(leftLogFile, rightLogFile, options);
+        this.displayUpdated = Boolean.valueOf(options.getProperty(Options.DIFFER_UPDATED, "false"));
+        this.displayAdded = Boolean.valueOf(options.getProperty(Options.DIFFER_ADDED, "true"));
+        this.displayDeleted = Boolean.valueOf(options.getProperty(Options.DIFFER_DELETED, "true"));
         diff();
     }
 
-    public Action[] getLeftActions() {
-        return this.leftActions;
+    private void diff() {
+        analyzeLeftSteps();
+        analyzeRightSteps();
     }
 
-    public Action[] getRightActions() {
-        return this.rightActions;
+    private void analyzeLeftSteps() {
+        for (String leftStep : parser.leftSteps.keySet()) {
+            if (!parser.rightSteps.containsKey(leftStep))
+                System.out.println(RED_FONT + BOLD_FONT + "Deleted step [" + leftStep + "]" + REGULAR_FONT + NO_COLOR_FONT);
+            else
+                diffStep(leftStep);
+        }
     }
-    
-    public void diff() {
-        // Identify unchanged lines
-        for (int i = 0; i < leftLines.size(); i++) {
-            final String leftLine = leftLines.get(i);
-            for (int j = 0; j < rightLines.size(); j++) {
-                final String rightLine = rightLines.get(j);
-                if (leftLine.equals(rightLine) && rightActions[j] == null) {
-                    Action action = new Action(i, j, ActionType.UNCHANGED);
-                    leftActions[i] = action;
-                    rightActions[j] = action;
-                    break;
-                }
+
+    private void analyzeRightSteps() {
+        for (String rightStep : parser.rightSteps.keySet())
+            if (!parser.leftSteps.containsKey(rightStep))
+                System.out.println(GREEN_FONT + BOLD_FONT + "Added step [" + rightStep + "]" + REGULAR_FONT + NO_COLOR_FONT);
+    }
+
+    private void diffStep(String step) {
+        System.out.println(BOLD_FONT + "Diffing step [" + step + "]" + REGULAR_FONT);
+        final List<String> leftLines = parser.leftSteps.get(step);
+        final List<String> rightLines = parser.rightSteps.get(step);
+        StepDiffer logDiffer = new StepDiffer(leftLines, rightLines);
+        final int maxLineNumberSize = Integer.toString(Math.max(logDiffer.leftActions.length, logDiffer.rightActions.length)).length();
+        final String lineFormat = "%0" + maxLineNumberSize + "d";
+        for (Action action : logDiffer.getLeftActions()) {
+            if (action.type == Action.Type.UPDATED && displayUpdated) {
+                final String leftlineNumber = String.format(lineFormat, action.leftLocation + 1);
+                final String leftOutput = String.format("\tU[%s] %s", leftlineNumber, leftLines.get(action.leftLocation));
+                System.out.println(leftOutput);
+                final String rightlineNumber = String.format(lineFormat, action.rightLocation + 1);
+                final String rightOutput = String.format("\t [%s] %s", rightlineNumber, rightLines.get(action.rightLocation));
+                System.out.println(rightOutput);
+            }
+            else if (action.type == Action.Type.DELETED && displayDeleted) {
+                final String leftlineNumber = String.format(lineFormat, action.leftLocation + 1);
+                final String output = String.format("%s\tD[%s] %s%s", RED_FONT, leftlineNumber,
+                    leftLines.get(action.leftLocation), NO_COLOR_FONT);
+                System.out.println(output);
             }
         }
-
-        // Identify updated lines
-        for (int i = 0; i < leftLines.size(); i++) {
-            if (leftActions[i] != null)
-                continue;
-
-            final String leftLine = leftLines.get(i);
-            for (int j = 0; j < rightLines.size(); j++) {
-                if (rightActions[j] != null)
-                    continue;
-
-                final String rightLine = rightLines.get(j);
-                final double sim = rewriteSim(leftLine, rightLine);
-                if (sim >= MIN_REWRITE_SIM) {
-                    Action action = new Action(i, j, ActionType.UPDATED);
-                    leftActions[i] = action;
-                    rightActions[j] = action;
-                    break;
-                }
+        for (Action action : logDiffer.getRightActions()) {
+            if (action.type == Action.Type.ADDED && displayAdded) {
+                final String rightlineNumber = String.format(lineFormat, action.rightLocation + 1);
+                final String output = String.format("%s\tA[%s] %s%s", GREEN_FONT, rightlineNumber,
+                    rightLines.get(action.rightLocation), NO_COLOR_FONT);
+                System.out.println(output);
             }
         }
-
-        // Identify added lines
-        for (int i = 0; i < leftLines.size(); i++)
-            if (leftActions[i] == null)
-                leftActions[i] = new Action(i, Action.NO_LOCATION, ActionType.DELETED);
-
-        // Identify added lines
-        for (int i = 0; i < rightLines.size(); i++)
-            if (rightActions[i] == null)
-                rightActions[i] = new Action(Action.NO_LOCATION, i, ActionType.ADDED);
-    }
-
-    static double rewriteSim(String leftLine, String rightLine) {
-        final String[] leftTokens = leftLine.split(TOKEN_SEPARATORS);
-        final String[] rightTokens = rightLine.split(TOKEN_SEPARATORS);
-        
-        if (leftTokens.length != rightTokens.length)
-            return 0.0;
-        
-        int dist = 0;
-        for (int i = 0; i < leftTokens.length; i++)
-            if (!leftTokens[i].equals(rightTokens[i]))
-                dist++;
-
-        return (double) (leftTokens.length - dist) / (double) leftTokens.length;
     }
 }
