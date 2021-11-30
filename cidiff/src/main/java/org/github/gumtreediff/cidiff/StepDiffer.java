@@ -32,8 +32,11 @@ public class StepDiffer {
         for (int i = 0; i < leftLines.size(); i++) {
             final String leftLine = leftLines.get(i);
             for (int j = 0; j < rightLines.size(); j++) {
+                if (rightActions[j] != null)
+                    continue;
+
                 final String rightLine = rightLines.get(j);
-                if (leftLine.equals(rightLine) && rightActions[j] == null) {
+                if (leftLine.equals(rightLine)) {
                     Action action = Action.unchanged(i, j);
                     leftActions[i] = action;
                     rightActions[j] = action;
