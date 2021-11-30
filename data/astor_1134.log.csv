@@ -1,0 +1,1187 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu16 (lin) in workspace /builds/workspace/astor
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/astor.git
+ > git init /builds/workspace/astor # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/astor.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.7.4'
+ > git fetch --tags --progress https://github.com/SpoonLabs/astor.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/astor.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 627834737e3fb05cdca13aa5658d43d6d708fde0 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 627834737e3fb05cdca13aa5658d43d6d708fde0 # timeout=10
+Commit message: "keepcomments optionally, default is false (#329)"
+ > git rev-list --no-walk 627834737e3fb05cdca13aa5658d43d6d708fde0 # timeout=10
+[astor] $ /bin/sh -xe /tmp/jenkins5726263122132906149.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  12628      0 --:--:-- --:--:-- --:--:-- 12664
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml (822 B at 560 B/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 280 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 172 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (835 B at 60 kB/s)
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.8.1:use-latest-versions (default-cli) @ astor ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from sonatype-snapshots
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from inria
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from spoon-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from EvoSuite
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from sachaproject.gforge.inria.fr-release
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from tdurieux.github.io/maven-repository/snapshots/
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from maven.inria.fr-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from central
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:9.2.0-beta-1 to version 10.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  17.322 s
+[INFO] Finished at: 2021-11-29T12:26:57+01:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml (822 B at 2.5 kB/s)
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ astor ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.195 s
+[INFO] Finished at: 2021-11-29T12:27:05+01:00
+[INFO] ------------------------------------------------------------------------
++ cd examples/math_70
++ mvn clean test -DskipTests
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.apache.commons:commons-math:jar:2.2-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-idea-plugin is missing. @ org.apache.commons:commons-parent:15, /builds/.m2/repository/org/apache/commons/commons-parent/15/commons-parent-15.pom, line 329, column 15
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ------------------< org.apache.commons:commons-math >-------------------
+[INFO] Building Commons Math 2.2-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4:clean (default-clean) @ commons-math ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.3:run (javadoc.resources) @ commons-math ---
+[INFO] Executing tasks
+     [copy] Copying 2 files to /builds/workspace/astor/examples/math_70/target/apidocs/META-INF
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.0:process (default) @ commons-math ---
+[INFO] Setting property: classpath.resource.loader.class => 'org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader'.
+[INFO] Setting property: velocimacro.messages.on => 'false'.
+[INFO] Setting property: resource.loader => 'classpath'.
+[INFO] Setting property: resource.manager.logwhenfound => 'false'.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.1:resources (default-resources) @ commons-math ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources to META-INF
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.1:compile (default-compile) @ commons-math ---
+[INFO] Compiling 414 source files to /builds/workspace/astor/examples/math_70/target/classes
+[INFO] 
+[INFO] --- maven-bundle-plugin:1.4.3:manifest (bundle-manifest) @ commons-math ---
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.1:testResources (default-testResources) @ commons-math ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 11 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.1:testCompile (default-testCompile) @ commons-math ---
+[INFO] Compiling 270 source files to /builds/workspace/astor/examples/math_70/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.5:test (default-test) @ commons-math ---
+[INFO] Tests are skipped.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  16.882 s
+[INFO] Finished at: 2021-11-29T12:27:23+01:00
+[INFO] ------------------------------------------------------------------------
++ cd ../..
++ mvn versions:use-latest-versions -DallowSnapshots=true -Dincludes=com.github.spoonlabs
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.8.1:use-latest-versions (default-cli) @ astor ---
+[INFO] Major version changes allowed
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from sonatype-snapshots
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from inria
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from spoon-snapshot
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from EvoSuite
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from sachaproject.gforge.inria.fr-release
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from tdurieux.github.io/maven-repository/snapshots/
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from maven.inria.fr-snapshot
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from central
+[INFO] Updated com.github.spoonlabs:flacoco:jar:1.0.0 to version 1.0.2-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.291 s
+[INFO] Finished at: 2021-11-29T12:27:29+01:00
+[INFO] ------------------------------------------------------------------------
++ mvn clean test -Dtest=JGenProgEvolutionaryTest
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/com/github/spoonlabs/flacoco/1.0.2-SNAPSHOT/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/com/github/spoonlabs/flacoco/1.0.2-SNAPSHOT/maven-metadata.xml
+Downloading from spoon-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/com/github/spoonlabs/flacoco/1.0.2-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/com/github/spoonlabs/flacoco/1.0.2-SNAPSHOT/maven-metadata.xml
+Downloading from sachaproject.gforge.inria.fr-release: http://sachaproject.gforge.inria.fr/repositories/releases/com/github/spoonlabs/flacoco/1.0.2-SNAPSHOT/maven-metadata.xml
+Downloading from tdurieux.github.io/maven-repository/snapshots/: https://tdurieux.github.io/maven-repository/snapshots/com/github/spoonlabs/flacoco/1.0.2-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/com/github/spoonlabs/flacoco/1.0.2-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/com/github/spoonlabs/flacoco/1.0.2-SNAPSHOT/maven-metadata.xml (1.0 kB at 1.4 kB/s)
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/junit/junit-dep/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/junit/junit-dep/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/junit/junit-dep/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/junit/junit-dep/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+[INFO] 
+[INFO] --- maven-clean-plugin:3.0.0:clean (default-clean) @ astor ---
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.7:prepare-agent (default) @ astor ---
+[INFO] argLine set to -javaagent:/builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar=destfile=/builds/workspace/astor/target/jacoco.exec
+[INFO] 
+[INFO] --- build-helper-maven-plugin:3.2.0:add-source (default) @ astor ---
+[INFO] Source directory: /builds/workspace/astor/src/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-core/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-jgenprog/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-jkali/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-jmutrepair/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-cardumen/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-deeprepair/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-3sfix/main/java added.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ astor ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.0:compile (default-compile) @ astor ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 329 source files to /builds/workspace/astor/target/classes
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/AbstractMain.java: Some input files use or override a deprecated API.
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/AbstractMain.java: Recompile with -Xlint:deprecation for details.
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/FileLauncher.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/FileLauncher.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ astor ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 5 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.0:testCompile (default-testCompile) @ astor ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 41 source files to /builds/workspace/astor/target/test-classes
+[WARNING] /builds/workspace/astor/src/test/java/fr/inria/astor/test/repair/evaluation/regression/RepairnatorTest.java: /builds/workspace/astor/src/test/java/fr/inria/astor/test/repair/evaluation/regression/RepairnatorTest.java uses or overrides a deprecated API.
+[WARNING] /builds/workspace/astor/src/test/java/fr/inria/astor/test/repair/evaluation/regression/RepairnatorTest.java: Recompile with -Xlint:deprecation for details.
+[WARNING] /builds/workspace/astor/src/test/java/fr/inria/astor/test/repair/core/antipattern/AntiPatternTest.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/astor/src/test/java/fr/inria/astor/test/repair/core/antipattern/AntiPatternTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.16:test (default-test) @ astor ---
+[INFO] Surefire report directory: /builds/workspace/astor/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Running fr.inria.astor.test.repair.approaches.JGenProgEvolutionaryTest
+[-dependencies, /builds/workspace/astor/./examples/libs/junit-4.4.jar, -mode, jgenprog, -failing, org.apache.commons.math.analysis.solvers.BisectionSolverTest, -location, /builds/workspace/astor/./examples/math_70, -package, org.apache.commons, -srcjavafolder, /src/java/, -srctestfolder, /src/test/, -binjavafolder, /target/classes, -bintestfolder, /target/test-classes, -javacompliancelevel, 7, -flthreshold, 0.5, -out, /builds/workspace/astor/./output_astor, -scope, package, -seed, 10, -maxgen, 3000, -stopfirst, false, -maxtime, 10, -population, 1, -reintroduce, PARENTS:SOLUTIONS, -parameters, maxnumbersolutions:3:ignoredTestCases:org.apache.commons.math.estimation.MinpackTest]
+[0] INFO ProjectConfiguration - Version of the JVM used: 11.0.2
+[1] INFO main - Java version of the JDK used to run tests: 11.0.2
+[1] INFO main - The compliance of the JVM is:  0
+[2] INFO main - command line arguments: [-dependencies  /builds/workspace/astor/./examples/libs/junit-4.4.jar  -mode  jgenprog  -failing  org.apache.commons.math.analysis.solvers.BisectionSolverTest  -location  /builds/workspace/astor/./examples/math_70  -package  org.apache.commons  -srcjavafolder  /src/java/  -srctestfolder  /src/test/  -binjavafolder  /target/classes  -bintestfolder  /target/test-classes  -javacompliancelevel  7  -flthreshold  0.5  -out  /builds/workspace/astor/./output_astor  -scope  package  -seed  10  -maxgen  3000  -stopfirst  false  -maxtime  10  -population  1  -reintroduce  PARENTS:SOLUTIONS  -parameters  maxnumbersolutions:3:ignoredTestCases:org.apache.commons.math.estimation.MinpackTest]
+[3] INFO AstorMain - Running Astor on a JDK at /usr/lib/jvm/jdk-11.0.2
+[42] INFO main - Source folders: [/builds/workspace/astor/./examples/math_70/src/main/java]
+[43] INFO main - Source Test folders: [/builds/workspace/astor/./examples/math_70/src/test]
+[2229] INFO AstorCoreEngine - ---- Creating spoon model
+[2282] INFO MutationSupporter - Creating model,  Code location from working folder: /builds/workspace/astor/./examples/math_70/src/main/java
+[2282] INFO MutationSupporter - building model: /builds/workspace/astor/./examples/math_70/src/main/java, compliance level: 7
+[2319] INFO MutationSupporter - Classpath (Dependencies) for building SpoonModel: [/builds/workspace/astor/./examples/libs/junit-4.4.jar]
+[12087] INFO AstorCoreEngine - Number of CtTypes created: 416
+[13484] INFO AstorCoreEngine - Test retrieved from classes: 237
+[13491] INFO Flacoco - Running Flacoco...
+[39744] INFO CoverageRunner - Tests found: 2163
+[39749] INFO CoverageRunner - Tests executed: 2163
+[43067] INFO FlacocoFaultLocalization - Suspicious: 1 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 72, susp 1.0
+[43069] INFO FlacocoFaultLocalization - Suspicious: 2 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 66, susp 0.7071067811865475
+[43069] INFO FlacocoFaultLocalization - Suspicious: 3 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 80, susp 0.5
+[43070] INFO FlacocoFaultLocalization - Suspicious: 4 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 81, susp 0.5
+[43070] INFO FlacocoFaultLocalization - Suspicious: 5 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 86, susp 0.5
+[43070] INFO FlacocoFaultLocalization - Suspicious: 6 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 87, susp 0.5
+[43070] INFO FlacocoFaultLocalization - Suspicious: 7 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 88, susp 0.5
+[43070] INFO FlacocoFaultLocalization - Suspicious: 8 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 89, susp 0.5
+[43073] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 72, susp 1.0
+[43073] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 66, susp 0.7071067811865475
+[43075] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 80, susp 0.5
+[43079] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 81, susp 0.5
+[43083] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 86, susp 0.5
+[43083] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 87, susp 0.5
+[43083] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 88, susp 0.5
+[43084] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 89, susp 0.5
+[43084] INFO AstorCoreEngine - Setting up the max to 306020 milliseconds (306 sec)
+[43084] INFO AstorCoreEngine - ---- Initial suspicious size: 8
+[43325] INFO main - Total suspicious from FL: 8,  8
+[43325] INFO main - Total ModPoint created: 8
+[43325] INFO main - Creating program variant #1, [Variant id: 1, #gens: 8, #ops: 0, parent:-]
+[50950] INFO AstorCoreEngine - The original fitness is : 1.0
+[57136] WARN ConfigurationProperties - ----------------------------
+[57137] INFO ConfigurationProperties - ---Configuration properties
+[57137] INFO ConfigurationProperties - p:projectinfocommand= com.github.tdurieux:project-config-maven-plugin:info
+[57138] INFO ConfigurationProperties - p:workingDirectory= /builds/workspace/astor/./output_astor
+[57138] INFO ConfigurationProperties - p:keepcomments= false
+[57139] INFO ConfigurationProperties - p:maxnumvariablesperingredient= 10
+[57139] INFO ConfigurationProperties - p:evo_affected_by_op= true
+[57139] INFO ConfigurationProperties - p:clusteringfilename= clustering.csv
+[57139] INFO ConfigurationProperties - p:validation= process
+[57139] INFO ConfigurationProperties - p:modificationpointnavigation= weight
+[57148] INFO ConfigurationProperties - p:transformingredient= false
+[57148] INFO ConfigurationProperties - p:diffcontext= 0
+[57149] INFO ConfigurationProperties - p:evo_buggy_class= true
+[57150] INFO ConfigurationProperties - p:runjava7code= false
+[57150] INFO ConfigurationProperties - p:manipulatesuper= false
+[57150] INFO ConfigurationProperties - p:forceExecuteRegression= false
+[57150] INFO ConfigurationProperties - p:skipfitnessinitialpopulation= false
+[57150] INFO ConfigurationProperties - p:filterfaultlocalization= true
+[57150] INFO ConfigurationProperties - p:population= 1
+[57150] INFO ConfigurationProperties - p:maxtimefactor= 10
+[57151] INFO ConfigurationProperties - p:elementsToMutate= 10
+[57151] INFO ConfigurationProperties - p:parsesourcefromoriginal= true
+[57151] INFO ConfigurationProperties - p:alternativecompliancelevel= 8
+[57151] INFO ConfigurationProperties - p:bugId= 280
+[57151] INFO ConfigurationProperties - p:regressionforfaultlocalization= true
+[57151] INFO ConfigurationProperties - p:max_synthesis_step= 10000
+[57151] INFO ConfigurationProperties - p:failing= org.apache.commons.math.analysis.solvers.BisectionSolverTest
+[57152] INFO ConfigurationProperties - p:maxmodificationpoints= 1000
+[57152] INFO ConfigurationProperties - p:projectIdentifier= 
+[57152] INFO ConfigurationProperties - p:savecompletepatched= true
+[57152] INFO ConfigurationProperties - p:synthesis_depth= 3
+[57153] INFO ConfigurationProperties - p:seed= 10
+[57153] INFO ConfigurationProperties - p:applyCrossover= false
+[57153] INFO ConfigurationProperties - p:executorjar= ./lib/jtestex7.jar
+[57153] INFO ConfigurationProperties - p:binjavafolder= /target/classes
+[57153] INFO ConfigurationProperties - p:version-location= ./math-version/
+[57154] INFO ConfigurationProperties - p:tmax1= 10000
+[57154] INFO ConfigurationProperties - p:tmax2= 306020
+[57155] INFO ConfigurationProperties - p:continuewhenmodelfail= true
+[57155] INFO ConfigurationProperties - p:logtestexecution= false
+[57155] INFO ConfigurationProperties - p:processoutputinfile= false
+[57156] INFO ConfigurationProperties - p:javacompliancelevel= 7
+[57156] INFO ConfigurationProperties - p:gzoltarpackagetonotinstrument= junit.framework
+[57156] INFO ConfigurationProperties - p:diff_type= relative
+[57156] INFO ConfigurationProperties - p:cleantemplates= true
+[57156] INFO ConfigurationProperties - p:stopfirst= false
+[57156] INFO ConfigurationProperties - p:lastJUnitVersion= ./examples/libs/junit-4.11.jar
+[57156] INFO ConfigurationProperties - p:testbystep= false
+[57158] INFO ConfigurationProperties - p:maxtime= 10
+[57158] INFO ConfigurationProperties - p:preservelinenumbers= true
+[57158] INFO ConfigurationProperties - p:resetoperations= false
+[57158] INFO ConfigurationProperties - p:forcesubprocesskilling= false
+[57158] INFO ConfigurationProperties - p:jvm4evosuitetestexecution= /usr/lib/jvm/jdk-11.0.2/bin
+[57158] INFO ConfigurationProperties - p:dependenciespath= /builds/workspace/astor/./examples/libs/junit-4.4.jar
+[57159] INFO ConfigurationProperties - p:pathToMVNRepository= 
+[57159] INFO ConfigurationProperties - p:limitbysuspicious= true
+[57160] INFO ConfigurationProperties - p:faultlocalization= fr.inria.astor.core.faultlocalization.flacoco.FlacocoFaultLocalization
+[57160] INFO ConfigurationProperties - p:maxsuspcandidates= 1000
+[57160] INFO ConfigurationProperties - p:antipattern= false
+[57160] INFO ConfigurationProperties - p:reintroduce= PARENTS:SOLUTIONS
+[57160] INFO ConfigurationProperties - p:multipointmodification= false
+[57161] INFO ConfigurationProperties - p:probabilistictransformation= true
+[57161] INFO ConfigurationProperties - p:mutationrate= 1 
+[57161] INFO ConfigurationProperties - p:jvm4testexecution= /usr/lib/jvm/jdk-11.0.2/bin
+[57161] INFO ConfigurationProperties - p:mode= jgenprog
+[57161] INFO ConfigurationProperties - p:pvariantfoldername= variant-
+[57162] INFO ConfigurationProperties - p:flthreshold= 0.5
+[57162] INFO ConfigurationProperties - p:fitnessfunction= fr.inria.astor.core.solutionsearch.population.TestCaseFitnessFunction
+[57162] INFO ConfigurationProperties - p:nrPlaceholders= 1
+[57162] INFO ConfigurationProperties - p:saveall= false
+[57162] INFO ConfigurationProperties - p:evoRunOnBuggyClass= true
+[57163] INFO ConfigurationProperties - p:learningdir= 
+[57163] INFO ConfigurationProperties - p:bintestfolder= /target/test-classes
+[57163] INFO ConfigurationProperties - p:evosuiteresultfolder= evosuite
+[57164] INFO ConfigurationProperties - p:operatorspace= irr-statements
+[57164] INFO ConfigurationProperties - p:resourcesfolder= /src/main/resources:/src/test/resources:
+[57164] INFO ConfigurationProperties - p:allpoints= false
+[57164] INFO ConfigurationProperties - p:collectonlyusedmethod= false
+[57164] INFO ConfigurationProperties - p:considerzerovaluesusp= false
+[57164] INFO ConfigurationProperties - p:maxVarCombination= 1000
+[57165] INFO ConfigurationProperties - p:timezone= America/Los_Angeles
+[57168] INFO ConfigurationProperties - p:skipfaultlocalization= false
+[57168] INFO ConfigurationProperties - p:savesolution= true
+[57168] INFO ConfigurationProperties - p:maxGeneration= 3000
+[57168] INFO ConfigurationProperties - p:evosuitetimeout= 120
+[57168] INFO ConfigurationProperties - p:packageToInstrument= org.apache.commons
+[57169] INFO ConfigurationProperties - p:uniqueoptogen= false
+[57169] INFO ConfigurationProperties - p:scope= package
+[57169] INFO ConfigurationProperties - p:srcjavafolder= /src/java/
+[57170] INFO ConfigurationProperties - p:commandTrunk= 50000
+[57170] INFO ConfigurationProperties - p:metid= 0
+[57170] INFO ConfigurationProperties - p:ignoredTestCases= org.apache.commons.math.estimation.MinpackTest
+[57170] INFO ConfigurationProperties - p:savespoonmodelondisk= false
+[57170] INFO ConfigurationProperties - p:targetelementprocessor= statements
+[57170] INFO ConfigurationProperties - p:compiler= fr.inria.astor.core.manipulation.bytecode.compiler.SpoonClassCompiler
+[57170] INFO ConfigurationProperties - p:maxCombinationVariableLimit= false
+[57172] INFO ConfigurationProperties - p:jvmversion= 11.0.2
+[57172] INFO ConfigurationProperties - p:nomodificationconvergence= 100
+[57173] INFO ConfigurationProperties - p:evosuitejar= ./lib/evosuite-master-1.0.4-SNAPSHOT.jar
+[57173] INFO ConfigurationProperties - p:srctestfolder= /src/test/
+[57173] INFO ConfigurationProperties - p:outputjsonresult= true
+[57173] INFO ConfigurationProperties - p:gzoltartestpackagetoexclude= junit.framework
+[57173] INFO ConfigurationProperties - p:probagenmutation= false
+[57173] INFO ConfigurationProperties - p:resetmodel= true
+[57173] INFO ConfigurationProperties - p:jsonoutputname= astor_output
+[57173] INFO ConfigurationProperties - p:numberExecutions= 1
+[57173] INFO ConfigurationProperties - p:ignoreflakyinfl= false
+[57175] INFO ConfigurationProperties - p:evoDSE= false
+[57175] INFO ConfigurationProperties - p:duplicateingredientsinspace= false
+[57175] INFO ConfigurationProperties - p:overridemaxtime= true
+[57175] INFO ConfigurationProperties - p:maxnumbersolutions= 3
+[57175] INFO ConfigurationProperties - p:logsattemps= true
+[57175] INFO ConfigurationProperties - p:location= /builds/workspace/astor/./examples/math_70
+[57176] INFO ConfigurationProperties - p:populationcontroller= fr.inria.astor.core.solutionsearch.population.TestCaseBasedFitnessPopulationController
+[57177] INFO ConfigurationProperties - ----------------------------
+[57177] INFO AstorCoreEngine - ----Starting Solution Search
+[57184] WARN AstorCoreEngine - ----------Running generation: 1, population size: 1
+[58576] WARN AstorCoreEngine - ----------Running generation: 2, population size: 1
+[58716] WARN AstorCoreEngine - ----------Running generation: 3, population size: 1
+[59220] WARN AstorCoreEngine - ----------Running generation: 4, population size: 1
+[59631] WARN AstorCoreEngine - ----------Running generation: 5, population size: 1
+[60027] WARN AstorCoreEngine - ----------Running generation: 6, population size: 1
+[60117] WARN AstorCoreEngine - ----------Running generation: 7, population size: 1
+[60235] WARN AstorCoreEngine - ----------Running generation: 8, population size: 1
+[60666] WARN AstorCoreEngine - ----------Running generation: 9, population size: 1
+[61184] WARN AstorCoreEngine - ----------Running generation: 10, population size: 1
+[61626] WARN AstorCoreEngine - ----------Running generation: 11, population size: 1
+[62018] WARN AstorCoreEngine - ----------Running generation: 12, population size: 1
+[62394] WARN AstorCoreEngine - ----------Running generation: 13, population size: 1
+[62437] WARN AstorCoreEngine - ----------Running generation: 14, population size: 1
+[62884] WARN AstorCoreEngine - ----------Running generation: 15, population size: 1
+[62984] WARN AstorCoreEngine - ----------Running generation: 16, population size: 1
+[63392] WARN AstorCoreEngine - ----------Running generation: 17, population size: 1
+[63428] WARN AstorCoreEngine - ----------Running generation: 18, population size: 1
+[63771] WARN AstorCoreEngine - ----------Running generation: 19, population size: 1
+[64142] WARN AstorCoreEngine - ----------Running generation: 20, population size: 1
+[64538] WARN AstorCoreEngine - ----------Running generation: 21, population size: 1
+[64575] WARN AstorCoreEngine - ----------Running generation: 22, population size: 1
+[64631] WARN AstorCoreEngine - ----------Running generation: 23, population size: 1
+[64679] WARN AstorCoreEngine - ----------Running generation: 24, population size: 1
+[65100] WARN AstorCoreEngine - ----------Running generation: 25, population size: 1
+[65119] WARN AstorCoreEngine - ----------Running generation: 26, population size: 1
+[65523] WARN AstorCoreEngine - ----------Running generation: 27, population size: 1
+[65569] WARN AstorCoreEngine - ----------Running generation: 28, population size: 1
+[65600] WARN AstorCoreEngine - ----------Running generation: 29, population size: 1
+[65628] WARN AstorCoreEngine - ----------Running generation: 30, population size: 1
+[65683] WARN AstorCoreEngine - ----------Running generation: 31, population size: 1
+[65714] WARN AstorCoreEngine - ----------Running generation: 32, population size: 1
+[65748] WARN AstorCoreEngine - ----------Running generation: 33, population size: 1
+[66127] WARN AstorCoreEngine - ----------Running generation: 34, population size: 1
+[66494] WARN AstorCoreEngine - ----------Running generation: 35, population size: 1
+[66873] WARN AstorCoreEngine - ----------Running generation: 36, population size: 1
+[67390] WARN AstorCoreEngine - ----------Running generation: 37, population size: 1
+[67888] WARN AstorCoreEngine - ----------Running generation: 38, population size: 1
+[68328] WARN AstorCoreEngine - ----------Running generation: 39, population size: 1
+[68383] WARN AstorCoreEngine - ----------Running generation: 40, population size: 1
+[68394] WARN AstorCoreEngine - ----------Running generation: 41, population size: 1
+[68418] WARN AstorCoreEngine - ----------Running generation: 42, population size: 1
+[68790] WARN AstorCoreEngine - ----------Running generation: 43, population size: 1
+[69193] WARN AstorCoreEngine - ----------Running generation: 44, population size: 1
+[69518] WARN AstorCoreEngine - ----------Running generation: 45, population size: 1
+[69529] WARN AstorCoreEngine - ----------Running generation: 46, population size: 1
+[69908] WARN AstorCoreEngine - ----------Running generation: 47, population size: 1
+[70293] WARN AstorCoreEngine - ----------Running generation: 48, population size: 1
+[70699] WARN AstorCoreEngine - ----------Running generation: 49, population size: 1
+[70726] WARN AstorCoreEngine - ----------Running generation: 50, population size: 1
+[71126] WARN AstorCoreEngine - ----------Running generation: 51, population size: 1
+[71531] WARN AstorCoreEngine - ----------Running generation: 52, population size: 1
+[71876] WARN AstorCoreEngine - ----------Running generation: 53, population size: 1
+[71905] WARN AstorCoreEngine - ----------Running generation: 54, population size: 1
+[72291] WARN AstorCoreEngine - ----------Running generation: 55, population size: 1
+[72613] WARN AstorCoreEngine - ----------Running generation: 56, population size: 1
+[72958] WARN AstorCoreEngine - ----------Running generation: 57, population size: 1
+[72992] WARN AstorCoreEngine - ----------Running generation: 58, population size: 1
+[73356] WARN AstorCoreEngine - ----------Running generation: 59, population size: 1
+[73381] WARN AstorCoreEngine - ----------Running generation: 60, population size: 1
+[73740] WARN AstorCoreEngine - ----------Running generation: 61, population size: 1
+[80365] INFO AstorCoreEngine - -Found Solution, child variant #62
+[80380] WARN AstorCoreEngine - ----------Running generation: 62, population size: 1
+[80786] WARN AstorCoreEngine - ----------Running generation: 63, population size: 1
+[80823] WARN AstorCoreEngine - ----------Running generation: 64, population size: 1
+[87639] INFO AstorCoreEngine - -Found Solution, child variant #65
+[87659] WARN AstorCoreEngine - ----------Running generation: 65, population size: 1
+[94439] INFO AstorCoreEngine - -Found Solution, child variant #66
+[94456] INFO AstorCoreEngine - Time Repair Loop (s): 37.279
+[94457] INFO AstorCoreEngine - generationsexecuted: 65
+[94458] WARN AstorCoreEngine - ----SUMMARY_EXECUTION---
+[94458] WARN AstorCoreEngine - End Repair Search: Found solution
+[94458] WARN AstorCoreEngine - Solution stored at: /builds/workspace/astor/./output_astor/AstorMain-math_70//src/
+[94458] WARN AstorCoreEngine - Number solutions:3
+[94458] INFO AstorCoreEngine - f (sol): 0.0, [Variant id: 62 (SOL) , #gens: 8, #ops: 1, parent:1]
+[94459] INFO AstorCoreEngine - f (sol): 0.0, [Variant id: 65 (SOL) , #gens: 8, #ops: 2, parent:62]
+[94459] INFO AstorCoreEngine - f (sol): 0.0, [Variant id: 66 (SOL) , #gens: 7, #ops: 2, parent:62]
+[94460] WARN AstorCoreEngine - Number suspicious:1
+[94637] INFO AstorCoreEngine - 
+ --SOLUTIONS DESCRIPTION--
+
+ ----
+ProgramVariant 62
+ 
+time(sec)= 23
+operation: ReplaceOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 72
+lineSuspiciousness= 1
+lineSuspiciousness= 0
+original statement= return solve(min, max)
+buggy kind= CtReturnImpl|CtBlockImpl
+fixed statement= return solve(f, min, max)
+Patch kind= CtReturnImpl|CtBlockImpl
+generation= 61
+ingredientScope= LOCAL
+validation=|true|0|2163|[]|
+diffpatch=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -23 +23 @@
+-		return solve(min, max);
++		return solve(f, min, max);
+
+
+diffpatchoriginal=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+
+
+ ----
+ProgramVariant 65
+ 
+time(sec)= 30
+operation: ReplaceOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 72
+lineSuspiciousness= 1
+lineSuspiciousness= 0
+original statement= return solve(min, max)
+buggy kind= CtReturnImpl|CtBlockImpl
+fixed statement= return solve(f, min, max)
+Patch kind= CtReturnImpl|CtBlockImpl
+generation= 61
+ingredientScope= LOCAL
+operation: ReplaceOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 81
+lineSuspiciousness= 0.5
+lineSuspiciousness= 3
+original statement= verifyInterval(min, max)
+buggy kind= CtInvocationImpl|CtBlockImpl
+fixed statement= verifyInterval(min, max)
+Patch kind= CtInvocationImpl|CtBlockImpl
+generation= 64
+ingredientScope= LOCAL
+validation=|true|0|2163|[]|
+diffpatch=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -23 +23 @@
+-		return solve(min, max);
++		return solve(f, min, max);
+
+--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -23 +23 @@
+-		return solve(min, max);
++		return solve(f, min, max);
+
+
+diffpatchoriginal=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+
+--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+
+
+ ----
+ProgramVariant 66
+ 
+time(sec)= 37
+operation: ReplaceOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 72
+lineSuspiciousness= 1
+lineSuspiciousness= 0
+original statement= return solve(min, max)
+buggy kind= CtReturnImpl|CtBlockImpl
+fixed statement= return solve(f, min, max)
+Patch kind= CtReturnImpl|CtBlockImpl
+generation= 61
+ingredientScope= LOCAL
+operation: RemoveOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 80
+lineSuspiciousness= 0.5
+lineSuspiciousness= 2
+original statement= clearResult()
+buggy kind= CtInvocationImpl|CtBlockImpl
+fixed statement= 
+generation= 65
+ingredientScope= -
+validation=|true|0|2163|[]|
+diffpatch=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -23 +23 @@
+-		return solve(min, max);
++		return solve(f, min, max);
+@@ -27 +26,0 @@
+-		clearResult();
+
+--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -23 +23 @@
+-		return solve(min, max);
++		return solve(f, min, max);
+@@ -27 +26,0 @@
+-		clearResult();
+
+
+diffpatchoriginal=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+@@ -80 +80 @@
+-		clearResult();
++
+
+--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+@@ -80 +80 @@
+-		clearResult();
++
+
+
+
+[94641] INFO AstorCoreEngine - Generation 1
+[94641] INFO AstorCoreEngine - Generation 2
+[94641] INFO AstorCoreEngine - Generation 3
+[94641] INFO AstorCoreEngine - Generation 4
+[94641] INFO AstorCoreEngine - Generation 5
+[94641] INFO AstorCoreEngine - Generation 6
+[94641] INFO AstorCoreEngine - Generation 7
+[94641] INFO AstorCoreEngine - Generation 8
+[94641] INFO AstorCoreEngine - Generation 9
+[94641] INFO AstorCoreEngine - Generation 10
+[94641] INFO AstorCoreEngine - Generation 11
+[94641] INFO AstorCoreEngine - Generation 12
+[94641] INFO AstorCoreEngine - Generation 13
+[94642] INFO AstorCoreEngine - Generation 14
+[94642] INFO AstorCoreEngine - Generation 15
+[94642] INFO AstorCoreEngine - Generation 16
+[94642] INFO AstorCoreEngine - Generation 17
+[94643] INFO AstorCoreEngine - Generation 18
+[94643] INFO AstorCoreEngine - Generation 19
+[94643] INFO AstorCoreEngine - Generation 20
+[94643] INFO AstorCoreEngine - Generation 21
+[94646] INFO AstorCoreEngine - Generation 22
+[94649] INFO AstorCoreEngine - Generation 23
+[94651] INFO AstorCoreEngine - Generation 24
+[94652] INFO AstorCoreEngine - Generation 25
+[94654] INFO AstorCoreEngine - Generation 26
+[94654] INFO AstorCoreEngine - Generation 27
+[94654] INFO AstorCoreEngine - Generation 28
+[94654] INFO AstorCoreEngine - Generation 29
+[94654] INFO AstorCoreEngine - Generation 30
+[94654] INFO AstorCoreEngine - Generation 31
+[94654] INFO AstorCoreEngine - Generation 32
+[94654] INFO AstorCoreEngine - Generation 33
+[94654] INFO AstorCoreEngine - Generation 34
+[94654] INFO AstorCoreEngine - Generation 35
+[94654] INFO AstorCoreEngine - Generation 36
+[94654] INFO AstorCoreEngine - Generation 37
+[94655] INFO AstorCoreEngine - Generation 38
+[94655] INFO AstorCoreEngine - Generation 39
+[94655] INFO AstorCoreEngine - Generation 40
+[94655] INFO AstorCoreEngine - Generation 41
+[94655] INFO AstorCoreEngine - Generation 42
+[94655] INFO AstorCoreEngine - Generation 43
+[94655] INFO AstorCoreEngine - Generation 44
+[94655] INFO AstorCoreEngine - Generation 45
+[94655] INFO AstorCoreEngine - Generation 46
+[94655] INFO AstorCoreEngine - Generation 47
+[94655] INFO AstorCoreEngine - Generation 48
+[94655] INFO AstorCoreEngine - Generation 49
+[94655] INFO AstorCoreEngine - Generation 50
+[94655] INFO AstorCoreEngine - Generation 51
+[94655] INFO AstorCoreEngine - Generation 52
+[94655] INFO AstorCoreEngine - Generation 53
+[94655] INFO AstorCoreEngine - Generation 54
+[94655] INFO AstorCoreEngine - Generation 55
+[94664] INFO AstorCoreEngine - Generation 56
+[94664] INFO AstorCoreEngine - Generation 57
+[94664] INFO AstorCoreEngine - Generation 58
+[94664] INFO AstorCoreEngine - Generation 59
+[94665] INFO AstorCoreEngine - Generation 60
+[94665] INFO AstorCoreEngine - Generation 61
+[94669] INFO AstorCoreEngine - Generation 62
+[94669] INFO AstorCoreEngine - Generation 63
+[94669] INFO AstorCoreEngine - Generation 64
+[94669] INFO AstorCoreEngine - Generation 65
+[94669] INFO AstorCoreEngine - Generation 1
+[94669] INFO AstorCoreEngine - Generation 2
+[94669] INFO AstorCoreEngine - Generation 3
+[94669] INFO AstorCoreEngine - Generation 4
+[94669] INFO AstorCoreEngine - Generation 5
+[94669] INFO AstorCoreEngine - Generation 6
+[94669] INFO AstorCoreEngine - Generation 7
+[94669] INFO AstorCoreEngine - Generation 8
+[94669] INFO AstorCoreEngine - Generation 9
+[94670] INFO AstorCoreEngine - Generation 10
+[94670] INFO AstorCoreEngine - Generation 11
+[94670] INFO AstorCoreEngine - Generation 12
+[94670] INFO AstorCoreEngine - Generation 13
+[94670] INFO AstorCoreEngine - Generation 14
+[94670] INFO AstorCoreEngine - Generation 15
+[94670] INFO AstorCoreEngine - Generation 16
+[94670] INFO AstorCoreEngine - Generation 17
+[94670] INFO AstorCoreEngine - Generation 18
+[94670] INFO AstorCoreEngine - Generation 19
+[94670] INFO AstorCoreEngine - Generation 20
+[94671] INFO AstorCoreEngine - Generation 21
+[94671] INFO AstorCoreEngine - Generation 22
+[94671] INFO AstorCoreEngine - Generation 23
+[94671] INFO AstorCoreEngine - Generation 24
+[94671] INFO AstorCoreEngine - Generation 25
+[94671] INFO AstorCoreEngine - Generation 26
+[94671] INFO AstorCoreEngine - Generation 27
+[94671] INFO AstorCoreEngine - Generation 28
+[94672] INFO AstorCoreEngine - Generation 29
+[94673] INFO AstorCoreEngine - Generation 30
+[94674] INFO AstorCoreEngine - Generation 31
+[94674] INFO AstorCoreEngine - Generation 32
+[94674] INFO AstorCoreEngine - Generation 33
+[94674] INFO AstorCoreEngine - Generation 34
+[94674] INFO AstorCoreEngine - Generation 35
+[94674] INFO AstorCoreEngine - Generation 36
+[94674] INFO AstorCoreEngine - Generation 37
+[94674] INFO AstorCoreEngine - Generation 38
+[94674] INFO AstorCoreEngine - Generation 39
+[94674] INFO AstorCoreEngine - Generation 40
+[94674] INFO AstorCoreEngine - Generation 41
+[94674] INFO AstorCoreEngine - Generation 42
+[94674] INFO AstorCoreEngine - Generation 43
+[94674] INFO AstorCoreEngine - Generation 44
+[94674] INFO AstorCoreEngine - Generation 45
+[94674] INFO AstorCoreEngine - Generation 46
+[94674] INFO AstorCoreEngine - Generation 47
+[94674] INFO AstorCoreEngine - Generation 48
+[94674] INFO AstorCoreEngine - Generation 49
+[94675] INFO AstorCoreEngine - Generation 50
+[94675] INFO AstorCoreEngine - Generation 51
+[94675] INFO AstorCoreEngine - Generation 52
+[94675] INFO AstorCoreEngine - Generation 53
+[94684] INFO AstorCoreEngine - Generation 54
+[94684] INFO AstorCoreEngine - Generation 55
+[94684] INFO AstorCoreEngine - Generation 56
+[94684] INFO AstorCoreEngine - Generation 57
+[94685] INFO AstorCoreEngine - Generation 58
+[94685] INFO AstorCoreEngine - Generation 59
+[94685] INFO AstorCoreEngine - Generation 60
+[94685] INFO AstorCoreEngine - Generation 61
+[94686] INFO AstorCoreEngine - Generation 62
+[94686] INFO AstorCoreEngine - Generation 63
+[94686] INFO AstorCoreEngine - Generation 64
+[94687] INFO AstorCoreEngine - Generation 65
+[94687] INFO AstorCoreEngine - Generation 1
+[94687] INFO AstorCoreEngine - Generation 2
+[94687] INFO AstorCoreEngine - Generation 3
+[94687] INFO AstorCoreEngine - Generation 4
+[94687] INFO AstorCoreEngine - Generation 5
+[94688] INFO AstorCoreEngine - Generation 6
+[94688] INFO AstorCoreEngine - Generation 7
+[94688] INFO AstorCoreEngine - Generation 8
+[94688] INFO AstorCoreEngine - Generation 9
+[94688] INFO AstorCoreEngine - Generation 10
+[94688] INFO AstorCoreEngine - Generation 11
+[94688] INFO AstorCoreEngine - Generation 12
+[94688] INFO AstorCoreEngine - Generation 13
+[94688] INFO AstorCoreEngine - Generation 14
+[94689] INFO AstorCoreEngine - Generation 15
+[94689] INFO AstorCoreEngine - Generation 16
+[94689] INFO AstorCoreEngine - Generation 17
+[94689] INFO AstorCoreEngine - Generation 18
+[94689] INFO AstorCoreEngine - Generation 19
+[94689] INFO AstorCoreEngine - Generation 20
+[94691] INFO AstorCoreEngine - Generation 21
+[94697] INFO AstorCoreEngine - Generation 22
+[94697] INFO AstorCoreEngine - Generation 23
+[94700] INFO AstorCoreEngine - Generation 24
+[94700] INFO AstorCoreEngine - Generation 25
+[94700] INFO AstorCoreEngine - Generation 26
+[94700] INFO AstorCoreEngine - Generation 27
+[94700] INFO AstorCoreEngine - Generation 28
+[94701] INFO AstorCoreEngine - Generation 29
+[94701] INFO AstorCoreEngine - Generation 30
+[94701] INFO AstorCoreEngine - Generation 31
+[94701] INFO AstorCoreEngine - Generation 32
+[94701] INFO AstorCoreEngine - Generation 33
+[94701] INFO AstorCoreEngine - Generation 34
+[94701] INFO AstorCoreEngine - Generation 35
+[94701] INFO AstorCoreEngine - Generation 36
+[94701] INFO AstorCoreEngine - Generation 37
+[94701] INFO AstorCoreEngine - Generation 38
+[94701] INFO AstorCoreEngine - Generation 39
+[94701] INFO AstorCoreEngine - Generation 40
+[94701] INFO AstorCoreEngine - Generation 41
+[94701] INFO AstorCoreEngine - Generation 42
+[94701] INFO AstorCoreEngine - Generation 43
+[94701] INFO AstorCoreEngine - Generation 44
+[94701] INFO AstorCoreEngine - Generation 45
+[94701] INFO AstorCoreEngine - Generation 46
+[94701] INFO AstorCoreEngine - Generation 47
+[94701] INFO AstorCoreEngine - Generation 48
+[94701] INFO AstorCoreEngine - Generation 49
+[94701] INFO AstorCoreEngine - Generation 50
+[94701] INFO AstorCoreEngine - Generation 51
+[94701] INFO AstorCoreEngine - Generation 52
+[94701] INFO AstorCoreEngine - Generation 53
+[94701] INFO AstorCoreEngine - Generation 54
+[94701] INFO AstorCoreEngine - Generation 55
+[94701] INFO AstorCoreEngine - Generation 56
+[94702] INFO AstorCoreEngine - Generation 57
+[94702] INFO AstorCoreEngine - Generation 58
+[94702] INFO AstorCoreEngine - Generation 59
+[94702] INFO AstorCoreEngine - Generation 60
+[94702] INFO AstorCoreEngine - Generation 61
+[94704] INFO AstorCoreEngine - Generation 62
+[94704] INFO AstorCoreEngine - Generation 63
+[94704] INFO AstorCoreEngine - Generation 64
+[94704] INFO AstorCoreEngine - Generation 65
+Astor Output:
+
+General stats:
+EXECUTION_IDENTIFIER=
+TOTAL_TIME=37.279
+NR_GENERATIONS=65
+NR_RIGHT_COMPILATIONS=40
+NR_FAILLING_COMPILATIONS=22
+NR_ERRONEOUS_VARIANCES=null
+NR_FAILING_VALIDATION_PROCESS=null
+OUTPUT_STATUS=STOP_BY_PATCH_FOUND
+
+Patch stats:
+
+Patch 1
+VARIANT_ID=62
+TIME=23
+VALIDATION=|true|0|2163|[]|
+GENERATION=61
+FOLDER_SOLUTION_CODE=/builds/workspace/astor/./output_astor/AstorMain-math_70//src//variant-62
+--Patch Hunk #1
+OPERATOR=ReplaceOp
+
+LOCATION=org.apache.commons.math.analysis.solvers.BisectionSolver
+
+PATH=/builds/workspace/astor/examples/math_70/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+MODIFIED_FILE_PATH=/builds/workspace/astor/./output_astor/AstorMain-math_70//src//variant-62/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+LINE=72
+
+SUSPICIOUNESS=1
+
+MP_RANKING=0
+
+ORIGINAL_CODE=return solve(min, max)
+
+BUGGY_CODE_TYPE=CtReturnImpl|CtBlockImpl
+
+PATCH_HUNK_CODE=return solve(f, min, max)
+
+PATCH_HUNK_TYPE=CtReturnImpl|CtBlockImpl
+
+INGREDIENT_SCOPE=LOCAL
+
+INGREDIENT_PARENT=return solve(f, min, max)
+
+PATCH_DIFF_ORIG=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+
+
+
+Patch 2
+VARIANT_ID=65
+TIME=30
+VALIDATION=|true|0|2163|[]|
+GENERATION=64
+FOLDER_SOLUTION_CODE=/builds/workspace/astor/./output_astor/AstorMain-math_70//src//variant-65
+--Patch Hunk #1
+OPERATOR=ReplaceOp
+
+LOCATION=org.apache.commons.math.analysis.solvers.BisectionSolver
+
+PATH=/builds/workspace/astor/examples/math_70/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+MODIFIED_FILE_PATH=/builds/workspace/astor/./output_astor/AstorMain-math_70//src//variant-65/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+LINE=72
+
+SUSPICIOUNESS=1
+
+MP_RANKING=0
+
+ORIGINAL_CODE=return solve(min, max)
+
+BUGGY_CODE_TYPE=CtReturnImpl|CtBlockImpl
+
+PATCH_HUNK_CODE=return solve(f, min, max)
+
+PATCH_HUNK_TYPE=CtReturnImpl|CtBlockImpl
+
+INGREDIENT_SCOPE=LOCAL
+
+INGREDIENT_PARENT=return solve(f, min, max)
+--Patch Hunk #2
+OPERATOR=ReplaceOp
+
+LOCATION=org.apache.commons.math.analysis.solvers.BisectionSolver
+
+PATH=/builds/workspace/astor/examples/math_70/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+MODIFIED_FILE_PATH=/builds/workspace/astor/./output_astor/AstorMain-math_70//src//variant-65/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+LINE=81
+
+SUSPICIOUNESS=0.5
+
+MP_RANKING=3
+
+ORIGINAL_CODE=verifyInterval(min, max)
+
+BUGGY_CODE_TYPE=CtInvocationImpl|CtBlockImpl
+
+PATCH_HUNK_CODE=verifyInterval(min, max)
+
+PATCH_HUNK_TYPE=CtInvocationImpl|CtBlockImpl
+
+INGREDIENT_SCOPE=LOCAL
+
+INGREDIENT_PARENT=verifyInterval(min, max)
+
+PATCH_DIFF_ORIG=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+
+--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+
+
+
+Patch 3
+VARIANT_ID=66
+TIME=37
+VALIDATION=|true|0|2163|[]|
+GENERATION=65
+FOLDER_SOLUTION_CODE=/builds/workspace/astor/./output_astor/AstorMain-math_70//src//variant-66
+--Patch Hunk #1
+OPERATOR=ReplaceOp
+
+LOCATION=org.apache.commons.math.analysis.solvers.BisectionSolver
+
+PATH=/builds/workspace/astor/examples/math_70/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+MODIFIED_FILE_PATH=/builds/workspace/astor/./output_astor/AstorMain-math_70//src//variant-66/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+LINE=72
+
+SUSPICIOUNESS=1
+
+MP_RANKING=0
+
+ORIGINAL_CODE=return solve(min, max)
+
+BUGGY_CODE_TYPE=CtReturnImpl|CtBlockImpl
+
+PATCH_HUNK_CODE=return solve(f, min, max)
+
+PATCH_HUNK_TYPE=CtReturnImpl|CtBlockImpl
+
+INGREDIENT_SCOPE=LOCAL
+
+INGREDIENT_PARENT=return solve(f, min, max)
+--Patch Hunk #2
+OPERATOR=RemoveOp
+
+LOCATION=org.apache.commons.math.analysis.solvers.BisectionSolver
+
+PATH=/builds/workspace/astor/examples/math_70/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+MODIFIED_FILE_PATH=/builds/workspace/astor/./output_astor/AstorMain-math_70//src//variant-66/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+
+LINE=80
+
+SUSPICIOUNESS=0.5
+
+MP_RANKING=2
+
+ORIGINAL_CODE=clearResult()
+
+BUGGY_CODE_TYPE=CtInvocationImpl|CtBlockImpl
+
+PATCH_HUNK_CODE=null
+
+PATCH_HUNK_TYPE=null
+
+INGREDIENT_SCOPE=-
+
+INGREDIENT_PARENT=null
+
+PATCH_DIFF_ORIG=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+@@ -80 +80 @@
+-		clearResult();
++
+
+--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+@@ -80 +80 @@
+-		clearResult();
++
+
+
+
+[94746] INFO Stats - Storing ing JSON at /builds/workspace/astor/./output_astor/AstorMain-math_70//astor_output.json
+[94748] INFO Stats - astor_output:
+{"general":{"NR_RIGHT_COMPILATIONS":40,"NR_ERRONEOUS_VARIANCES":null,"EXECUTION_IDENTIFIER":"","OUTPUT_STATUS":"STOP_BY_PATCH_FOUND","NR_FAILLING_COMPILATIONS":22,"NR_GENERATIONS":65,"TOTAL_TIME":37.279,"NR_FAILING_VALIDATION_PROCESS":null},"patches":[{"VARIANT_ID":"62","VALIDATION":"|true|0|2163|[]|","patchhunks":[{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"1","INGREDIENT_PARENT":"return solve(f, min, max)","PATCH_HUNK_TYPE":"CtReturnImpl|CtBlockImpl","ORIGINAL_CODE":"return solve(min, max)","BUGGY_CODE_TYPE":"CtReturnImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-62\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"72","MP_RANKING":"0","PATCH_HUNK_CODE":"return solve(f, min, max)"}],"TIME":"23","GENERATION":"61","FOLDER_SOLUTION_CODE":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-62","PATCH_DIFF_ORIG":"--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n\\n"},{"VARIANT_ID":"65","VALIDATION":"|true|0|2163|[]|","patchhunks":[{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"1","INGREDIENT_PARENT":"return solve(f, min, max)","PATCH_HUNK_TYPE":"CtReturnImpl|CtBlockImpl","ORIGINAL_CODE":"return solve(min, max)","BUGGY_CODE_TYPE":"CtReturnImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-65\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"72","MP_RANKING":"0","PATCH_HUNK_CODE":"return solve(f, min, max)"},{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"0.5","INGREDIENT_PARENT":"verifyInterval(min, max)","PATCH_HUNK_TYPE":"CtInvocationImpl|CtBlockImpl","ORIGINAL_CODE":"verifyInterval(min, max)","BUGGY_CODE_TYPE":"CtInvocationImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-65\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"81","MP_RANKING":"3","PATCH_HUNK_CODE":"verifyInterval(min, max)"}],"TIME":"30","GENERATION":"64","FOLDER_SOLUTION_CODE":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-65","PATCH_DIFF_ORIG":"--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n\\n--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n\\n"},{"VARIANT_ID":"66","VALIDATION":"|true|0|2163|[]|","patchhunks":[{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"1","INGREDIENT_PARENT":"return solve(f, min, max)","PATCH_HUNK_TYPE":"CtReturnImpl|CtBlockImpl","ORIGINAL_CODE":"return solve(min, max)","BUGGY_CODE_TYPE":"CtReturnImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-66\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"72","MP_RANKING":"0","PATCH_HUNK_CODE":"return solve(f, min, max)"},{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"-","ORIGINAL_CODE":"clearResult()","BUGGY_CODE_TYPE":"CtInvocationImpl|CtBlockImpl","OPERATOR":"RemoveOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-66\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"80","SUSPICIOUNESS":"0.5","MP_RANKING":"2"}],"TIME":"37","GENERATION":"65","FOLDER_SOLUTION_CODE":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-66","PATCH_DIFF_ORIG":"--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n@@ -80 +80 @@\\n-\\t\\tclearResult();\\n+\\n\\n--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\torg.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n@@ -80 +80 @@\\n-\\t\\tclearResult();\\n+\\n\\n"}]}
+[94748] INFO AstorMain - Time Total(s): 94.733
+[94750] INFO main - -->[[OP_INSTANCE:
+ReplaceOp:(spoon.support.reflect.code.CtReturnImpl) `return solve(min, max) ` -topatch--> `return solve(f, min, max)` (spoon.support.reflect.code.CtReturnImpl) ]]
+[94751] INFO main - -->[[OP_INSTANCE:
+ReplaceOp:(spoon.support.reflect.code.CtInvocationImpl) `verifyInterval(min, max) ` -topatch--> `verifyInterval(min, max)` (spoon.support.reflect.code.CtInvocationImpl) ], [OP_INSTANCE:
+ReplaceOp:(spoon.support.reflect.code.CtReturnImpl) `return solve(min, max) ` -topatch--> `return solve(f, min, max)` (spoon.support.reflect.code.CtReturnImpl) ]]
+[94752] INFO main - -->[[OP_INSTANCE:
+ReplaceOp:(spoon.support.reflect.code.CtReturnImpl) `return solve(min, max) ` -topatch--> `return solve(f, min, max)` (spoon.support.reflect.code.CtReturnImpl) ], [OP_INSTANCE:
+RemoveOp:(spoon.support.reflect.code.CtInvocationImpl) `clearResult() ` -topatch--> `-` (null) ]]
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 95.762 sec - in fr.inria.astor.test.repair.approaches.JGenProgEvolutionaryTest
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.7:report (report) @ astor ---
+[INFO] Loading execution data file /builds/workspace/astor/target/jacoco.exec
+[INFO] Analyzed bundle 'ASTOR' with 352 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:02 min
+[INFO] Finished at: 2021-11-29T12:29:34+01:00
+[INFO] ------------------------------------------------------------------------
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] done
+Finished: SUCCESS
