@@ -8,7 +8,7 @@ public class StepDiffer {
     final Action[] leftActions;
     final Action[] rightActions;
 
-    final static String TOKEN_SEPARATORS = "\\s+|=|:";
+    final static String TOKEN_SEPARATORS = "\\s+";
     final static double MIN_REWRITE_SIM = 0.5;
 
     public StepDiffer(List<String> leftLines, List<String> rightLines) {
