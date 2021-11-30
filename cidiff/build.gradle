@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'info.solidsoft.pitest' version '1.7.0'
 }
 
 repositories {
@@ -13,6 +14,11 @@ dependencies {
 application {
     mainClass = 'org.github.gumtreediff.cidiff.CiDiff'
     distTar.enabled = false
+}
+
+pitest {
+    junit5PluginVersion = '0.15'
+    targetClasses = ['org.github.gumtreediff.cidiff.*']
 }
 
 tasks.named('test') {
