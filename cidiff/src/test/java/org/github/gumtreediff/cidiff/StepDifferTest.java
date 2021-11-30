@@ -66,14 +66,16 @@ public class StepDifferTest {
 
     @Test
     void testUpdatedCode() {
-        List<String> leftLines = Arrays.asList("Build status failed", "Running time: 22s", "Foo");
-        List<String> rightLines = Arrays.asList("Build status OK", "Running times: 22s", "Bar");
+        List<String> leftLines = Arrays.asList("Build status failed", "Running time: 22s", "Foo Bar", "Foo");
+        List<String> rightLines = Arrays.asList("Build status OK", "Running times: 22s", "Foo Baz", "Bar");
         StepDiffer d = new StepDiffer(leftLines, rightLines);
         assertEquals(Action.updated(0, 0), d.leftActions[0]);
         assertEquals(Action.updated(0, 0), d.rightActions[0]);
         assertEquals(Action.updated(1, 1), d.leftActions[1]);
         assertEquals(Action.updated(1, 1), d.rightActions[1]);
-        assertEquals(Action.deleted(2), d.leftActions[2]);
-        assertEquals(Action.added(2), d.rightActions[2]);
+        assertEquals(Action.updated(2, 2), d.leftActions[2]);
+        assertEquals(Action.updated(2, 2), d.rightActions[2]);
+        assertEquals(Action.deleted(3), d.leftActions[3]);
+        assertEquals(Action.added(3), d.rightActions[3]);
     }
 }
