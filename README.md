@@ -24,7 +24,7 @@ The command line is defined as such:
 cidiff LEFT_LOG_FILE RIGHT_LOG_FILE -o KEY VALUE -o KEY VALUE
 ~~~
 
-With `LEFT_LOG_FILE` the path the original log file and `RIGHT_LOG_FILE` the path to the modified logf file.
+With `LEFT_LOG_FILE` the path the original log file and `RIGHT_LOG_FILE` the path to the modified log file.
 
 Options can be provided after these two mandatory arguments using the following syntax: `-o KEY VALUE`.
 
