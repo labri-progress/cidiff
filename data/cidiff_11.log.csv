@@ -1,0 +1,271 @@
+build-test-deploy	Set up job	2021-12-01T13:00:40.1077661Z Current runner version: '2.284.0'
+build-test-deploy	Set up job	2021-12-01T13:00:40.1114185Z ##[group]Operating System
+build-test-deploy	Set up job	2021-12-01T13:00:40.1115380Z Ubuntu
+build-test-deploy	Set up job	2021-12-01T13:00:40.1116003Z 20.04.3
+build-test-deploy	Set up job	2021-12-01T13:00:40.1116748Z LTS
+build-test-deploy	Set up job	2021-12-01T13:00:40.1117351Z ##[endgroup]
+build-test-deploy	Set up job	2021-12-01T13:00:40.1117997Z ##[group]Virtual Environment
+build-test-deploy	Set up job	2021-12-01T13:00:40.1118836Z Environment: ubuntu-20.04
+build-test-deploy	Set up job	2021-12-01T13:00:40.1119507Z Version: 20211129.1
+build-test-deploy	Set up job	2021-12-01T13:00:40.1120732Z Included Software: https://github.com/actions/virtual-environments/blob/ubuntu20/20211129.1/images/linux/Ubuntu2004-README.md
+build-test-deploy	Set up job	2021-12-01T13:00:40.1122371Z Image Release: https://github.com/actions/virtual-environments/releases/tag/ubuntu20%2F20211129.1
+build-test-deploy	Set up job	2021-12-01T13:00:40.1123395Z ##[endgroup]
+build-test-deploy	Set up job	2021-12-01T13:00:40.1124166Z ##[group]Virtual Environment Provisioner
+build-test-deploy	Set up job	2021-12-01T13:00:40.1124943Z 1.0.0.0-master-20211123-1
+build-test-deploy	Set up job	2021-12-01T13:00:40.1125618Z ##[endgroup]
+build-test-deploy	Set up job	2021-12-01T13:00:40.1127962Z ##[group]GITHUB_TOKEN Permissions
+build-test-deploy	Set up job	2021-12-01T13:00:40.1129506Z Actions: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1130315Z Checks: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1130956Z Contents: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1131599Z Deployments: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1132293Z Discussions: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1132891Z Issues: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1133544Z Metadata: read
+build-test-deploy	Set up job	2021-12-01T13:00:40.1134139Z Packages: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1134795Z Pages: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1135484Z PullRequests: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1136207Z RepositoryProjects: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1137029Z SecurityEvents: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1137670Z Statuses: write
+build-test-deploy	Set up job	2021-12-01T13:00:40.1138440Z ##[endgroup]
+build-test-deploy	Set up job	2021-12-01T13:00:40.1142054Z Prepare workflow directory
+build-test-deploy	Set up job	2021-12-01T13:00:40.1843433Z Prepare all required actions
+build-test-deploy	Set up job	2021-12-01T13:00:40.1855109Z Getting action download info
+build-test-deploy	Set up job	2021-12-01T13:00:40.3874085Z Download action repository 'actions/checkout@v2' (SHA:ec3a7ce113134d7a93b817d10a8272cb61118579)
+build-test-deploy	Set up job	2021-12-01T13:00:42.1109013Z Download action repository 'actions/setup-java@v2' (SHA:5f00602cd1b2819185d88dc7a1b1985f598c6705)
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5725135Z ##[group]Run actions/checkout@v2
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5725931Z with:
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5726590Z   repository: labri-progress/cidiff
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5727780Z   token: ***
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5728349Z   ssh-strict: true
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5729028Z   persist-credentials: true
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5729662Z   clean: true
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5730210Z   fetch-depth: 1
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5730734Z   lfs: false
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5731290Z   submodules: false
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.5731848Z ##[endgroup]
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.8560586Z Syncing repository: labri-progress/cidiff
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.8562857Z ##[group]Getting Git version info
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.8563978Z Working directory is '/home/runner/work/cidiff/cidiff'
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.8588966Z [command]/usr/bin/git version
+build-test-deploy	checkout cidiff	2021-12-01T13:00:42.8740620Z git version 2.34.1
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4251560Z ##[endgroup]
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4253534Z Deleting the contents of '/home/runner/work/cidiff/cidiff'
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4262552Z ##[group]Initializing the repository
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4263691Z [command]/usr/bin/git init /home/runner/work/cidiff/cidiff
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4265029Z hint: Using 'master' as the name for the initial branch. This default branch name
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4266192Z hint: is subject to change. To configure the initial branch name to use in all
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4267309Z hint: of your new repositories, which will suppress this warning, call:
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4268181Z hint: 
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4269217Z hint: 	git config --global init.defaultBranch <name>
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4270045Z hint: 
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4271104Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4272470Z hint: 'development'. The just-created branch can be renamed via this command:
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4273377Z hint: 
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4274216Z hint: 	git branch -m <name>
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4275192Z Initialized empty Git repository in /home/runner/work/cidiff/cidiff/.git/
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4279131Z [command]/usr/bin/git remote add origin https://github.com/labri-progress/cidiff
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4281513Z ##[endgroup]
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4282972Z ##[group]Disabling automatic garbage collection
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4284166Z [command]/usr/bin/git config --local gc.auto 0
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4285563Z ##[endgroup]
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4288863Z ##[group]Setting up auth
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4290132Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4292053Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4293972Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4296297Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4298609Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4300355Z ##[endgroup]
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4301740Z ##[group]Fetching the repository
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4303673Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin +f6887281fd53075915bb6320e4a3f352b2c22dcb:refs/remotes/origin/main
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4305252Z remote: Enumerating objects: 50, done.        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4306121Z remote: Counting objects:   2% (1/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4306942Z remote: Counting objects:   4% (2/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4307752Z remote: Counting objects:   6% (3/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4308570Z remote: Counting objects:   8% (4/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4309430Z remote: Counting objects:  10% (5/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4310235Z remote: Counting objects:  12% (6/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4311048Z remote: Counting objects:  14% (7/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4312116Z remote: Counting objects:  16% (8/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4312915Z remote: Counting objects:  18% (9/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4313738Z remote: Counting objects:  20% (10/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4314544Z remote: Counting objects:  22% (11/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4315363Z remote: Counting objects:  24% (12/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4316357Z remote: Counting objects:  26% (13/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4317181Z remote: Counting objects:  28% (14/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4318001Z remote: Counting objects:  30% (15/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4318812Z remote: Counting objects:  32% (16/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4319618Z remote: Counting objects:  34% (17/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4320469Z remote: Counting objects:  36% (18/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4321283Z remote: Counting objects:  38% (19/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4322091Z remote: Counting objects:  40% (20/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4322925Z remote: Counting objects:  42% (21/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4323721Z remote: Counting objects:  44% (22/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4324537Z remote: Counting objects:  46% (23/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4325350Z remote: Counting objects:  48% (24/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4326151Z remote: Counting objects:  50% (25/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4326965Z remote: Counting objects:  52% (26/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4327777Z remote: Counting objects:  54% (27/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4328568Z remote: Counting objects:  56% (28/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4329386Z remote: Counting objects:  58% (29/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4330206Z remote: Counting objects:  60% (30/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4330998Z remote: Counting objects:  62% (31/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4331822Z remote: Counting objects:  64% (32/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4332637Z remote: Counting objects:  66% (33/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4333444Z remote: Counting objects:  68% (34/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4335076Z remote: Counting objects:  70% (35/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4336216Z remote: Counting objects:  72% (36/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4337028Z remote: Counting objects:  74% (37/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4337852Z remote: Counting objects:  76% (38/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4338680Z remote: Counting objects:  78% (39/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4339477Z remote: Counting objects:  80% (40/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4340298Z remote: Counting objects:  82% (41/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4341110Z remote: Counting objects:  84% (42/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4341907Z remote: Counting objects:  86% (43/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4342729Z remote: Counting objects:  88% (44/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4343542Z remote: Counting objects:  90% (45/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4344341Z remote: Counting objects:  92% (46/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4345160Z remote: Counting objects:  94% (47/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4345986Z remote: Counting objects:  96% (48/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4346808Z remote: Counting objects:  98% (49/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4347626Z remote: Counting objects: 100% (50/50)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4348443Z remote: Counting objects: 100% (50/50), done.        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4349309Z remote: Compressing objects:   3% (1/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4350176Z remote: Compressing objects:   6% (2/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4351026Z remote: Compressing objects:  10% (3/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4351895Z remote: Compressing objects:  13% (4/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4352767Z remote: Compressing objects:  16% (5/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4353615Z remote: Compressing objects:  20% (6/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4354479Z remote: Compressing objects:  23% (7/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4355348Z remote: Compressing objects:  26% (8/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4356333Z remote: Compressing objects:  30% (9/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4357416Z remote: Compressing objects:  33% (10/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4358275Z remote: Compressing objects:  36% (11/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4359152Z remote: Compressing objects:  40% (12/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4360018Z remote: Compressing objects:  43% (13/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4360879Z remote: Compressing objects:  46% (14/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4361755Z remote: Compressing objects:  50% (15/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4362628Z remote: Compressing objects:  53% (16/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4363484Z remote: Compressing objects:  56% (17/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4364357Z remote: Compressing objects:  60% (18/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4365229Z remote: Compressing objects:  63% (19/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4366084Z remote: Compressing objects:  66% (20/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4366951Z remote: Compressing objects:  70% (21/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4367824Z remote: Compressing objects:  73% (22/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4368699Z remote: Compressing objects:  76% (23/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4369568Z remote: Compressing objects:  80% (24/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4370418Z remote: Compressing objects:  83% (25/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4371289Z remote: Compressing objects:  86% (26/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4372152Z remote: Compressing objects:  90% (27/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4373003Z remote: Compressing objects:  93% (28/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4373975Z remote: Compressing objects:  96% (29/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4374836Z remote: Compressing objects: 100% (30/30)        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4375715Z remote: Compressing objects: 100% (30/30), done.        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4377121Z remote: Total 50 (delta 7), reused 37 (delta 6), pack-reused 0        
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4378403Z From https://github.com/labri-progress/cidiff
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4459007Z  * [new ref]         f6887281fd53075915bb6320e4a3f352b2c22dcb -> origin/main
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4460840Z ##[endgroup]
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4462565Z ##[group]Determining the checkout info
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4463956Z ##[endgroup]
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4465276Z ##[group]Checking out the ref
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4466590Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4467789Z Switched to a new branch 'main'
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4468930Z Branch 'main' set up to track remote branch 'main' from 'origin'.
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4470407Z ##[endgroup]
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4471357Z [command]/usr/bin/git log -1 --format='%H'
+build-test-deploy	checkout cidiff	2021-12-01T13:00:43.4472475Z 'f6887281fd53075915bb6320e4a3f352b2c22dcb'
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4630631Z ##[group]Run actions/setup-java@v2
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4631310Z with:
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4631846Z   java-version: 17
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4632458Z   distribution: zulu
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4633060Z   java-package: jdk
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4633670Z   architecture: x64
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4634298Z   check-latest: false
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4634894Z   server-id: github
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4635586Z   server-username: GITHUB_ACTOR
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4636556Z   server-password: GITHUB_TOKEN
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4637315Z   overwrite-settings: true
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4637991Z   job-status: success
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:43.4638572Z ##[endgroup]
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:44.1099910Z Trying to resolve the latest version from remote
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:44.1111940Z Resolved latest version as 17.0.1+12
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:44.1112947Z Trying to download...
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:44.1118046Z Downloading Java 17.0.1+12 (Zulu) from https://cdn.azul.com/zulu/bin/zulu17.30.15-ca-jdk17.0.1-linux_x64.tar.gz ...
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:45.3819912Z Extracting Java archive...
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:45.3993075Z [command]/usr/bin/tar xz --warning=no-unknown-keyword -C /home/runner/work/_temp/1a928a25-21d4-400f-93dd-9abc8f07bcd3 -f /home/runner/work/_temp/57c3b18d-9b0a-41b7-a7ca-5b5114bf9c1d
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3649347Z Java 17.0.1+12 was downloaded
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3652677Z Setting Java 17.0.1+12 as the default
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3678168Z 
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3680652Z Java configuration:
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3682456Z   Distribution: zulu
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3684254Z   Version: 17.0.1+12
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3686583Z   Path: /opt/hostedtoolcache/Java_Zulu_jdk/17.0.1-12/x64
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3690272Z 
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3715509Z Creating settings.xml with server-id: github
+build-test-deploy	Run actions/setup-java@v2	2021-12-01T13:00:49.3797380Z Writing to /home/runner/.m2/settings.xml
+build-test-deploy	build cidiff	2021-12-01T13:00:49.3973698Z ##[group]Run ./gradlew build
+build-test-deploy	build cidiff	2021-12-01T13:00:49.3974318Z [36;1m./gradlew build[0m
+build-test-deploy	build cidiff	2021-12-01T13:00:49.4033562Z shell: /usr/bin/bash -e {0}
+build-test-deploy	build cidiff	2021-12-01T13:00:49.4034041Z env:
+build-test-deploy	build cidiff	2021-12-01T13:00:49.4034648Z   JAVA_HOME: /opt/hostedtoolcache/Java_Zulu_jdk/17.0.1-12/x64
+build-test-deploy	build cidiff	2021-12-01T13:00:49.4035250Z ##[endgroup]
+build-test-deploy	build cidiff	2021-12-01T13:00:49.5258078Z Downloading https://services.gradle.org/distributions/gradle-7.3-bin.zip
+build-test-deploy	build cidiff	2021-12-01T13:00:51.5436741Z ...........10%...........20%...........30%...........40%...........50%...........60%...........70%...........80%...........90%...........100%
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9798324Z 
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9800616Z Welcome to Gradle 7.3!
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9808045Z 
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9829718Z Here are the highlights of this release:
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9831959Z  - Easily declare new test suites in Java projects
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9844323Z  - Support for Java 17
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9845809Z  - Support for Scala 3
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9846695Z 
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9848510Z For more details see https://docs.gradle.org/7.3/release-notes.html
+build-test-deploy	build cidiff	2021-12-01T13:00:52.9850220Z 
+build-test-deploy	build cidiff	2021-12-01T13:00:53.0808176Z Starting a Gradle Daemon (subsequent builds will be faster)
+build-test-deploy	build cidiff	2021-12-01T13:01:00.5795182Z > Task :cidiff:compileJava
+build-test-deploy	build cidiff	2021-12-01T13:01:00.5807830Z > Task :cidiff:processResources NO-SOURCE
+build-test-deploy	build cidiff	2021-12-01T13:01:00.5809562Z > Task :cidiff:classes
+build-test-deploy	build cidiff	2021-12-01T13:01:00.6798879Z > Task :cidiff:jar
+build-test-deploy	build cidiff	2021-12-01T13:01:01.0793255Z > Task :cidiff:startScripts
+build-test-deploy	build cidiff	2021-12-01T13:01:01.0794245Z > Task :cidiff:distTar SKIPPED
+build-test-deploy	build cidiff	2021-12-01T13:01:01.0794856Z > Task :cidiff:distZip
+build-test-deploy	build cidiff	2021-12-01T13:01:01.0796000Z > Task :cidiff:assemble
+build-test-deploy	build cidiff	2021-12-01T13:01:02.4794789Z > Task :cidiff:compileTestJava
+build-test-deploy	build cidiff	2021-12-01T13:01:02.4797328Z > Task :cidiff:processTestResources NO-SOURCE
+build-test-deploy	build cidiff	2021-12-01T13:01:02.4801077Z > Task :cidiff:testClasses
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3782602Z 
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3784953Z 
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3785538Z > Task :cidiff:test FAILED
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3787133Z 10 tests completed, 1 failed
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3787743Z 
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3806856Z 
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3807878Z LogDifferTest > testGithubParsing() FAILED
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3809857Z FAILURE: Build failed with an exception.
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3811085Z     java.lang.IllegalArgumentException at LogDifferTest.java:61
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3812849Z 
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3813394Z 6 actionable tasks: 6 executed
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3817212Z * What went wrong:
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3818883Z Execution failed for task ':cidiff:test'.
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3820252Z > There were failing tests. See the report at: file:///home/runner/work/cidiff/cidiff/cidiff/build/reports/tests/test/index.html
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3821224Z 
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3821787Z * Try:
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3822818Z > Run with --stacktrace option to get the stack trace.
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3824088Z > Run with --info or --debug option to get more log output.
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3829168Z > Run with --scan to get full insights.
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3829937Z 
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3830820Z * Get more help at https://help.gradle.org
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3831590Z 
+build-test-deploy	build cidiff	2021-12-01T13:01:04.3832160Z BUILD FAILED in 14s
+build-test-deploy	build cidiff	2021-12-01T13:01:04.7408115Z ##[error]Process completed with exit code 1.
+build-test-deploy	Post Run actions/setup-java@v2	2021-12-01T13:01:04.7534768Z Post job cleanup.
+build-test-deploy	Post checkout cidiff	2021-12-01T13:01:04.9295988Z Post job cleanup.
+build-test-deploy	Post checkout cidiff	2021-12-01T13:01:05.0838707Z [command]/usr/bin/git version
+build-test-deploy	Post checkout cidiff	2021-12-01T13:01:05.0894890Z git version 2.34.1
+build-test-deploy	Post checkout cidiff	2021-12-01T13:01:05.0935520Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build-test-deploy	Post checkout cidiff	2021-12-01T13:01:05.0978686Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+build-test-deploy	Post checkout cidiff	2021-12-01T13:01:05.1256702Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build-test-deploy	Post checkout cidiff	2021-12-01T13:01:05.1287580Z http.https://github.com/.extraheader
+build-test-deploy	Post checkout cidiff	2021-12-01T13:01:05.1299299Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build-test-deploy	Post checkout cidiff	2021-12-01T13:01:05.1342473Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+build-test-deploy	Complete job	2021-12-01T13:01:05.1679085Z Cleaning up orphan processes
+build-test-deploy	Complete job	2021-12-01T13:01:05.2042587Z Terminate orphan process: pid (1625) (java)
