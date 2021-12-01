@@ -17,7 +17,7 @@ public abstract class LogParser {
     public final String rightLogFile;
     public final Map<String, List<String>> leftSteps;
     public final Map<String, List<String>> rightSteps;
-    private final Properties options;
+    public final Properties options;
 
     private LogParser(String leftLogFile, String rightLogFile, Properties options) {
         this.options = options;
@@ -57,13 +57,13 @@ public abstract class LogParser {
         final static String DEFAULT_TIMESTAMP_SIZE = "0";
         final int timestampSize;
 
-        public DefaultLogParser(String leftLogFile, String rightLogFile, Properties options) {
+        private DefaultLogParser(String leftLogFile, String rightLogFile, Properties options) {
             super(leftLogFile, rightLogFile, options);
             this.timestampSize = Integer.parseInt(options.getProperty(
                     Options.PARSER_DEFAULT_TIMESTAMPSIZE, DEFAULT_TIMESTAMP_SIZE));
         }
 
-        public void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
+        protected void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
             Files.lines(Paths.get(logFile)).forEach(
                 line -> {
                     if (line.length() < timestampSize)
@@ -80,11 +80,11 @@ public abstract class LogParser {
         final static Pattern LOG_LINE_REGEXP = Pattern.compile("([^\\t]+)\\t([^\\t]+)\\t(.*)");
         final static int TIMESTAMP_SIZE = 29;
 
-        public GithubLogParser(String leftLogFile, String rightLogFile, Properties options) {
+        private GithubLogParser(String leftLogFile, String rightLogFile, Properties options) {
             super(leftLogFile, rightLogFile, options);
         }
 
-        public void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
+        protected void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
             Files.lines(Paths.get(logFile)).forEach(
                 line -> {
                     final Matcher m = LOG_LINE_REGEXP.matcher(line);
