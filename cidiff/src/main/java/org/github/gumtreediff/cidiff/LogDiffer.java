@@ -55,15 +55,15 @@ public class LogDiffer {
         for (Action action : logDiffer.getLeftActions()) {
             if (action.type == Action.Type.UPDATED && displayUpdated) {
                 final String leftlineNumber = String.format(lineFormat, action.leftLocation + 1);
-                final String leftOutput = String.format("\tU[%s] %s", leftlineNumber, leftLines.get(action.leftLocation));
+                final String leftOutput = String.format("\t> %s %s", leftlineNumber, leftLines.get(action.leftLocation));
                 System.out.println(leftOutput);
                 final String rightlineNumber = String.format(lineFormat, action.rightLocation + 1);
-                final String rightOutput = String.format("\t [%s] %s", rightlineNumber, rightLines.get(action.rightLocation));
+                final String rightOutput = String.format("\t  %s %s", rightlineNumber, rightLines.get(action.rightLocation));
                 System.out.println(rightOutput);
             }
             else if (action.type == Action.Type.DELETED && displayDeleted) {
                 final String leftlineNumber = String.format(lineFormat, action.leftLocation + 1);
-                final String output = String.format("%s\tD[%s] %s%s", RED_FONT, leftlineNumber,
+                final String output = String.format("%s\t- %s %s%s", RED_FONT, leftlineNumber,
                     leftLines.get(action.leftLocation), NO_COLOR_FONT);
                 System.out.println(output);
             }
@@ -71,7 +71,7 @@ public class LogDiffer {
         for (Action action : logDiffer.getRightActions()) {
             if (action.type == Action.Type.ADDED && displayAdded) {
                 final String rightlineNumber = String.format(lineFormat, action.rightLocation + 1);
-                final String output = String.format("%s\tA[%s] %s%s", GREEN_FONT, rightlineNumber,
+                final String output = String.format("%s\t+ %s %s%s", GREEN_FONT, rightlineNumber,
                     rightLines.get(action.rightLocation), NO_COLOR_FONT);
                 System.out.println(output);
             }
