@@ -1,4 +1,4 @@
-name: Build, Test and Deploy GumTree
+name: Build and test cidiff
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
+    if: "!(contains(github.event.head_commit.message, '[no ci]') || startsWith(github.event.head_commit.message, 'doc'))"
     steps:
       - name: checkout cidiff
         uses: actions/checkout@v2
