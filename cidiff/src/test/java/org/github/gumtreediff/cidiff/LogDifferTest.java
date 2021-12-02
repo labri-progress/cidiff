@@ -48,7 +48,7 @@ class LogDifferTest {
         options.setProperty(Options.DIFFER_UPDATED, "true");
         LogDiffer d = new LogDiffer("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", options);
         System.out.println(outContent);
-        assertTrue(outContent.toString().contains("D[3] Foo"));
+        assertTrue(outContent.toString().contains("D[3] Fooo"));
         assertTrue(outContent.toString().contains("A[4] Bar"));
         assertTrue(outContent.toString().contains("U[2] Current runner version: '2.283.2'"));
         assertTrue(outContent.toString().contains(" [2] Current runner version: '2.283.3'"));

@@ -2,6 +2,7 @@ package org.github.gumtreediff.cidiff;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -11,9 +12,9 @@ public class StepDifferTest {
     @Test
     void rewriteSimTest() {
         assertEquals(0.0, StepDiffer.rewriteSim("A B C", "A B C D"), 0.001);
-        assertEquals(0.666, StepDiffer.rewriteSim("A B C", "A E C"), 0.001);
-        assertEquals(0.333, StepDiffer.rewriteSim("A B C", "A E F"), 0.001);
-        assertEquals(0.0, StepDiffer.rewriteSim("A B C", "G E F"), 0.001);
+        assertEquals(0.666, StepDiffer.rewriteSim("A B C", "A EE C"), 0.001);
+        assertEquals(0.333, StepDiffer.rewriteSim("A B C", "A EE FF"), 0.001);
+        assertEquals(0.0, StepDiffer.rewriteSim("A B C", "GG EE FF"), 0.001);
     }
 
     @Test
@@ -66,8 +67,8 @@ public class StepDifferTest {
 
     @Test
     void testUpdatedCode() {
-        List<String> leftLines = Arrays.asList("Build status failed", "Running time: 22s", "Foo Bar", "Foo");
-        List<String> rightLines = Arrays.asList("Build status OK", "Running times: 22s", "Foo Baz", "Bar");
+        List<String> leftLines = Arrays.asList("Build status failed", "Running time: 22s", "Foo Bar", "Foo", "Foo Foo");
+        List<String> rightLines = Arrays.asList("Build status OK", "Running times: 22s", "Foo Baz", "Bar", "Fooo Fooo");
         StepDiffer d = new StepDiffer(leftLines, rightLines);
         assertEquals(Action.updated(0, 0), d.leftActions[0]);
         assertEquals(Action.updated(0, 0), d.rightActions[0]);
@@ -75,7 +76,9 @@ public class StepDifferTest {
         assertEquals(Action.updated(1, 1), d.rightActions[1]);
         assertEquals(Action.updated(2, 2), d.leftActions[2]);
         assertEquals(Action.updated(2, 2), d.rightActions[2]);
-        assertEquals(Action.deleted(3), d.leftActions[3]);
-        assertEquals(Action.added(3), d.rightActions[3]);
+        assertEquals(Action.updated(3, 3), d.leftActions[3]);
+        assertEquals(Action.updated(3, 3), d.rightActions[3]);
+        assertEquals(Action.deleted(4), d.leftActions[4]);
+        assertEquals(Action.added(4), d.rightActions[4]);
     }
 }

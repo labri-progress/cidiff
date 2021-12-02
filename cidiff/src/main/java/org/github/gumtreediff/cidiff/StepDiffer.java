@@ -87,9 +87,14 @@ public class StepDiffer {
 
         // number of distinct tokens
         int dist = 0;
-        for (int i = 0; i < leftTokens.length; i++)
-            if (!leftTokens[i].equals(rightTokens[i]))
+        for (int i = 0; i < leftTokens.length; i++) {
+            boolean matched = false;
+            if (leftTokens[i].length() == rightTokens[i].length())
+                matched = true;
+
+            if (!matched)
                 dist++;
+        }
 
         return (double) (leftTokens.length - dist) / (double) leftTokens.length;
     }
