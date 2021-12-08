@@ -1,5 +1,6 @@
 package org.github.gumtreediff.cidiff;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -54,34 +55,55 @@ public class LogDiffer {
 
     private void diffStep(String step) {
         System.out.println(BOLD_FONT + "Diffing step [" + step + "]" + REGULAR_FONT);
-        final List<String> leftLines = parser.steps.left.get(step);
-        final List<String> rightLines = parser.steps.right.get(step);
-        Pair<Action[]> actions = differ.diffStep(new Pair<>(leftLines, rightLines));
+        final var leftLines = parser.steps.left.get(step);
+        final var rightLines = parser.steps.right.get(step);
+        final var actions = differ.diffStep(new Pair<>(leftLines, rightLines));
         final int maxLineNumberSize = Integer.toString(Math.max(actions.left.length,
                 actions.right.length)).length();
-        final String lineFormat = "%0" + maxLineNumberSize + "d";
-        for (Action action : actions.left) {
+        final var lineFormat = "%0" + maxLineNumberSize + "d";
+        var lastDisplayed = 0;
+        for (int i = 0; i < actions.left.length; i++) {
+            final var action = actions.left[i];
+
             if (action.type == Action.Type.UPDATED && displayUpdated) {
-                final String leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
-                final String leftOutput = String.format("\t> %s %s",
+                boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
+                if (newLine)
+                    System.out.println();
+
+                lastDisplayed = i;
+                final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
+                final var leftOutput = String.format("\t> %s %s",
                         leftLineNumber, leftLines.get(action.leftLocation));
                 System.out.println(leftOutput);
-                final String rightLineNumber = String.format(lineFormat, action.rightLocation + 1);
-                final String rightOutput = String.format("\t  %s %s",
+                final var rightLineNumber = String.format(lineFormat, action.rightLocation + 1);
+                final var rightOutput = String.format("\t  %s %s",
                         rightLineNumber, rightLines.get(action.rightLocation));
                 System.out.println(rightOutput);
             }
             else if (action.type == Action.Type.DELETED && displayDeleted) {
-                final String leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
-                final String output = String.format("%s\t- %s %s%s", RED_FONT, leftLineNumber,
+                boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
+                if (newLine)
+                    System.out.println();
+
+                lastDisplayed = i;
+                final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
+                final var output = String.format("%s\t- %s %s%s", RED_FONT, leftLineNumber,
                     leftLines.get(action.leftLocation), NO_COLOR_FONT);
                 System.out.println(output);
             }
         }
-        for (Action action : actions.right) {
+
+        lastDisplayed = 0;
+        for (int i = 0; i < actions.right.length; i++) {
+            final var action = actions.right[i];
             if (action.type == Action.Type.ADDED && displayAdded) {
-                final String rightlineNumber = String.format(lineFormat, action.rightLocation + 1);
-                final String output = String.format("%s\t+ %s %s%s", GREEN_FONT, rightlineNumber,
+                boolean newLine = lastDisplayed == 0 || lastDisplayed != i - 1;
+                if (newLine)
+                    System.out.println();
+
+                lastDisplayed = i;
+                final var rightlineNumber = String.format(lineFormat, action.rightLocation + 1);
+                final var output = String.format("%s\t+ %s %s%s", GREEN_FONT, rightlineNumber,
                     rightLines.get(action.rightLocation), NO_COLOR_FONT);
                 System.out.println(output);
             }
