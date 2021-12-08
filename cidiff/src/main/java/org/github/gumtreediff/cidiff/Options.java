@@ -6,6 +6,11 @@ public final class Options {
     public static final String DIFFER_ADDED = "differ.added";
     public static final String DIFFER_DELETED = "differ.deleted";
 
+    public static final String DIFFER_REWRITE_MIN = "differ.rewrite.min";
+
+    public static final String DIFFER_SEED_BLOCK = "differ.seed.block";
+    public static final String DIFFER_SEED_WINDOW = "differ.seed.window";
+
     public static final String PARSER = "parser";
     public static final String PARSER_DEFAULT_TRIM = "parser.default.trim";
 

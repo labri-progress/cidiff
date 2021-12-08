@@ -10,13 +10,6 @@ import java.util.Properties;
 
 public class BruteForceStepDifferTest {
     private static final Properties options = new Properties();
-    @Test
-    void rewriteSimTest() {
-        assertEquals(0.0, BruteForceStepDiffer.rewriteSim("A B C", "A B C D"), 0.001);
-        assertEquals(0.666, BruteForceStepDiffer.rewriteSim("A B C", "A EE C"), 0.001);
-        assertEquals(0.333, BruteForceStepDiffer.rewriteSim("A B C", "A EE FF"), 0.001);
-        assertEquals(0.0, BruteForceStepDiffer.rewriteSim("A B C", "GG EE FF"), 0.001);
-    }
 
     @Test
     void testUnchangedCode1() {

@@ -6,7 +6,8 @@ import java.util.Properties;
 public interface StepDiffer {
     enum Algorithm {
         BRUTE_FORCE,
-        LCS
+        LCS,
+        SEED_EXTEND,
     }
     Pair<Action[]> diffStep(Pair<List<String>> lines);
 
@@ -14,6 +15,7 @@ public interface StepDiffer {
         return switch (algorithm) {
             case BRUTE_FORCE -> new BruteForceStepDiffer(options);
             case LCS -> new LcsStepDiffer(options);
+            case SEED_EXTEND -> new SeedExtendDiffer(options);
         };
     }
 }

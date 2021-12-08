@@ -4,20 +4,18 @@ import java.util.List;
 import java.util.Properties;
 
 public final class BruteForceStepDiffer extends AbstractStepDiffer {
-    Pair<List<String>> lines;
-    Pair<Action[]> actions;
+    private final static String DEFAULT_REWRITE_MIN = "0.5";
 
-    final static String TOKEN_SEPARATORS = "\\s+";
-    final static double MIN_REWRITE_SIM = 0.5;
+    private final double rewriteMin;
 
     public BruteForceStepDiffer(Properties options) {
         super(options);
+        rewriteMin = Double.parseDouble(options.getProperty(Options.DIFFER_REWRITE_MIN, DEFAULT_REWRITE_MIN));
     }
 
     @Override
     public Pair<Action[]> diffStep(Pair<List<String>> lines) {
-        this.lines = lines;
-        this.actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
+        Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
 
         // Identify unchanged lines
         for (int i = 0; i < lines.left.size(); i++) {
@@ -47,8 +45,8 @@ public final class BruteForceStepDiffer extends AbstractStepDiffer {
                     continue;
 
                 final String rightLine = lines.right.get(j);
-                final double sim = rewriteSim(leftLine, rightLine);
-                if (sim >= MIN_REWRITE_SIM) {
+                final double sim = Utils.rewriteSim(leftLine, rightLine);
+                if (sim >= rewriteMin) {
                     Action action = Action.updated(i, j);
                     actions.left[i] = action;
                     actions.right[j] = action;
@@ -68,23 +66,5 @@ public final class BruteForceStepDiffer extends AbstractStepDiffer {
                 actions.right[i] = Action.added(i);
 
         return actions;
-    }
-
-    static double rewriteSim(String leftLine, String rightLine) {
-        final String[] leftTokens = leftLine.split(TOKEN_SEPARATORS);
-        final String[] rightTokens = rightLine.split(TOKEN_SEPARATORS);
-
-        // lowest similarity if the number of tokens is distinct
-        if (leftTokens.length != rightTokens.length)
-            return 0.0;
-
-        // number of distinct tokens
-        int dist = 0;
-        for (int i = 0; i < leftTokens.length; i++) {
-            if (leftTokens[i].length() != rightTokens[i].length())
-                dist++;
-        }
-
-        return (double) (leftTokens.length - dist) / (double) leftTokens.length;
     }
 }
