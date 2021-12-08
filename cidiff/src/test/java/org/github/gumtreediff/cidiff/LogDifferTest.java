@@ -33,12 +33,12 @@ class LogDifferTest {
         final Properties options = new Properties();
         options.setProperty("parser", "GITHUB");
         LogDiffer d = new LogDiffer("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", options);
-        assertEquals(1, d.parser.leftSteps.keySet().size());
-        assertTrue(d.parser.leftSteps.containsKey("Set up job"));
-        assertEquals(1, d.parser.rightSteps.keySet().size());
-        assertTrue(d.parser.rightSteps.containsKey("Set up job"));
-        assertEquals(4, d.parser.leftSteps.get("Set up job").size());
-        assertEquals(4, d.parser.rightSteps.get("Set up job").size());
+        assertEquals(1, d.parser.steps.left.keySet().size());
+        assertTrue(d.parser.steps.left.containsKey("Set up job"));
+        assertEquals(1, d.parser.steps.right.keySet().size());
+        assertTrue(d.parser.steps.right.containsKey("Set up job"));
+        assertEquals(4, d.parser.steps.left.get("Set up job").size());
+        assertEquals(4, d.parser.steps.right.get("Set up job").size());
     }
 
     @Test
@@ -59,10 +59,10 @@ class LogDifferTest {
         final Properties options = new Properties();
         options.setProperty("parser", "GITHUB");
         LogDiffer d = new LogDiffer("../data/gumtree_191.log.csv", "../data/gumtree_192.log.csv", options);
-        assertEquals(14, d.parser.leftSteps.keySet().size());
-        assertTrue(d.parser.leftSteps.containsKey("Set up job"));
-        assertEquals(14, d.parser.rightSteps.keySet().size());
-        assertTrue(d.parser.rightSteps.containsKey("Set up job"));
+        assertEquals(14, d.parser.steps.left.keySet().size());
+        assertTrue(d.parser.steps.left.containsKey("Set up job"));
+        assertEquals(14, d.parser.steps.right.keySet().size());
+        assertTrue(d.parser.steps.right.containsKey("Set up job"));
     }
 
     @Test
@@ -70,7 +70,7 @@ class LogDifferTest {
         final Properties options = new Properties();
         options.setProperty("parser", "DEFAULT");
         LogDiffer d = new LogDiffer("../data/astor_399.log.csv", "../data/astor_400.log.csv", options);
-        assertEquals(1, d.parser.leftSteps.keySet().size());
-        assertEquals(1, d.parser.rightSteps.keySet().size());
+        assertEquals(1, d.parser.steps.left.keySet().size());
+        assertEquals(1, d.parser.steps.right.keySet().size());
     }
 }

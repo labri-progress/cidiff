@@ -13,25 +13,21 @@ public abstract class LogParser {
         DEFAULT
     }
 
-    public final String leftLogFile;
-    public final String rightLogFile;
-    public final Map<String, List<String>> leftSteps;
-    public final Map<String, List<String>> rightSteps;
+    public final Pair<String> logFiles;
+    public final Pair<Map<String, List<String>>> steps;
     public final Properties options;
 
     private LogParser(String leftLogFile, String rightLogFile, Properties options) {
         this.options = options;
-        this.leftLogFile = leftLogFile;
-        this.rightLogFile = rightLogFile;
-        this.leftSteps = new LinkedHashMap<>();
-        this.rightSteps = new LinkedHashMap<>();
+        this.logFiles = new Pair<>(leftLogFile, rightLogFile);
+        this.steps = new Pair<>(new LinkedHashMap<>(), new LinkedHashMap<>());
         parse();
     }
     
     protected void parse() {
         try {
-            loadLog(leftLogFile, leftSteps);
-            loadLog(rightLogFile, rightSteps);
+            loadLog(logFiles.left, steps.left);
+            loadLog(logFiles.right, steps.right);
         }
         catch (IOException e) {
             throw new IllegalArgumentException("Error parsing logs");

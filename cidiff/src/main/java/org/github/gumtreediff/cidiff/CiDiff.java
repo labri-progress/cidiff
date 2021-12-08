@@ -10,7 +10,7 @@ public class CiDiff {
         final LogDiffer d = new LogDiffer(leftLogFile, rightLogFile, options);
     }
 
-    private static Properties parseOptions(String args[]) {
+    static Properties parseOptions(String args[]) {
         final Properties options = new Properties();
         if (args.length > 2) {
             if ((args.length - 2) % 3 != 0)
