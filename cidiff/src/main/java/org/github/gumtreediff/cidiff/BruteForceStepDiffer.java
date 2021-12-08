@@ -1,13 +1,18 @@
 package org.github.gumtreediff.cidiff;
 
 import java.util.List;
+import java.util.Properties;
 
-public class BruteForceStepDiffer implements StepDiffer {
+public final class BruteForceStepDiffer extends AbstractStepDiffer {
     Pair<List<String>> lines;
     Pair<Action[]> actions;
 
     final static String TOKEN_SEPARATORS = "\\s+";
     final static double MIN_REWRITE_SIM = 0.5;
+
+    public BruteForceStepDiffer(Properties options) {
+        super(options);
+    }
 
     @Override
     public Pair<Action[]> diffStep(Pair<List<String>> lines) {

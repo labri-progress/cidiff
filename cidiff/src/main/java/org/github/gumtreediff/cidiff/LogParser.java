@@ -8,9 +8,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class LogParser {
+    static String DEFAULT_PARSER = "DEFAULT";
+
     public enum Type {
         GITHUB,
         DEFAULT
+    }
+
+    public static LogParser get(String leftLogFile, String rightLogFile, Properties options) {
+        Type type = Type.valueOf(options.getProperty(Options.PARSER, DEFAULT_PARSER));
+        return switch (type) {
+            case GITHUB -> new GithubLogParser(leftLogFile, rightLogFile, options);
+            case DEFAULT -> new DefaultLogParser(leftLogFile, rightLogFile, options);
+        };
     }
 
     public final Pair<String> logFiles;
@@ -35,18 +45,6 @@ public abstract class LogParser {
     }
 
     protected abstract void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException;
-
-    public static LogParser getParser(String leftLogFile, String rightLogFile, Properties options) {
-        Type type = Type.valueOf(options.getProperty(Options.PARSER, "DEFAULT"));
-        switch (type) {
-            case GITHUB:
-                return new GithubLogParser(leftLogFile, rightLogFile, options);
-            case DEFAULT:
-                return new DefaultLogParser(leftLogFile, rightLogFile, options);
-        }
-
-        throw new IllegalArgumentException("Unable to create parser");
-    }
 
     public final static class DefaultLogParser extends LogParser {
         final static String DEFAULT_STEP = "default";

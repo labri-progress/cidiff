@@ -2,7 +2,7 @@ package org.github.gumtreediff.cidiff;
 
 import java.util.Objects;
 
-public class Action {
+public final class Action {
     public enum Type {
         ADDED,
         DELETED,

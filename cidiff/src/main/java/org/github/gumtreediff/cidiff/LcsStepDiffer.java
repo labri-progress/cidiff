@@ -3,8 +3,13 @@ package org.github.gumtreediff.cidiff;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
-public class LcsStepDiffer implements StepDiffer {
+public final class LcsStepDiffer extends AbstractStepDiffer {
+    public LcsStepDiffer(Properties options) {
+        super(options);
+    }
+
     @Override
     public Pair<Action[]> diffStep(Pair<List<String>> lines) {
         Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
@@ -27,38 +32,6 @@ public class LcsStepDiffer implements StepDiffer {
             if (actions.right[i] == null)
                 actions.right[i] = Action.added(i);
         return actions;
-    }
-
-    /**
-     * Returns the hunks of the longest common subsequence between s1 and s2.
-     *
-     * @return the hunks as a list of int arrays of size 4 with start index and end index of left sequence
-     * and corresponding start index and end index in right sequence.
-     */
-    static List<int[]> hunks(List<String> leftLines, List<String> rightLines) {
-        List<int[]> lcs = longestCommonSubsequence(leftLines, rightLines);
-        List<int[]> hunks = new ArrayList<int[]>();
-        int inf0 = -1;
-        int inf1 = -1;
-        int last0 = -1;
-        int last1 = -1;
-        for (int i = 0; i < lcs.size(); i++) {
-            int[] match = lcs.get(i);
-            if (inf0 == -1 || inf1 == -1) {
-                inf0 = match[0];
-                inf1 = match[1];
-            } else if (last0 + 1 != match[0] || last1 + 1 != match[1]) {
-                hunks.add(new int[]{inf0, last0 + 1, inf1, last1 + 1});
-                inf0 = match[0];
-                inf1 = match[1];
-            } else if (i == lcs.size() - 1) {
-                hunks.add(new int[]{inf0, match[0] + 1, inf1, match[1] + 1});
-                break;
-            }
-            last0 = match[0];
-            last1 = match[1];
-        }
-        return hunks;
     }
 
     /**

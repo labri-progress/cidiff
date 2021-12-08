@@ -21,8 +21,9 @@ public class LogDiffer {
 
     public LogDiffer(String leftLogFile, String rightLogFile, Properties options) {
         this.options = options;
-        this.differ = StepDiffer.get(StepDiffer.Algorithm.valueOf(options.getProperty(Options.DIFFER, DEFAULT_DIFFER)));
-        this.parser = LogParser.getParser(leftLogFile, rightLogFile, options);
+        this.differ = StepDiffer.get(StepDiffer.Algorithm.valueOf(
+                options.getProperty(Options.DIFFER, DEFAULT_DIFFER)), options);
+        this.parser = LogParser.get(leftLogFile, rightLogFile, options);
         this.displayUpdated = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UPDATED, "false"));
         this.displayAdded = Boolean.parseBoolean(options.getProperty(Options.DIFFER_ADDED, "true"));
         this.displayDeleted = Boolean.parseBoolean(options.getProperty(Options.DIFFER_DELETED, "true"));
@@ -61,18 +62,18 @@ public class LogDiffer {
         final String lineFormat = "%0" + maxLineNumberSize + "d";
         for (Action action : actions.left) {
             if (action.type == Action.Type.UPDATED && displayUpdated) {
-                final String leftlineNumber = String.format(lineFormat, action.leftLocation + 1);
+                final String leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
                 final String leftOutput = String.format("\t> %s %s",
-                        leftlineNumber, leftLines.get(action.leftLocation));
+                        leftLineNumber, leftLines.get(action.leftLocation));
                 System.out.println(leftOutput);
-                final String rightlineNumber = String.format(lineFormat, action.rightLocation + 1);
+                final String rightLineNumber = String.format(lineFormat, action.rightLocation + 1);
                 final String rightOutput = String.format("\t  %s %s",
-                        rightlineNumber, rightLines.get(action.rightLocation));
+                        rightLineNumber, rightLines.get(action.rightLocation));
                 System.out.println(rightOutput);
             }
             else if (action.type == Action.Type.DELETED && displayDeleted) {
-                final String leftlineNumber = String.format(lineFormat, action.leftLocation + 1);
-                final String output = String.format("%s\t- %s %s%s", RED_FONT, leftlineNumber,
+                final String leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
+                final String output = String.format("%s\t- %s %s%s", RED_FONT, leftLineNumber,
                     leftLines.get(action.leftLocation), NO_COLOR_FONT);
                 System.out.println(output);
             }

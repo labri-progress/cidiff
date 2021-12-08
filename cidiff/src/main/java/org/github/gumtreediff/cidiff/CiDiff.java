@@ -2,7 +2,7 @@ package org.github.gumtreediff.cidiff;
 
 import java.util.Properties;
 
-public class CiDiff {
+public final class CiDiff {
     public static void main(String[] args) {
         final String leftLogFile = args[0];
         final String rightLogFile = args[1];

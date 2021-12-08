@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
-public class StepDifferTest {
+public class BruteForceStepDifferTest {
+    private static final Properties options = new Properties();
     @Test
     void rewriteSimTest() {
         assertEquals(0.0, BruteForceStepDiffer.rewriteSim("A B C", "A B C D"), 0.001);
@@ -20,7 +22,7 @@ public class StepDifferTest {
     void testUnchangedCode1() {
         List<String> leftLines = Arrays.asList("Foo", "Bar", "Foo");
         List<String> rightLines = Arrays.asList("Foo", "Bar");
-        BruteForceStepDiffer d = new BruteForceStepDiffer();
+        BruteForceStepDiffer d = new BruteForceStepDiffer(options);
         Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
@@ -33,7 +35,7 @@ public class StepDifferTest {
     void testUnchangedCode2() {
         List<String> leftLines = Arrays.asList("Foo", "Foo");
         List<String> rightLines = Arrays.asList("Foo", "Foo", "Foo");
-        BruteForceStepDiffer d = new BruteForceStepDiffer();
+        StepDiffer d = new BruteForceStepDiffer(options);
         Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
@@ -46,7 +48,7 @@ public class StepDifferTest {
     void testDeletedCode() {
         List<String> leftLines = Arrays.asList("Foo", "Baz", "Foo");
         List<String> rightLines = Arrays.asList("Foo", "Foo");
-        BruteForceStepDiffer d = new BruteForceStepDiffer();
+        StepDiffer d = new BruteForceStepDiffer(options);
         Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
@@ -59,7 +61,7 @@ public class StepDifferTest {
     void testAddedCode() {
         List<String> leftLines = Arrays.asList("Foo", "Foo");
         List<String> rightLines = Arrays.asList("Foo", "Baz", "Foo");
-        BruteForceStepDiffer d = new BruteForceStepDiffer();
+        StepDiffer d = new BruteForceStepDiffer(options);
         Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
@@ -72,7 +74,7 @@ public class StepDifferTest {
     void testUpdatedCode() {
         List<String> leftLines = Arrays.asList("Build status failed", "Running time: 22s", "Foo Bar", "Foo", "Foo Foo");
         List<String> rightLines = Arrays.asList("Build status OK", "Running times: 22s", "Foo Baz", "Bar", "Fooo Fooo");
-        BruteForceStepDiffer d = new BruteForceStepDiffer();
+        StepDiffer d = new BruteForceStepDiffer(options);
         Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
         assertEquals(Action.updated(0, 0), actions.left[0]);
         assertEquals(Action.updated(0, 0), actions.right[0]);
