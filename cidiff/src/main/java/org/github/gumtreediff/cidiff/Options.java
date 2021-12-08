@@ -7,7 +7,7 @@ public final class Options {
     public static final String DIFFER_DELETED = "differ.deleted";
 
     public static final String PARSER = "parser";
-    public static final String PARSER_DEFAULT_TIMESTAMPSIZE = "parser.default.timestampSize";
+    public static final String PARSER_DEFAULT_TRIM = "parser.default.trim";
 
     private Options() {}
 }

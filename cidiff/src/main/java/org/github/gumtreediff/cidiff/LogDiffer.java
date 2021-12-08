@@ -25,13 +25,14 @@ public class LogDiffer {
         this.differ = StepDiffer.get(StepDiffer.Algorithm.valueOf(
                 options.getProperty(Options.DIFFER, DEFAULT_DIFFER)), options);
         this.parser = LogParser.get(leftLogFile, rightLogFile, options);
+        this.parser.parse();
         this.displayUpdated = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UPDATED, "false"));
         this.displayAdded = Boolean.parseBoolean(options.getProperty(Options.DIFFER_ADDED, "true"));
         this.displayDeleted = Boolean.parseBoolean(options.getProperty(Options.DIFFER_DELETED, "true"));
         diff();
     }
 
-    private void diff() {
+    public void diff() {
         analyzeLeftSteps();
         analyzeRightSteps();
     }

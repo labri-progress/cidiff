@@ -31,10 +31,9 @@ public abstract class LogParser {
         this.options = options;
         this.logFiles = new Pair<>(leftLogFile, rightLogFile);
         this.steps = new Pair<>(new LinkedHashMap<>(), new LinkedHashMap<>());
-        parse();
     }
     
-    protected void parse() {
+    public void parse() {
         try {
             loadLog(logFiles.left, steps.left);
             loadLog(logFiles.right, steps.right);
@@ -48,23 +47,23 @@ public abstract class LogParser {
 
     public final static class DefaultLogParser extends LogParser {
         final static String DEFAULT_STEP = "default";
-        final static String DEFAULT_TIMESTAMP_SIZE = "0";
-        final int timestampSize;
+        final static String DEFAULT_TRIM = "0";
+        final int trim;
 
         private DefaultLogParser(String leftLogFile, String rightLogFile, Properties options) {
             super(leftLogFile, rightLogFile, options);
-            this.timestampSize = Integer.parseInt(options.getProperty(
-                    Options.PARSER_DEFAULT_TIMESTAMPSIZE, DEFAULT_TIMESTAMP_SIZE));
+            this.trim = Integer.parseInt(options.getProperty(
+                    Options.PARSER_DEFAULT_TRIM, DEFAULT_TRIM));
         }
 
         protected void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
             Files.lines(Paths.get(logFile)).forEach(
                 line -> {
-                    if (line.length() < timestampSize)
+                    if (line.length() < trim)
                         throw new IllegalArgumentException("Illegal log format: " + line);
                     
                     logSteps.putIfAbsent(DEFAULT_STEP, new ArrayList<>());
-                    logSteps.get(DEFAULT_STEP).add(line.substring(timestampSize));
+                    logSteps.get(DEFAULT_STEP).add(line.substring(trim));
                 }
             );
         }
