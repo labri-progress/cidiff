@@ -6,7 +6,7 @@ import java.util.*;
 public class SeedExtendDiffer extends AbstractStepDiffer {
     private final static int PRIME = 31;
     private final static String DEFAULT_REWRITE_MIN = "0.5";
-    private final static String DEFAULT_BLOCK_SIZE = "5";
+    private final static String DEFAULT_BLOCK_SIZE = "3";
     private final static String DEFAULT_WINDOW_SIZE = "30";
 
     private final int blockSize;
@@ -43,6 +43,44 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
                         actions.right[rightInit + i] = action;
                     }
 
+                    // left extension
+                    var step = 1;
+                    while (true) {
+                        if (leftInit - step < 0 || rightInit - step < 0)
+                            break;
+                        if (actions.left[leftInit - step] != null || actions.right[rightInit - step] != null)
+                            break;
+
+                        final String leftLine = lines.left.get(leftInit - step);
+                        final String rightLine = lines.right.get(rightInit - step);
+                        final var action = makeAction(actions, leftLine, rightLine,
+                                leftInit - step, rightInit - step);
+                        if (action == null)
+                            break;
+
+                        step++;
+                    }
+
+                    // right extension
+                    step = 0;
+                    while (true) {
+                        if (leftInit + blockSize + step >= lines.left.size()
+                                ||  rightInit + blockSize + step >= lines.right.size())
+                            break;
+                        if (actions.left[leftInit + blockSize + step] != null
+                                || actions.right[rightInit + blockSize + step] != null)
+                            break;
+
+                        final String leftLine = lines.left.get(leftInit + blockSize + step);
+                        final String rightLine = lines.right.get(rightInit + blockSize + step);
+                        final var action = makeAction(actions, leftLine, rightLine,
+                                leftInit + blockSize + step, rightInit + blockSize + step);
+                        if (action == null)
+                            break;
+
+                        step++;
+                    }
+
                     final var leftMinBound = Math.max(0, leftInit - windowSize);
                     final var leftMaxBound = Math.min(leftInit + blockSize + windowSize, lines.left.size());
                     for (int i = leftMinBound; i < leftMaxBound; i++) {
@@ -58,20 +96,8 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
                                 continue;
 
                             final String rightLine = lines.right.get(j);
-
-                            if (leftLine.equals(rightLine)) {
-                                final var action = Action.unchanged(i, j);
-                                actions.left[i] = action;
-                                actions.right[j] = action;
-                            } else {
-                                final double sim = Utils.rewriteSim(leftLine, rightLine);
-                                if (sim >= rewriteMin) {
-                                    final var action = Action.updated(i, j);
-                                    actions.left[i] = action;
-                                    actions.right[j] = action;
-                                    break;
-                                }
-                            }
+                            if (makeAction(actions, leftLine, rightLine, i, j) != null)
+                                break;
                         }
                     }
                 }
@@ -89,6 +115,23 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
                 actions.right[i] = Action.added(i);
 
         return actions;
+    }
+
+    private Action makeAction(final Pair<Action[]> actions, final String leftLine, final String rightLine,
+                                     final int leftLocation, final int rightLocation) {
+        if (leftLine.equals(rightLine)) {
+            final var action = Action.unchanged(leftLocation, rightLocation);
+            actions.left[leftLocation] = action;
+            actions.right[rightLocation] = action;
+            return action;
+        }
+        else if (Utils.rewriteSim(leftLine, rightLine) >= rewriteMin) {
+            final var action = Action.updated(leftLocation, rightLocation);
+            actions.left[leftLocation] = action;
+            actions.right[rightLocation] = action;
+            return action;
+        }
+        return null;
     }
 
     private List<Pair<Integer>> mappings(int hash, Pair<Map<Integer, List<Integer>>> hashes, Pair<List<String>> lines) {
