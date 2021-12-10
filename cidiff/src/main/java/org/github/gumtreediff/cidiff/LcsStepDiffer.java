@@ -22,7 +22,7 @@ public final class LcsStepDiffer extends AbstractStepDiffer {
             actions.right[match[1]] = action;
         }
 
-        // Identify added lines
+        // Identify deleted lines
         for (int i = 0; i < lines.left.size(); i++)
             if (actions.left[i] == null)
                 actions.left[i] = Action.deleted(i);

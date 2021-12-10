@@ -1,5 +1,6 @@
 package org.github.gumtreediff.cidiff;
 
+import java.sql.Array;
 import java.util.*;
 
 public class SeedExtendDiffer extends AbstractStepDiffer {
@@ -21,6 +22,10 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
 
     @Override
     public Pair<Action[]> diffStep(Pair<List<String>> lines) {
+        if (lines.left.size() < blockSize + 2 * windowSize
+                || lines.right.size() < blockSize + 2 * windowSize)
+            return new BruteForceStepDiffer(options).diffStep(lines);
+
         Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
         Pair<Map<Integer, List<Integer>>> hashes = new Pair<>(new HashMap<>(), new HashMap<>());
         fillHash(lines.left, hashes.left);
@@ -28,40 +33,44 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
 
         // Identify unchanged and updated lines
         for (int hash : hashes.left.keySet()) {
-            if (hashes.right.containsKey(hash) && hashes.left.get(hash).size() == 1
-                    && hashes.right.get(hash).size() == 1) {
-                final int leftInit = hashes.left.get(hash).get(0);
-                final int rightInit = hashes.right.get(hash).get(0);
-                for (int i = 0; i < blockSize; i++) {
-                    final var action = Action.unchanged(leftInit + i, rightInit + i);
-                    actions.left[leftInit + i] = action;
-                    actions.right[rightInit + i] = action;
-                }
+            if (hashes.right.containsKey(hash)) {
+                for (Pair<Integer> matches : mappings(hash, hashes, lines)) {
+                    final int leftInit = matches.left;
+                    final int rightInit = matches.right;
+                    for (int i = 0; i < blockSize; i++) {
+                        final var action = Action.unchanged(leftInit + i, rightInit + i);
+                        actions.left[leftInit + i] = action;
+                        actions.right[rightInit + i] = action;
+                    }
 
-                for (int i = Math.max(0, leftInit - windowSize)
-                     ; i < Math.min(leftInit + blockSize + windowSize, lines.left.size()); i++) {
-                    if (actions.left[i] != null || (i >= leftInit && i < leftInit + blockSize))
-                        continue;
-
-                    final String leftLine = lines.left.get(i);
-                    for (int j = Math.max(0, rightInit - windowSize)
-                         ; j < Math.min(rightInit + blockSize + windowSize, lines.right.size()); j++) {
-                        if (actions.right[j] != null || (j >= rightInit && i < rightInit + blockSize))
+                    final var leftMinBound = Math.max(0, leftInit - windowSize);
+                    final var leftMaxBound = Math.min(leftInit + blockSize + windowSize, lines.left.size());
+                    for (int i = leftMinBound; i < leftMaxBound; i++) {
+                        if (actions.left[i] != null || (i >= leftInit && i < leftInit + blockSize))
                             continue;
 
-                        final String rightLine = lines.right.get(j);
-                        if (leftLine.equals(rightLine)) {
-                            final var action = Action.unchanged(i, j);
-                            actions.left[i] = action;
-                            actions.right[j] = action;
-                        }
-                        else {
-                            final double sim = Utils.rewriteSim(leftLine, rightLine);
-                            if (sim >= rewriteMin) {
-                                final var action = Action.updated(i, j);
+                        final String leftLine = lines.left.get(i);
+
+                        final var rightMinBound = Math.max(0, rightInit - windowSize);
+                        final var rightMaxBound = Math.min(rightInit + blockSize + windowSize, lines.right.size());
+                        for (int j = rightMinBound; j < rightMaxBound; j++) {
+                            if (actions.right[j] != null || (j >= rightInit && i < rightInit + blockSize))
+                                continue;
+
+                            final String rightLine = lines.right.get(j);
+
+                            if (leftLine.equals(rightLine)) {
+                                final var action = Action.unchanged(i, j);
                                 actions.left[i] = action;
                                 actions.right[j] = action;
-                                break;
+                            } else {
+                                final double sim = Utils.rewriteSim(leftLine, rightLine);
+                                if (sim >= rewriteMin) {
+                                    final var action = Action.updated(i, j);
+                                    actions.left[i] = action;
+                                    actions.right[j] = action;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -69,7 +78,7 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
             }
         }
 
-        // Identify added lines
+        // Identify deleted lines
         for (int i = 0; i < lines.left.size(); i++)
             if (actions.left[i] == null)
                 actions.left[i] = Action.deleted(i);
@@ -82,7 +91,49 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
         return actions;
     }
 
+    private List<Pair<Integer>> mappings(int hash, Pair<Map<Integer, List<Integer>>> hashes, Pair<List<String>> lines) {
+        List<Pair<Integer>> results = new ArrayList<>();
+        Set<Integer> rightMatched = new HashSet<>();
+        List<Integer> leftMatches = hashes.left.get(hash);
+        List<Integer> rightMatches = hashes.right.get(hash);
+
+        for (int leftMatch : leftMatches) {
+            int bestDist = Integer.MAX_VALUE;
+            int bestMatch = -1;
+            for (int rightMatch : rightMatches) {
+                if (rightMatched.contains(rightMatch))
+                    continue;
+
+                boolean ensureEquals = true;
+                for (int i = 0; i < blockSize; i++) {
+                    if (lines.left.get(leftMatch + i).length() != lines.right.get(rightMatch + i).length()) {
+                        ensureEquals = false;
+                        break;
+                    }
+                }
+
+                if (ensureEquals) {
+                    var dist = Math.abs(leftMatch - rightMatch);
+                    if (dist < bestDist) {
+                        bestDist = dist;
+                        bestMatch = rightMatch;
+                    }
+                }
+            }
+
+            if (bestMatch != -1) {
+                results.add(new Pair<>(leftMatch, bestMatch));
+                rightMatched.add(bestMatch);
+            }
+        }
+
+        return results;
+    }
+
     private void fillHash(final List<String> lines, final Map<Integer, List<Integer>> hashes) {
+        if (lines.size() < blockSize)
+            return;
+
         int hash = 0;
         for (int i = 0; i < blockSize; i++)
             hash += lines.get(i).hashCode() * Utils.fastExponentiation(PRIME, blockSize - i - 1);

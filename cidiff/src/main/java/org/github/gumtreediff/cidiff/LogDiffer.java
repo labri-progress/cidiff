@@ -9,6 +9,7 @@ public class LogDiffer {
     final StepDiffer differ;
     final Properties options;
     final boolean displayUpdated;
+    final boolean displayUnchanged;
     final boolean displayAdded;
     final boolean displayDeleted;
 
@@ -27,6 +28,7 @@ public class LogDiffer {
         this.parser = LogParser.get(leftLogFile, rightLogFile, options);
         this.parser.parse();
         this.displayUpdated = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UPDATED, "false"));
+        this.displayUnchanged = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UNCHANGED, "false"));
         this.displayAdded = Boolean.parseBoolean(options.getProperty(Options.DIFFER_ADDED, "true"));
         this.displayDeleted = Boolean.parseBoolean(options.getProperty(Options.DIFFER_DELETED, "true"));
         diff();
@@ -74,6 +76,21 @@ public class LogDiffer {
                 lastDisplayed = i;
                 final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
                 final var leftOutput = String.format("\t> %s %s",
+                        leftLineNumber, leftLines.get(action.leftLocation));
+                System.out.println(leftOutput);
+                final var rightLineNumber = String.format(lineFormat, action.rightLocation + 1);
+                final var rightOutput = String.format("\t  %s %s",
+                        rightLineNumber, rightLines.get(action.rightLocation));
+                System.out.println(rightOutput);
+            }
+            else if (action.type == Action.Type.UNCHANGED && displayUnchanged) {
+                boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
+                if (newLine)
+                    System.out.println();
+
+                lastDisplayed = i;
+                final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
+                final var leftOutput = String.format("\t= %s %s",
                         leftLineNumber, leftLines.get(action.leftLocation));
                 System.out.println(leftOutput);
                 final var rightLineNumber = String.format(lineFormat, action.rightLocation + 1);
