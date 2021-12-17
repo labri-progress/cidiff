@@ -1,5 +1,9 @@
 package org.github.gumtreediff.cidiff;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
+
 public final class Options {
     public static final String DIFFER = "differ";
     public static final String DIFFER_UPDATED = "differ.updated";
@@ -16,4 +20,20 @@ public final class Options {
     public static final String PARSER_DEFAULT_TRIM = "parser.default.trim";
 
     private Options() {}
+
+    public static Set<String> allOptions() {
+        var fields = Arrays.stream(Options.class.getDeclaredFields())
+                .filter(f -> Modifier.isStatic(f.getModifiers())).toList();
+        Set<String> options = new HashSet<>();
+        try {
+            for (Field f : fields)
+                options.add((String) f.get(null));
+        }
+        catch (IllegalAccessException e) {
+            System.err.println(e);
+        }
+        finally {
+            return options;
+        }
+    }
 }

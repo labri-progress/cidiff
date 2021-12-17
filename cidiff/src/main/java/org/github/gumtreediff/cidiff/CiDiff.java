@@ -1,6 +1,7 @@
 package org.github.gumtreediff.cidiff;
 
 import java.util.Properties;
+import java.util.Set;
 
 public final class CiDiff {
     public static void main(String[] args) {
@@ -11,6 +12,7 @@ public final class CiDiff {
     }
 
     static Properties parseOptions(String args[]) {
+        Set<String> allOptions = Options.allOptions();
         final Properties options = new Properties();
         if (args.length > 2) {
             if ((args.length - 2) % 3 != 0)
@@ -21,6 +23,9 @@ public final class CiDiff {
                     throw new IllegalArgumentException("Illegal option flag: " + option);
 
                 final String key = args[i + 1];
+                if (!allOptions.contains(key))
+                    throw new IllegalArgumentException("Illegal option: " + key);
+                
                 final String value = args[i + 2];
                 options.setProperty(key, value);
             }
