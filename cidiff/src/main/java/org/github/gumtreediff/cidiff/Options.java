@@ -32,8 +32,6 @@ public final class Options {
         catch (IllegalAccessException e) {
             System.err.println(e);
         }
-        finally {
-            return options;
-        }
+        return options;
     }
 }

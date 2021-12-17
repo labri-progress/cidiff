@@ -1,6 +1,5 @@
 package org.github.gumtreediff.cidiff;
 
-import java.sql.Array;
 import java.util.*;
 
 public class SeedExtendDiffer extends AbstractStepDiffer {

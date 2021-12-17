@@ -1,7 +1,5 @@
 package org.github.gumtreediff.cidiff;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 public class LogDiffer {

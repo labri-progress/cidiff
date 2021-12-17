@@ -46,7 +46,7 @@ class LogDifferTest {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER, "GITHUB");
         options.setProperty(Options.DIFFER_UPDATED, "true");
-        LogDiffer d = new LogDiffer("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", options);
+        new LogDiffer("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", options);
         System.out.println(outContent);
         assertTrue(outContent.toString().contains("- 3 Fooo"));
         assertTrue(outContent.toString().contains("+ 4 Bar"));

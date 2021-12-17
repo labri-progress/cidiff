@@ -8,7 +8,7 @@ public final class CiDiff {
         final String leftLogFile = args[0];
         final String rightLogFile = args[1];
         final Properties options = parseOptions(args);
-        final LogDiffer d = new LogDiffer(leftLogFile, rightLogFile, options);
+        new LogDiffer(leftLogFile, rightLogFile, options);
     }
 
     static Properties parseOptions(String args[]) {
