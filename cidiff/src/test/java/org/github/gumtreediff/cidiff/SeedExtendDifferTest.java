@@ -12,26 +12,24 @@ public class SeedExtendDifferTest {
     private static final Properties getOptions() {
         Properties options = new Properties();
         options.setProperty(Options.DIFFER_SEED_BLOCK, "2");
-        options.setProperty(Options.DIFFER_SEED_WINDOW, "5");
+        options.setProperty(Options.DIFFER_SEED_WINDOW, "2");
         return options;
     }
 
     @Test
-    void testUnchangedCode1() {
-        List<String> leftLines = Arrays.asList("Foo", "Bar");
-        List<String> rightLines = Arrays.asList("Foo", "Bar");
+    void testFallback() {
+        List<String> leftLines = Arrays.asList("Foo");
+        List<String> rightLines = Arrays.asList("Foo");
         StepDiffer d = new SeedExtendDiffer(getOptions());
         Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
-        assertEquals(Action.unchanged(1, 1), actions.left[1]);
-        assertEquals(Action.unchanged(1, 1), actions.right[1]);
     }
 
     @Test
-    void testUpdatedCode2() {
-        List<String> leftLines = Arrays.asList("Same1", "Foo", "Bar", "Same1", "Same");
-        List<String> rightLines = Arrays.asList("Same2", "Foo", "Bar", "Same2", "Same");
+    void testUpdatedCode() {
+        List<String> leftLines = Arrays.asList("Distinct1", "Same1", "Same1", "Distinct1", "Same2", "Same2");
+        List<String> rightLines = Arrays.asList("Distinct2", "Same1", "Same1", "Distinct2", "Same2", "Same2");
         StepDiffer d = new SeedExtendDiffer(getOptions());
         Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
         assertEquals(Action.updated(0, 0), actions.left[0]);

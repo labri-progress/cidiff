@@ -23,7 +23,7 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
     public Pair<Action[]> diffStep(Pair<List<String>> lines) {
         if (lines.left.size() < blockSize + 2 * windowSize
                 || lines.right.size() < blockSize + 2 * windowSize)
-            return new BruteForceStepDiffer(options).diffStep(lines);
+            return new BruteForceStepDiffer(options).diffStep(lines); // Fallback to brute force for small logs
 
         Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
         Pair<Map<Integer, List<Integer>>> hashes = new Pair<>(new HashMap<>(), new HashMap<>());
@@ -36,6 +36,7 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
                 for (Pair<Integer> matches : mappings(hash, hashes, lines)) {
                     final int leftInit = matches.left;
                     final int rightInit = matches.right;
+
                     for (int i = 0; i < blockSize; i++) {
                         final var action = Action.unchanged(leftInit + i, rightInit + i);
                         actions.left[leftInit + i] = action;
