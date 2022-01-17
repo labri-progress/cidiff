@@ -23,31 +23,27 @@ public final class BruteForceStepDiffer extends AbstractStepDiffer {
             final String leftLine = lines.left.get(i);
             for (int j = 0; j < lines.right.size(); j++) {
                 int upperIndex = lastRightUnchanged + j;
-
-                if (upperIndex >= actions.right.length  || actions.right[upperIndex] != null)
-                    continue;
-
-                final String upperRightLine = lines.right.get(upperIndex);
-                if (leftLine.equals(upperRightLine)) {
-                    lastRightUnchanged = upperIndex;
-                    Action action = Action.unchanged(i, upperIndex);
-                    actions.left[i] = action;
-                    actions.right[upperIndex] = action;
-                    break;
+                if (upperIndex < actions.right.length  && actions.right[upperIndex] == null) {
+                    final String upperRightLine = lines.right.get(upperIndex);
+                    if (leftLine.equals(upperRightLine)) {
+                        lastRightUnchanged = upperIndex;
+                        Action action = Action.unchanged(i, upperIndex);
+                        actions.left[i] = action;
+                        actions.right[upperIndex] = action;
+                        break;
+                    }
                 }
 
                 int lowerIndex = lastRightUnchanged - j;
-
-                if (lowerIndex < 0 || lowerIndex == upperIndex || actions.right[lowerIndex] != null)
-                    continue;
-
-                final String lowerRightLine = lines.right.get(lowerIndex);
-                if (leftLine.equals(lowerRightLine)) {
-                    lastRightUnchanged = lowerIndex;
-                    Action action = Action.unchanged(i, lowerIndex);
-                    actions.left[i] = action;
-                    actions.right[lowerIndex] = action;
-                    break;
+                if (lowerIndex > 0 && lowerIndex != upperIndex && actions.right[lowerIndex] == null) {
+                    final String lowerRightLine = lines.right.get(lowerIndex);
+                    if (leftLine.equals(lowerRightLine)) {
+                        lastRightUnchanged = lowerIndex;
+                        Action action = Action.unchanged(i, lowerIndex);
+                        actions.left[i] = action;
+                        actions.right[lowerIndex] = action;
+                        break;
+                    }
                 }
             }
         }
@@ -60,34 +56,30 @@ public final class BruteForceStepDiffer extends AbstractStepDiffer {
 
             final String leftLine = lines.left.get(i);
             for (int j = 0; j < lines.right.size(); j++) {
-                int upperIndex = lastRightUnchanged + j;
-
-                if (upperIndex >= actions.right.length  || actions.right[upperIndex] != null)
-                    continue;
-
-                final String upperRightLine = lines.right.get(upperIndex);
-                final double upperSim = Utils.rewriteSim(leftLine, upperRightLine);
-                if (upperSim >= rewriteMin) {
-                    lastRightUnchanged = upperIndex;
-                    Action action = Action.updated(i, upperIndex);
-                    actions.left[i] = action;
-                    actions.right[upperIndex] = action;
-                    break;
+                int upperIndex = lastRightUpdated + j;
+                if (upperIndex < actions.right.length  && actions.right[upperIndex] == null) {
+                    final String upperRightLine = lines.right.get(upperIndex);
+                    final double upperSim = Utils.rewriteSim(leftLine, upperRightLine);
+                    if (upperSim >= rewriteMin) {
+                        lastRightUpdated = upperIndex;
+                        Action action = Action.updated(i, upperIndex);
+                        actions.left[i] = action;
+                        actions.right[upperIndex] = action;
+                        break;
+                    }
                 }
 
-                int lowerIndex = lastRightUnchanged - j;
-
-                if (lowerIndex < 0 || lowerIndex == upperIndex || actions.right[lowerIndex] != null)
-                    continue;
-
-                final String lowerRightLine = lines.right.get(lowerIndex);
-                final double lowerSim = Utils.rewriteSim(leftLine, lowerRightLine);
-                if (lowerSim >= rewriteMin) {
-                    lastRightUnchanged = lowerIndex;
-                    Action action = Action.updated(i, lowerIndex);
-                    actions.left[i] = action;
-                    actions.right[lowerIndex] = action;
-                    break;
+                int lowerIndex = lastRightUpdated - j;
+                if (lowerIndex > 0 && lowerIndex != upperIndex && actions.right[lowerIndex] == null) {
+                    final String lowerRightLine = lines.right.get(lowerIndex);
+                    final double lowerSim = Utils.rewriteSim(leftLine, lowerRightLine);
+                    if (lowerSim >= rewriteMin) {
+                        lastRightUpdated = lowerIndex;
+                        Action action = Action.updated(i, lowerIndex);
+                        actions.left[i] = action;
+                        actions.right[lowerIndex] = action;
+                        break;
+                    }
                 }
             }
         }
