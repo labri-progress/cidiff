@@ -19,6 +19,8 @@ public class LogDiffer {
     final static String BOLD_FONT = "\033[1m";
     final static String REGULAR_FONT = "\033[0m";
 
+    Metrics metrics;
+
     public LogDiffer(String leftLogFile, String rightLogFile, Properties options) {
         this.options = options;
         this.differ = StepDiffer.get(StepDiffer.Algorithm.valueOf(
@@ -33,15 +35,22 @@ public class LogDiffer {
     }
 
     public void diff() {
+        metrics = new Metrics();
         analyzeLeftSteps();
         analyzeRightSteps();
     }
 
+    public Metrics getMetrics() {
+        return metrics;
+    }
+
     private void analyzeLeftSteps() {
         for (String leftStep : parser.steps.left.keySet()) {
-            if (!parser.steps.right.containsKey(leftStep))
+            if (!parser.steps.right.containsKey(leftStep)) {
+                metrics.deleted += parser.steps.left.get(leftStep).size();
                 System.out.println(RED_FONT + BOLD_FONT
                         + "Deleted step [" + leftStep + "]" + REGULAR_FONT + NO_COLOR_FONT);
+            }
             else
                 diffStep(leftStep);
         }
@@ -49,9 +58,11 @@ public class LogDiffer {
 
     private void analyzeRightSteps() {
         for (String rightStep : parser.steps.right.keySet())
-            if (!parser.steps.left.containsKey(rightStep))
+            if (!parser.steps.left.containsKey(rightStep)) {
+                metrics.deleted += parser.steps.left.get(rightStep).size();
                 System.out.println(GREEN_FONT + BOLD_FONT
                         + "Added step [" + rightStep + "]" + REGULAR_FONT + NO_COLOR_FONT);
+            }
     }
 
     private void diffStep(String step) {
@@ -66,63 +77,82 @@ public class LogDiffer {
         for (int i = 0; i < actions.left.length; i++) {
             final var action = actions.left[i];
 
-            if (action.type == Action.Type.UPDATED && displayUpdated) {
-                boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
-                if (newLine)
-                    System.out.println();
+            if (action.type == Action.Type.UPDATED) {
+                metrics.updated++;
+                if (displayUpdated) {
+                    boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
+                    if (newLine)
+                        System.out.println();
 
-                lastDisplayed = i;
-                final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
-                final var leftOutput = String.format("\t> %s %s",
-                        leftLineNumber, leftLines.get(action.leftLocation));
-                System.out.println(leftOutput);
-                final var rightLineNumber = String.format(lineFormat, action.rightLocation + 1);
-                final var rightOutput = String.format("\t  %s %s",
-                        rightLineNumber, rightLines.get(action.rightLocation));
-                System.out.println(rightOutput);
+                    lastDisplayed = i;
+                    final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
+                    final var leftOutput = String.format("\t> %s %s",
+                            leftLineNumber, leftLines.get(action.leftLocation));
+                    System.out.println(leftOutput);
+                    final var rightLineNumber = String.format(lineFormat, action.rightLocation + 1);
+                    final var rightOutput = String.format("\t  %s %s",
+                            rightLineNumber, rightLines.get(action.rightLocation));
+                    System.out.println(rightOutput);
+                }
             }
-            else if (action.type == Action.Type.UNCHANGED && displayUnchanged) {
-                boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
-                if (newLine)
-                    System.out.println();
+            else if (action.type == Action.Type.UNCHANGED) {
+                metrics.unchanged++;
+                if (displayUnchanged) {
+                    boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
+                    if (newLine)
+                        System.out.println();
 
-                lastDisplayed = i;
-                final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
-                final var leftOutput = String.format("\t= %s %s",
-                        leftLineNumber, leftLines.get(action.leftLocation));
-                System.out.println(leftOutput);
-                final var rightLineNumber = String.format(lineFormat, action.rightLocation + 1);
-                final var rightOutput = String.format("\t  %s %s",
-                        rightLineNumber, rightLines.get(action.rightLocation));
-                System.out.println(rightOutput);
+                    lastDisplayed = i;
+                    final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
+                    final var leftOutput = String.format("\t= %s %s",
+                            leftLineNumber, leftLines.get(action.leftLocation));
+                    System.out.println(leftOutput);
+                    final var rightLineNumber = String.format(lineFormat, action.rightLocation + 1);
+                    final var rightOutput = String.format("\t  %s %s",
+                            rightLineNumber, rightLines.get(action.rightLocation));
+                    System.out.println(rightOutput);
+                }
             }
-            else if (action.type == Action.Type.DELETED && displayDeleted) {
-                boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
-                if (newLine)
-                    System.out.println();
+            else if (action.type == Action.Type.DELETED) {
+                metrics.deleted++;
+                if (displayDeleted) {
+                    boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
+                    if (newLine)
+                        System.out.println();
 
-                lastDisplayed = i;
-                final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
-                final var output = String.format("%s\t- %s %s%s", RED_FONT, leftLineNumber,
-                    leftLines.get(action.leftLocation), NO_COLOR_FONT);
-                System.out.println(output);
+                    lastDisplayed = i;
+                    final var leftLineNumber = String.format(lineFormat, action.leftLocation + 1);
+                    final var output = String.format("%s\t- %s %s%s", RED_FONT, leftLineNumber,
+                            leftLines.get(action.leftLocation), NO_COLOR_FONT);
+                    System.out.println(output);
+                }
             }
         }
 
         lastDisplayed = 0;
         for (int i = 0; i < actions.right.length; i++) {
             final var action = actions.right[i];
-            if (action.type == Action.Type.ADDED && displayAdded) {
-                boolean newLine = lastDisplayed == 0 || lastDisplayed != i - 1;
-                if (newLine)
-                    System.out.println();
+            if (action.type == Action.Type.ADDED) {
+                metrics.added++;
+                if (displayAdded) {
+                    boolean newLine = lastDisplayed == 0 || lastDisplayed != i - 1;
+                    if (newLine)
+                        System.out.println();
 
-                lastDisplayed = i;
-                final var rightlineNumber = String.format(lineFormat, action.rightLocation + 1);
-                final var output = String.format("%s\t+ %s %s%s", GREEN_FONT, rightlineNumber,
-                    rightLines.get(action.rightLocation), NO_COLOR_FONT);
-                System.out.println(output);
+                    lastDisplayed = i;
+                    final var rightlineNumber = String.format(lineFormat, action.rightLocation + 1);
+                    final var output = String.format("%s\t+ %s %s%s", GREEN_FONT, rightlineNumber,
+                            rightLines.get(action.rightLocation), NO_COLOR_FONT);
+                    System.out.println(output);
+                }
             }
         }
+    }
+
+    public static final class Metrics {
+        public int added;
+        public int deleted;
+        public int updated;
+        public int unchanged;
     }
 }
