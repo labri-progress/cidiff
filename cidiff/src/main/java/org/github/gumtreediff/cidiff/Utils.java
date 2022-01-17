@@ -10,7 +10,7 @@ public final class Utils {
         if (leftTokens.length != rightTokens.length)
             return 0.0;
 
-        // number of distinct tokens
+        // number of distinct-length tokens
         int dist = 0;
         for (int i = 0; i < leftTokens.length; i++) {
             if (leftTokens[i].length() != rightTokens[i].length())
