@@ -23,7 +23,7 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
     public Pair<Action[]> diffStep(Pair<List<String>> lines) {
         if (lines.left.size() < blockSize + 2 * windowSize
                 || lines.right.size() < blockSize + 2 * windowSize)
-            return new BruteForceStepDiffer(options).diffStep(lines); // Fallback to brute force for small logs
+            return new AlternatingBruteForceStepDiffer(options).diffStep(lines); // Fallback to brute force for small logs
 
         Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
         Pair<Map<Integer, List<Integer>>> hashes = new Pair<>(new HashMap<>(), new HashMap<>());
