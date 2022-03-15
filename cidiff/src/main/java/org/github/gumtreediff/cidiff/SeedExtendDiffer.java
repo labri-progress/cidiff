@@ -2,7 +2,7 @@ package org.github.gumtreediff.cidiff;
 
 import java.util.*;
 
-public class SeedExtendDiffer extends AbstractStepDiffer {
+public class SeedExtendDiffer extends AbstractLogDiffer {
     private final static int PRIME = 31;
     private final static String DEFAULT_REWRITE_MIN = "0.5";
     private final static String DEFAULT_BLOCK_SIZE = "3";
@@ -20,10 +20,10 @@ public class SeedExtendDiffer extends AbstractStepDiffer {
     }
 
     @Override
-    public Pair<Action[]> diffStep(Pair<List<String>> lines) {
+    public Pair<Action[]> diff(Pair<List<String>> lines) {
         if (lines.left.size() < blockSize + 2 * windowSize
                 || lines.right.size() < blockSize + 2 * windowSize)
-            return new AlternatingBruteForceStepDiffer(options).diffStep(lines); // Fallback to brute force for small logs
+            return new AlternatingBruteForceLogDiffer(options).diff(lines); // Fallback to brute force for small logs
 
         Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
         Pair<Map<Integer, List<Integer>>> hashes = new Pair<>(new HashMap<>(), new HashMap<>());

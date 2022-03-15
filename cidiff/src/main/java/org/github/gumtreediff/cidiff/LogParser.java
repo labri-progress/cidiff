@@ -11,42 +11,43 @@ public abstract class LogParser {
     static String DEFAULT_PARSER = "DEFAULT";
 
     public enum Type {
-        GITHUB,
+        RAW_GITHUB,
+        FULL_GITHUB,
         DEFAULT
     }
 
     public static LogParser get(String leftLogFile, String rightLogFile, Properties options) {
         Type type = Type.valueOf(options.getProperty(Options.PARSER, DEFAULT_PARSER));
         return switch (type) {
-            case GITHUB -> new GithubLogParser(leftLogFile, rightLogFile, options);
+            case RAW_GITHUB -> new RawGithubLogParser(leftLogFile, rightLogFile, options);
+            case FULL_GITHUB -> new FullGithubLogParser(leftLogFile, rightLogFile, options);
             case DEFAULT -> new DefaultLogParser(leftLogFile, rightLogFile, options);
         };
     }
 
-    public final Pair<String> logFiles;
-    public final Pair<Map<String, List<String>>> steps;
+    public final Pair<String> files;
+    public final Pair<List<String>> lines;
     public final Properties options;
 
     private LogParser(String leftLogFile, String rightLogFile, Properties options) {
         this.options = options;
-        this.logFiles = new Pair<>(leftLogFile, rightLogFile);
-        this.steps = new Pair<>(new LinkedHashMap<>(), new LinkedHashMap<>());
+        this.files = new Pair<>(leftLogFile, rightLogFile);
+        this.lines = new Pair<>(new ArrayList<>(), new ArrayList<>());
     }
     
     public void parse() {
         try {
-            loadLog(logFiles.left, steps.left);
-            loadLog(logFiles.right, steps.right);
+            loadLog(files.left, lines.left);
+            loadLog(files.right, lines.right);
         }
         catch (IOException e) {
-            throw new IllegalArgumentException("Error parsing logs");
+            throw new IllegalArgumentException("Error parsing logs: " + e);
         }
     }
 
-    protected abstract void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException;
+    protected abstract void loadLog(String file, List<String> lines) throws IOException;
 
-    public final static class DefaultLogParser extends LogParser {
-        final static String DEFAULT_STEP = "default";
+    public static class DefaultLogParser extends LogParser {
         final static String DEFAULT_TRIM = "0";
         final int trim;
 
@@ -56,43 +57,60 @@ public abstract class LogParser {
                     Options.PARSER_DEFAULT_TRIM, DEFAULT_TRIM));
         }
 
-        protected void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
-            Files.lines(Paths.get(logFile)).forEach(
+        protected void loadLog(String file, List<String> lines) throws IOException {
+            Files.lines(Paths.get(file)).forEach(
                 line -> {
                     if (line.length() < trim)
                         throw new IllegalArgumentException("Illegal log format: " + line);
-                    
-                    logSteps.putIfAbsent(DEFAULT_STEP, new ArrayList<>());
-                    logSteps.get(DEFAULT_STEP).add(line.substring(trim));
+
+                    lines.add(line.substring(trim));
                 }
             );
         }
     }
 
-    public final static class GithubLogParser extends LogParser {
-        final static Pattern LOG_LINE_REGEXP = Pattern.compile("([^\\t]+)\\t([^\\t]+)\\t(.*)");
-        final static int TIMESTAMP_SIZE = 29;
+    public final static class RawGithubLogParser extends LogParser {
+        final static int TIMESTAMP_SIZE = 29; // GitHub logs have a 29 characters prefix
 
-        private GithubLogParser(String leftLogFile, String rightLogFile, Properties options) {
+        private RawGithubLogParser(String leftLogFile, String rightLogFile, Properties options) {
             super(leftLogFile, rightLogFile, options);
         }
 
-        protected void loadLog(String logFile, Map<String, List<String>> logSteps) throws IOException {
-            Files.lines(Paths.get(logFile)).forEach(
+        protected void loadLog(String file, List<String> lines) throws IOException {
+            Files.lines(Paths.get(file)).forEach(
                 line -> {
-                    final Matcher m = LOG_LINE_REGEXP.matcher(line);
-                    final boolean isMatching = m.matches();
-                    if (!isMatching)
+                    if (line.length() < TIMESTAMP_SIZE)
                         throw new IllegalArgumentException("Illegal log format: " + line);
-                    // final String job = m.group(1); in case of multiple jobs
-                    final String step = m.group(2);
-                    final String content = m.group(3);
-                    if (content.length() < TIMESTAMP_SIZE)
-                        throw new IllegalArgumentException("Illegal log format: " + line);
-                    
-                    logSteps.putIfAbsent(step, new ArrayList<>());
-                    logSteps.get(step).add(content.substring(TIMESTAMP_SIZE)); // GITHUB has a 29 character timestamp
+
+                    lines.add(line.substring(TIMESTAMP_SIZE));
                 }
+            );
+        }
+    }
+
+    public final static class FullGithubLogParser extends LogParser {
+        final static Pattern LOG_LINE_REGEXP = Pattern.compile("([^\\t]+)\\t([^\\t]+)\\t(.*)");
+        final static int TIMESTAMP_SIZE = 29; // GitHub logs have a 29 characters timestamp
+
+        private FullGithubLogParser(String leftLogFile, String rightLogFile, Properties options) {
+            super(leftLogFile, rightLogFile, options);
+        }
+
+        protected void loadLog(String file, List<String> lines) throws IOException {
+            Files.lines(Paths.get(file)).forEach(
+                    line -> {
+                        final Matcher m = LOG_LINE_REGEXP.matcher(line);
+                        final boolean isMatching = m.matches();
+                        if (!isMatching)
+                            throw new IllegalArgumentException("Illegal log format: " + line);
+                        // final String job = m.group(1); in case of multiple jobs
+                        final String step = m.group(2);
+                        final String content = m.group(3);
+                        if (content.length() < TIMESTAMP_SIZE)
+                            throw new IllegalArgumentException("Illegal log format: " + line);
+
+                        lines.add(content.substring(TIMESTAMP_SIZE));
+                    }
             );
         }
     }

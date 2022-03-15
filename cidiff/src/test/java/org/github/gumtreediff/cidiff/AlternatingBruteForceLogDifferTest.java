@@ -8,15 +8,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-public class AlternatingBruteForceStepDifferTest {
+public class AlternatingBruteForceLogDifferTest {
     private static final Properties options = new Properties();
 
     @Test
     void testUnchangedCode1() {
         List<String> leftLines = Arrays.asList("Foo", "Bar", "Foo");
         List<String> rightLines = Arrays.asList("Foo", "Bar");
-        AlternatingBruteForceStepDiffer d = new AlternatingBruteForceStepDiffer(options);
-        Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
+        AlternatingBruteForceLogDiffer d = new AlternatingBruteForceLogDiffer(options);
+        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
         assertEquals(Action.unchanged(1, 1), actions.left[1]);
@@ -28,8 +28,8 @@ public class AlternatingBruteForceStepDifferTest {
     void testUnchangedCode2() {
         List<String> leftLines = Arrays.asList("Foo", "Foo");
         List<String> rightLines = Arrays.asList("Foo", "Foo", "Foo");
-        StepDiffer d = new AlternatingBruteForceStepDiffer(options);
-        Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
+        LogDiffer d = new AlternatingBruteForceLogDiffer(options);
+        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
         assertEquals(Action.unchanged(1, 1), actions.left[1]);
@@ -41,8 +41,8 @@ public class AlternatingBruteForceStepDifferTest {
     void testDeletedCode() {
         List<String> leftLines = Arrays.asList("Foo", "Baz", "Foo");
         List<String> rightLines = Arrays.asList("Foo", "Foo");
-        StepDiffer d = new AlternatingBruteForceStepDiffer(options);
-        Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
+        LogDiffer d = new AlternatingBruteForceLogDiffer(options);
+        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
         assertEquals(Action.deleted(1), actions.left[1]);
@@ -54,8 +54,8 @@ public class AlternatingBruteForceStepDifferTest {
     void testAddedCode() {
         List<String> leftLines = Arrays.asList("Foo", "Foo");
         List<String> rightLines = Arrays.asList("Foo", "Baz", "Foo");
-        StepDiffer d = new AlternatingBruteForceStepDiffer(options);
-        Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
+        LogDiffer d = new AlternatingBruteForceLogDiffer(options);
+        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
         assertEquals(Action.added(1), actions.right[1]);
@@ -67,8 +67,8 @@ public class AlternatingBruteForceStepDifferTest {
     void testUpdatedCode() {
         List<String> leftLines = Arrays.asList("Build status failed", "Running time: 22s", "Foo Bar", "Foo", "Foo Foo");
         List<String> rightLines = Arrays.asList("Build status OK", "Running times: 22s", "Foo Baz", "Bar", "Fooo Fooo");
-        StepDiffer d = new AlternatingBruteForceStepDiffer(options);
-        Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
+        LogDiffer d = new AlternatingBruteForceLogDiffer(options);
+        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.updated(0, 0), actions.left[0]);
         assertEquals(Action.updated(0, 0), actions.right[0]);
         assertEquals(Action.updated(1, 1), actions.left[1]);
@@ -85,8 +85,8 @@ public class AlternatingBruteForceStepDifferTest {
     void testUpdatedCode2() {
         List<String> leftLines = Arrays.asList("Distinct1", "Same1", "Same1", "Distinct1", "Same2", "Same2");
         List<String> rightLines = Arrays.asList("Distinct2", "Same1", "Same1", "Distinct2", "Same2", "Same2");
-        StepDiffer d = new AlternatingBruteForceStepDiffer(options);
-        Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
+        LogDiffer d = new AlternatingBruteForceLogDiffer(options);
+        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.updated(0, 0), actions.left[0]);
         assertEquals(Action.updated(0, 0), actions.right[0]);
         assertEquals(Action.unchanged(1, 1), actions.left[1]);

@@ -20,8 +20,8 @@ public class SeedExtendDifferTest {
     void testFallback() {
         List<String> leftLines = Arrays.asList("Foo");
         List<String> rightLines = Arrays.asList("Foo");
-        StepDiffer d = new SeedExtendDiffer(getOptions());
-        Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
+        LogDiffer d = new SeedExtendDiffer(getOptions());
+        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
     }
@@ -30,8 +30,8 @@ public class SeedExtendDifferTest {
     void testUpdatedCode() {
         List<String> leftLines = Arrays.asList("Distinct1", "Same1", "Same1", "Distinct1", "Same2", "Same2");
         List<String> rightLines = Arrays.asList("Distinct2", "Same1", "Same1", "Distinct2", "Same2", "Same2");
-        StepDiffer d = new SeedExtendDiffer(getOptions());
-        Pair<Action[]> actions = d.diffStep(new Pair<>(leftLines, rightLines));
+        LogDiffer d = new SeedExtendDiffer(getOptions());
+        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.updated(0, 0), actions.left[0]);
         assertEquals(Action.updated(0, 0), actions.right[0]);
         assertEquals(Action.unchanged(1, 1), actions.left[1]);

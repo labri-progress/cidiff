@@ -25,7 +25,7 @@ public class BenchmarkHarness {
     }
 
     private static List<String> run(String left, String right, Properties options, String config) {
-        LogDiffer d = null;
+        LogDifferCli d = null;
         options.setProperty(Options.PARSER, "GITHUB");
         options.setProperty(Options.DIFFER_DELETED, "false");
         options.setProperty(Options.DIFFER_ADDED, "false");
@@ -37,7 +37,7 @@ public class BenchmarkHarness {
         results.add(config);
         for(int i = 0; i < RUNS; i++) {
             long tStart = System.currentTimeMillis();
-            d = new LogDiffer(left, right, options);
+            d = new LogDifferCli(left, right, options);
             d.diff();
             long tEnd= System.currentTimeMillis();
             results.add(Long.toString(tEnd - tStart));

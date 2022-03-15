@@ -3,18 +3,18 @@ package org.github.gumtreediff.cidiff;
 import java.util.List;
 import java.util.Properties;
 
-public final class AlternatingBruteForceStepDiffer extends AbstractStepDiffer {
+public final class AlternatingBruteForceLogDiffer extends AbstractLogDiffer {
     private final static String DEFAULT_REWRITE_MIN = "0.5";
 
     private final double rewriteMin;
 
-    public AlternatingBruteForceStepDiffer(Properties options) {
+    public AlternatingBruteForceLogDiffer(Properties options) {
         super(options);
         rewriteMin = Double.parseDouble(options.getProperty(Options.DIFFER_REWRITE_MIN, DEFAULT_REWRITE_MIN));
     }
 
     @Override
-    public Pair<Action[]> diffStep(Pair<List<String>> lines) {
+    public Pair<Action[]> diff(Pair<List<String>> lines) {
         Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
 
         // Identify unchanged lines

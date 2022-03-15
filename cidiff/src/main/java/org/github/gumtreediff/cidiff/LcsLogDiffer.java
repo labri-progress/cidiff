@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-public final class LcsStepDiffer extends AbstractStepDiffer {
-    public LcsStepDiffer(Properties options) {
+public final class LcsLogDiffer extends AbstractLogDiffer {
+    public LcsLogDiffer(Properties options) {
         super(options);
     }
 
     @Override
-    public Pair<Action[]> diffStep(Pair<List<String>> lines) {
+    public Pair<Action[]> diff(Pair<List<String>> lines) {
         Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
 
         // Identify unchanged lines
