@@ -10,7 +10,7 @@ public interface StepDiffer {
         LCS,
         SEED_EXTEND,
     }
-    
+
     Pair<Action[]> diffStep(Pair<List<String>> lines);
 
     static StepDiffer get(Algorithm algorithm, Properties options) {
