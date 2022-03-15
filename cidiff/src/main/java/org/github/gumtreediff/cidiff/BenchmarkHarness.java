@@ -29,10 +29,10 @@ public class BenchmarkHarness {
     private static List<String> run(String left, String right, Properties options, String config) {
         ConsoleClient d = null;
         options.setProperty(Options.PARSER, "GITHUB");
-        options.setProperty(Options.DIFFER_DELETED, "false");
-        options.setProperty(Options.DIFFER_ADDED, "false");
-        options.setProperty(Options.DIFFER_UPDATED, "false");
-        options.setProperty(Options.DIFFER_UNCHANGED, "false");
+        options.setProperty(Options.CONSOLE_DELETED, "false");
+        options.setProperty(Options.CONSOLE_ADDED, "false");
+        options.setProperty(Options.CONSOLE_UPDATED, "false");
+        options.setProperty(Options.CONSOLE_UNCHANGED, "false");
         List<String> results = new ArrayList<>();
         results.add(left);
         results.add(right);

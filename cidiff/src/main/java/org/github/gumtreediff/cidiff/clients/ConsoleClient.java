@@ -21,10 +21,10 @@ public class ConsoleClient extends AbstractLogClient {
 
     public ConsoleClient(String leftFile, String rightFile, Properties options) {
         super(leftFile, rightFile, options);
-        this.displayUpdated = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UPDATED, "false"));
-        this.displayUnchanged = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UNCHANGED, "false"));
-        this.displayAdded = Boolean.parseBoolean(options.getProperty(Options.DIFFER_ADDED, "true"));
-        this.displayDeleted = Boolean.parseBoolean(options.getProperty(Options.DIFFER_DELETED, "true"));
+        this.displayUpdated = Boolean.parseBoolean(options.getProperty(Options.CONSOLE_UPDATED, "false"));
+        this.displayUnchanged = Boolean.parseBoolean(options.getProperty(Options.CONSOLE_UNCHANGED, "false"));
+        this.displayAdded = Boolean.parseBoolean(options.getProperty(Options.CONSOLE_ADDED, "true"));
+        this.displayDeleted = Boolean.parseBoolean(options.getProperty(Options.CONSOLE_DELETED, "true"));
     }
 
     public void execute() {
