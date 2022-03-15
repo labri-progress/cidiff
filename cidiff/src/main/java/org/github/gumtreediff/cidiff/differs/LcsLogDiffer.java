@@ -1,4 +1,8 @@
-package org.github.gumtreediff.cidiff;
+package org.github.gumtreediff.cidiff.differs;
+
+import org.github.gumtreediff.cidiff.AbstractLogDiffer;
+import org.github.gumtreediff.cidiff.Action;
+import org.github.gumtreediff.cidiff.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;

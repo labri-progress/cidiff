@@ -1,5 +1,6 @@
 package org.github.gumtreediff.cidiff;
 
+import org.github.gumtreediff.cidiff.differs.SeedExtendDiffer;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

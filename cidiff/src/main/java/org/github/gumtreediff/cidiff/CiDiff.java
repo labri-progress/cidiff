@@ -4,14 +4,19 @@ import java.util.Properties;
 import java.util.Set;
 
 public final class CiDiff {
+    public static final String DEFAULT_CLIENT = "CONSOLE";
+
     public static void main(String[] args) {
-        final String leftLogFile = args[0];
-        final String rightLogFile = args[1];
+        final String leftFile = args[0];
+        final String rightFile = args[1];
         final Properties options = parseOptions(args);
-        new LogDifferCli(leftLogFile, rightLogFile, options);
+        LogClient.Type type = LogClient.Type.valueOf(
+                options.getProperty(Options.CLIENT, DEFAULT_CLIENT));
+        LogClient client = LogClient.get(leftFile, rightFile, options, type);
+        client.execute();
     }
 
-    static Properties parseOptions(String args[]) {
+    public static Properties parseOptions(String args[]) {
         Set<String> allOptions = Options.allOptions();
         final Properties options = new Properties();
         if (args.length > 2) {

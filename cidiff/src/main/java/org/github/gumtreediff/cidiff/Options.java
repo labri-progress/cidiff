@@ -19,6 +19,8 @@ public final class Options {
     public static final String PARSER = "parser";
     public static final String PARSER_DEFAULT_TRIM = "parser.default.trim";
 
+    public static final String CLIENT = "client";
+
     private Options() {}
 
     public static Set<String> allOptions() {

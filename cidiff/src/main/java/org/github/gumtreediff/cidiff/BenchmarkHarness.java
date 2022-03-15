@@ -1,5 +1,7 @@
 package org.github.gumtreediff.cidiff;
 
+import org.github.gumtreediff.cidiff.clients.ConsoleClient;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,7 +27,7 @@ public class BenchmarkHarness {
     }
 
     private static List<String> run(String left, String right, Properties options, String config) {
-        LogDifferCli d = null;
+        ConsoleClient d = null;
         options.setProperty(Options.PARSER, "GITHUB");
         options.setProperty(Options.DIFFER_DELETED, "false");
         options.setProperty(Options.DIFFER_ADDED, "false");
@@ -37,16 +39,11 @@ public class BenchmarkHarness {
         results.add(config);
         for(int i = 0; i < RUNS; i++) {
             long tStart = System.currentTimeMillis();
-            d = new LogDifferCli(left, right, options);
-            d.diff();
+            d = new ConsoleClient(left, right, options);
+            d.execute();
             long tEnd= System.currentTimeMillis();
             results.add(Long.toString(tEnd - tStart));
         }
-
-        results.add(Integer.toString(d.getMetrics().unchanged));
-        results.add(Integer.toString(d.getMetrics().updated));
-        results.add(Integer.toString(d.getMetrics().deleted));
-        results.add(Integer.toString(d.getMetrics().added));
 
         return results;
     }

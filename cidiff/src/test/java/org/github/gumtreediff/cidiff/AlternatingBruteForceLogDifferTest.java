@@ -2,6 +2,7 @@ package org.github.gumtreediff.cidiff;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.github.gumtreediff.cidiff.differs.AlternatingBruteForceLogDiffer;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

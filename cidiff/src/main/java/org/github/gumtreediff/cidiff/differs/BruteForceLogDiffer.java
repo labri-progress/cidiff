@@ -1,4 +1,6 @@
-package org.github.gumtreediff.cidiff;
+package org.github.gumtreediff.cidiff.differs;
+
+import org.github.gumtreediff.cidiff.*;
 
 import java.util.List;
 import java.util.Properties;

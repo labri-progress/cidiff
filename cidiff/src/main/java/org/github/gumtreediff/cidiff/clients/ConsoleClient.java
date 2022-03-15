@@ -1,19 +1,17 @@
-package org.github.gumtreediff.cidiff;
+package org.github.gumtreediff.cidiff.clients;
 
-import java.util.List;
+import org.github.gumtreediff.cidiff.AbstractLogClient;
+import org.github.gumtreediff.cidiff.Action;
+import org.github.gumtreediff.cidiff.Options;
+import org.github.gumtreediff.cidiff.Pair;
+
 import java.util.Properties;
 
-public class LogDifferCli {
-    final Pair<String> files;
-    final Pair<List<String>> lines;
-    final LogDiffer differ;
-    final Properties options;
+public class ConsoleClient extends AbstractLogClient {
     final boolean displayUpdated;
     final boolean displayUnchanged;
     final boolean displayAdded;
     final boolean displayDeleted;
-
-    final static String DEFAULT_DIFFER = "BRUTE_FORCE";
 
     final static String RED_FONT = "\033[0;31m";
     final static String GREEN_FONT = "\033[0;32m";
@@ -21,27 +19,15 @@ public class LogDifferCli {
     final static String BOLD_FONT = "\033[1m";
     final static String REGULAR_FONT = "\033[0m";
 
-    Metrics metrics;
-
-    public LogDifferCli(String leftFile, String rightFile, Properties options) {
-        this.options = options;
-        this.files = new Pair<>(leftFile, rightFile);
-        this.differ = LogDiffer.get(LogDiffer.Algorithm.valueOf(
-                options.getProperty(Options.DIFFER, DEFAULT_DIFFER)), options);
-        this.lines = LogParser.parseLogs(this.files, options);
+    public ConsoleClient(String leftFile, String rightFile, Properties options) {
+        super(leftFile, rightFile, options);
         this.displayUpdated = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UPDATED, "false"));
         this.displayUnchanged = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UNCHANGED, "false"));
         this.displayAdded = Boolean.parseBoolean(options.getProperty(Options.DIFFER_ADDED, "true"));
         this.displayDeleted = Boolean.parseBoolean(options.getProperty(Options.DIFFER_DELETED, "true"));
-        diff();
     }
 
-    public Metrics getMetrics() {
-        return this.metrics;
-    }
-
-    public void diff() {
-        metrics = new Metrics();
+    public void execute() {
         final var leftLines = lines.left;
         final var rightLines = lines.right;
         final var actions = differ.diff(new Pair<>(leftLines, rightLines));
@@ -53,7 +39,6 @@ public class LogDifferCli {
             final var action = actions.left[i];
 
             if (action.type == Action.Type.UPDATED) {
-                metrics.updated++;
                 if (displayUpdated) {
                     boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
                     if (newLine)
@@ -71,7 +56,6 @@ public class LogDifferCli {
                 }
             }
             else if (action.type == Action.Type.UNCHANGED) {
-                metrics.unchanged++;
                 if (displayUnchanged) {
                     boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
                     if (newLine)
@@ -89,7 +73,6 @@ public class LogDifferCli {
                 }
             }
             else if (action.type == Action.Type.DELETED) {
-                metrics.deleted++;
                 if (displayDeleted) {
                     boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
                     if (newLine)
@@ -108,7 +91,6 @@ public class LogDifferCli {
         for (int i = 0; i < actions.right.length; i++) {
             final var action = actions.right[i];
             if (action.type == Action.Type.ADDED) {
-                metrics.added++;
                 if (displayAdded) {
                     boolean newLine = lastDisplayed == 0 || lastDisplayed != i - 1;
                     if (newLine)
