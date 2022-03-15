@@ -1,9 +1,11 @@
 package org.github.gumtreediff.cidiff;
 
+import java.util.List;
 import java.util.Properties;
 
 public class LogDifferCli {
-    final LogParser parser;
+    final Pair<String> files;
+    final Pair<List<String>> lines;
     final LogDiffer differ;
     final Properties options;
     final boolean displayUpdated;
@@ -21,12 +23,12 @@ public class LogDifferCli {
 
     Metrics metrics;
 
-    public LogDifferCli(String leftLogFile, String rightLogFile, Properties options) {
+    public LogDifferCli(String leftFile, String rightFile, Properties options) {
         this.options = options;
+        this.files = new Pair<>(leftFile, rightFile);
         this.differ = LogDiffer.get(LogDiffer.Algorithm.valueOf(
                 options.getProperty(Options.DIFFER, DEFAULT_DIFFER)), options);
-        this.parser = LogParser.get(leftLogFile, rightLogFile, options);
-        this.parser.parse();
+        this.lines = LogParser.parseLogs(this.files, options);
         this.displayUpdated = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UPDATED, "false"));
         this.displayUnchanged = Boolean.parseBoolean(options.getProperty(Options.DIFFER_UNCHANGED, "false"));
         this.displayAdded = Boolean.parseBoolean(options.getProperty(Options.DIFFER_ADDED, "true"));
@@ -40,8 +42,8 @@ public class LogDifferCli {
 
     public void diff() {
         metrics = new Metrics();
-        final var leftLines = parser.lines.left;
-        final var rightLines = parser.lines.right;
+        final var leftLines = lines.left;
+        final var rightLines = lines.right;
         final var actions = differ.diff(new Pair<>(leftLines, rightLines));
         final int maxLineNumberSize = Integer.toString(Math.max(actions.left.length,
                 actions.right.length)).length();

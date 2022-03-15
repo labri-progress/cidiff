@@ -33,11 +33,11 @@ class LogDifferCliTest {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER, "RAW_GITHUB");
         LogDifferCli d = new LogDifferCli("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", options);
-        assertEquals(4, d.parser.lines.left.size());
-        assertEquals(4, d.parser.lines.right.size());
-        assertEquals(4, d.parser.lines.left.size());
-        assertEquals("Fooo", d.parser.lines.left.get(2));
-        assertEquals("Bar", d.parser.lines.right.get(3));
+        assertEquals(4, d.lines.left.size());
+        assertEquals(4, d.lines.right.size());
+        assertEquals(4, d.lines.left.size());
+        assertEquals("Fooo", d.lines.left.get(2));
+        assertEquals("Bar", d.lines.right.get(3));
     }
 
     @Test
@@ -78,6 +78,6 @@ class LogDifferCliTest {
         options.setProperty(Options.PARSER_DEFAULT_TRIM, "29");
         options.setProperty(Options.PARSER, "DEFAULT");
         LogDifferCli d = new LogDifferCli("../data/budibase_left.log.csv", "../data/budibase_right.log.csv", options);
-        assertEquals("Found online and idle hosted runner in the current repository's organization account that matches the required labels: 'ubuntu-latest'", d.parser.lines.left.get(0));
+        assertEquals("Found online and idle hosted runner in the current repository's organization account that matches the required labels: 'ubuntu-latest'", d.lines.left.get(0));
     }
 }
