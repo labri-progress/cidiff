@@ -1,6 +1,5 @@
 package org.github.gumtreediff.cidiff.differs;
 
-import org.github.gumtreediff.cidiff.AbstractLogDiffer;
 import org.github.gumtreediff.cidiff.Action;
 import org.github.gumtreediff.cidiff.Pair;
 

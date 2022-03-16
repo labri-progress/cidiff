@@ -1,7 +1,6 @@
 package org.github.gumtreediff.cidiff.differs;
 
 import org.github.gumtreediff.cidiff.*;
-import org.github.gumtreediff.cidiff.differs.AlternatingBruteForceLogDiffer;
 
 import java.util.*;
 
