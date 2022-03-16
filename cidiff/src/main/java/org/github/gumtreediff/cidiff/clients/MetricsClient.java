@@ -1,6 +1,5 @@
 package org.github.gumtreediff.cidiff.clients;
 
-import org.github.gumtreediff.cidiff.AbstractDiffClient;
 import org.github.gumtreediff.cidiff.Action;
 
 import java.util.Properties;

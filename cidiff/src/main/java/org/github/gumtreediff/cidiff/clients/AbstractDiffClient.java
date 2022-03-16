@@ -1,14 +1,16 @@
-package org.github.gumtreediff.cidiff;
+package org.github.gumtreediff.cidiff.clients;
+
+import org.github.gumtreediff.cidiff.*;
 
 import java.util.List;
 import java.util.Properties;
 
 public abstract class AbstractDiffClient implements DiffClient {
-    protected final Properties options;
-    protected final LogDiffer differ;
-    protected final Pair<String> files;
-    protected final Pair<List<String>> lines;
-    protected final Pair<Action[]> actions;
+    public final Properties options;
+    public final LogDiffer differ;
+    public final Pair<String> files;
+    public final Pair<List<String>> lines;
+    public final Pair<Action[]> actions;
 
     final static String DEFAULT_DIFFER = "BRUTE_FORCE";
 
