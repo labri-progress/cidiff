@@ -1,13 +1,13 @@
 package org.github.gumtreediff.cidiff.clients;
 
-import org.github.gumtreediff.cidiff.AbstractLogClient;
+import org.github.gumtreediff.cidiff.AbstractDiffClient;
 import org.github.gumtreediff.cidiff.Action;
 import org.github.gumtreediff.cidiff.Options;
 import org.github.gumtreediff.cidiff.Pair;
 
 import java.util.Properties;
 
-public class ConsoleClient extends AbstractLogClient {
+public class ConsoleClient extends AbstractDiffClient {
     final boolean displayUpdated;
     final boolean displayUnchanged;
     final boolean displayAdded;

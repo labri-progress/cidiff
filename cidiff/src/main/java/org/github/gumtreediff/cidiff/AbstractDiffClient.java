@@ -3,7 +3,7 @@ package org.github.gumtreediff.cidiff;
 import java.util.List;
 import java.util.Properties;
 
-public abstract class AbstractLogClient implements LogClient {
+public abstract class AbstractDiffClient implements DiffClient {
     protected final Properties options;
     protected final LogDiffer differ;
     protected final Pair<String> files;
@@ -12,7 +12,7 @@ public abstract class AbstractLogClient implements LogClient {
 
     final static String DEFAULT_DIFFER = "BRUTE_FORCE";
 
-    public AbstractLogClient(String leftFile, String rightFile, Properties options) {
+    public AbstractDiffClient(String leftFile, String rightFile, Properties options) {
         this.options = options;
         this.files = new Pair<>(leftFile, rightFile);
         this.differ = LogDiffer.get(LogDiffer.Algorithm.valueOf(

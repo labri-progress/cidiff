@@ -6,15 +6,15 @@ import org.github.gumtreediff.cidiff.clients.SwingClient;
 
 import java.util.Properties;
 
-public interface LogClient {
+public interface DiffClient {
     enum Type {
         SWING,
         CONSOLE,
         METRICS
     }
 
-    public static LogClient get(String leftFile, String rightFile,
-                                Properties options, Type type) {
+    static DiffClient get(String leftFile, String rightFile,
+                                 Properties options, Type type) {
         return switch (type) {
             case SWING -> new SwingClient(leftFile, rightFile, options);
             case CONSOLE -> new ConsoleClient(leftFile, rightFile, options);

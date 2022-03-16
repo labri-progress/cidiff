@@ -10,9 +10,9 @@ public final class CiDiff {
         final String leftFile = args[0];
         final String rightFile = args[1];
         final Properties options = parseOptions(args);
-        LogClient.Type type = LogClient.Type.valueOf(
+        DiffClient.Type type = DiffClient.Type.valueOf(
                 options.getProperty(Options.CLIENT, DEFAULT_CLIENT));
-        LogClient client = LogClient.get(leftFile, rightFile, options, type);
+        DiffClient client = DiffClient.get(leftFile, rightFile, options, type);
         client.execute();
     }
 

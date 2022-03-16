@@ -46,7 +46,7 @@ class ConsoleClientTest {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER, "RAW_GITHUB");
         options.setProperty(Options.CONSOLE_UPDATED, "true");
-        LogClient d = new ConsoleClient("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", options);
+        DiffClient d = new ConsoleClient("../data/test-gh-parser-left.csv", "../data/test-gh-parser-right.csv", options);
         d.execute();
         assertTrue(outContent.toString().contains("- 3 Fooo"));
         assertTrue(outContent.toString().contains("+ 4 Bar"));

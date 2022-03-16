@@ -5,7 +5,7 @@ import org.github.gumtreediff.cidiff.*;
 import javax.swing.*;
 import java.util.Properties;
 
-public class SwingClient extends AbstractLogClient {
+public class SwingClient extends AbstractDiffClient {
     public static void main(String[] args) {
         final String leftLogFile = args[0];
         final String rightLogFile = args[1];

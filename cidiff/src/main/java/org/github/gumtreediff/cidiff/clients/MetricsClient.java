@@ -1,11 +1,11 @@
 package org.github.gumtreediff.cidiff.clients;
 
-import org.github.gumtreediff.cidiff.AbstractLogClient;
+import org.github.gumtreediff.cidiff.AbstractDiffClient;
 import org.github.gumtreediff.cidiff.Action;
 
 import java.util.Properties;
 
-public class MetricsClient extends AbstractLogClient {
+public class MetricsClient extends AbstractDiffClient {
     public MetricsClient(String leftFile, String rightFile, Properties options) {
         super(leftFile, rightFile, options);
     }
