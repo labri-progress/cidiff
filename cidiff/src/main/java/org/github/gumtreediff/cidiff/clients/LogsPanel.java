@@ -14,13 +14,16 @@ public class LogsPanel extends JPanel {
     final JList<String> rightLines;
     final Pair<Action[]> actions;
 
-    final Color ADDED = new Color(20, 127, 20, 134);
-    final Color DELETED = new Color(255, 0, 0, 129);
-    final Color UPDATED = new Color(255, 173, 0, 184);
-    final Color UNCHANGED = new Color(255, 255, 255);
+    final static Color COLOR_ADDED = new Color(20, 127, 20, 134);
+    final static Color COLOR_DELETED = new Color(255, 0, 0, 129);
+    final static Color COLOR_UPDATED = new Color(255, 173, 0, 184);
+    final static Color COLOR_UNCHANGED = new Color(255, 255, 255);
 
-    final Color TEXT_NORMAL = new Color(0, 0,0 );
-    final Color TEXT_SELECTED = new Color(0, 0,255 );
+    final static Font FONT_NORMAL = new Font(Font.MONOSPACED, Font.PLAIN, 11);
+    final static Font FONT_SELECTED = new Font(Font.MONOSPACED, Font.BOLD, 11);
+
+    final static Color COLOR_NORMAL = new Color(0, 0,0 );
+    final static Color COLOR_SELECTED = new Color(0, 0,255 );
 
     public LogsPanel(Pair<List<String>> lines, Pair<Action[]> actions) {
         super(new GridLayout(1, 2));
@@ -59,20 +62,24 @@ public class LogsPanel extends JPanel {
                 boolean cellHasFocus) {
             Component res = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-            if (!isSelected)
-                setForeground(TEXT_NORMAL);
-            else
-                setForeground(TEXT_SELECTED);
+            if (!isSelected) {
+                setForeground(COLOR_NORMAL);
+                setFont(FONT_NORMAL);
+            }
+            else {
+                setForeground(COLOR_SELECTED);
+                setFont(FONT_SELECTED);
+            }
 
             Action action = actions[index];
             if (action.type == Action.Type.ADDED)
-                setBackground(ADDED);
+                setBackground(COLOR_ADDED);
             else if (action.type == Action.Type.DELETED)
-                setBackground(DELETED);
+                setBackground(COLOR_DELETED);
             else if (action.type == Action.Type.UPDATED)
-                setBackground(UPDATED);
+                setBackground(COLOR_UPDATED);
             else
-                setBackground(UNCHANGED);
+                setBackground(COLOR_UNCHANGED);
             return res;
         }
     }
