@@ -2,6 +2,7 @@ package org.github.gumtreediff.cidiff;
 
 public final class Utils {
     private final static String TOKEN_SEPARATORS = "\\s+";
+
     public static double rewriteSim(String leftLine, String rightLine) {
         final String[] leftTokens = leftLine.split(TOKEN_SEPARATORS);
         final String[] rightTokens = rightLine.split(TOKEN_SEPARATORS);
