@@ -2,6 +2,7 @@ package org.github.gumtreediff.cidiff.clients;
 
 import org.github.gumtreediff.cidiff.Action;
 import org.github.gumtreediff.cidiff.Pair;
+import org.github.gumtreediff.cidiff.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +20,8 @@ public class LogsPanel extends JPanel {
     final static Color COLOR_UPDATED = new Color(255, 173, 0, 184);
     final static Color COLOR_UNCHANGED = new Color(255, 255, 255);
 
-    final static Font FONT_NORMAL = new Font(Font.MONOSPACED, Font.PLAIN, 11);
-    final static Font FONT_SELECTED = new Font(Font.MONOSPACED, Font.BOLD, 11);
+    final static Font FONT_NORMAL = new Font(Font.MONOSPACED, Font.PLAIN, 12);
+    final static Font FONT_SELECTED = new Font(Font.MONOSPACED, Font.ITALIC, 12);
 
     final static Color COLOR_NORMAL = new Color(0, 0,0 );
     final static Color COLOR_SELECTED = new Color(0, 0,255 );
@@ -48,10 +49,10 @@ public class LogsPanel extends JPanel {
     }
 
     private class LogLineCellRenderer extends DefaultListCellRenderer {
-        private final Action[] actions;
+        private final Action[] cellActions;
 
-        public LogLineCellRenderer(Action[] actions) {
-            this.actions = actions;
+        public LogLineCellRenderer(Action[] cellActions) {
+            this.cellActions = cellActions;
         }
 
         public Component getListCellRendererComponent(
@@ -71,16 +72,41 @@ public class LogsPanel extends JPanel {
                 setFont(FONT_SELECTED);
             }
 
-            Action action = actions[index];
+            Action action = cellActions[index];
             if (action.type == Action.Type.ADDED)
                 setBackground(COLOR_ADDED);
             else if (action.type == Action.Type.DELETED)
                 setBackground(COLOR_DELETED);
-            else if (action.type == Action.Type.UPDATED)
+            else if (action.type == Action.Type.UPDATED) {
                 setBackground(COLOR_UPDATED);
+                setText(toHtml(action, (String) value));
+            }
             else
                 setBackground(COLOR_UNCHANGED);
             return res;
+        }
+
+        private String toHtml(Action action, String text) {
+            String otherText = this.cellActions == actions.left ?
+                    rightLines.getModel().getElementAt(action.rightLocation) :
+                    leftLines.getModel().getElementAt(action.leftLocation);
+            String[] tokens = text.split("\\s+");
+            String[] otherTokens = otherText.split("\\s+");
+            StringBuilder b = new StringBuilder();
+            b.append("<html>");
+            for (int i = 0; i < Math.min(tokens.length, otherTokens.length); i++) {
+                if (tokens[i].equals(otherTokens[i]))
+                    b.append(tokens[i]);
+                else
+                    b.append("<b>" + tokens[i] + "</b>");
+                b.append(" ");
+            }
+            for (int i = Math.min(tokens.length, otherTokens.length); i < tokens.length; i++) {
+                b.append(tokens[i]);
+                b.append(" ");
+            }
+            b.append("</html>");
+            return b.toString();
         }
     }
 
