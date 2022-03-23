@@ -21,19 +21,27 @@ public interface LogParser {
         DEFAULT
     }
 
-    static Pair<List<String>> parseLogs(Pair<String> files, Properties options) {
+    static LogParser get(Properties options) {
         Type type = Type.valueOf(options.getProperty(Options.PARSER, DEFAULT_PARSER));
-        LogParser parser = switch (type) {
+        return switch (type) {
             case RAW_GITHUB -> new RawGithubLogParser(options);
             case FULL_GITHUB -> new FullGithubLogParser(options);
             case DEFAULT -> new DefaultLogParser(options);
         };
+    }
+
+    static List<String> parseLog(String file, Properties options) {
+        LogParser parser = get(options);
         try {
-            return new Pair<>(parser.parse(files.left), parser.parse(files.right));
+            return parser.parse(file);
         }
         catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    static Pair<List<String>> parseLogs(Pair<String> files, Properties options) {
+        return new Pair<>(parseLog(files.left, options), parseLog(files.right, options));
     }
 
     List<String> parse(String file) throws IOException;
