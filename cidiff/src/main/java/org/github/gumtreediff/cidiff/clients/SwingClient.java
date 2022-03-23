@@ -6,12 +6,7 @@ import javax.swing.*;
 import java.util.Properties;
 
 public class SwingClient extends AbstractDiffClient {
-    public static void main(String[] args) {
-        final String leftLogFile = args[0];
-        final String rightLogFile = args[1];
-        final Properties options = CiDiff.parseOptions(args);
-        new SwingClient(leftLogFile, rightLogFile, options);
-    }
+    final static String TITLE = "CiDiff";
 
     public SwingClient(String leftFile, String rightFile, Properties options) {
         super(leftFile, rightFile, options);
@@ -22,7 +17,7 @@ public class SwingClient extends AbstractDiffClient {
     }
 
     private void createAndShow() {
-        JFrame frame = new JFrame("Logs diff");
+        JFrame frame = new JFrame(TITLE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(new LogsPanel(super.lines, super.actions));
         frame.pack();
