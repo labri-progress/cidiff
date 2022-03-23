@@ -2,17 +2,20 @@ package org.github.gumtreediff.cidiff.clients;
 
 import org.github.gumtreediff.cidiff.Action;
 import org.github.gumtreediff.cidiff.Pair;
-import org.github.gumtreediff.cidiff.Utils;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
 import java.util.List;
 
 public class LogsPanel extends JPanel {
     final JList<String> leftLines;
     final JList<String> rightLines;
+    final JScrollBar leftBar = new JScrollBar(JScrollBar.VERTICAL);
+    final JScrollBar rightBar = new JScrollBar(JScrollBar.VERTICAL);
     final Pair<Action[]> actions;
 
     final static Color COLOR_ADDED = new Color(20, 127, 20, 134);
@@ -36,7 +39,11 @@ public class LogsPanel extends JPanel {
         leftLines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         leftLines.addMouseListener(new LeftLinesSelectionListener());
         JScrollPane panLeftLines = new JScrollPane(leftLines);
+        leftBar.setUI(makeScrollBarUI(leftLines, actions.left));
+        leftBar.setUnitIncrement(10);
+        panLeftLines.setVerticalScrollBar(leftBar);
         this.add(panLeftLines);
+
         String[] rightData = new String[lines.right.size()];
         lines.right.toArray(rightData);
         rightLines = new JList<>(rightData);
@@ -44,8 +51,45 @@ public class LogsPanel extends JPanel {
         rightLines.addMouseListener(new RightLinesSelectionListener());
         rightLines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane panRightLines = new JScrollPane(rightLines);
+        rightBar.setUI(makeScrollBarUI(rightLines, actions.right));
+        panRightLines.setVerticalScrollBar(rightBar);
+        rightBar.setUnitIncrement(10);
+
         this.add(panRightLines);
         this.setPreferredSize(new Dimension(1024, 768));
+    }
+
+    private BasicScrollBarUI makeScrollBarUI(JList<String> lines, Action[] actions) {
+        return new BasicScrollBarUI() {
+            @Override protected void paintTrack(
+                    Graphics g, JComponent c, Rectangle trackBounds) {
+                super.paintTrack(g, c, trackBounds);
+                Rectangle rect = lines.getBounds();
+                double sy = trackBounds.getHeight() / rect.getHeight();
+                AffineTransform at = AffineTransform.getScaleInstance(1.0, sy);
+                for (int i = 0; i < actions.length; i++) {
+                    Action a = actions[i];
+                    if (a.type == Action.Type.UNCHANGED)
+                        continue;
+
+                    Rectangle r = lines.getCellBounds(i, i);
+                    Rectangle s = at.createTransformedShape(r).getBounds();
+                    int h = 2; //Math.max(2, s.height-2);
+                    if (a.type == Action.Type.DELETED) {
+                        g.setColor(COLOR_DELETED);
+                        g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
+                    }
+                    else if (a.type == Action.Type.ADDED) {
+                        g.setColor(COLOR_ADDED);
+                        g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
+                    }
+                    else if (a.type == Action.Type.UPDATED) {
+                        g.setColor(COLOR_UPDATED);
+                        g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
+                    }
+                }
+            }
+        };
     }
 
     private class LogLineCellRenderer extends DefaultListCellRenderer {
