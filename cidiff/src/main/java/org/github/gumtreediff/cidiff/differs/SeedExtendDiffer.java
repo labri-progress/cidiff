@@ -25,7 +25,7 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
     public Pair<Action[]> diff(Pair<List<String>> lines) {
         if (lines.left.size() < blockSize + 2 * windowSize
                 || lines.right.size() < blockSize + 2 * windowSize)
-            return new AlternatingBruteForceLogDiffer(options).diff(lines); // Fallback to brute force for small logs
+            return new BruteForceLogDiffer(options).diff(lines); // Fallback to brute force for small logs
 
         Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
         Pair<Map<Integer, List<Integer>>> hashes = new Pair<>(new HashMap<>(), new HashMap<>());

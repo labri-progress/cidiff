@@ -76,27 +76,9 @@ public class BruteForceLogDifferTest {
         assertEquals(Action.updated(1, 1), actions.right[1]);
         assertEquals(Action.updated(2, 2), actions.left[2]);
         assertEquals(Action.updated(2, 2), actions.right[2]);
-        assertEquals(Action.updated(3, 3), actions.left[3]);
-        assertEquals(Action.updated(3, 3), actions.right[3]);
+        assertEquals(Action.deleted(3), actions.left[3]);
+        assertEquals(Action.added(3), actions.right[3]);
         assertEquals(Action.deleted(4), actions.left[4]);
         assertEquals(Action.added(4), actions.right[4]);
-    }
-
-    @Test
-    void testUpdatedCode2() {
-        List<String> leftLines = Arrays.asList("Distinct1", "Same1", "Same1", "Distinct1", "Same2", "Same2");
-        List<String> rightLines = Arrays.asList("Distinct2", "Same1", "Same1", "Distinct2", "Same2", "Same2");
-        LogDiffer d = new BruteForceLogDiffer(options);
-        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
-        assertEquals(Action.updated(0, 0), actions.left[0]);
-        assertEquals(Action.updated(0, 0), actions.right[0]);
-        assertEquals(Action.unchanged(1, 1), actions.left[1]);
-        assertEquals(Action.unchanged(1, 1), actions.right[1]);
-        assertEquals(Action.unchanged(2, 2), actions.left[2]);
-        assertEquals(Action.unchanged(2, 2), actions.right[2]);
-        assertEquals(Action.updated(3, 3), actions.left[3]);
-        assertEquals(Action.updated(3, 3), actions.right[3]);
-        assertEquals(Action.unchanged(4, 4), actions.left[4]);
-        assertEquals(Action.unchanged(4, 4), actions.right[4]);
     }
 }

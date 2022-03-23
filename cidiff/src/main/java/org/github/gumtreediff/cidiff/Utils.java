@@ -12,13 +12,21 @@ public final class Utils {
             return 0.0;
 
         // number of distinct-length tokens
-        int dist = 0;
+        int sameLength = 0;
+        int sameValue = 0;
+
         for (int i = 0; i < leftTokens.length; i++) {
-            if (leftTokens[i].length() != rightTokens[i].length())
-                dist++;
+            if (leftTokens[i].length() == rightTokens[i].length()) {
+                sameLength++;
+                if (leftTokens[i].equals(rightTokens[i]))
+                    sameValue++;
+            }
         }
 
-        return (double) (leftTokens.length - dist) / (double) leftTokens.length;
+        if (sameValue == 0)
+            return 0.0;
+
+        return (double) (sameLength) / (double) leftTokens.length;
     }
 
     public static int fastExponentiation(int base, int exponent) {
