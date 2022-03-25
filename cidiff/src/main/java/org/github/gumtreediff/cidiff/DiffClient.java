@@ -14,7 +14,7 @@ public interface DiffClient {
     }
 
     static DiffClient get(String leftFile, String rightFile,
-                                 Properties options, Type type) {
+                          Properties options, Type type) {
         return switch (type) {
             case SWING -> new SwingClient(leftFile, rightFile, options);
             case CONSOLE -> new ConsoleClient(leftFile, rightFile, options);
