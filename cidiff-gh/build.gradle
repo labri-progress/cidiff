@@ -1,0 +1,33 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.kohsuke:github-api:1.303'
+    implementation project(':cidiff')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+}
+
+compileJava {
+    options.release = 17
+}
+
+application {
+    mainClass = 'org.github.gumtreediff.cidiff.gh.CiDiffGithub'
+    distTar.enabled = false
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+
+    testLogging {
+        exceptionFormat = 'full'
+        events "passed", "skipped", "failed"
+    }
+}
+
+build.finalizedBy installDist
