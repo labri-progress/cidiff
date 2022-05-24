@@ -107,6 +107,8 @@ public class LogsPanel extends JPanel {
                 boolean cellHasFocus) {
             Component res = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
+            setToolTipText(Integer.toString(index));
+
             if (!isSelected) {
                 setForeground(COLOR_NORMAL);
                 setFont(FONT_NORMAL);
@@ -127,6 +129,7 @@ public class LogsPanel extends JPanel {
             }
             else
                 setBackground(COLOR_UNCHANGED);
+
             return res;
         }
 
