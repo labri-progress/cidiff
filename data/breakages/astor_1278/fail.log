@@ -1,0 +1,86 @@
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu16 (lin) in workspace /builds/workspace/astor
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/astor.git
+ > git init /builds/workspace/astor # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/astor.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.0'
+ > git fetch --tags --progress -- https://github.com/SpoonLabs/astor.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/astor.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision c47235dadebbf566a4f8c6c08658a794d419ac26 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f c47235dadebbf566a4f8c6c08658a794d419ac26 # timeout=10
+FATAL: hudson.remoting.Channel$OrderlyShutdown: Command Close created at
+Command Close created at
+	at hudson.remoting.Command.<init>(Command.java:70)
+	at hudson.remoting.Channel$CloseCommand.<init>(Channel.java:1315)
+	at hudson.remoting.Channel$CloseCommand.<init>(Channel.java:1313)
+	at hudson.remoting.Channel.close(Channel.java:1488)
+	at hudson.remoting.Channel.close(Channel.java:1455)
+	at hudson.remoting.Channel$CloseCommand.execute(Channel.java:1321)
+Caused: hudson.remoting.Channel$OrderlyShutdown
+Also:   hudson.remoting.Channel$CallSiteStackTrace: Remote call to sos-builder01-ubuntu16
+		at hudson.remoting.Channel.attachCallSiteStackTrace(Channel.java:1800)
+		at hudson.remoting.Request.call(Request.java:199)
+		at hudson.remoting.Channel.call(Channel.java:1000)
+		at org.jenkinsci.plugins.gitclient.RemoteGitImpl$CommandInvocationHandler.execute(RemoteGitImpl.java:143)
+		at sun.reflect.GeneratedMethodAccessor284.invoke(Unknown Source)
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.lang.reflect.Method.invoke(Method.java:498)
+		at org.jenkinsci.plugins.gitclient.RemoteGitImpl$CommandInvocationHandler.invoke(RemoteGitImpl.java:129)
+		at com.sun.proxy.$Proxy78.execute(Unknown Source)
+		at hudson.plugins.git.GitSCM.checkout(GitSCM.java:1358)
+		at hudson.scm.SCM.checkout(SCM.java:505)
+		at hudson.model.AbstractProject.checkout(AbstractProject.java:1211)
+		at hudson.model.AbstractBuild$AbstractBuildExecution.defaultCheckout(AbstractBuild.java:636)
+		at jenkins.scm.SCMCheckoutStrategy.checkout(SCMCheckoutStrategy.java:86)
+		at hudson.model.AbstractBuild$AbstractBuildExecution.run(AbstractBuild.java:508)
+		at hudson.model.Run.execute(Run.java:1906)
+		at hudson.model.FreeStyleBuild.run(FreeStyleBuild.java:43)
+		at hudson.model.ResourceController.execute(ResourceController.java:97)
+		at hudson.model.Executor.run(Executor.java:429)
+Caused: hudson.remoting.RequestAbortedException
+	at hudson.remoting.Request.abort(Request.java:345)
+	at hudson.remoting.Channel.terminate(Channel.java:1085)
+	at hudson.remoting.Channel$CloseCommand.execute(Channel.java:1322)
+	at hudson.remoting.Channel$1.handle(Channel.java:607)
+	at hudson.remoting.SynchronousCommandTransport$ReaderThread.run(SynchronousCommandTransport.java:81)
+Sending e-mails to: martin.monperrus@gnieh.org matias.sebastian.martinez@gmail.com
+ERROR: Step ‘Delete workspace when build is done’ failed: no workspace for astor #1278
+Finished: FAILURE

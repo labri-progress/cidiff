@@ -1,0 +1,580 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu16 (lin) in workspace /builds/workspace/AssertFixer
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Wiping out workspace first.
+Cloning the remote Git repository
+Cloning repository https://github.com/STAMP-project/AssertFixer.git
+ > git init /builds/workspace/AssertFixer # timeout=10
+Fetching upstream changes from https://github.com/STAMP-project/AssertFixer.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.7.4'
+ > git fetch --tags --progress https://github.com/STAMP-project/AssertFixer.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/STAMP-project/AssertFixer.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 09954354e251bb209ef0366c38efc6883dbf564f (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 09954354e251bb209ef0366c38efc6883dbf564f # timeout=10
+Commit message: "bump version after release"
+ > git rev-list --no-walk 09954354e251bb209ef0366c38efc6883dbf564f # timeout=10
+[AssertFixer] $ /bin/sh -xe /tmp/jenkins465338860404507997.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  11466      0 --:--:-- --:--:-- --:--:-- 11502
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 38 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 53 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (835 B at 42 kB/s)
+[INFO] 
+[INFO] -------------------< eu.stamp-project:assert-fixer >--------------------
+[INFO] Building eu.stamp-project:assert-fixer 1.0.10-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.8.1:use-latest-versions (default-cli) @ assert-fixer ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from gforge.inria.fr-release
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from sonatype-nexus-snapshots
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:7.6.0-SNAPSHOT to version 10.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.411 s
+[INFO] Finished at: 2021-11-19T12:53:11+01:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] 
+[INFO] -------------------< eu.stamp-project:assert-fixer >--------------------
+[INFO] Building eu.stamp-project:assert-fixer 1.0.10-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ assert-fixer ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.922 s
+[INFO] Finished at: 2021-11-19T12:53:14+01:00
+[INFO] ------------------------------------------------------------------------
++ mvn clean test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] 
+[INFO] -------------------< eu.stamp-project:assert-fixer >--------------------
+[INFO] Building eu.stamp-project:assert-fixer 1.0.10-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from gforge.inria.fr-release: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from gforge.inria.fr-release: http://maven.inria.fr/artifactory/spoon-public-snapshot/org/apache/maven/maven-model/maven-metadata.xml
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ assert-fixer ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.0:enforce (enforce-maven) @ assert-fixer ---
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.7:prepare-agent (default) @ assert-fixer ---
+[INFO] argLine set to -javaagent:/builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar=destfile=/builds/workspace/AssertFixer/target/jacoco.exec,excludes=**/fr/inria/spirals/test4repair/*
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ assert-fixer ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ assert-fixer ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 12 source files to /builds/workspace/AssertFixer/target/classes
+[WARNING] /builds/workspace/AssertFixer/src/main/java/eu/stamp/project/assertfixer/test/TestRunner.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/AssertFixer/src/main/java/eu/stamp/project/assertfixer/test/TestRunner.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ assert-fixer ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ assert-fixer ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 5 source files to /builds/workspace/AssertFixer/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ assert-fixer ---
+[INFO] Surefire report directory: /builds/workspace/AssertFixer/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Running eu.stamp.project.assertfixer.MainTest
+[0] INFO EntryPoint - Path to runner Classes: /builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar
+[39] INFO EntryPoint - /builds/.m2/repository/org/jacoco/org.jacoco.core/0.8.7/org.jacoco.core-0.8.7.jar
+[39] INFO EntryPoint - /builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar
+[41] INFO EntryPoint - /builds/.m2/repository/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar
+[42] INFO EntryPoint - /builds/.m2/repository/org/pitest/pitest-entry/1.6.7/pitest-entry-1.6.7.jar
+[55] INFO EntryPoint - /builds/.m2/repository/org/pitest/pitest/1.6.7/pitest-1.6.7.jar
+[55] INFO EntryPoint - /builds/.m2/repository/org/pitest/pitest/1.6.7/pitest-1.6.7.jar
+[62] INFO EntryPoint - /builds/.m2/repository/org/pitest/pitest-entry/1.6.7/pitest-entry-1.6.7.jar
+[62] INFO EntryPoint - /builds/.m2/repository/eu/stamp-project/descartes/1.2.4/descartes-1.2.4.jar
+[63] INFO EntryPoint - /builds/.m2/repository/org/pitest/pitest-junit5-plugin/0.8/pitest-junit5-plugin-0.8.jar
+[63] INFO EntryPoint - /builds/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.3.2/junit-jupiter-api-5.3.2.jar
+[64] INFO EntryPoint - /builds/.m2/repository/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar
+[3280] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorBoolean]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorBoolean
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[3777] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorBoolean(aPackage.ClassResourcesTest): null
+[3781] INFO Main - Fixing: null
+[3975] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorBoolean:testAssertionErrorBoolean_0:testAssertionErrorBoolean_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorBoolean:testAssertionErrorBoolean_0:testAssertionErrorBoolean_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[4266] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorBoolean_0,aPackage.ClassResourcesTest#testAssertionErrorBoolean_1,aPackage.ClassResourcesTest#testAssertionErrorBoolean
+[4321] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorBoolean]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorBoolean
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[4643] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorBoolean(aPackage.ClassResourcesTest): eu/stamp/project/assertfixer/asserts/log/Logger,aPackage.ClassResourcesTest#null(aPackage.ClassResourcesTest): eu/stamp/project/assertfixer/asserts/log/Logger
+[aPackage.ClassResourcesTest#testAssertionErrorBoolean(aPackage.ClassResourcesTest): eu/stamp/project/assertfixer/asserts/log/Logger, aPackage.ClassResourcesTest#null(aPackage.ClassResourcesTest): eu/stamp/project/assertfixer/asserts/log/Logger]
+[4710] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorPrimitive]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorPrimitive
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[5033] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorPrimitive(aPackage.ClassResourcesTest): expected:<32> but was:<23>
+[5033] INFO Main - Fixing: expected:<32> but was:<23>
+[5116] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorPrimitive:testAssertionErrorPrimitive_0:testAssertionErrorPrimitive_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorPrimitive:testAssertionErrorPrimitive_0:testAssertionErrorPrimitive_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[5391] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorPrimitive,aPackage.ClassResourcesTest#testAssertionErrorPrimitive_0,aPackage.ClassResourcesTest#testAssertionErrorPrimitive_1
+[5450] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorPrimitive]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorPrimitive
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[5738] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorPrimitive(aPackage.ClassResourcesTest): eu/stamp/project/assertfixer/asserts/log/Logger,aPackage.ClassResourcesTest#null(aPackage.ClassResourcesTest): eu/stamp/project/assertfixer/asserts/log/Logger
+[aPackage.ClassResourcesTest#testAssertionErrorPrimitive(aPackage.ClassResourcesTest): eu/stamp/project/assertfixer/asserts/log/Logger, aPackage.ClassResourcesTest#null(aPackage.ClassResourcesTest): eu/stamp/project/assertfixer/asserts/log/Logger]
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.438 sec
+Running eu.stamp.project.assertfixer.asserts.AssertFixerTest
+[6201] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorBoolean]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorBoolean
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[6585] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorBoolean(aPackage.ClassResourcesTest): null
+[6653] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorBoolean:testAssertionErrorBoolean_0:testAssertionErrorBoolean_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorBoolean:testAssertionErrorBoolean_0:testAssertionErrorBoolean_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[7027] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorBoolean_0,aPackage.ClassResourcesTest#testAssertionErrorBoolean_1,aPackage.ClassResourcesTest#testAssertionErrorBoolean
+[7193] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorBoolean]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorBoolean
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[7514] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorBoolean
+[7714] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorPrimitive]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorPrimitive
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[8008] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorPrimitive(aPackage.ClassResourcesTest): expected:<32> but was:<23>
+[8061] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorPrimitive:testAssertionErrorPrimitive_0:testAssertionErrorPrimitive_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorPrimitive:testAssertionErrorPrimitive_0:testAssertionErrorPrimitive_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[8407] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorPrimitive,aPackage.ClassResourcesTest#testAssertionErrorPrimitive_0,aPackage.ClassResourcesTest#testAssertionErrorPrimitive_1
+[8520] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorPrimitive]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorPrimitive
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[8774] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorPrimitive
+[8984] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testRemoveTryCatchBlock]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testRemoveTryCatchBlock
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[9364] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testRemoveTryCatchBlock(aPackage.ClassResourcesTest): Expecting exception: IndexOutOfBoundsException
+[9429] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testRemoveTryCatchBlock]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testRemoveTryCatchBlock
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[9730] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testRemoveTryCatchBlock
+[9839] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testRemoveTryCatchBlock]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testRemoveTryCatchBlock
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[10176] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testRemoveTryCatchBlock
+[10334] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAddExpectedExceptionAnonymous]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAddExpectedExceptionAnonymous
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[10645] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAddExpectedExceptionAnonymous(aPackage.ClassResourcesTest): null
+[10821] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAddExpectedExceptionAnonymous]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAddExpectedExceptionAnonymous
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[11104] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAddExpectedExceptionAnonymous
+[11253] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testReplaceExpectedExceptionAnonymous]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testReplaceExpectedExceptionAnonymous
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[11610] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testReplaceExpectedExceptionAnonymous(aPackage.ClassResourcesTest): null
+[11761] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testReplaceExpectedExceptionAnonymous]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testReplaceExpectedExceptionAnonymous
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[12042] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testReplaceExpectedExceptionAnonymous
+[12177] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAddTryCatchFail]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAddTryCatchFail
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[12440] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAddTryCatchFail(aPackage.ClassResourcesTest): null
+[12523] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAddTryCatchFail]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAddTryCatchFail
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[12819] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAddTryCatchFail
+[12936] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testReplaceExpectedException]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testReplaceExpectedException
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[13279] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testReplaceExpectedException(aPackage.ClassResourcesTest): null
+[13397] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testReplaceExpectedException]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testReplaceExpectedException
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[13718] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testReplaceExpectedException
+[13808] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testNegativeInfinity]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testNegativeInfinity
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[14068] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testNegativeInfinity(aPackage.ClassResourcesTest): expected:<Infinity> but was:<-Infinity>
+[14102] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testNegativeInfinity:testNegativeInfinity_0:testNegativeInfinity_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testNegativeInfinity:testNegativeInfinity_0:testNegativeInfinity_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[14377] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testNegativeInfinity_0,aPackage.ClassResourcesTest#testNegativeInfinity_1,aPackage.ClassResourcesTest#testNegativeInfinity
+[14491] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testNegativeInfinity]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testNegativeInfinity
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[14820] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testNegativeInfinity
+[14924] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorArray]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorArray
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[15320] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorArray(aPackage.ClassResourcesTest): arrays first differed at element [0]; expected:<32> but was:<23>
+[15377] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorArray:testAssertionErrorArray_0:testAssertionErrorArray_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorArray:testAssertionErrorArray_0:testAssertionErrorArray_1
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+Saving 3 observations... Saved!
+Saving 3 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[15766] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorArray_0,aPackage.ClassResourcesTest#testAssertionErrorArray,aPackage.ClassResourcesTest#testAssertionErrorArray_1
+[15868] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorArray]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorArray
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[16123] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorArray
+[16236] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testReplaceExpectedExceptionWithForwardReference]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testReplaceExpectedExceptionWithForwardReference
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[16577] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testReplaceExpectedExceptionWithForwardReference(aPackage.ClassResourcesTest): null
+[16702] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testReplaceExpectedExceptionWithForwardReference]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testReplaceExpectedExceptionWithForwardReference
+java.lang.NullPointerException
+	at aPackage.ClassResourcesTest.throwNPE(ClassResourcesTest.java:24)
+	at aPackage.ClassResourcesTest.testReplaceExpectedExceptionWithForwardReference(ClassResourcesTest.java:78)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:27)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at eu.stamp_project.testrunner.runner.JUnit4Runner.run(JUnit4Runner.java:63)
+	at eu.stamp_project.testrunner.runner.JUnit4Runner.main(JUnit4Runner.java:27)
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[17062] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testReplaceExpectedExceptionWithForwardReference
+[17164] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertSame]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertSame
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[17497] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertSame(aPackage.ClassResourcesTest): expected same:<Infinity> was not:<-Infinity>
+[17569] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertSame:testAssertSame_0:testAssertSame_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertSame:testAssertSame_0:testAssertSame_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[17938] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertSame_1,aPackage.ClassResourcesTest#testAssertSame_0,aPackage.ClassResourcesTest#testAssertSame
+[18010] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertSame]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertSame
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[18317] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertSame
+[18432] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorField]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorField
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[18696] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorField(aPackage.ClassResourcesTest): expected:<0.0> but was:<NaN>
+[18743] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorField:testAssertionErrorField_0:testAssertionErrorField_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorField:testAssertionErrorField_0:testAssertionErrorField_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[19085] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorField,aPackage.ClassResourcesTest#testAssertionErrorField_1,aPackage.ClassResourcesTest#testAssertionErrorField_0
+[19145] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorField]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorField
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[19456] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorField
+[19525] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testPositiveInfinity]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testPositiveInfinity
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[19787] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testPositiveInfinity(aPackage.ClassResourcesTest): expected:<-Infinity> but was:<Infinity>
+[19819] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testPositiveInfinity:testPositiveInfinity_0:testPositiveInfinity_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testPositiveInfinity:testPositiveInfinity_0:testPositiveInfinity_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[20125] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testPositiveInfinity_1,aPackage.ClassResourcesTest#testPositiveInfinity,aPackage.ClassResourcesTest#testPositiveInfinity_0
+[20195] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testPositiveInfinity]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testPositiveInfinity
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[20455] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testPositiveInfinity
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.641 sec
+Running eu.stamp.project.assertfixer.util.CounterTest
+[20549] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorBoolean]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorBoolean
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[20823] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorBoolean(aPackage.ClassResourcesTest): null
+[20854] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorBoolean:testAssertionErrorBoolean_0:testAssertionErrorBoolean_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorBoolean:testAssertionErrorBoolean_0:testAssertionErrorBoolean_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[21160] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorBoolean_0,aPackage.ClassResourcesTest#testAssertionErrorBoolean_1,aPackage.ClassResourcesTest#testAssertionErrorBoolean
+[21212] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorBoolean]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorBoolean
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[21455] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorBoolean
+[21461] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorPrimitive]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorPrimitive
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[21713] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorPrimitive(aPackage.ClassResourcesTest): expected:<32> but was:<23>
+[21749] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorPrimitive:testAssertionErrorPrimitive_0:testAssertionErrorPrimitive_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorPrimitive:testAssertionErrorPrimitive_0:testAssertionErrorPrimitive_1
+Saving 1 observations... Saved!
+Saving 1 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[22014] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorPrimitive,aPackage.ClassResourcesTest#testAssertionErrorPrimitive_0,aPackage.ClassResourcesTest#testAssertionErrorPrimitive_1
+[22105] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorPrimitive]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorPrimitive
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[22346] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorPrimitive
+[22356] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorArray]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorArray
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[22639] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorArray(aPackage.ClassResourcesTest): arrays first differed at element [0]; expected:<32> but was:<23>
+[22681] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/workspace/AssertFixer/target/classes:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorArray:testAssertionErrorArray_0:testAssertionErrorArray_1]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorArray:testAssertionErrorArray_0:testAssertionErrorArray_1
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+WARNING: this test may be flaky
+Saving 3 observations... Saved!
+Saving 3 observations... Saved!
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[23016] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorArray_0,aPackage.ClassResourcesTest#testAssertionErrorArray,aPackage.ClassResourcesTest#testAssertionErrorArray_1
+[23074] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAssertionErrorArray]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAssertionErrorArray
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[23373] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAssertionErrorArray
+[23379] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAddTryCatchFail]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAddTryCatchFail
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[23642] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAddTryCatchFail(aPackage.ClassResourcesTest): null
+[23782] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testAddTryCatchFail]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testAddTryCatchFail
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[24086] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testAddTryCatchFail
+[24093] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testReplaceExpectedException]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testReplaceExpectedException
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[24362] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testReplaceExpectedException(aPackage.ClassResourcesTest): null
+[24430] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testReplaceExpectedException]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testReplaceExpectedException
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[24700] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testReplaceExpectedException
+[24706] INFO EntryPoint - Run: [java, -classpath, /builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:target/assert-fixer/spooned-classes/:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testRemoveTryCatchBlock]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testRemoveTryCatchBlock
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[25005] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testRemoveTryCatchBlock(aPackage.ClassResourcesTest): Expecting exception: IndexOutOfBoundsException
+[25029] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testRemoveTryCatchBlock]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testRemoveTryCatchBlock
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[25270] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testRemoveTryCatchBlock
+[25340] INFO EntryPoint - Run: [java, -classpath, target/assert-fixer/spooned-classes/:/builds/.m2/repository/junit/junit/4.13.1/junit-4.13.1.jar:/builds/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/builds/workspace/AssertFixer/target/classes:target/dependency-binary:/builds/.m2/repository/eu/stamp-project/test-runner/3.0.0/test-runner-3.0.0.jar, eu.stamp_project.testrunner.runner.JUnit4Runner, --class, aPackage.ClassResourcesTest, --tests, testRemoveTryCatchBlock]
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Parsing --class aPackage.ClassResourcesTest --tests testRemoveTryCatchBlock
+File saved to the following path: /builds/workspace/AssertFixer/target/TestResult.dat
+[25632] INFO EntryPoint - Test has been run: aPackage.ClassResourcesTest#testRemoveTryCatchBlock
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.304 sec
+
+Results :
+
+Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  35.988 s
+[INFO] Finished at: 2021-11-19T12:53:52+01:00
+[INFO] ------------------------------------------------------------------------
+Finished: SUCCESS
