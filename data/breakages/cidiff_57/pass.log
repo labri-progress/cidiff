@@ -1,0 +1,554 @@
+2022-05-24T13:48:55.4015135Z Requested labels: ubuntu-latest
+2022-05-24T13:48:55.4015193Z Job defined at: labri-progress/cidiff/.github/workflows/build-test-cidiff.yml@refs/heads/main
+2022-05-24T13:48:55.4015215Z Waiting for a runner to pick up this job...
+2022-05-24T13:48:56.1271758Z Job is waiting for a hosted runner to come online.
+2022-05-24T13:49:02.3081790Z Job is about to start running on the hosted runner: Hosted Agent (hosted)
+2022-05-24T13:49:06.4860510Z Current runner version: '2.291.1'
+2022-05-24T13:49:06.4885879Z ##[group]Operating System
+2022-05-24T13:49:06.4886462Z Ubuntu
+2022-05-24T13:49:06.4886693Z 20.04.4
+2022-05-24T13:49:06.4886951Z LTS
+2022-05-24T13:49:06.4887204Z ##[endgroup]
+2022-05-24T13:49:06.4887513Z ##[group]Virtual Environment
+2022-05-24T13:49:06.4887900Z Environment: ubuntu-20.04
+2022-05-24T13:49:06.4888212Z Version: 20220515.1
+2022-05-24T13:49:06.4888670Z Included Software: https://github.com/actions/virtual-environments/blob/ubuntu20/20220515.1/images/linux/Ubuntu2004-Readme.md
+2022-05-24T13:49:06.4889306Z Image Release: https://github.com/actions/virtual-environments/releases/tag/ubuntu20%2F20220515.1
+2022-05-24T13:49:06.4889732Z ##[endgroup]
+2022-05-24T13:49:06.4890050Z ##[group]Virtual Environment Provisioner
+2022-05-24T13:49:06.4890400Z 1.0.0.0-main-20220421-1
+2022-05-24T13:49:06.4890704Z ##[endgroup]
+2022-05-24T13:49:06.4891548Z ##[group]GITHUB_TOKEN Permissions
+2022-05-24T13:49:06.4892174Z Actions: write
+2022-05-24T13:49:06.4892595Z Checks: write
+2022-05-24T13:49:06.4892902Z Contents: write
+2022-05-24T13:49:06.4893186Z Deployments: write
+2022-05-24T13:49:06.4893519Z Discussions: write
+2022-05-24T13:49:06.4893822Z Issues: write
+2022-05-24T13:49:06.4894062Z Metadata: read
+2022-05-24T13:49:06.4894351Z Packages: write
+2022-05-24T13:49:06.4894660Z Pages: write
+2022-05-24T13:49:06.4894918Z PullRequests: write
+2022-05-24T13:49:06.4895253Z RepositoryProjects: write
+2022-05-24T13:49:06.4895582Z SecurityEvents: write
+2022-05-24T13:49:06.4895851Z Statuses: write
+2022-05-24T13:49:06.4896164Z ##[endgroup]
+2022-05-24T13:49:06.4899710Z Secret source: Actions
+2022-05-24T13:49:06.4900119Z Prepare workflow directory
+2022-05-24T13:49:06.5753444Z Prepare all required actions
+2022-05-24T13:49:06.5937845Z Getting action download info
+2022-05-24T13:49:06.8801255Z Download action repository 'actions/checkout@v2' (SHA:7884fcad6b5d53d10323aee724dc68d8b9096a2e)
+2022-05-24T13:49:07.7883329Z Download action repository 'actions/setup-java@v2' (SHA:f0bb91606209742fe3ea40199be2f3ef195ecabf)
+2022-05-24T13:49:08.9823371Z ##[group]Run actions/checkout@v2
+2022-05-24T13:49:08.9823771Z with:
+2022-05-24T13:49:08.9824045Z   repository: labri-progress/cidiff
+2022-05-24T13:49:08.9824557Z   token: ***
+2022-05-24T13:49:08.9824821Z   ssh-strict: true
+2022-05-24T13:49:08.9825063Z   persist-credentials: true
+2022-05-24T13:49:08.9825379Z   clean: true
+2022-05-24T13:49:08.9825635Z   fetch-depth: 1
+2022-05-24T13:49:08.9825847Z   lfs: false
+2022-05-24T13:49:08.9826094Z   submodules: false
+2022-05-24T13:49:08.9826402Z   set-safe-directory: true
+2022-05-24T13:49:08.9826649Z ##[endgroup]
+2022-05-24T13:49:09.2041756Z Syncing repository: labri-progress/cidiff
+2022-05-24T13:49:09.2044168Z ##[group]Getting Git version info
+2022-05-24T13:49:09.2045254Z Working directory is '/home/runner/work/cidiff/cidiff'
+2022-05-24T13:49:09.2046390Z [command]/usr/bin/git version
+2022-05-24T13:49:09.2125402Z git version 2.36.1
+2022-05-24T13:49:09.2146537Z ##[endgroup]
+2022-05-24T13:49:09.2163866Z Temporarily overriding HOME='/home/runner/work/_temp/4e32a2c4-65c0-4d75-a348-481330369a15' before making global git config changes
+2022-05-24T13:49:09.2164867Z Adding repository directory to the temporary git global config as a safe directory
+2022-05-24T13:49:09.2165822Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cidiff/cidiff
+2022-05-24T13:49:09.2203761Z Deleting the contents of '/home/runner/work/cidiff/cidiff'
+2022-05-24T13:49:09.2207920Z ##[group]Initializing the repository
+2022-05-24T13:49:09.2211310Z [command]/usr/bin/git init /home/runner/work/cidiff/cidiff
+2022-05-24T13:49:09.2262210Z hint: Using 'master' as the name for the initial branch. This default branch name
+2022-05-24T13:49:09.2262904Z hint: is subject to change. To configure the initial branch name to use in all
+2022-05-24T13:49:09.2264123Z hint: of your new repositories, which will suppress this warning, call:
+2022-05-24T13:49:09.2264581Z hint: 
+2022-05-24T13:49:09.2265366Z hint: 	git config --global init.defaultBranch <name>
+2022-05-24T13:49:09.2265987Z hint: 
+2022-05-24T13:49:09.2266828Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2022-05-24T13:49:09.2267437Z hint: 'development'. The just-created branch can be renamed via this command:
+2022-05-24T13:49:09.2267859Z hint: 
+2022-05-24T13:49:09.2268205Z hint: 	git branch -m <name>
+2022-05-24T13:49:09.2274106Z Initialized empty Git repository in /home/runner/work/cidiff/cidiff/.git/
+2022-05-24T13:49:09.2283853Z [command]/usr/bin/git remote add origin https://github.com/labri-progress/cidiff
+2022-05-24T13:49:09.2317228Z ##[endgroup]
+2022-05-24T13:49:09.2318094Z ##[group]Disabling automatic garbage collection
+2022-05-24T13:49:09.2354666Z [command]/usr/bin/git config --local gc.auto 0
+2022-05-24T13:49:09.2385312Z ##[endgroup]
+2022-05-24T13:49:09.2386216Z ##[group]Setting up auth
+2022-05-24T13:49:09.2397674Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2022-05-24T13:49:09.2427285Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+2022-05-24T13:49:09.2717612Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2022-05-24T13:49:09.2748879Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+2022-05-24T13:49:09.2977350Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2022-05-24T13:49:09.3006629Z ##[endgroup]
+2022-05-24T13:49:09.3007289Z ##[group]Fetching the repository
+2022-05-24T13:49:09.3019708Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin +e1228e437f190589bba6cebbf65ecfaa5ba118a6:refs/remotes/origin/main
+2022-05-24T13:49:09.7877248Z remote: Enumerating objects: 109, done.        
+2022-05-24T13:49:09.7878363Z remote: Counting objects:   0% (1/109)        
+2022-05-24T13:49:09.7878876Z remote: Counting objects:   1% (2/109)        
+2022-05-24T13:49:09.7880734Z remote: Counting objects:   2% (3/109)        
+2022-05-24T13:49:09.7881162Z remote: Counting objects:   3% (4/109)        
+2022-05-24T13:49:09.7881521Z remote: Counting objects:   4% (5/109)        
+2022-05-24T13:49:09.7946255Z remote: Counting objects:   5% (6/109)        
+2022-05-24T13:49:09.7946508Z remote: Counting objects:   6% (7/109)        
+2022-05-24T13:49:09.7946749Z remote: Counting objects:   7% (8/109)        
+2022-05-24T13:49:09.7946999Z remote: Counting objects:   8% (9/109)        
+2022-05-24T13:49:09.7947242Z remote: Counting objects:   9% (10/109)        
+2022-05-24T13:49:09.7947493Z remote: Counting objects:  10% (11/109)        
+2022-05-24T13:49:09.7947743Z remote: Counting objects:  11% (12/109)        
+2022-05-24T13:49:09.7947986Z remote: Counting objects:  12% (14/109)        
+2022-05-24T13:49:09.7948253Z remote: Counting objects:  13% (15/109)        
+2022-05-24T13:49:09.7948485Z remote: Counting objects:  14% (16/109)        
+2022-05-24T13:49:09.7948722Z remote: Counting objects:  15% (17/109)        
+2022-05-24T13:49:09.7948947Z remote: Counting objects:  16% (18/109)        
+2022-05-24T13:49:09.7949177Z remote: Counting objects:  17% (19/109)        
+2022-05-24T13:49:09.7949414Z remote: Counting objects:  18% (20/109)        
+2022-05-24T13:49:09.7949640Z remote: Counting objects:  19% (21/109)        
+2022-05-24T13:49:09.7949869Z remote: Counting objects:  20% (22/109)        
+2022-05-24T13:49:09.7950102Z remote: Counting objects:  21% (23/109)        
+2022-05-24T13:49:09.7950324Z remote: Counting objects:  22% (24/109)        
+2022-05-24T13:49:09.7950558Z remote: Counting objects:  23% (26/109)        
+2022-05-24T13:49:09.7950794Z remote: Counting objects:  24% (27/109)        
+2022-05-24T13:49:09.7951025Z remote: Counting objects:  25% (28/109)        
+2022-05-24T13:49:09.7951250Z remote: Counting objects:  26% (29/109)        
+2022-05-24T13:49:09.7951654Z remote: Counting objects:  27% (30/109)        
+2022-05-24T13:49:09.7951907Z remote: Counting objects:  28% (31/109)        
+2022-05-24T13:49:09.7952132Z remote: Counting objects:  29% (32/109)        
+2022-05-24T13:49:09.7952367Z remote: Counting objects:  30% (33/109)        
+2022-05-24T13:49:09.7952596Z remote: Counting objects:  31% (34/109)        
+2022-05-24T13:49:09.7952815Z remote: Counting objects:  32% (35/109)        
+2022-05-24T13:49:09.7953048Z remote: Counting objects:  33% (36/109)        
+2022-05-24T13:49:09.7953282Z remote: Counting objects:  34% (38/109)        
+2022-05-24T13:49:09.7953501Z remote: Counting objects:  35% (39/109)        
+2022-05-24T13:49:09.7953732Z remote: Counting objects:  36% (40/109)        
+2022-05-24T13:49:09.7953961Z remote: Counting objects:  37% (41/109)        
+2022-05-24T13:49:09.7954197Z remote: Counting objects:  38% (42/109)        
+2022-05-24T13:49:09.7954421Z remote: Counting objects:  39% (43/109)        
+2022-05-24T13:49:09.7954659Z remote: Counting objects:  40% (44/109)        
+2022-05-24T13:49:09.7954893Z remote: Counting objects:  41% (45/109)        
+2022-05-24T13:49:09.7955117Z remote: Counting objects:  42% (46/109)        
+2022-05-24T13:49:09.7955351Z remote: Counting objects:  43% (47/109)        
+2022-05-24T13:49:09.7955585Z remote: Counting objects:  44% (48/109)        
+2022-05-24T13:49:09.7955806Z remote: Counting objects:  45% (50/109)        
+2022-05-24T13:49:09.7956033Z remote: Counting objects:  46% (51/109)        
+2022-05-24T13:49:09.7956272Z remote: Counting objects:  47% (52/109)        
+2022-05-24T13:49:09.7956494Z remote: Counting objects:  48% (53/109)        
+2022-05-24T13:49:09.7956730Z remote: Counting objects:  49% (54/109)        
+2022-05-24T13:49:09.7956958Z remote: Counting objects:  50% (55/109)        
+2022-05-24T13:49:09.7957192Z remote: Counting objects:  51% (56/109)        
+2022-05-24T13:49:09.7957410Z remote: Counting objects:  52% (57/109)        
+2022-05-24T13:49:09.7957711Z remote: Counting objects:  53% (58/109)        
+2022-05-24T13:49:09.7957951Z remote: Counting objects:  54% (59/109)        
+2022-05-24T13:49:09.7958181Z remote: Counting objects:  55% (60/109)        
+2022-05-24T13:49:09.7958462Z remote: Counting objects:  56% (62/109)        
+2022-05-24T13:49:09.7958694Z remote: Counting objects:  57% (63/109)        
+2022-05-24T13:49:09.7958920Z remote: Counting objects:  58% (64/109)        
+2022-05-24T13:49:09.7959152Z remote: Counting objects:  59% (65/109)        
+2022-05-24T13:49:09.7959377Z remote: Counting objects:  60% (66/109)        
+2022-05-24T13:49:09.7959594Z remote: Counting objects:  61% (67/109)        
+2022-05-24T13:49:09.7959828Z remote: Counting objects:  62% (68/109)        
+2022-05-24T13:49:09.7960062Z remote: Counting objects:  63% (69/109)        
+2022-05-24T13:49:09.7960408Z remote: Counting objects:  64% (70/109)        
+2022-05-24T13:49:09.7960644Z remote: Counting objects:  65% (71/109)        
+2022-05-24T13:49:09.7960871Z remote: Counting objects:  66% (72/109)        
+2022-05-24T13:49:09.7961106Z remote: Counting objects:  67% (74/109)        
+2022-05-24T13:49:09.7961349Z remote: Counting objects:  68% (75/109)        
+2022-05-24T13:49:09.7961576Z remote: Counting objects:  69% (76/109)        
+2022-05-24T13:49:09.7961809Z remote: Counting objects:  70% (77/109)        
+2022-05-24T13:49:09.7962049Z remote: Counting objects:  71% (78/109)        
+2022-05-24T13:49:09.7962269Z remote: Counting objects:  72% (79/109)        
+2022-05-24T13:49:09.7962502Z remote: Counting objects:  73% (80/109)        
+2022-05-24T13:49:09.7962736Z remote: Counting objects:  74% (81/109)        
+2022-05-24T13:49:09.7962958Z remote: Counting objects:  75% (82/109)        
+2022-05-24T13:49:09.7963194Z remote: Counting objects:  76% (83/109)        
+2022-05-24T13:49:09.7963431Z remote: Counting objects:  77% (84/109)        
+2022-05-24T13:49:09.7963662Z remote: Counting objects:  78% (86/109)        
+2022-05-24T13:49:09.7963885Z remote: Counting objects:  79% (87/109)        
+2022-05-24T13:49:09.7964181Z remote: Counting objects:  80% (88/109)        
+2022-05-24T13:49:09.7964410Z remote: Counting objects:  81% (89/109)        
+2022-05-24T13:49:09.7964635Z remote: Counting objects:  82% (90/109)        
+2022-05-24T13:49:09.7964868Z remote: Counting objects:  83% (91/109)        
+2022-05-24T13:49:09.7965098Z remote: Counting objects:  84% (92/109)        
+2022-05-24T13:49:09.7965317Z remote: Counting objects:  85% (93/109)        
+2022-05-24T13:49:09.7965548Z remote: Counting objects:  86% (94/109)        
+2022-05-24T13:49:09.7965777Z remote: Counting objects:  87% (95/109)        
+2022-05-24T13:49:09.7966002Z remote: Counting objects:  88% (96/109)        
+2022-05-24T13:49:09.7966229Z remote: Counting objects:  89% (98/109)        
+2022-05-24T13:49:09.7966458Z remote: Counting objects:  90% (99/109)        
+2022-05-24T13:49:09.7966699Z remote: Counting objects:  91% (100/109)        
+2022-05-24T13:49:09.7966948Z remote: Counting objects:  92% (101/109)        
+2022-05-24T13:49:09.7967201Z remote: Counting objects:  93% (102/109)        
+2022-05-24T13:49:09.7967452Z remote: Counting objects:  94% (103/109)        
+2022-05-24T13:49:09.7967689Z remote: Counting objects:  95% (104/109)        
+2022-05-24T13:49:09.7967922Z remote: Counting objects:  96% (105/109)        
+2022-05-24T13:49:09.7968162Z remote: Counting objects:  97% (106/109)        
+2022-05-24T13:49:09.7968385Z remote: Counting objects:  98% (107/109)        
+2022-05-24T13:49:09.7968616Z remote: Counting objects:  99% (108/109)        
+2022-05-24T13:49:09.7968857Z remote: Counting objects: 100% (109/109)        
+2022-05-24T13:49:09.7969106Z remote: Counting objects: 100% (109/109), done.        
+2022-05-24T13:49:09.7969389Z remote: Compressing objects:   1% (1/62)        
+2022-05-24T13:49:09.7969639Z remote: Compressing objects:   3% (2/62)        
+2022-05-24T13:49:09.7969881Z remote: Compressing objects:   4% (3/62)        
+2022-05-24T13:49:09.7970123Z remote: Compressing objects:   6% (4/62)        
+2022-05-24T13:49:09.7970415Z remote: Compressing objects:   8% (5/62)        
+2022-05-24T13:49:09.7970663Z remote: Compressing objects:   9% (6/62)        
+2022-05-24T13:49:09.7970899Z remote: Compressing objects:  11% (7/62)        
+2022-05-24T13:49:09.7971137Z remote: Compressing objects:  12% (8/62)        
+2022-05-24T13:49:09.7971380Z remote: Compressing objects:  14% (9/62)        
+2022-05-24T13:49:09.7971624Z remote: Compressing objects:  16% (10/62)        
+2022-05-24T13:49:09.7971882Z remote: Compressing objects:  17% (11/62)        
+2022-05-24T13:49:09.7972138Z remote: Compressing objects:  19% (12/62)        
+2022-05-24T13:49:09.7972394Z remote: Compressing objects:  20% (13/62)        
+2022-05-24T13:49:09.7972643Z remote: Compressing objects:  22% (14/62)        
+2022-05-24T13:49:09.7972893Z remote: Compressing objects:  24% (15/62)        
+2022-05-24T13:49:09.7973141Z remote: Compressing objects:  25% (16/62)        
+2022-05-24T13:49:09.7973403Z remote: Compressing objects:  27% (17/62)        
+2022-05-24T13:49:09.7973655Z remote: Compressing objects:  29% (18/62)        
+2022-05-24T13:49:09.7973907Z remote: Compressing objects:  30% (19/62)        
+2022-05-24T13:49:09.8323489Z remote: Compressing objects:  32% (20/62)        
+2022-05-24T13:49:09.8323922Z remote: Compressing objects:  33% (21/62)        
+2022-05-24T13:49:09.8324188Z remote: Compressing objects:  35% (22/62)        
+2022-05-24T13:49:09.8324441Z remote: Compressing objects:  37% (23/62)        
+2022-05-24T13:49:09.8324688Z remote: Compressing objects:  38% (24/62)        
+2022-05-24T13:49:09.8324932Z remote: Compressing objects:  40% (25/62)        
+2022-05-24T13:49:09.8325169Z remote: Compressing objects:  41% (26/62)        
+2022-05-24T13:49:09.8325415Z remote: Compressing objects:  43% (27/62)        
+2022-05-24T13:49:09.8325654Z remote: Compressing objects:  45% (28/62)        
+2022-05-24T13:49:09.8325882Z remote: Compressing objects:  46% (29/62)        
+2022-05-24T13:49:09.8326136Z remote: Compressing objects:  48% (30/62)        
+2022-05-24T13:49:09.8326599Z remote: Compressing objects:  50% (31/62)        
+2022-05-24T13:49:09.8339118Z remote: Compressing objects:  51% (32/62)        
+2022-05-24T13:49:09.8339370Z remote: Compressing objects:  53% (33/62)        
+2022-05-24T13:49:09.8339618Z remote: Compressing objects:  54% (34/62)        
+2022-05-24T13:49:09.8339868Z remote: Compressing objects:  56% (35/62)        
+2022-05-24T13:49:09.8340100Z remote: Compressing objects:  58% (36/62)        
+2022-05-24T13:49:09.8340343Z remote: Compressing objects:  59% (37/62)        
+2022-05-24T13:49:09.8340582Z remote: Compressing objects:  61% (38/62)        
+2022-05-24T13:49:09.8340934Z remote: Compressing objects:  62% (39/62)        
+2022-05-24T13:49:09.8369000Z remote: Compressing objects:  64% (40/62)        
+2022-05-24T13:49:09.8369324Z remote: Compressing objects:  66% (41/62)        
+2022-05-24T13:49:09.8404408Z remote: Compressing objects:  67% (42/62)        
+2022-05-24T13:49:09.8404666Z remote: Compressing objects:  69% (43/62)        
+2022-05-24T13:49:09.8404920Z remote: Compressing objects:  70% (44/62)        
+2022-05-24T13:49:09.8405159Z remote: Compressing objects:  72% (45/62)        
+2022-05-24T13:49:09.8405390Z remote: Compressing objects:  74% (46/62)        
+2022-05-24T13:49:09.8405633Z remote: Compressing objects:  75% (47/62)        
+2022-05-24T13:49:09.8405878Z remote: Compressing objects:  77% (48/62)        
+2022-05-24T13:49:09.8406117Z remote: Compressing objects:  79% (49/62)        
+2022-05-24T13:49:09.8406351Z remote: Compressing objects:  80% (50/62)        
+2022-05-24T13:49:09.8406590Z remote: Compressing objects:  82% (51/62)        
+2022-05-24T13:49:09.8406829Z remote: Compressing objects:  83% (52/62)        
+2022-05-24T13:49:09.8407057Z remote: Compressing objects:  85% (53/62)        
+2022-05-24T13:49:09.8407295Z remote: Compressing objects:  87% (54/62)        
+2022-05-24T13:49:09.8407536Z remote: Compressing objects:  88% (55/62)        
+2022-05-24T13:49:09.8407765Z remote: Compressing objects:  90% (56/62)        
+2022-05-24T13:49:09.8408144Z remote: Compressing objects:  91% (57/62)        
+2022-05-24T13:49:09.8408391Z remote: Compressing objects:  93% (58/62)        
+2022-05-24T13:49:09.8408632Z remote: Compressing objects:  95% (59/62)        
+2022-05-24T13:49:09.8408867Z remote: Compressing objects:  96% (60/62)        
+2022-05-24T13:49:09.8409113Z remote: Compressing objects:  98% (61/62)        
+2022-05-24T13:49:09.8409355Z remote: Compressing objects: 100% (62/62)        
+2022-05-24T13:49:09.8409610Z remote: Compressing objects: 100% (62/62), done.        
+2022-05-24T13:49:09.8481972Z Receiving objects:   0% (1/109)
+2022-05-24T13:49:09.8482230Z Receiving objects:   1% (2/109)
+2022-05-24T13:49:09.8482446Z Receiving objects:   2% (3/109)
+2022-05-24T13:49:09.8482861Z Receiving objects:   3% (4/109)
+2022-05-24T13:49:09.8483077Z Receiving objects:   4% (5/109)
+2022-05-24T13:49:09.8483290Z Receiving objects:   5% (6/109)
+2022-05-24T13:49:09.8483512Z Receiving objects:   6% (7/109)
+2022-05-24T13:49:09.8483729Z Receiving objects:   7% (8/109)
+2022-05-24T13:49:09.8483942Z Receiving objects:   8% (9/109)
+2022-05-24T13:49:09.8484151Z Receiving objects:   9% (10/109)
+2022-05-24T13:49:09.8484377Z Receiving objects:  10% (11/109)
+2022-05-24T13:49:09.8484596Z Receiving objects:  11% (12/109)
+2022-05-24T13:49:09.8484803Z Receiving objects:  12% (14/109)
+2022-05-24T13:49:09.8485013Z Receiving objects:  13% (15/109)
+2022-05-24T13:49:09.8485228Z Receiving objects:  14% (16/109)
+2022-05-24T13:49:09.8485428Z Receiving objects:  15% (17/109)
+2022-05-24T13:49:09.8485633Z Receiving objects:  16% (18/109)
+2022-05-24T13:49:09.8485840Z Receiving objects:  17% (19/109)
+2022-05-24T13:49:09.8486039Z Receiving objects:  18% (20/109)
+2022-05-24T13:49:09.8486251Z Receiving objects:  19% (21/109)
+2022-05-24T13:49:09.8486455Z Receiving objects:  20% (22/109)
+2022-05-24T13:49:09.8486662Z Receiving objects:  21% (23/109)
+2022-05-24T13:49:09.8486859Z Receiving objects:  22% (24/109)
+2022-05-24T13:49:09.8487063Z Receiving objects:  23% (26/109)
+2022-05-24T13:49:09.8487420Z Receiving objects:  24% (27/109)
+2022-05-24T13:49:09.8487621Z Receiving objects:  25% (28/109)
+2022-05-24T13:49:09.8487828Z Receiving objects:  26% (29/109)
+2022-05-24T13:49:09.8488039Z Receiving objects:  27% (30/109)
+2022-05-24T13:49:09.8488240Z Receiving objects:  28% (31/109)
+2022-05-24T13:49:09.8488448Z Receiving objects:  29% (32/109)
+2022-05-24T13:49:09.8488659Z Receiving objects:  30% (33/109)
+2022-05-24T13:49:09.8488857Z Receiving objects:  31% (34/109)
+2022-05-24T13:49:09.8489061Z Receiving objects:  32% (35/109)
+2022-05-24T13:49:09.8898892Z Receiving objects:  33% (36/109)
+2022-05-24T13:49:09.8902545Z Receiving objects:  34% (38/109)
+2022-05-24T13:49:09.8902782Z Receiving objects:  35% (39/109)
+2022-05-24T13:49:09.8903024Z Receiving objects:  36% (40/109)
+2022-05-24T13:49:09.8903227Z Receiving objects:  37% (41/109)
+2022-05-24T13:49:09.8903441Z Receiving objects:  38% (42/109)
+2022-05-24T13:49:09.8903653Z Receiving objects:  39% (43/109)
+2022-05-24T13:49:09.8903849Z Receiving objects:  40% (44/109)
+2022-05-24T13:49:09.8904074Z Receiving objects:  41% (45/109)
+2022-05-24T13:49:09.8904291Z Receiving objects:  42% (46/109)
+2022-05-24T13:49:09.8904488Z Receiving objects:  43% (47/109)
+2022-05-24T13:49:09.8904704Z Receiving objects:  44% (48/109)
+2022-05-24T13:49:09.8918830Z Receiving objects:  45% (50/109)
+2022-05-24T13:49:09.8919063Z Receiving objects:  46% (51/109)
+2022-05-24T13:49:09.8919264Z Receiving objects:  47% (52/109)
+2022-05-24T13:49:09.8919469Z Receiving objects:  48% (53/109)
+2022-05-24T13:49:09.8919681Z Receiving objects:  49% (54/109)
+2022-05-24T13:49:09.8919887Z Receiving objects:  50% (55/109)
+2022-05-24T13:49:09.8920094Z Receiving objects:  51% (56/109)
+2022-05-24T13:49:09.8920301Z Receiving objects:  52% (57/109)
+2022-05-24T13:49:09.8920498Z Receiving objects:  53% (58/109)
+2022-05-24T13:49:09.8920699Z Receiving objects:  54% (59/109)
+2022-05-24T13:49:09.8920905Z Receiving objects:  55% (60/109)
+2022-05-24T13:49:09.8921102Z Receiving objects:  56% (62/109)
+2022-05-24T13:49:09.8921464Z Receiving objects:  57% (63/109)
+2022-05-24T13:49:09.8921675Z Receiving objects:  58% (64/109)
+2022-05-24T13:49:09.8921887Z Receiving objects:  59% (65/109)
+2022-05-24T13:49:09.8922088Z Receiving objects:  60% (66/109)
+2022-05-24T13:49:09.8922286Z Receiving objects:  61% (67/109)
+2022-05-24T13:49:09.8922489Z Receiving objects:  62% (68/109)
+2022-05-24T13:49:09.8984770Z Receiving objects:  63% (69/109)
+2022-05-24T13:49:09.9029354Z Receiving objects:  64% (70/109)
+2022-05-24T13:49:09.9029610Z Receiving objects:  65% (71/109)
+2022-05-24T13:49:10.0105838Z Receiving objects:  66% (72/109)
+2022-05-24T13:49:10.0632395Z Receiving objects:  67% (74/109)
+2022-05-24T13:49:10.0638176Z Receiving objects:  68% (75/109)
+2022-05-24T13:49:10.0640697Z Receiving objects:  69% (76/109)
+2022-05-24T13:49:10.0642891Z Receiving objects:  70% (77/109)
+2022-05-24T13:49:10.0644644Z Receiving objects:  71% (78/109)
+2022-05-24T13:49:10.0646740Z Receiving objects:  72% (79/109)
+2022-05-24T13:49:10.0648913Z Receiving objects:  73% (80/109)
+2022-05-24T13:49:10.0650629Z Receiving objects:  74% (81/109)
+2022-05-24T13:49:10.0681880Z Receiving objects:  75% (82/109)
+2022-05-24T13:49:10.0692579Z Receiving objects:  76% (83/109)
+2022-05-24T13:49:10.1206331Z Receiving objects:  77% (84/109)
+2022-05-24T13:49:10.1220015Z Receiving objects:  78% (86/109)
+2022-05-24T13:49:10.1287950Z Receiving objects:  79% (87/109)
+2022-05-24T13:49:10.1317851Z Receiving objects:  80% (88/109)
+2022-05-24T13:49:10.1374436Z Receiving objects:  81% (89/109)
+2022-05-24T13:49:10.1397369Z Receiving objects:  82% (90/109)
+2022-05-24T13:49:10.1402984Z Receiving objects:  83% (91/109)
+2022-05-24T13:49:10.1409018Z Receiving objects:  84% (92/109)
+2022-05-24T13:49:10.1414775Z Receiving objects:  85% (93/109)
+2022-05-24T13:49:10.1420089Z Receiving objects:  86% (94/109)
+2022-05-24T13:49:10.1425067Z Receiving objects:  87% (95/109)
+2022-05-24T13:49:10.1502137Z Receiving objects:  88% (96/109)
+2022-05-24T13:49:10.1566594Z Receiving objects:  89% (98/109)
+2022-05-24T13:49:10.1570983Z Receiving objects:  90% (99/109)
+2022-05-24T13:49:10.1571694Z remote: Total 109 (delta 29), reused 75 (delta 25), pack-reused 0        
+2022-05-24T13:49:10.1575703Z Receiving objects:  91% (100/109)
+2022-05-24T13:49:10.1576778Z Receiving objects:  92% (101/109)
+2022-05-24T13:49:10.1578081Z Receiving objects:  93% (102/109)
+2022-05-24T13:49:10.1579302Z Receiving objects:  94% (103/109)
+2022-05-24T13:49:10.1590385Z Receiving objects:  95% (104/109)
+2022-05-24T13:49:10.1591467Z Receiving objects:  96% (105/109)
+2022-05-24T13:49:10.1594052Z Receiving objects:  97% (106/109)
+2022-05-24T13:49:10.1595625Z Receiving objects:  98% (107/109)
+2022-05-24T13:49:10.1596878Z Receiving objects:  99% (108/109)
+2022-05-24T13:49:10.1598104Z Receiving objects: 100% (109/109)
+2022-05-24T13:49:10.1598656Z Receiving objects: 100% (109/109), 1.30 MiB | 4.15 MiB/s, done.
+2022-05-24T13:49:10.1602444Z Resolving deltas:   0% (0/29)
+2022-05-24T13:49:10.1603112Z Resolving deltas:   3% (1/29)
+2022-05-24T13:49:10.1604268Z Resolving deltas:   6% (2/29)
+2022-05-24T13:49:10.1605790Z Resolving deltas:  10% (3/29)
+2022-05-24T13:49:10.1606950Z Resolving deltas:  13% (4/29)
+2022-05-24T13:49:10.1608390Z Resolving deltas:  17% (5/29)
+2022-05-24T13:49:10.1608845Z Resolving deltas:  20% (6/29)
+2022-05-24T13:49:10.1610221Z Resolving deltas:  24% (7/29)
+2022-05-24T13:49:10.1621333Z Resolving deltas:  27% (8/29)
+2022-05-24T13:49:10.1627872Z Resolving deltas:  31% (9/29)
+2022-05-24T13:49:10.1631195Z Resolving deltas:  34% (10/29)
+2022-05-24T13:49:10.1636732Z Resolving deltas:  37% (11/29)
+2022-05-24T13:49:10.1745283Z Resolving deltas:  41% (12/29)
+2022-05-24T13:49:10.1748684Z Resolving deltas:  44% (13/29)
+2022-05-24T13:49:10.1751374Z Resolving deltas:  48% (14/29)
+2022-05-24T13:49:10.1754256Z Resolving deltas:  51% (15/29)
+2022-05-24T13:49:10.1756706Z Resolving deltas:  55% (16/29)
+2022-05-24T13:49:10.1799857Z Resolving deltas:  58% (17/29)
+2022-05-24T13:49:10.1942335Z Resolving deltas:  62% (18/29)
+2022-05-24T13:49:10.2040005Z Resolving deltas:  65% (19/29)
+2022-05-24T13:49:10.2093850Z Resolving deltas:  68% (20/29)
+2022-05-24T13:49:10.2109301Z Resolving deltas:  72% (21/29)
+2022-05-24T13:49:10.2123433Z Resolving deltas:  75% (22/29)
+2022-05-24T13:49:10.2128141Z Resolving deltas:  79% (23/29)
+2022-05-24T13:49:10.2143507Z Resolving deltas:  82% (24/29)
+2022-05-24T13:49:10.2145876Z Resolving deltas:  86% (25/29)
+2022-05-24T13:49:10.2191520Z Resolving deltas:  89% (26/29)
+2022-05-24T13:49:10.2192010Z Resolving deltas:  93% (27/29)
+2022-05-24T13:49:10.2248836Z Resolving deltas:  96% (28/29)
+2022-05-24T13:49:10.2249322Z Resolving deltas: 100% (29/29)
+2022-05-24T13:49:10.2250388Z Resolving deltas: 100% (29/29), done.
+2022-05-24T13:49:10.2350622Z From https://github.com/labri-progress/cidiff
+2022-05-24T13:49:10.2351230Z  * [new ref]         e1228e437f190589bba6cebbf65ecfaa5ba118a6 -> origin/main
+2022-05-24T13:49:10.2386731Z ##[endgroup]
+2022-05-24T13:49:10.2387534Z ##[group]Determining the checkout info
+2022-05-24T13:49:10.2388531Z ##[endgroup]
+2022-05-24T13:49:10.2389077Z ##[group]Checking out the ref
+2022-05-24T13:49:10.2390061Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2022-05-24T13:49:10.2925809Z Switched to a new branch 'main'
+2022-05-24T13:49:10.2941620Z branch 'main' set up to track 'origin/main'.
+2022-05-24T13:49:10.2942513Z ##[endgroup]
+2022-05-24T13:49:10.2973792Z [command]/usr/bin/git log -1 --format='%H'
+2022-05-24T13:49:10.3000239Z 'e1228e437f190589bba6cebbf65ecfaa5ba118a6'
+2022-05-24T13:49:10.3313696Z ##[group]Run actions/setup-java@v2
+2022-05-24T13:49:10.3313931Z with:
+2022-05-24T13:49:10.3314108Z   java-version: 17
+2022-05-24T13:49:10.3314307Z   distribution: zulu
+2022-05-24T13:49:10.3314512Z   java-package: jdk
+2022-05-24T13:49:10.3314695Z   architecture: x64
+2022-05-24T13:49:10.3314885Z   check-latest: false
+2022-05-24T13:49:10.3315083Z   server-id: github
+2022-05-24T13:49:10.3315284Z   server-username: GITHUB_ACTOR
+2022-05-24T13:49:10.3315530Z   server-password: GITHUB_TOKEN
+2022-05-24T13:49:10.3315855Z   overwrite-settings: true
+2022-05-24T13:49:10.3316060Z   job-status: success
+2022-05-24T13:49:10.3316249Z ##[endgroup]
+2022-05-24T13:49:10.5206256Z Trying to resolve the latest version from remote
+2022-05-24T13:49:10.6052690Z Resolved latest version as 17.0.3+7
+2022-05-24T13:49:10.6055380Z Trying to download...
+2022-05-24T13:49:10.6059596Z Downloading Java 17.0.3+7 (Zulu) from https://cdn.azul.com/zulu/bin/zulu17.34.19-ca-jdk17.0.3-linux_x64.tar.gz ...
+2022-05-24T13:49:12.6054679Z Extracting Java archive...
+2022-05-24T13:49:12.6208747Z [command]/usr/bin/tar xz --warning=no-unknown-keyword -C /home/runner/work/_temp/3b899ee4-b30f-47f0-9128-c0ceaf1d5010 -f /home/runner/work/_temp/4eb101b3-7b39-415a-ac17-e1110fed11cd
+2022-05-24T13:49:17.2532530Z Java 17.0.3+7 was downloaded
+2022-05-24T13:49:17.2533344Z Setting Java 17.0.3+7 as the default
+2022-05-24T13:49:17.2552777Z 
+2022-05-24T13:49:17.2552967Z Java configuration:
+2022-05-24T13:49:17.2553191Z   Distribution: zulu
+2022-05-24T13:49:17.2554012Z   Version: 17.0.3+7
+2022-05-24T13:49:17.2554787Z   Path: /opt/hostedtoolcache/Java_Zulu_jdk/17.0.3-7/x64
+2022-05-24T13:49:17.2555043Z 
+2022-05-24T13:49:17.2582895Z Creating settings.xml with server-id: github
+2022-05-24T13:49:17.2668613Z Writing to /home/runner/.m2/settings.xml
+2022-05-24T13:49:17.3858255Z ##[group]Run ./gradlew build
+2022-05-24T13:49:17.3858614Z [36;1m./gradlew build[0m
+2022-05-24T13:49:17.3914476Z shell: /usr/bin/bash -e {0}
+2022-05-24T13:49:17.3914701Z env:
+2022-05-24T13:49:17.3914958Z   JAVA_HOME: /opt/hostedtoolcache/Java_Zulu_jdk/17.0.3-7/x64
+2022-05-24T13:49:17.3915196Z ##[endgroup]
+2022-05-24T13:49:17.4932398Z Downloading https://services.gradle.org/distributions/gradle-7.3-bin.zip
+2022-05-24T13:49:19.1345446Z ...........10%...........20%...........30%...........40%...........50%...........60%...........70%...........80%...........90%...........100%
+2022-05-24T13:49:20.3438998Z 
+2022-05-24T13:49:20.3446577Z Welcome to Gradle 7.3!
+2022-05-24T13:49:20.3446927Z 
+2022-05-24T13:49:20.3447218Z Here are the highlights of this release:
+2022-05-24T13:49:20.3447785Z  - Easily declare new test suites in Java projects
+2022-05-24T13:49:20.3448096Z  - Support for Java 17
+2022-05-24T13:49:20.3448331Z  - Support for Scala 3
+2022-05-24T13:49:20.3448460Z 
+2022-05-24T13:49:20.3448780Z For more details see https://docs.gradle.org/7.3/release-notes.html
+2022-05-24T13:49:20.3448991Z 
+2022-05-24T13:49:20.4426072Z Starting a Gradle Daemon (subsequent builds will be faster)
+2022-05-24T13:49:28.7479618Z > Task :cidiff:compileJava
+2022-05-24T13:49:28.8426395Z > Task :cidiff:processResources NO-SOURCE
+2022-05-24T13:49:28.8437224Z > Task :cidiff:classes
+2022-05-24T13:49:28.8437559Z > Task :cidiff:jar
+2022-05-24T13:49:29.1430352Z > Task :cidiff:startScripts
+2022-05-24T13:49:29.1430898Z > Task :cidiff:distTar SKIPPED
+2022-05-24T13:49:29.1431543Z > Task :cidiff:distZip
+2022-05-24T13:49:29.1431813Z > Task :cidiff:assemble
+2022-05-24T13:49:30.3426403Z > Task :cidiff:compileTestJava
+2022-05-24T13:49:30.3427169Z > Task :cidiff:processTestResources NO-SOURCE
+2022-05-24T13:49:30.3431567Z > Task :cidiff:testClasses
+2022-05-24T13:49:32.1441401Z 
+2022-05-24T13:49:32.1453196Z > Task :cidiff:test
+2022-05-24T13:49:32.1453382Z 
+2022-05-24T13:49:32.1453626Z AlternatingBruteForceLogDifferTest > testUnchangedCode1() PASSED
+2022-05-24T13:49:32.1453846Z 
+2022-05-24T13:49:32.1454015Z AlternatingBruteForceLogDifferTest > testUnchangedCode2() PASSED
+2022-05-24T13:49:32.1454228Z 
+2022-05-24T13:49:32.1454403Z AlternatingBruteForceLogDifferTest > testDeletedCode() PASSED
+2022-05-24T13:49:32.1454610Z 
+2022-05-24T13:49:32.1454775Z AlternatingBruteForceLogDifferTest > testUpdatedCode() PASSED
+2022-05-24T13:49:32.1454975Z 
+2022-05-24T13:49:32.1455143Z AlternatingBruteForceLogDifferTest > testAddedCode() PASSED
+2022-05-24T13:49:32.1455347Z 
+2022-05-24T13:49:32.1455711Z BruteForceLogDifferTest > testUnchangedCode1() PASSED
+2022-05-24T13:49:32.1455890Z 
+2022-05-24T13:49:32.1456117Z BruteForceLogDifferTest > testUnchangedCode2() PASSED
+2022-05-24T13:49:32.1456639Z 
+2022-05-24T13:49:32.1456875Z BruteForceLogDifferTest > testDeletedCode() PASSED
+2022-05-24T13:49:32.1457056Z 
+2022-05-24T13:49:32.1457196Z BruteForceLogDifferTest > testUpdatedCode() PASSED
+2022-05-24T13:49:32.1457371Z 
+2022-05-24T13:49:32.1457510Z BruteForceLogDifferTest > testAddedCode() PASSED
+2022-05-24T13:49:32.1457681Z 
+2022-05-24T13:49:32.1457805Z ConsoleClientTest > testGithubParsing() PASSED
+2022-05-24T13:49:32.1457973Z 
+2022-05-24T13:49:32.1458114Z ConsoleClientTest > testGithubParsingMock() PASSED
+2022-05-24T13:49:32.1458290Z 
+2022-05-24T13:49:32.1458551Z ConsoleClientTest > testClassicParsingWithTimestamp() PASSED
+2022-05-24T13:49:32.1458833Z 
+2022-05-24T13:49:32.1459029Z ConsoleClientTest > testOutput() PASSED
+2022-05-24T13:49:32.1459188Z 
+2022-05-24T13:49:32.1459317Z ConsoleClientTest > testClassicParsing() PASSED
+2022-05-24T13:49:32.1459484Z 
+2022-05-24T13:49:32.1459693Z LcsLogDifferTest > testUnchangedCode1() PASSED
+2022-05-24T13:49:32.1459927Z 
+2022-05-24T13:49:32.1460123Z LcsLogDifferTest > testUnchangedCode2() PASSED
+2022-05-24T13:49:32.1460295Z 
+2022-05-24T13:49:32.1460522Z LcsLogDifferTest > testDeletedCode() PASSED
+2022-05-24T13:49:32.1460684Z 
+2022-05-24T13:49:32.1461059Z LcsLogDifferTest > testUpdatedCode() PASSED
+2022-05-24T13:49:32.1473298Z 
+2022-05-24T13:49:32.1473604Z LcsLogDifferTest > testAddedCode() PASSED
+2022-05-24T13:49:32.1473785Z 
+2022-05-24T13:49:32.1474018Z OptionsTest > parseIncorrectOptionsTest() PASSED
+2022-05-24T13:49:32.1474219Z 
+2022-05-24T13:49:32.1474361Z OptionsTest > parseTwoOptionsTest() PASSED
+2022-05-24T13:49:32.1474524Z 
+2022-05-24T13:49:32.1474725Z OptionsTest > parseEmptyOptionsTest() PASSED
+2022-05-24T13:49:32.1474959Z 
+2022-05-24T13:49:32.1475138Z OptionsTest > parseOneOptionTest() PASSED
+2022-05-24T13:49:32.1475295Z 
+2022-05-24T13:49:32.1475484Z SeedExtendDifferTest > testFallback() PASSED
+2022-05-24T13:49:32.1475723Z 
+2022-05-24T13:49:32.1475895Z UtilsTest > rewriteSimTest() PASSED
+2022-05-24T13:49:32.1476047Z 
+2022-05-24T13:49:32.1476246Z UtilsTest > testFastExponentiation() PASSED
+2022-05-24T13:49:32.1476477Z 
+2022-05-24T13:49:32.1476624Z > Task :cidiff:check
+2022-05-24T13:49:32.1476822Z > Task :cidiff:build
+2022-05-24T13:49:32.1477087Z > Task :cidiff:installDist
+2022-05-24T13:49:33.6430836Z > Task :cidiff-gh:compileJava
+2022-05-24T13:49:33.6431438Z > Task :cidiff-gh:processResources NO-SOURCE
+2022-05-24T13:49:33.6431834Z > Task :cidiff-gh:classes
+2022-05-24T13:49:33.6432173Z > Task :cidiff-gh:jar
+2022-05-24T13:49:33.8423382Z > Task :cidiff-gh:startScripts
+2022-05-24T13:49:33.8424044Z > Task :cidiff-gh:distTar SKIPPED
+2022-05-24T13:49:34.0438975Z > Task :cidiff-gh:distZip
+2022-05-24T13:49:34.0439724Z > Task :cidiff-gh:assemble
+2022-05-24T13:49:34.0440662Z > Task :cidiff-gh:compileTestJava NO-SOURCE
+2022-05-24T13:49:34.0441072Z > Task :cidiff-gh:processTestResources NO-SOURCE
+2022-05-24T13:49:34.0441415Z > Task :cidiff-gh:testClasses UP-TO-DATE
+2022-05-24T13:49:34.0441722Z > Task :cidiff-gh:test NO-SOURCE
+2022-05-24T13:49:34.0442002Z > Task :cidiff-gh:check UP-TO-DATE
+2022-05-24T13:49:34.0442300Z > Task :cidiff-gh:build
+2022-05-24T13:49:34.0442563Z > Task :cidiff-gh:installDist
+2022-05-24T13:49:34.0442705Z 
+2022-05-24T13:49:34.0442787Z BUILD SUCCESSFUL in 16s
+2022-05-24T13:49:34.0443018Z 12 actionable tasks: 12 executed
+2022-05-24T13:49:34.3955558Z Post job cleanup.
+2022-05-24T13:49:34.5512119Z Post job cleanup.
+2022-05-24T13:49:34.6729200Z [command]/usr/bin/git version
+2022-05-24T13:49:34.6774278Z git version 2.36.1
+2022-05-24T13:49:34.6815120Z Temporarily overriding HOME='/home/runner/work/_temp/b1abf3b4-959d-4ba8-8840-6d36f4330f04' before making global git config changes
+2022-05-24T13:49:34.6815935Z Adding repository directory to the temporary git global config as a safe directory
+2022-05-24T13:49:34.6821412Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cidiff/cidiff
+2022-05-24T13:49:34.6859910Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2022-05-24T13:49:34.6892026Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+2022-05-24T13:49:34.7145595Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2022-05-24T13:49:34.7176852Z http.https://github.com/.extraheader
+2022-05-24T13:49:34.7238952Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2022-05-24T13:49:34.7286173Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+2022-05-24T13:49:34.7744933Z Cleaning up orphan processes
+2022-05-24T13:49:34.8057410Z Terminate orphan process: pid (1641) (java)
