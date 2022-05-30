@@ -58,7 +58,7 @@ class ConsoleClientTest {
     void testGithubParsing() {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER, "FULL_GITHUB");
-        ConsoleClient d = new ConsoleClient("../data/gumtree_191.log", "../data/gumtree_192.log", options);
+        ConsoleClient d = new ConsoleClient("../data/test-fullgh-left.log", "../data/test-fullgh-right.log", options);
         //FIXME
     }
 
@@ -66,7 +66,7 @@ class ConsoleClientTest {
     void testClassicParsing() {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER, "DEFAULT");
-        ConsoleClient d = new ConsoleClient("../data/astor_399.log", "../data/astor_400.log", options);
+        ConsoleClient d = new ConsoleClient("../data/test-classic-parser-left.log", "../data/test-classic-parser-right.log", options);
         //FIXME
     }
 
