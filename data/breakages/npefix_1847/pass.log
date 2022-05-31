@@ -1,0 +1,805 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/npefix
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/Spirals-Team/npefix.git
+ > git init /builds/workspace/npefix # timeout=10
+Fetching upstream changes from https://github.com/Spirals-Team/npefix.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/Spirals-Team/npefix.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/Spirals-Team/npefix.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 7e0b0ee9c5eda2f65ae828e80ab634e51f4752c5 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 7e0b0ee9c5eda2f65ae828e80ab634e51f4752c5 # timeout=10
+Commit message: "bump to Java 11"
+ > git rev-list --no-walk 7e0b0ee9c5eda2f65ae828e80ab634e51f4752c5 # timeout=10
+[npefix] $ /bin/sh -xe /tmp/jenkins6941737836620623054.sh
++ rm -rf /builds/.m2/repository/fr/inria/gforge/spoon
+[npefix] $ /bin/sh -xe /tmp/jenkins12200992750761727260.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  16420      0 --:--:-- --:--:-- --:--:-- 16420
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 25 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 36 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (866 B at 67 kB/s)
+[INFO] 
+[INFO] -------------------< fr.inria.gforge.spirals:npefix >-------------------
+[INFO] Building npefix 0.8-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.9.0:use-latest-versions (default-cli) @ npefix ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from gforge.inria.fr-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:7.5.0-SNAPSHOT to version 10.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.470 s
+[INFO] Finished at: 2022-02-14T05:24:11+01:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] 
+[INFO] -------------------< fr.inria.gforge.spirals:npefix >-------------------
+[INFO] Building npefix 0.8-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ npefix ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.931 s
+[INFO] Finished at: 2022-02-14T05:24:18+01:00
+[INFO] ------------------------------------------------------------------------
++ mvn test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] Inspecting build with total of 1 modules...
+[[1;34mINFO[m] Installing Nexus Staging features:
+[[1;34mINFO[m]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------------< [0;36mfr.inria.gforge.spirals:npefix[0;1m >-------------------[m
+[[1;34mINFO[m] [1mBuilding npefix 0.8-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml (1.0 kB at 1.6 kB/s)
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220213.234347-296.pom
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220213.234347-296.pom
+Progress (1): 883 BProgress (1): 3.2 kBProgress (1): 6.0 kBProgress (1): 8.1 kBProgress (1): 11 kB Progress (1): 11 kB                   Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220213.234347-296.pom (11 kB at 210 kB/s)
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-pom/1.0/spoon-pom-1.0.pom
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-pom/1.0/spoon-pom-1.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-pom/1.0/spoon-pom-1.0.pom
+Progress (1): 1.4/21 kBProgress (1): 2.7/21 kBProgress (1): 4.1/21 kBProgress (1): 5.5/21 kBProgress (1): 6.9/21 kBProgress (1): 8.2/21 kBProgress (1): 9.6/21 kBProgress (1): 11/21 kB Progress (1): 12/21 kBProgress (1): 14/21 kBProgress (1): 15/21 kBProgress (1): 16/21 kBProgress (1): 18/21 kBProgress (1): 19/21 kBProgress (1): 21/21 kBProgress (1): 21 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-pom/1.0/spoon-pom-1.0.pom (21 kB at 150 kB/s)
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220213.234347-296.jar
+Progress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8 MB                        Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220213.234347-296.jar (1.8 MB at 1.6 MB/s)
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.4:prepare-agent[m [1m(default)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] argLine set to -javaagent:/builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.4/org.jacoco.agent-0.8.4-runtime.jar=destfile=/builds/workspace/npefix/target/jacoco.exec
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mbuild-helper-maven-plugin:1.7:add-source[m [1m(add-source)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] Source directory: /builds/workspace/npefix/src/evaluation/java added.
+[[1;34mINFO[m] Source directory: /builds/workspace/npefix/src/main/java added.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 1 resource
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.5.1:compile[m [1m(default-compile)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 185 source files to /builds/workspace/npefix/target/classes
+[[1;34mINFO[m] /builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/resi/strategies/AbstractStrategy.java: Some input files use or override a deprecated API.
+[[1;34mINFO[m] /builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/resi/strategies/AbstractStrategy.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] /builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/transformer/processors/ProcessorUtility.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/transformer/processors/ProcessorUtility.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:testResources[m [1m(default-testResources)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 9 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.5.1:testCompile[m [1m(default-testCompile)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 17 source files to /builds/workspace/npefix/target/test-classes
+[[1;34mINFO[m] /builds/workspace/npefix/src/test/java/fr/inria/spirals/npefix/patch/PatchesGeneratorTest.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /builds/workspace/npefix/src/test/java/fr/inria/spirals/npefix/patch/PatchesGeneratorTest.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.17:test[m [1m(default-test)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] Surefire report directory: /builds/workspace/npefix/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Running fr.inria.spirals.npefix.transformer.processors.ConstructorEncapsulationTest
+ConstructorEncapsulation # Constructor: 2 in 98ms
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.991 sec - in fr.inria.spirals.npefix.transformer.processors.ConstructorEncapsulationTest
+Running fr.inria.spirals.npefix.transformer.processors.ArrayAccessTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.494 sec - in fr.inria.spirals.npefix.transformer.processors.ArrayAccessTest
+Running fr.inria.spirals.npefix.transformer.processors.BeforeDerefAdderTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.01 sec - in fr.inria.spirals.npefix.transformer.processors.BeforeDerefAdderTest
+Running fr.inria.spirals.npefix.transformer.processors.TernarySplitterTest
+TernarySplitter  in 19ms
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.554 sec - in fr.inria.spirals.npefix.transformer.processors.TernarySplitterTest
+Running fr.inria.spirals.npefix.transformer.processors.ImplicitCastCheckerTest
+AddImplicitCastChecker --> 4 in 21ms
+BeforeDeref --> 31 (failed:0) in 57ms
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.179 sec - in fr.inria.spirals.npefix.transformer.processors.ImplicitCastCheckerTest
+Running fr.inria.spirals.npefix.transformer.processors.CheckNotNullTest
+java.lang.String local = (field == null) ? "" : field
+return field == null ? "" : field
+field = (parm == null) ? "" : parm
+java.lang.Class type = (array != null) ? array.getClass() : element != null ? element.getClass() : java.lang.Object.class
+java.lang.Class type = (array != null) ? array.getClass() : element != null ? element.getClass() : java.lang.Object.class
+CheckNotNull  in 65ms
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.481 sec - in fr.inria.spirals.npefix.transformer.processors.CheckNotNullTest
+Running fr.inria.spirals.npefix.transformer.processors.TargetModifierTest
+target--> 29 (failed:0) in 83ms
+public void multiCatch() {
+    try {
+    } catch (java.lang.IllegalArgumentException | java.lang.NullPointerException e) {
+        e.printStackTrace();
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.471 sec - in fr.inria.spirals.npefix.transformer.processors.TargetModifierTest
+Running fr.inria.spirals.npefix.transformer.TryCatchRepairModelTest
+/builds/workspace/npefix/target/test-classes/foo/src
+RMI Selector (Host: 127.0.0.1, Port: 10000): KO
+CheckNotNull  in 0ms
+ForceNullInit in 0ms
+AddImplicitCastChecker --> 0 in 0ms
+Assign --> 0 (failed: 0) in 0ms
+VarInit --> 0 in 0ms
+TryCatchRepair # Method: 4 in 21ms
+ConstructorTryCatchRepair # Constructor: 0 in 0ms
+VariableFor in 0ms
+ConeflowerTest#test3
+	1 Strat4 NULL Coneflower:7 Used null
+Status: Ko
+ConeflowerTest#test2
+	1 Strat4 NULL Coneflower:11 Used null
+Status: Ko
+ConeflowerTest#test1
+	1 Strat4 NULL Coneflower:15 Used null
+Status: Ko
+Multirun 4/1500 0%
+ConeflowerTest#test2
+	1 Strat4 NULL Coneflower:7 Used null
+Status: Ko
+ConeflowerTest#test1
+	1 Strat4 NULL Coneflower:11 Used null
+Status: Ko
+Multirun 8/1500 0%
+ConeflowerTest#test1
+	1 Strat4 NULL Coneflower:7 Used null
+Status: Ko
+Multirun 12/1500 0%
+ConeflowerTest#testThrowException
+	1 Strat4 VAR Coneflower:19 Used i
+Status: Ok
+Multirun 4/1500 0%
+ConeflowerTest#test3
+	1 Strat4 NEW Coneflower:7 Used java.lang.String()
+Status: Ok
+ConeflowerTest#testThrowException
+	1 Strat4 NEW Coneflower:19 Used 0
+Status: Ok
+ConeflowerTest#test2
+	1 Strat4 NEW Coneflower:11 Used java.lang.String()
+Status: Ko
+ConeflowerTest#test1
+	1 Strat4 NEW Coneflower:15 Used java.lang.String()
+Status: Ko
+Multirun 4/1500 0%
+ConeflowerTest#testThrowException
+	1 Strat4 NEW Coneflower:19 Used -1
+Status: Ko
+ConeflowerTest#test2
+	1 Strat4 NEW Coneflower:7 Used java.lang.String()
+Status: Ok
+ConeflowerTest#test1
+	1 Strat4 NEW Coneflower:11 Used java.lang.String()
+Status: Ko
+Multirun 8/1500 0%
+ConeflowerTest#testThrowException
+	1 Strat4 NEW Coneflower:19 Used 1
+Status: Ko
+ConeflowerTest#test1
+	1 Strat4 NEW Coneflower:7 Used java.lang.String()
+Status: Ok
+Multirun 12/1500 0%
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.836 sec - in fr.inria.spirals.npefix.transformer.TryCatchRepairModelTest
+Running fr.inria.spirals.npefix.patchTemplate.ReplaceGlobalTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.734 sec - in fr.inria.spirals.npefix.patchTemplate.ReplaceGlobalTest
+Running fr.inria.spirals.npefix.patchTemplate.VariableFinderTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.252 sec - in fr.inria.spirals.npefix.patchTemplate.VariableFinderTest
+Running fr.inria.spirals.npefix.patchTemplate.SkipLineTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.336 sec - in fr.inria.spirals.npefix.patchTemplate.SkipLineTest
+Running fr.inria.spirals.npefix.patchTemplate.SkipMethodReturnTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.686 sec - in fr.inria.spirals.npefix.patchTemplate.SkipMethodReturnTest
+Running fr.inria.spirals.npefix.patchTemplate.ReplaceLocalTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.544 sec - in fr.inria.spirals.npefix.patchTemplate.ReplaceLocalTest
+Running fr.inria.spirals.npefix.patch.PatchesGeneratorTest
+--- a/target/test-classes/foo/src/main/java/Foo.java
++++ b/target/test-classes/foo/src/main/java/Foo.java
+@@ -105,3 +105,7 @@
+     public void  multiDecisionLine() {
+-        Arrays.asList(field.toString(), field.toString());
++        if (field == null) {
++            Arrays.asList( new String().toString(), new String().toString());
++        } else {
++            Arrays.asList(field.toString(), field.toString());
++        }
+     }
+
+--- a/target/test-classes/foo/src/main/java/Foo.java
++++ b/target/test-classes/foo/src/main/java/Foo.java
+@@ -20,6 +20,8 @@
+         String result = "";
+-        for (String element : array) {
+-            result += element.toString();
+-            if(element == null) {
+-                return null;
++        if (array != null) {
++            for (String element : array) {
++                result += element.toString();
++                if(element == null) {
++                    return null;
++                }
+             }
+
+--- a/src/main/java/Foo.java
++++ b/src/main/java/Foo.java
+@@ -20,2 +20,5 @@
+         String result = "";
++        if (array == null) {
++            return new Object();
++        }
+         for (String element : array) {
+
+--- a/target/test-classes/foo/src/main/java/Foo.java
++++ b/target/test-classes/foo/src/main/java/Foo.java
+@@ -111,4 +111,12 @@
+ 
+-        } else if (array[0].isEmpty()) {
+-
++        } else {
++            if (array[0] == null) {
++                if ( new String().isEmpty()) {
++                    
++                }
++            } else {
++                if (array[0].isEmpty()) {
++                    
++                }
++            }
+         }
+
+--- a/target/test-classes/foo/src/main/java/Foo.java
++++ b/target/test-classes/foo/src/main/java/Foo.java
+@@ -20,2 +20,5 @@
+         String result = "";
++        if (array == null) {
++            return new Object();
++        }
+         for (String element : array) {
+
+--- a/target/test-classes/foo/src/main/java/Foo.java
++++ b/target/test-classes/foo/src/main/java/Foo.java
+@@ -20,2 +20,5 @@
+         String result = "";
++        if (array == null) {
++            return result;
++        }
+         for (String element : array) {
+@@ -30,3 +33,5 @@
+     public String fooLocal() {
+-        System.out.print(field.toLowerCase());
++        if (field != null) {
++            System.out.print(field.toLowerCase());
++        }
+         if(field == null) {
+
+--- a/target/test-classes/foo/src/main/java/Foo.java
++++ b/target/test-classes/foo/src/main/java/Foo.java
+@@ -20,7 +20,16 @@
+         String result = "";
+-        for (String element : array) {
+-            result += element.toString();
+-            if(element == null) {
+-                return null;
++        if (array == null) {
++            for (String element : result) {
++                result += element.toString();
++                if(element == null) {
++                    return null;
++                }
+             }
++        } else {
++            for (String element : array) {
++                result += element.toString();
++                if(element == null) {
++                    return null;
++                }
++            }
+         }
+
+--- a/target/test-classes/foo/src/main/java/Foo.java
++++ b/target/test-classes/foo/src/main/java/Foo.java
+@@ -20,7 +20,16 @@
+         String result = "";
+-        for (String element : array) {
+-            result += element.toString();
+-            if(element == null) {
+-                return null;
++        if (array == null) {
++            for (String element : new String[0]) {
++                result += element.toString();
++                if(element == null) {
++                    return null;
++                }
+             }
++        } else {
++            for (String element : array) {
++                result += element.toString();
++                if(element == null) {
++                    return null;
++                }
++            }
+         }
+
+--- a/target/test-classes/foo/src/main/java/Foo.java
++++ b/target/test-classes/foo/src/main/java/Foo.java
+@@ -20,2 +20,5 @@
+         String result = "";
++        if (array == null) {
++            array = new String[0];
++        }
+         for (String element : array) {
+
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.466 sec - in fr.inria.spirals.npefix.patch.PatchesGeneratorTest
+Running fr.inria.spirals.npefix.main.all.LauncherTest
+TernarySplitter  in 8ms
+type = (element != null) ? element.getClass() : Object.class
+CheckNotNull  in 29ms
+ForceNullInit in 2ms
+AddImplicitCastChecker --> 4 in 9ms
+BeforeDeref --> 29 (failed:0) in 20ms
+target--> 32 (failed:0) in 57ms
+TryRegister # Try: 1 in 25ms
+Assign --> 19 (failed: 0) in 60ms
+VarInit --> 10 in 14ms
+MethodEncapsulation # Method: 28 in 78ms
+ConstructorEncapsulation # Constructor: 2 in 13ms
+VariableFor in 8ms
+NoStrat
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+<No Strat> Status: Ko
+FooClassTest#foo1Test
+<No Strat> Status: Ko
+FooClassTest#fooLocalTest
+<No Strat> Status: Ko
+FooClassTest#fooGlobalTest
+<No Strat> Status: Ko
+FooClassTest#fooVariableLocalTest
+<No Strat> Status: Ko
+FooClassTest#fooVariableGlobalTest
+<No Strat> Status: Ko
+FooClassTest#returnVoidTest
+<No Strat> Status: Ko
+Strat1A
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+<No Strat> Status: Ko
+FooClassTest#foo1Test
+	1 Strat1A Foo:21 result
+Status: Ko
+FooClassTest#fooLocalTest
+<No Strat> Status: Ko
+FooClassTest#fooGlobalTest
+<No Strat> Status: Ko
+FooClassTest#fooVariableLocalTest
+	1 Strat1A Foo:49 Used empty
+Status: Ko
+FooClassTest#fooVariableGlobalTest
+	1 Strat1A Foo:58 Used empty
+Status: Ok
+FooClassTest#returnVoidTest
+<No Strat> Status: Ko
+Strat1B
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+<No Strat> Status: Ko
+FooClassTest#foo1Test
+	1 Strat1B Foo:21 result
+Status: Ko
+FooClassTest#fooLocalTest
+<No Strat> Status: Ko
+FooClassTest#fooGlobalTest
+<No Strat> Status: Ko
+FooClassTest#fooVariableLocalTest
+	1 Strat1B Foo:49 Used empty
+Status: Ko
+FooClassTest#fooVariableGlobalTest
+	1 Strat1B Foo:58 Used empty
+Status: Ok
+FooClassTest#returnVoidTest
+<No Strat> Status: Ko
+Strat2A
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+	1 Strat2A Foo:16 Used java.lang.String()
+Status: Ok
+FooClassTest#foo1Test
+	1 Strat2A Foo:21 java.lang.Object()
+Status: Ko
+FooClassTest#fooLocalTest
+	1 Strat2A Foo:31 Used java.lang.String()
+Status: Ok
+FooClassTest#fooGlobalTest
+	1 Strat2A Foo:31 Used java.lang.String()
+Status: Ko
+FooClassTest#fooVariableLocalTest
+	1 Strat2A Foo:49 Used java.lang.String()
+Status: Ko
+FooClassTest#fooVariableGlobalTest
+	1 Strat2A Foo:58 Used java.lang.String()
+Status: Ko
+FooClassTest#returnVoidTest
+	1 Strat2A Foo:67 Used java.lang.String()
+Status: Ok
+Strat2B
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+	1 Strat2B Foo:16 Used java.lang.String()
+Status: Ok
+FooClassTest#foo1Test
+	1 Strat2B Foo:21 java.lang.Object()
+Status: Ko
+FooClassTest#fooLocalTest
+	1 Strat2B Foo:31 Used java.lang.String()
+Status: Ko
+FooClassTest#fooGlobalTest
+	1 Strat2B Foo:31 Used java.lang.String()
+Status: Ok
+FooClassTest#fooVariableLocalTest
+	1 Strat2B Foo:49 Used java.lang.String()
+Status: Ko
+FooClassTest#fooVariableGlobalTest
+	1 Strat2B Foo:58 Used java.lang.String()
+Status: Ko
+FooClassTest#returnVoidTest
+	1 Strat2B Foo:67 Used java.lang.String()
+Status: Ok
+Strat3
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+	1 Strat3 Foo:16 Used false
+Status: Ok
+FooClassTest#foo1Test
+	1 Strat3 Foo:21 Used false
+Status: Ok
+FooClassTest#fooLocalTest
+	1 Strat3 Foo:31 Used false
+Status: Ok
+FooClassTest#fooGlobalTest
+	1 Strat3 Foo:31 Used false
+Status: Ko
+FooClassTest#fooVariableLocalTest
+	1 Strat3 Foo:49 Used false
+Status: Ok
+FooClassTest#fooVariableGlobalTest
+	1 Strat3 Foo:58 Used false
+Status: Ko
+FooClassTest#returnVoidTest
+	1 Strat3 Foo:67 Used false
+Status: Ok
+Strat4 NULL
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+<No Strat> Status: Ko
+FooClassTest#foo1Test
+	1 Strat4 NULL Foo:21 Used null
+Status: Ok
+FooClassTest#fooLocalTest
+	1 Strat4 NULL Foo:31 Used null
+Status: Ko
+FooClassTest#fooGlobalTest
+	1 Strat4 NULL Foo:31 Used null
+Status: Ko
+FooClassTest#fooVariableLocalTest
+	1 Strat4 NULL Foo:49 Used null
+Status: Ko
+FooClassTest#fooVariableGlobalTest
+	1 Strat4 NULL Foo:58 Used null
+Status: Ko
+FooClassTest#returnVoidTest
+<No Strat> Status: Ko
+Strat4 VAR
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+<No Strat> Status: Ko
+FooClassTest#foo1Test
+	1 Strat4 VAR Foo:21 Used result
+Status: Ok
+FooClassTest#fooLocalTest
+<No Strat> Status: Ko
+FooClassTest#fooGlobalTest
+<No Strat> Status: Ko
+FooClassTest#fooVariableLocalTest
+	1 Strat4 VAR Foo:49 Used empty
+Status: Ko
+FooClassTest#fooVariableGlobalTest
+	1 Strat4 VAR Foo:58 Used empty
+Status: Ko
+FooClassTest#returnVoidTest
+<No Strat> Status: Ko
+Strat4 NEW
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+<No Strat> Status: Ko
+FooClassTest#foo1Test
+	1 Strat4 NEW Foo:21 Used java.lang.Object()
+Status: Ok
+FooClassTest#fooLocalTest
+	1 Strat4 NEW Foo:31 Used java.lang.String()
+Status: Ko
+FooClassTest#fooGlobalTest
+	1 Strat4 NEW Foo:31 Used java.lang.String()
+Status: Ok
+FooClassTest#fooVariableLocalTest
+	1 Strat4 NEW Foo:49 Used java.lang.String()
+Status: Ko
+FooClassTest#fooVariableGlobalTest
+	1 Strat4 NEW Foo:58 Used java.lang.String()
+Status: Ko
+FooClassTest#returnVoidTest
+<No Strat> Status: Ko
+Strat4 VOID
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+	1 Strat4 VOID Foo:16 Used null
+Status: Ok
+FooClassTest#foo1Test
+<No Strat> Status: Ko
+FooClassTest#fooLocalTest
+<No Strat> Status: Ko
+FooClassTest#fooGlobalTest
+<No Strat> Status: Ko
+FooClassTest#fooVariableLocalTest
+<No Strat> Status: Ko
+FooClassTest#fooVariableGlobalTest
+<No Strat> Status: Ko
+FooClassTest#returnVoidTest
+	1 Strat4 VOID Foo:67 Used null
+Status: Ok
+TernarySplitter  in 8ms
+type = (element != null) ? element.getClass() : Object.class
+CheckNotNull  in 20ms
+ForceNullInit in 1ms
+AddImplicitCastChecker --> 4 in 6ms
+BeforeDeref --> 29 (failed:0) in 13ms
+target--> 32 (failed:0) in 38ms
+TryRegister # Try: 1 in 17ms
+Assign --> 19 (failed: 0) in 32ms
+VarInit --> 10 in 11ms
+MethodEncapsulation # Method: 52 in 61ms
+ConstructorEncapsulation # Constructor: 2 in 14ms
+VariableFor in 5ms
+ArrayReadReturnNull
+FooArrayAccessTest#fooTest1
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest
+<No Strat> Status: Ko
+FooArrayAccessTest#fooTest2
+<No Strat> Status: Ko
+FooClassTest#fooTest
+	1 ArrayReadReturnNull Foo:16 null
+Status: Ko
+FooClassTest#foo1Test
+	1 ArrayReadReturnNull Foo:21 null
+Status: Ko
+FooClassTest#fooLocalTest
+	1 ArrayReadReturnNull Foo:31 null
+Status: Ko
+FooClassTest#fooGlobalTest
+	1 ArrayReadReturnNull Foo:31 null
+Status: Ko
+FooClassTest#fooVariableLocalTest
+	1 ArrayReadReturnNull Foo:49 null
+Status: Ko
+FooClassTest#fooVariableGlobalTest
+	1 ArrayReadReturnNull Foo:58 null
+Status: Ko
+FooClassTest#returnVoidTest
+	1 ArrayReadReturnNull Foo:67 null
+Status: Ko
+TernarySplitter  in 3ms
+type = (element != null) ? element.getClass() : Object.class
+CheckNotNull  in 26ms
+ForceNullInit in 1ms
+AddImplicitCastChecker --> 4 in 2ms
+BeforeDeref --> 29 (failed:0) in 10ms
+target--> 32 (failed:0) in 30ms
+TryRegister # Try: 1 in 13ms
+Assign --> 19 (failed: 0) in 28ms
+VarInit --> 10 in 5ms
+MethodEncapsulation # Method: 76 in 61ms
+ConstructorEncapsulation # Constructor: 2 in 10ms
+VariableFor in 11ms
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.207 sec - in fr.inria.spirals.npefix.main.all.LauncherTest
+
+Results :
+
+Tests run: 29, Failures: 0, Errors: 0, Skipped: 2
+
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  40.712 s
+[[1;34mINFO[m] Finished at: 2022-02-14T05:25:02+01:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+Finished: SUCCESS

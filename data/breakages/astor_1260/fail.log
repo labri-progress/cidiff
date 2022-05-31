@@ -1,0 +1,387 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu16 (lin) in workspace /builds/workspace/astor
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/astor.git
+ > git init /builds/workspace/astor # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/astor.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.7.4'
+ > git fetch --tags --progress https://github.com/SpoonLabs/astor.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/astor.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 0373f75f70f4028de54f9d568af1b434850a11c3 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0373f75f70f4028de54f9d568af1b434850a11c3 # timeout=10
+Commit message: "check jar gzoltar files in classpath"
+ > git rev-list --no-walk 1188abd969173983c8c86d91b9ebfb596af49c48 # timeout=10
+[astor] $ /bin/sh -xe /tmp/jenkins895217705494374533.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  11489      0 --:--:-- --:--:-- --:--:-- 11447
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml (853 B at 1.7 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 243 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 197 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (900 B at 32 kB/s)
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.10.0:use-latest-versions (default-cli) @ astor ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from sonatype-snapshots
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from inria
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from spoon-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from EvoSuite
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from sachaproject.gforge.inria.fr-release
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from tdurieux.github.io/maven-repository/snapshots/
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from maven.inria.fr-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from central
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:9.2.0-beta-1 to version 10.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.948 s
+[INFO] Finished at: 2022-04-04T12:27:22+02:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml (853 B at 1.9 kB/s)
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ astor ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.190 s
+[INFO] Finished at: 2022-04-04T12:27:28+02:00
+[INFO] ------------------------------------------------------------------------
++ cd examples/math_70
++ mvn clean test -DskipTests
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.apache.commons:commons-math:jar:2.2-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-idea-plugin is missing. @ org.apache.commons:commons-parent:15, /builds/.m2/repository/org/apache/commons/commons-parent/15/commons-parent-15.pom, line 329, column 15
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ------------------< org.apache.commons:commons-math >-------------------
+[INFO] Building Commons Math 2.2-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4:clean (default-clean) @ commons-math ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.3:run (javadoc.resources) @ commons-math ---
+[INFO] Executing tasks
+     [copy] Copying 2 files to /builds/workspace/astor/examples/math_70/target/apidocs/META-INF
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.0:process (default) @ commons-math ---
+[INFO] Setting property: classpath.resource.loader.class => 'org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader'.
+[INFO] Setting property: velocimacro.messages.on => 'false'.
+[INFO] Setting property: resource.loader => 'classpath'.
+[INFO] Setting property: resource.manager.logwhenfound => 'false'.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.1:resources (default-resources) @ commons-math ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources to META-INF
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.1:compile (default-compile) @ commons-math ---
+[INFO] Compiling 414 source files to /builds/workspace/astor/examples/math_70/target/classes
+[INFO] 
+[INFO] --- maven-bundle-plugin:1.4.3:manifest (bundle-manifest) @ commons-math ---
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.1:testResources (default-testResources) @ commons-math ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 11 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.1:testCompile (default-testCompile) @ commons-math ---
+[INFO] Compiling 270 source files to /builds/workspace/astor/examples/math_70/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.5:test (default-test) @ commons-math ---
+[INFO] Tests are skipped.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  16.841 s
+[INFO] Finished at: 2022-04-04T12:27:47+02:00
+[INFO] ------------------------------------------------------------------------
++ cd ../..
++ mvn versions:use-latest-versions -DallowSnapshots=true -Dincludes=com.github.spoonlabs
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.10.0:use-latest-versions (default-cli) @ astor ---
+[INFO] Major version changes allowed
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from sonatype-snapshots
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from inria
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from spoon-snapshot
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from EvoSuite
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from sachaproject.gforge.inria.fr-release
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from tdurieux.github.io/maven-repository/snapshots/
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from maven.inria.fr-snapshot
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from central
+[INFO] Updated com.github.spoonlabs:flacoco:jar:1.0.2 to version 1.0.3-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.122 s
+[INFO] Finished at: 2022-04-04T12:27:55+02:00
+[INFO] ------------------------------------------------------------------------
++ mvn clean test -Dtest=JGenProgEvolutionaryTest
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from spoon-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from tdurieux.github.io/maven-repository/snapshots/: https://tdurieux.github.io/maven-repository/snapshots/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from sachaproject.gforge.inria.fr-release: http://sachaproject.gforge.inria.fr/repositories/releases/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml (1.0 kB at 1.2 kB/s)
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from spoon-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from sachaproject.gforge.inria.fr-release: http://sachaproject.gforge.inria.fr/repositories/releases/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloading from tdurieux.github.io/maven-repository/snapshots/: https://tdurieux.github.io/maven-repository/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloaded from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml (1.0 kB at 5.0 kB/s)
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype: https://oss.sonatype.org/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from sonatype: https://oss.sonatype.org/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml (1.0 kB at 5.6 kB/s)
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/junit/junit-dep/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/junit/junit-dep/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/junit/junit-dep/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/junit/junit-dep/maven-metadata.xml
+Downloading from sonatype: https://oss.sonatype.org/content/repositories/snapshots/junit/junit-dep/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+[INFO] 
+[INFO] --- maven-clean-plugin:3.0.0:clean (default-clean) @ astor ---
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.7:prepare-agent (default) @ astor ---
+[INFO] argLine set to -javaagent:/builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar=destfile=/builds/workspace/astor/target/jacoco.exec
+[INFO] 
+[INFO] --- build-helper-maven-plugin:3.3.0:add-source (default) @ astor ---
+[INFO] Source directory: /builds/workspace/astor/src/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-core/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-jgenprog/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-jkali/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-jmutrepair/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-cardumen/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-deeprepair/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-3sfix/main/java added.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ astor ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.0:compile (default-compile) @ astor ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 333 source files to /builds/workspace/astor/target/classes
+[INFO] -------------------------------------------------------------
+[WARNING] COMPILATION WARNING : 
+[INFO] -------------------------------------------------------------
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/AbstractMain.java: Some input files use or override a deprecated API.
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/AbstractMain.java: Recompile with -Xlint:deprecation for details.
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/FileLauncher.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/FileLauncher.java: Recompile with -Xlint:unchecked for details.
+[INFO] 4 warnings 
+[INFO] -------------------------------------------------------------
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /builds/workspace/astor/src/main/java/fr/inria/astor/core/faultlocalization/flacoco/FlacocoFaultLocalization.java:[71,65] cannot find symbol
+  symbol:   method getExecutedTests()
+  location: variable flacocoResult of type fr.spoonlabs.flacoco.api.result.FlacocoResult
+[ERROR] /builds/workspace/astor/src/main/java/fr/inria/astor/core/faultlocalization/gzoltar/NovelGZoltarFaultLocalization.java:[264,54] constructor JUnitTestTask in class com.gzoltar.core.test.junit.JUnitTestTask cannot be applied to given types;
+  required: java.net.URL[],boolean,boolean,com.gzoltar.core.test.TestMethod
+  found: java.net.URL[],boolean,boolean,boolean,com.gzoltar.core.test.TestMethod
+  reason: actual and formal argument lists differ in length
+[ERROR] /builds/workspace/astor/src/main/java/fr/inria/astor/core/faultlocalization/gzoltar/NovelGZoltarFaultLocalization.java:[276,35] cannot find symbol
+  symbol:   variable GzoltarTestClassesFinder
+  location: class fr.inria.astor.core.faultlocalization.gzoltar.NovelGZoltarFaultLocalization
+[INFO] 3 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  16.397 s
+[INFO] Finished at: 2022-04-04T12:28:14+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.0:compile (default-compile) on project astor: Compilation failure: Compilation failure: 
+[ERROR] /builds/workspace/astor/src/main/java/fr/inria/astor/core/faultlocalization/flacoco/FlacocoFaultLocalization.java:[71,65] cannot find symbol
+[ERROR]   symbol:   method getExecutedTests()
+[ERROR]   location: variable flacocoResult of type fr.spoonlabs.flacoco.api.result.FlacocoResult
+[ERROR] /builds/workspace/astor/src/main/java/fr/inria/astor/core/faultlocalization/gzoltar/NovelGZoltarFaultLocalization.java:[264,54] constructor JUnitTestTask in class com.gzoltar.core.test.junit.JUnitTestTask cannot be applied to given types;
+[ERROR]   required: java.net.URL[],boolean,boolean,com.gzoltar.core.test.TestMethod
+[ERROR]   found: java.net.URL[],boolean,boolean,boolean,com.gzoltar.core.test.TestMethod
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /builds/workspace/astor/src/main/java/fr/inria/astor/core/faultlocalization/gzoltar/NovelGZoltarFaultLocalization.java:[276,35] cannot find symbol
+[ERROR]   symbol:   variable GzoltarTestClassesFinder
+[ERROR]   location: class fr.inria.astor.core.faultlocalization.gzoltar.NovelGZoltarFaultLocalization
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+Build step 'Execute shell' marked build as failure
+Sending e-mails to: martin.monperrus@gnieh.org matias.sebastian.martinez@gmail.com
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] done
+Finished: FAILURE

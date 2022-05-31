@@ -1,0 +1,2067 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu16 (lin) in workspace /builds/workspace/astor
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/astor.git
+ > git init /builds/workspace/astor # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/astor.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.7.4'
+ > git fetch --tags --progress https://github.com/SpoonLabs/astor.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/astor.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 1188abd969173983c8c86d91b9ebfb596af49c48 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 1188abd969173983c8c86d91b9ebfb596af49c48 # timeout=10
+Commit message: "upgrade flacoco to 1.0.2"
+ > git rev-list --no-walk 1188abd969173983c8c86d91b9ebfb596af49c48 # timeout=10
+[astor] $ /bin/sh -xe /tmp/jenkins1826268603214688719.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  11811      0 --:--:-- --:--:-- --:--:-- 11845
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml (853 B at 1.5 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 99 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 67 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (900 B at 29 kB/s)
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.10.0:use-latest-versions (default-cli) @ astor ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from sonatype-snapshots
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from inria
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from spoon-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from EvoSuite
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from sachaproject.gforge.inria.fr-release
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from tdurieux.github.io/maven-repository/snapshots/
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from maven.inria.fr-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from central
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:9.2.0-beta-1 to version 10.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.187 s
+[INFO] Finished at: 2022-04-03T12:26:30+02:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/build-helper-maven-plugin/maven-metadata.xml (853 B at 1.8 kB/s)
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ astor ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.412 s
+[INFO] Finished at: 2022-04-03T12:26:36+02:00
+[INFO] ------------------------------------------------------------------------
++ cd examples/math_70
++ mvn clean test -DskipTests
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.apache.commons:commons-math:jar:2.2-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-idea-plugin is missing. @ org.apache.commons:commons-parent:15, /builds/.m2/repository/org/apache/commons/commons-parent/15/commons-parent-15.pom, line 329, column 15
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ------------------< org.apache.commons:commons-math >-------------------
+[INFO] Building Commons Math 2.2-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4:clean (default-clean) @ commons-math ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.3:run (javadoc.resources) @ commons-math ---
+[INFO] Executing tasks
+     [copy] Copying 2 files to /builds/workspace/astor/examples/math_70/target/apidocs/META-INF
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.0:process (default) @ commons-math ---
+[INFO] Setting property: classpath.resource.loader.class => 'org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader'.
+[INFO] Setting property: velocimacro.messages.on => 'false'.
+[INFO] Setting property: resource.loader => 'classpath'.
+[INFO] Setting property: resource.manager.logwhenfound => 'false'.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.1:resources (default-resources) @ commons-math ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources to META-INF
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.1:compile (default-compile) @ commons-math ---
+[INFO] Compiling 414 source files to /builds/workspace/astor/examples/math_70/target/classes
+[INFO] 
+[INFO] --- maven-bundle-plugin:1.4.3:manifest (bundle-manifest) @ commons-math ---
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.1:testResources (default-testResources) @ commons-math ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 11 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.1:testCompile (default-testCompile) @ commons-math ---
+[INFO] Compiling 270 source files to /builds/workspace/astor/examples/math_70/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.5:test (default-test) @ commons-math ---
+[INFO] Tests are skipped.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  17.648 s
+[INFO] Finished at: 2022-04-03T12:26:56+02:00
+[INFO] ------------------------------------------------------------------------
++ cd ../..
++ mvn versions:use-latest-versions -DallowSnapshots=true -Dincludes=com.github.spoonlabs
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.10.0:use-latest-versions (default-cli) @ astor ---
+[INFO] Major version changes allowed
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from sonatype-snapshots
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from inria
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from spoon-snapshot
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from EvoSuite
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from sachaproject.gforge.inria.fr-release
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from tdurieux.github.io/maven-repository/snapshots/
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from maven.inria.fr-snapshot
+[INFO] artifact com.github.spoonlabs:flacoco: checking for updates from central
+[INFO] Updated com.github.spoonlabs:flacoco:jar:1.0.2 to version 1.0.3-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.314 s
+[INFO] Finished at: 2022-04-03T12:27:04+02:00
+[INFO] ------------------------------------------------------------------------
++ mvn clean test -Dtest=JGenProgEvolutionaryTest
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.inria.sacha.automaticRepair:astor:jar:2.0.0
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ line 332, column 12
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.mojo:build-helper-maven-plugin is missing. @ line 307, column 12
+[WARNING] 'repositories.repository.id' must not contain any of these characters \/:"<>|?* but found / @ line 182, column 8
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ---------------< org.inria.sacha.automaticRepair:astor >----------------
+[INFO] Building ASTOR 2.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from EvoSuite: http://www.evosuite.org/m2/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from spoon-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from sachaproject.gforge.inria.fr-release: http://sachaproject.gforge.inria.fr/repositories/releases/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from tdurieux.github.io/maven-repository/snapshots/: https://tdurieux.github.io/maven-repository/snapshots/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/com/github/spoonlabs/flacoco/1.0.3-SNAPSHOT/maven-metadata.xml (1.0 kB at 1.1 kB/s)
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from spoon-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from sachaproject.gforge.inria.fr-release: http://sachaproject.gforge.inria.fr/repositories/releases/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml (1.0 kB at 4.4 kB/s)
+Downloading from tdurieux.github.io/maven-repository/snapshots/: https://tdurieux.github.io/maven-repository/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype: https://oss.sonatype.org/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from sonatype: https://oss.sonatype.org/content/repositories/snapshots/eu/stamp-project/test-runner/3.1.4-SNAPSHOT/maven-metadata.xml (1.0 kB at 5.6 kB/s)
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/junit/junit-dep/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/junit/junit-dep/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/junit/junit-dep/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/junit/junit-dep/maven-metadata.xml
+Downloading from sonatype: https://oss.sonatype.org/content/repositories/snapshots/junit/junit-dep/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from sonatype-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from inria: http://spoon.gforge.inria.fr/repositories/releases/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from EvoSuite: http://www.evosuite.org/m2/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fil/iagl/cocospoon/CocoSpoon/1.0.0-SNAPSHOT/maven-metadata.xml
+[INFO] 
+[INFO] --- maven-clean-plugin:3.0.0:clean (default-clean) @ astor ---
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.7:prepare-agent (default) @ astor ---
+[INFO] argLine set to -javaagent:/builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar=destfile=/builds/workspace/astor/target/jacoco.exec
+[INFO] 
+[INFO] --- build-helper-maven-plugin:3.3.0:add-source (default) @ astor ---
+[INFO] Source directory: /builds/workspace/astor/src/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-core/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-jgenprog/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-jkali/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-jmutrepair/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-cardumen/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-deeprepair/main/java added.
+[INFO] Source directory: /builds/workspace/astor/src-3sfix/main/java added.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ astor ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.0:compile (default-compile) @ astor ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 332 source files to /builds/workspace/astor/target/classes
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/AbstractMain.java: Some input files use or override a deprecated API.
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/AbstractMain.java: Recompile with -Xlint:deprecation for details.
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/FileLauncher.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/astor/src/main/java/fr/inria/main/FileLauncher.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ astor ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 5 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.0:testCompile (default-testCompile) @ astor ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 43 source files to /builds/workspace/astor/target/test-classes
+[WARNING] /builds/workspace/astor/src/test/java/fr/inria/astor/test/repair/evaluation/regression/RepairnatorTest.java: Some input files use or override a deprecated API.
+[WARNING] /builds/workspace/astor/src/test/java/fr/inria/astor/test/repair/evaluation/regression/RepairnatorTest.java: Recompile with -Xlint:deprecation for details.
+[WARNING] /builds/workspace/astor/src/test/java/fr/inria/astor/test/repair/core/antipattern/AntiPatternTest.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/astor/src/test/java/fr/inria/astor/test/repair/core/antipattern/AntiPatternTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.16:test (default-test) @ astor ---
+[INFO] Surefire report directory: /builds/workspace/astor/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Running fr.inria.astor.test.repair.approaches.JGenProgEvolutionaryTest
+[-dependencies, /builds/workspace/astor/./examples/libs/junit-4.4.jar, -mode, jgenprog, -failing, org.apache.commons.math.analysis.solvers.BisectionSolverTest, -location, /builds/workspace/astor/./examples/math_70, -package, org.apache.commons, -srcjavafolder, /src/java/, -srctestfolder, /src/test/, -binjavafolder, /target/classes, -bintestfolder, /target/test-classes, -javacompliancelevel, 7, -flthreshold, 0.5, -out, /builds/workspace/astor/./output_astor, -scope, package, -seed, 10, -maxgen, 3000, -stopfirst, false, -maxtime, 10, -population, 1, -reintroduce, PARENTS:SOLUTIONS, -parameters, maxnumbersolutions:3:ignoredTestCases:org.apache.commons.math.estimation.MinpackTest]
+[0] INFO ProjectConfiguration - Version of the JVM used: 11.0.2
+[1] INFO main - Java version of the JDK used to run tests: 11.0.2
+[3] INFO main - The compliance of the JVM is:  0
+[5] INFO main - command line arguments: [-dependencies  /builds/workspace/astor/./examples/libs/junit-4.4.jar  -mode  jgenprog  -failing  org.apache.commons.math.analysis.solvers.BisectionSolverTest  -location  /builds/workspace/astor/./examples/math_70  -package  org.apache.commons  -srcjavafolder  /src/java/  -srctestfolder  /src/test/  -binjavafolder  /target/classes  -bintestfolder  /target/test-classes  -javacompliancelevel  7  -flthreshold  0.5  -out  /builds/workspace/astor/./output_astor  -scope  package  -seed  10  -maxgen  3000  -stopfirst  false  -maxtime  10  -population  1  -reintroduce  PARENTS:SOLUTIONS  -parameters  maxnumbersolutions:3:ignoredTestCases:org.apache.commons.math.estimation.MinpackTest]
+[7] INFO AstorMain - Running Astor on a JDK at /usr/lib/jvm/jdk-11.0.2
+[15] INFO main - Source folders: [/builds/workspace/astor/./examples/math_70/src/main/java]
+[15] INFO main - Source Test folders: [/builds/workspace/astor/./examples/math_70/src/test]
+[2786] INFO AstorCoreEngine - ---- Creating spoon model
+[2851] INFO MutationSupporter - Creating model,  Code location from working folder: /builds/workspace/astor/./examples/math_70/src/main/java
+[2853] INFO MutationSupporter - building model: /builds/workspace/astor/./examples/math_70/src/main/java, compliance level: 7
+[2903] INFO MutationSupporter - Classpath (Dependencies) for building SpoonModel: [/builds/workspace/astor/./examples/libs/junit-4.4.jar]
+[19103] INFO AstorCoreEngine - Number of CtTypes created: 416
+[21229] INFO AstorCoreEngine - Test retrieved from classes: 237
+[21234] INFO Flacoco - Running Flacoco...
+[21273] WARN SpectrumRunner - System memory is lower than 4GiB. Caution when running spectrum-based fault localization on large projects, as coverage computation require more than the available memory
+[63747] INFO CoverageRunner - Tests found: 2163
+[63757] INFO CoverageRunner - Tests executed: 2163
+[67191] INFO FlacocoFaultLocalization - Suspicious: 1 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 72, susp 1.0
+[67195] INFO FlacocoFaultLocalization - Suspicious: 2 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 66, susp 0.7071067811865475
+[67195] INFO FlacocoFaultLocalization - Suspicious: 3 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 80, susp 0.5
+[67196] INFO FlacocoFaultLocalization - Suspicious: 4 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 81, susp 0.5
+[67197] INFO FlacocoFaultLocalization - Suspicious: 5 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 86, susp 0.5
+[67197] INFO FlacocoFaultLocalization - Suspicious: 6 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 87, susp 0.5
+[67198] INFO FlacocoFaultLocalization - Suspicious: 7 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 88, susp 0.5
+[67199] INFO FlacocoFaultLocalization - Suspicious: 8 line org.apache.commons.math.analysis.solvers.BisectionSolver l: 89, susp 0.5
+[67204] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 72, susp 1.0
+[67206] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 66, susp 0.7071067811865475
+[67207] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 80, susp 0.5
+[67207] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 81, susp 0.5
+[67208] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 86, susp 0.5
+[67208] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 87, susp 0.5
+[67209] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 88, susp 0.5
+[67209] INFO FlacocoFaultLocalization - Suspicious:  line org.apache.commons.math.analysis.solvers.BisectionSolver l: 89, susp 0.5
+[67210] INFO AstorCoreEngine - Setting up the max to 475650 milliseconds (475 sec)
+[67210] INFO AstorCoreEngine - ---- Initial suspicious size: 8
+[67625] INFO main - Total suspicious from FL: 8,  8
+[67627] INFO main - Total ModPoint created: 8
+[67630] INFO main - Creating program variant #1, [Variant id: 1, #gens: 8, #ops: 0, parent:-]
+[79625] INFO AstorCoreEngine - The original fitness is : 1.0
+[93074] WARN ConfigurationProperties - ----------------------------
+[93078] INFO ConfigurationProperties - ---Configuration properties
+[93078] INFO ConfigurationProperties - p:projectinfocommand= com.github.tdurieux:project-config-maven-plugin:info
+[93080] INFO ConfigurationProperties - p:workingDirectory= /builds/workspace/astor/./output_astor
+[93084] INFO ConfigurationProperties - p:keepcomments= true
+[93084] INFO ConfigurationProperties - p:maxnumvariablesperingredient= 10
+[93085] INFO ConfigurationProperties - p:folderDiff= ./diffSolutions
+[93086] INFO ConfigurationProperties - p:evo_affected_by_op= true
+[93086] INFO ConfigurationProperties - p:clusteringfilename= clustering.csv
+[93087] INFO ConfigurationProperties - p:validation= process
+[93088] INFO ConfigurationProperties - p:modificationpointnavigation= weight
+[93091] INFO ConfigurationProperties - p:transformingredient= false
+[93095] INFO ConfigurationProperties - p:diffcontext= 0
+[93095] INFO ConfigurationProperties - p:evo_buggy_class= true
+[93096] INFO ConfigurationProperties - p:runjava7code= false
+[93096] INFO ConfigurationProperties - p:manipulatesuper= false
+[93097] INFO ConfigurationProperties - p:forceExecuteRegression= false
+[93097] INFO ConfigurationProperties - p:skipfitnessinitialpopulation= false
+[93098] INFO ConfigurationProperties - p:filterfaultlocalization= true
+[93098] INFO ConfigurationProperties - p:population= 1
+[93098] INFO ConfigurationProperties - p:maxtimefactor= 10
+[93099] INFO ConfigurationProperties - p:elementsToMutate= 10
+[93100] INFO ConfigurationProperties - p:parsesourcefromoriginal= true
+[93101] INFO ConfigurationProperties - p:alternativecompliancelevel= 8
+[93102] INFO ConfigurationProperties - p:bugId= 280
+[93104] INFO ConfigurationProperties - p:regressionforfaultlocalization= true
+[93106] INFO ConfigurationProperties - p:max_synthesis_step= 10000
+[93107] INFO ConfigurationProperties - p:failing= org.apache.commons.math.analysis.solvers.BisectionSolverTest
+[93107] INFO ConfigurationProperties - p:maxmodificationpoints= 1000
+[93108] INFO ConfigurationProperties - p:projectIdentifier= 
+[93109] INFO ConfigurationProperties - p:savecompletepatched= true
+[93109] INFO ConfigurationProperties - p:synthesis_depth= 3
+[93110] INFO ConfigurationProperties - p:seed= 10
+[93110] INFO ConfigurationProperties - p:applyCrossover= false
+[93111] INFO ConfigurationProperties - p:executorjar= ./lib/jtestex7.jar
+[93111] INFO ConfigurationProperties - p:binjavafolder= /target/classes
+[93111] INFO ConfigurationProperties - p:version-location= ./math-version/
+[93112] INFO ConfigurationProperties - p:tmax1= 10000
+[93112] INFO ConfigurationProperties - p:tmax2= 475650
+[93113] INFO ConfigurationProperties - p:continuewhenmodelfail= true
+[93113] INFO ConfigurationProperties - p:logtestexecution= false
+[93114] INFO ConfigurationProperties - p:processoutputinfile= false
+[93114] INFO ConfigurationProperties - p:javacompliancelevel= 7
+[93114] INFO ConfigurationProperties - p:gzoltarpackagetonotinstrument= junit.framework
+[93115] INFO ConfigurationProperties - p:diff_type= relative
+[93116] INFO ConfigurationProperties - p:cleantemplates= true
+[93116] INFO ConfigurationProperties - p:stopfirst= false
+[93117] INFO ConfigurationProperties - p:lastJUnitVersion= ./examples/libs/junit-4.11.jar
+[93118] INFO ConfigurationProperties - p:testbystep= false
+[93118] INFO ConfigurationProperties - p:maxtime= 10
+[93119] INFO ConfigurationProperties - p:preservelinenumbers= true
+[93120] INFO ConfigurationProperties - p:resetoperations= false
+[93120] INFO ConfigurationProperties - p:forcesubprocesskilling= false
+[93121] INFO ConfigurationProperties - p:jvm4evosuitetestexecution= /usr/lib/jvm/jdk-11.0.2/bin
+[93122] INFO ConfigurationProperties - p:dependenciespath= /builds/workspace/astor/./examples/libs/junit-4.4.jar
+[93122] INFO ConfigurationProperties - p:pathToMVNRepository= 
+[93123] INFO ConfigurationProperties - p:limitbysuspicious= true
+[93124] INFO ConfigurationProperties - p:faultlocalization= fr.inria.astor.core.faultlocalization.flacoco.FlacocoFaultLocalization
+[93124] INFO ConfigurationProperties - p:maxsuspcandidates= 1000
+[93125] INFO ConfigurationProperties - p:antipattern= false
+[93126] INFO ConfigurationProperties - p:reintroduce= PARENTS:SOLUTIONS
+[93127] INFO ConfigurationProperties - p:multipointmodification= false
+[93131] INFO ConfigurationProperties - p:probabilistictransformation= true
+[93131] INFO ConfigurationProperties - p:mutationrate= 1 
+[93131] INFO ConfigurationProperties - p:jvm4testexecution= /usr/lib/jvm/jdk-11.0.2/bin
+[93132] INFO ConfigurationProperties - p:mode= jgenprog
+[93134] INFO ConfigurationProperties - p:pvariantfoldername= variant-
+[93135] INFO ConfigurationProperties - p:flthreshold= 0.5
+[93135] INFO ConfigurationProperties - p:fitnessfunction= fr.inria.astor.core.solutionsearch.population.TestCaseFitnessFunction
+[93136] INFO ConfigurationProperties - p:nrPlaceholders= 1
+[93140] INFO ConfigurationProperties - p:saveall= false
+[93140] INFO ConfigurationProperties - p:evoRunOnBuggyClass= true
+[93140] INFO ConfigurationProperties - p:learningdir= 
+[93141] INFO ConfigurationProperties - p:bintestfolder= /target/test-classes
+[93142] INFO ConfigurationProperties - p:evosuiteresultfolder= evosuite
+[93142] INFO ConfigurationProperties - p:operatorspace= irr-statements
+[93143] INFO ConfigurationProperties - p:resourcesfolder= /src/main/resources:/src/test/resources:
+[93143] INFO ConfigurationProperties - p:allpoints= false
+[93144] INFO ConfigurationProperties - p:collectonlyusedmethod= false
+[93144] INFO ConfigurationProperties - p:considerzerovaluesusp= false
+[93145] INFO ConfigurationProperties - p:maxVarCombination= 1000
+[93145] INFO ConfigurationProperties - p:timezone= America/Los_Angeles
+[93146] INFO ConfigurationProperties - p:skipfaultlocalization= false
+[93146] INFO ConfigurationProperties - p:savesolution= true
+[93147] INFO ConfigurationProperties - p:maxGeneration= 3000
+[93147] INFO ConfigurationProperties - p:evosuitetimeout= 120
+[93148] INFO ConfigurationProperties - p:packageToInstrument= org.apache.commons
+[93150] INFO ConfigurationProperties - p:uniqueoptogen= false
+[93151] INFO ConfigurationProperties - p:scope= package
+[93151] INFO ConfigurationProperties - p:srcjavafolder= /src/java/
+[93152] INFO ConfigurationProperties - p:commandTrunk= 50000
+[93154] INFO ConfigurationProperties - p:metid= 0
+[93155] INFO ConfigurationProperties - p:ignoredTestCases= org.apache.commons.math.estimation.MinpackTest
+[93155] INFO ConfigurationProperties - p:savespoonmodelondisk= false
+[93156] INFO ConfigurationProperties - p:targetelementprocessor= statements
+[93156] INFO ConfigurationProperties - p:compiler= fr.inria.astor.core.manipulation.bytecode.compiler.SpoonClassCompiler
+[93156] INFO ConfigurationProperties - p:maxCombinationVariableLimit= false
+[93157] INFO ConfigurationProperties - p:jvmversion= 11.0.2
+[93157] INFO ConfigurationProperties - p:nomodificationconvergence= 100
+[93158] INFO ConfigurationProperties - p:evosuitejar= ./lib/evosuite-master-1.0.4-SNAPSHOT.jar
+[93158] INFO ConfigurationProperties - p:srctestfolder= /src/test/
+[93159] INFO ConfigurationProperties - p:outputjsonresult= true
+[93159] INFO ConfigurationProperties - p:gzoltartestpackagetoexclude= junit.framework
+[93159] INFO ConfigurationProperties - p:probagenmutation= false
+[93160] INFO ConfigurationProperties - p:resetmodel= true
+[93160] INFO ConfigurationProperties - p:jsonoutputname= astor_output
+[93160] INFO ConfigurationProperties - p:numberExecutions= 1
+[93161] INFO ConfigurationProperties - p:ignoreflakyinfl= false
+[93161] INFO ConfigurationProperties - p:evoDSE= false
+[93162] INFO ConfigurationProperties - p:duplicateingredientsinspace= false
+[93163] INFO ConfigurationProperties - p:overridemaxtime= true
+[93166] INFO ConfigurationProperties - p:maxnumbersolutions= 3
+[93167] INFO ConfigurationProperties - p:logsattemps= true
+[93168] INFO ConfigurationProperties - p:location= /builds/workspace/astor/./examples/math_70
+[93168] INFO ConfigurationProperties - p:populationcontroller= fr.inria.astor.core.solutionsearch.population.TestCaseBasedFitnessPopulationController
+[93169] INFO ConfigurationProperties - ----------------------------
+[93169] INFO AstorCoreEngine - ----Starting Solution Search
+[93183] WARN AstorCoreEngine - ----------Running generation: 1, population size: 1
+[95790] WARN AstorCoreEngine - ----------Running generation: 2, population size: 1
+[96000] WARN AstorCoreEngine - ----------Running generation: 3, population size: 1
+[96063] WARN AstorCoreEngine - ----------Running generation: 4, population size: 1
+[96750] WARN AstorCoreEngine - ----------Running generation: 5, population size: 1
+[96910] WARN AstorCoreEngine - ----------Running generation: 6, population size: 1
+[96953] WARN AstorCoreEngine - ----------Running generation: 7, population size: 1
+[97009] WARN AstorCoreEngine - ----------Running generation: 8, population size: 1
+[97611] WARN AstorCoreEngine - ----------Running generation: 9, population size: 1
+[97646] WARN AstorCoreEngine - ----------Running generation: 10, population size: 1
+[97698] WARN AstorCoreEngine - ----------Running generation: 11, population size: 1
+[97862] WARN AstorCoreEngine - ----------Running generation: 12, population size: 1
+[97980] WARN AstorCoreEngine - ----------Running generation: 13, population size: 1
+[98517] WARN AstorCoreEngine - ----------Running generation: 14, population size: 1
+[98623] WARN AstorCoreEngine - ----------Running generation: 15, population size: 1
+[98656] WARN AstorCoreEngine - ----------Running generation: 16, population size: 1
+[98743] WARN AstorCoreEngine - ----------Running generation: 17, population size: 1
+[98869] WARN AstorCoreEngine - ----------Running generation: 18, population size: 1
+[98964] WARN AstorCoreEngine - ----------Running generation: 19, population size: 1
+[99051] WARN AstorCoreEngine - ----------Running generation: 20, population size: 1
+[99165] WARN AstorCoreEngine - ----------Running generation: 21, population size: 1
+[99255] WARN AstorCoreEngine - ----------Running generation: 22, population size: 1
+[99789] WARN AstorCoreEngine - ----------Running generation: 23, population size: 1
+[99868] WARN AstorCoreEngine - ----------Running generation: 24, population size: 1
+[99912] WARN AstorCoreEngine - ----------Running generation: 25, population size: 1
+[99953] WARN AstorCoreEngine - ----------Running generation: 26, population size: 1
+[100625] WARN AstorCoreEngine - ----------Running generation: 27, population size: 1
+[100668] WARN AstorCoreEngine - ----------Running generation: 28, population size: 1
+[100707] WARN AstorCoreEngine - ----------Running generation: 29, population size: 1
+[100738] WARN AstorCoreEngine - ----------Running generation: 30, population size: 1
+[100782] WARN AstorCoreEngine - ----------Running generation: 31, population size: 1
+[101557] WARN AstorCoreEngine - ----------Running generation: 32, population size: 1
+[102160] WARN AstorCoreEngine - ----------Running generation: 33, population size: 1
+[102742] WARN AstorCoreEngine - ----------Running generation: 34, population size: 1
+[102768] WARN AstorCoreEngine - ----------Running generation: 35, population size: 1
+[102865] WARN AstorCoreEngine - ----------Running generation: 36, population size: 1
+[102970] WARN AstorCoreEngine - ----------Running generation: 37, population size: 1
+[103005] WARN AstorCoreEngine - ----------Running generation: 38, population size: 1
+[103075] WARN AstorCoreEngine - ----------Running generation: 39, population size: 1
+[103724] WARN AstorCoreEngine - ----------Running generation: 40, population size: 1
+[104330] WARN AstorCoreEngine - ----------Running generation: 41, population size: 1
+[104412] WARN AstorCoreEngine - ----------Running generation: 42, population size: 1
+[104456] WARN AstorCoreEngine - ----------Running generation: 43, population size: 1
+[104476] WARN AstorCoreEngine - ----------Running generation: 44, population size: 1
+[104535] WARN AstorCoreEngine - ----------Running generation: 45, population size: 1
+[104601] WARN AstorCoreEngine - ----------Running generation: 46, population size: 1
+[104630] WARN AstorCoreEngine - ----------Running generation: 47, population size: 1
+[104667] WARN AstorCoreEngine - ----------Running generation: 48, population size: 1
+[105191] WARN AstorCoreEngine - ----------Running generation: 49, population size: 1
+[105257] WARN AstorCoreEngine - ----------Running generation: 50, population size: 1
+[105290] WARN AstorCoreEngine - ----------Running generation: 51, population size: 1
+[105326] WARN AstorCoreEngine - ----------Running generation: 52, population size: 1
+[105346] WARN AstorCoreEngine - ----------Running generation: 53, population size: 1
+[105967] WARN AstorCoreEngine - ----------Running generation: 54, population size: 1
+[106024] WARN AstorCoreEngine - ----------Running generation: 55, population size: 1
+[106512] WARN AstorCoreEngine - ----------Running generation: 56, population size: 1
+[106533] WARN AstorCoreEngine - ----------Running generation: 57, population size: 1
+[107070] WARN AstorCoreEngine - ----------Running generation: 58, population size: 1
+[107603] WARN AstorCoreEngine - ----------Running generation: 59, population size: 1
+[107669] WARN AstorCoreEngine - ----------Running generation: 60, population size: 1
+[108280] WARN AstorCoreEngine - ----------Running generation: 61, population size: 1
+[108832] WARN AstorCoreEngine - ----------Running generation: 62, population size: 1
+[108868] WARN AstorCoreEngine - ----------Running generation: 63, population size: 1
+[108893] WARN AstorCoreEngine - ----------Running generation: 64, population size: 1
+[109439] WARN AstorCoreEngine - ----------Running generation: 65, population size: 1
+[109518] WARN AstorCoreEngine - ----------Running generation: 66, population size: 1
+[109547] WARN AstorCoreEngine - ----------Running generation: 67, population size: 1
+[109566] WARN AstorCoreEngine - ----------Running generation: 68, population size: 1
+[110061] WARN AstorCoreEngine - ----------Running generation: 69, population size: 1
+[110092] WARN AstorCoreEngine - ----------Running generation: 70, population size: 1
+[110154] WARN AstorCoreEngine - ----------Running generation: 71, population size: 1
+[110263] WARN AstorCoreEngine - ----------Running generation: 72, population size: 1
+[110764] WARN AstorCoreEngine - ----------Running generation: 73, population size: 1
+[111310] WARN AstorCoreEngine - ----------Running generation: 74, population size: 1
+[111868] WARN AstorCoreEngine - ----------Running generation: 75, population size: 1
+[111917] WARN AstorCoreEngine - ----------Running generation: 76, population size: 1
+[111943] WARN AstorCoreEngine - ----------Running generation: 77, population size: 1
+[112004] WARN AstorCoreEngine - ----------Running generation: 78, population size: 1
+[112117] WARN AstorCoreEngine - ----------Running generation: 79, population size: 1
+[112203] WARN AstorCoreEngine - ----------Running generation: 80, population size: 1
+[112259] WARN AstorCoreEngine - ----------Running generation: 81, population size: 1
+[112322] WARN AstorCoreEngine - ----------Running generation: 82, population size: 1
+[112370] WARN AstorCoreEngine - ----------Running generation: 83, population size: 1
+[112417] WARN AstorCoreEngine - ----------Running generation: 84, population size: 1
+[112449] WARN AstorCoreEngine - ----------Running generation: 85, population size: 1
+[113196] WARN AstorCoreEngine - ----------Running generation: 86, population size: 1
+[113261] WARN AstorCoreEngine - ----------Running generation: 87, population size: 1
+[113853] WARN AstorCoreEngine - ----------Running generation: 88, population size: 1
+[114391] WARN AstorCoreEngine - ----------Running generation: 89, population size: 1
+[114461] WARN AstorCoreEngine - ----------Running generation: 90, population size: 1
+[114497] WARN AstorCoreEngine - ----------Running generation: 91, population size: 1
+[114538] WARN AstorCoreEngine - ----------Running generation: 92, population size: 1
+[115290] WARN AstorCoreEngine - ----------Running generation: 93, population size: 1
+[115945] WARN AstorCoreEngine - ----------Running generation: 94, population size: 1
+[116455] WARN AstorCoreEngine - ----------Running generation: 95, population size: 1
+[117027] WARN AstorCoreEngine - ----------Running generation: 96, population size: 1
+[117056] WARN AstorCoreEngine - ----------Running generation: 97, population size: 1
+[117085] WARN AstorCoreEngine - ----------Running generation: 98, population size: 1
+[117133] WARN AstorCoreEngine - ----------Running generation: 99, population size: 1
+[117170] WARN AstorCoreEngine - ----------Running generation: 100, population size: 1
+[117715] WARN AstorCoreEngine - ----------Running generation: 101, population size: 1
+[117741] WARN AstorCoreEngine - ----------Running generation: 102, population size: 1
+[117790] WARN AstorCoreEngine - ----------Running generation: 103, population size: 1
+[118324] WARN AstorCoreEngine - ----------Running generation: 104, population size: 1
+[118851] WARN AstorCoreEngine - ----------Running generation: 105, population size: 1
+[118875] WARN AstorCoreEngine - ----------Running generation: 106, population size: 1
+[118929] WARN AstorCoreEngine - ----------Running generation: 107, population size: 1
+[118994] WARN AstorCoreEngine - ----------Running generation: 108, population size: 1
+[119527] WARN AstorCoreEngine - ----------Running generation: 109, population size: 1
+[120035] WARN AstorCoreEngine - ----------Running generation: 110, population size: 1
+[120059] WARN AstorCoreEngine - ----------Running generation: 111, population size: 1
+[120101] WARN AstorCoreEngine - ----------Running generation: 112, population size: 1
+[120125] WARN AstorCoreEngine - ----------Running generation: 113, population size: 1
+[120159] WARN AstorCoreEngine - ----------Running generation: 114, population size: 1
+[120216] WARN AstorCoreEngine - ----------Running generation: 115, population size: 1
+[120237] WARN AstorCoreEngine - ----------Running generation: 116, population size: 1
+[120289] WARN AstorCoreEngine - ----------Running generation: 117, population size: 1
+[120335] WARN AstorCoreEngine - ----------Running generation: 118, population size: 1
+[121087] WARN AstorCoreEngine - ----------Running generation: 119, population size: 1
+[121115] WARN AstorCoreEngine - ----------Running generation: 120, population size: 1
+[121794] WARN AstorCoreEngine - ----------Running generation: 121, population size: 1
+[121812] WARN AstorCoreEngine - ----------Running generation: 122, population size: 1
+[121873] WARN AstorCoreEngine - ----------Running generation: 123, population size: 1
+[122430] WARN AstorCoreEngine - ----------Running generation: 124, population size: 1
+[122500] WARN AstorCoreEngine - ----------Running generation: 125, population size: 1
+[123048] WARN AstorCoreEngine - ----------Running generation: 126, population size: 1
+[123111] WARN AstorCoreEngine - ----------Running generation: 127, population size: 1
+[123139] WARN AstorCoreEngine - ----------Running generation: 128, population size: 1
+[123671] WARN AstorCoreEngine - ----------Running generation: 129, population size: 1
+[124185] WARN AstorCoreEngine - ----------Running generation: 130, population size: 1
+[124720] WARN AstorCoreEngine - ----------Running generation: 131, population size: 1
+[125312] WARN AstorCoreEngine - ----------Running generation: 132, population size: 1
+[125884] WARN AstorCoreEngine - ----------Running generation: 133, population size: 1
+[125901] WARN AstorCoreEngine - ----------Running generation: 134, population size: 1
+[126519] WARN AstorCoreEngine - ----------Running generation: 135, population size: 1
+[127143] WARN AstorCoreEngine - ----------Running generation: 136, population size: 1
+[127216] WARN AstorCoreEngine - ----------Running generation: 137, population size: 1
+[127274] WARN AstorCoreEngine - ----------Running generation: 138, population size: 1
+[127330] WARN AstorCoreEngine - ----------Running generation: 139, population size: 1
+[127382] WARN AstorCoreEngine - ----------Running generation: 140, population size: 1
+[127440] WARN AstorCoreEngine - ----------Running generation: 141, population size: 1
+[127484] WARN AstorCoreEngine - ----------Running generation: 142, population size: 1
+[127508] WARN AstorCoreEngine - ----------Running generation: 143, population size: 1
+[127532] WARN AstorCoreEngine - ----------Running generation: 144, population size: 1
+[127551] WARN AstorCoreEngine - ----------Running generation: 145, population size: 1
+[128137] WARN AstorCoreEngine - ----------Running generation: 146, population size: 1
+[128182] WARN AstorCoreEngine - ----------Running generation: 147, population size: 1
+[128683] WARN AstorCoreEngine - ----------Running generation: 148, population size: 1
+[128699] WARN AstorCoreEngine - ----------Running generation: 149, population size: 1
+[128725] WARN AstorCoreEngine - ----------Running generation: 150, population size: 1
+[128764] WARN AstorCoreEngine - ----------Running generation: 151, population size: 1
+[128808] WARN AstorCoreEngine - ----------Running generation: 152, population size: 1
+[128826] WARN AstorCoreEngine - ----------Running generation: 153, population size: 1
+[128869] WARN AstorCoreEngine - ----------Running generation: 154, population size: 1
+[128887] WARN AstorCoreEngine - ----------Running generation: 155, population size: 1
+[128916] WARN AstorCoreEngine - ----------Running generation: 156, population size: 1
+[128972] WARN AstorCoreEngine - ----------Running generation: 157, population size: 1
+[128989] WARN AstorCoreEngine - ----------Running generation: 158, population size: 1
+[129456] WARN AstorCoreEngine - ----------Running generation: 159, population size: 1
+[129510] WARN AstorCoreEngine - ----------Running generation: 160, population size: 1
+[129553] WARN AstorCoreEngine - ----------Running generation: 161, population size: 1
+[129589] WARN AstorCoreEngine - ----------Running generation: 162, population size: 1
+[129629] WARN AstorCoreEngine - ----------Running generation: 163, population size: 1
+[130208] WARN AstorCoreEngine - ----------Running generation: 164, population size: 1
+[130711] WARN AstorCoreEngine - ----------Running generation: 165, population size: 1
+[130740] WARN AstorCoreEngine - ----------Running generation: 166, population size: 1
+[130768] WARN AstorCoreEngine - ----------Running generation: 167, population size: 1
+[130816] WARN AstorCoreEngine - ----------Running generation: 168, population size: 1
+[130855] WARN AstorCoreEngine - ----------Running generation: 169, population size: 1
+[130910] WARN AstorCoreEngine - ----------Running generation: 170, population size: 1
+[130959] WARN AstorCoreEngine - ----------Running generation: 171, population size: 1
+[131428] WARN AstorCoreEngine - ----------Running generation: 172, population size: 1
+[131452] WARN AstorCoreEngine - ----------Running generation: 173, population size: 1
+[131916] WARN AstorCoreEngine - ----------Running generation: 174, population size: 1
+[132423] WARN AstorCoreEngine - ----------Running generation: 175, population size: 1
+[132478] WARN AstorCoreEngine - ----------Running generation: 176, population size: 1
+[132517] WARN AstorCoreEngine - ----------Running generation: 177, population size: 1
+[132540] WARN AstorCoreEngine - ----------Running generation: 178, population size: 1
+[133040] WARN AstorCoreEngine - ----------Running generation: 179, population size: 1
+[133646] WARN AstorCoreEngine - ----------Running generation: 180, population size: 1
+[133683] WARN AstorCoreEngine - ----------Running generation: 181, population size: 1
+[133706] WARN AstorCoreEngine - ----------Running generation: 182, population size: 1
+[133732] WARN AstorCoreEngine - ----------Running generation: 183, population size: 1
+[133750] WARN AstorCoreEngine - ----------Running generation: 184, population size: 1
+[133767] WARN AstorCoreEngine - ----------Running generation: 185, population size: 1
+[134250] WARN AstorCoreEngine - ----------Running generation: 186, population size: 1
+[134781] WARN AstorCoreEngine - ----------Running generation: 187, population size: 1
+[134817] WARN AstorCoreEngine - ----------Running generation: 188, population size: 1
+[135335] WARN AstorCoreEngine - ----------Running generation: 189, population size: 1
+[135876] WARN AstorCoreEngine - ----------Running generation: 190, population size: 1
+[135905] WARN AstorCoreEngine - ----------Running generation: 191, population size: 1
+[135948] WARN AstorCoreEngine - ----------Running generation: 192, population size: 1
+[136418] WARN AstorCoreEngine - ----------Running generation: 193, population size: 1
+[136468] WARN AstorCoreEngine - ----------Running generation: 194, population size: 1
+[136948] WARN AstorCoreEngine - ----------Running generation: 195, population size: 1
+[137431] WARN AstorCoreEngine - ----------Running generation: 196, population size: 1
+[137929] WARN AstorCoreEngine - ----------Running generation: 197, population size: 1
+[137972] WARN AstorCoreEngine - ----------Running generation: 198, population size: 1
+[138440] WARN AstorCoreEngine - ----------Running generation: 199, population size: 1
+[138486] WARN AstorCoreEngine - ----------Running generation: 200, population size: 1
+[138529] WARN AstorCoreEngine - ----------Running generation: 201, population size: 1
+[138554] WARN AstorCoreEngine - ----------Running generation: 202, population size: 1
+[138568] WARN AstorCoreEngine - ----------Running generation: 203, population size: 1
+[138588] WARN AstorCoreEngine - ----------Running generation: 204, population size: 1
+[138599] WARN AstorCoreEngine - ----------Running generation: 205, population size: 1
+[138620] WARN AstorCoreEngine - ----------Running generation: 206, population size: 1
+[138672] WARN AstorCoreEngine - ----------Running generation: 207, population size: 1
+[139168] WARN AstorCoreEngine - ----------Running generation: 208, population size: 1
+[139205] WARN AstorCoreEngine - ----------Running generation: 209, population size: 1
+[139250] WARN AstorCoreEngine - ----------Running generation: 210, population size: 1
+[139293] WARN AstorCoreEngine - ----------Running generation: 211, population size: 1
+[139796] WARN AstorCoreEngine - ----------Running generation: 212, population size: 1
+[140292] WARN AstorCoreEngine - ----------Running generation: 213, population size: 1
+[140303] WARN AstorCoreEngine - ----------Running generation: 214, population size: 1
+[140353] WARN AstorCoreEngine - ----------Running generation: 215, population size: 1
+[140382] WARN AstorCoreEngine - ----------Running generation: 216, population size: 1
+[140427] WARN AstorCoreEngine - ----------Running generation: 217, population size: 1
+[140448] WARN AstorCoreEngine - ----------Running generation: 218, population size: 1
+[140460] WARN AstorCoreEngine - ----------Running generation: 219, population size: 1
+[140523] WARN AstorCoreEngine - ----------Running generation: 220, population size: 1
+[140579] WARN AstorCoreEngine - ----------Running generation: 221, population size: 1
+[140603] WARN AstorCoreEngine - ----------Running generation: 222, population size: 1
+[141088] WARN AstorCoreEngine - ----------Running generation: 223, population size: 1
+[141112] WARN AstorCoreEngine - ----------Running generation: 224, population size: 1
+[141578] WARN AstorCoreEngine - ----------Running generation: 225, population size: 1
+[141613] WARN AstorCoreEngine - ----------Running generation: 226, population size: 1
+[141628] WARN AstorCoreEngine - ----------Running generation: 227, population size: 1
+[142158] WARN AstorCoreEngine - ----------Running generation: 228, population size: 1
+[142628] WARN AstorCoreEngine - ----------Running generation: 229, population size: 1
+[143088] WARN AstorCoreEngine - ----------Running generation: 230, population size: 1
+[143124] WARN AstorCoreEngine - ----------Running generation: 231, population size: 1
+[143142] WARN AstorCoreEngine - ----------Running generation: 232, population size: 1
+[143185] WARN AstorCoreEngine - ----------Running generation: 233, population size: 1
+[143241] WARN AstorCoreEngine - ----------Running generation: 234, population size: 1
+[143259] WARN AstorCoreEngine - ----------Running generation: 235, population size: 1
+[143285] WARN AstorCoreEngine - ----------Running generation: 236, population size: 1
+[143305] WARN AstorCoreEngine - ----------Running generation: 237, population size: 1
+[143326] WARN AstorCoreEngine - ----------Running generation: 238, population size: 1
+[143349] WARN AstorCoreEngine - ----------Running generation: 239, population size: 1
+[143365] WARN AstorCoreEngine - ----------Running generation: 240, population size: 1
+[143822] WARN AstorCoreEngine - ----------Running generation: 241, population size: 1
+[144350] WARN AstorCoreEngine - ----------Running generation: 242, population size: 1
+[144362] WARN AstorCoreEngine - ----------Running generation: 243, population size: 1
+[144384] WARN AstorCoreEngine - ----------Running generation: 244, population size: 1
+[144405] WARN AstorCoreEngine - ----------Running generation: 245, population size: 1
+[144427] WARN AstorCoreEngine - ----------Running generation: 246, population size: 1
+[144452] WARN AstorCoreEngine - ----------Running generation: 247, population size: 1
+[144467] WARN AstorCoreEngine - ----------Running generation: 248, population size: 1
+[144499] WARN AstorCoreEngine - ----------Running generation: 249, population size: 1
+[144512] WARN AstorCoreEngine - ----------Running generation: 250, population size: 1
+[144531] WARN AstorCoreEngine - ----------Running generation: 251, population size: 1
+[144979] WARN AstorCoreEngine - ----------Running generation: 252, population size: 1
+[145469] WARN AstorCoreEngine - ----------Running generation: 253, population size: 1
+[145511] WARN AstorCoreEngine - ----------Running generation: 254, population size: 1
+[145530] WARN AstorCoreEngine - ----------Running generation: 255, population size: 1
+[145543] WARN AstorCoreEngine - ----------Running generation: 256, population size: 1
+[145597] WARN AstorCoreEngine - ----------Running generation: 257, population size: 1
+[146140] WARN AstorCoreEngine - ----------Running generation: 258, population size: 1
+[146597] WARN AstorCoreEngine - ----------Running generation: 259, population size: 1
+[147134] WARN AstorCoreEngine - ----------Running generation: 260, population size: 1
+[147169] WARN AstorCoreEngine - ----------Running generation: 261, population size: 1
+[147183] WARN AstorCoreEngine - ----------Running generation: 262, population size: 1
+[147216] WARN AstorCoreEngine - ----------Running generation: 263, population size: 1
+[147692] WARN AstorCoreEngine - ----------Running generation: 264, population size: 1
+[147719] WARN AstorCoreEngine - ----------Running generation: 265, population size: 1
+[148224] WARN AstorCoreEngine - ----------Running generation: 266, population size: 1
+[148270] WARN AstorCoreEngine - ----------Running generation: 267, population size: 1
+[148302] WARN AstorCoreEngine - ----------Running generation: 268, population size: 1
+[148824] WARN AstorCoreEngine - ----------Running generation: 269, population size: 1
+[149302] WARN AstorCoreEngine - ----------Running generation: 270, population size: 1
+[149316] WARN AstorCoreEngine - ----------Running generation: 271, population size: 1
+[149338] WARN AstorCoreEngine - ----------Running generation: 272, population size: 1
+[149381] WARN AstorCoreEngine - ----------Running generation: 273, population size: 1
+[149458] WARN AstorCoreEngine - ----------Running generation: 274, population size: 1
+[150047] WARN AstorCoreEngine - ----------Running generation: 275, population size: 1
+[150082] WARN AstorCoreEngine - ----------Running generation: 276, population size: 1
+[150590] WARN AstorCoreEngine - ----------Running generation: 277, population size: 1
+[151065] WARN AstorCoreEngine - ----------Running generation: 278, population size: 1
+[151565] WARN AstorCoreEngine - ----------Running generation: 279, population size: 1
+[151584] WARN AstorCoreEngine - ----------Running generation: 280, population size: 1
+[151631] WARN AstorCoreEngine - ----------Running generation: 281, population size: 1
+[151645] WARN AstorCoreEngine - ----------Running generation: 282, population size: 1
+[151680] WARN AstorCoreEngine - ----------Running generation: 283, population size: 1
+[152456] WARN AstorCoreEngine - ----------Running generation: 284, population size: 1
+[152906] WARN AstorCoreEngine - ----------Running generation: 285, population size: 1
+[152942] WARN AstorCoreEngine - ----------Running generation: 286, population size: 1
+[153473] WARN AstorCoreEngine - ----------Running generation: 287, population size: 1
+[153930] WARN AstorCoreEngine - ----------Running generation: 288, population size: 1
+[153980] WARN AstorCoreEngine - ----------Running generation: 289, population size: 1
+[154001] WARN AstorCoreEngine - ----------Running generation: 290, population size: 1
+[154028] WARN AstorCoreEngine - ----------Running generation: 291, population size: 1
+[154483] WARN AstorCoreEngine - ----------Running generation: 292, population size: 1
+[154495] WARN AstorCoreEngine - ----------Running generation: 293, population size: 1
+[154986] WARN AstorCoreEngine - ----------Running generation: 294, population size: 1
+[155025] WARN AstorCoreEngine - ----------Running generation: 295, population size: 1
+[155056] WARN AstorCoreEngine - ----------Running generation: 296, population size: 1
+[155082] WARN AstorCoreEngine - ----------Running generation: 297, population size: 1
+[155103] WARN AstorCoreEngine - ----------Running generation: 298, population size: 1
+[155143] WARN AstorCoreEngine - ----------Running generation: 299, population size: 1
+[155172] WARN AstorCoreEngine - ----------Running generation: 300, population size: 1
+[155204] WARN AstorCoreEngine - ----------Running generation: 301, population size: 1
+[155225] WARN AstorCoreEngine - ----------Running generation: 302, population size: 1
+[155677] WARN AstorCoreEngine - ----------Running generation: 303, population size: 1
+[155694] WARN AstorCoreEngine - ----------Running generation: 304, population size: 1
+[155739] WARN AstorCoreEngine - ----------Running generation: 305, population size: 1
+[156239] WARN AstorCoreEngine - ----------Running generation: 306, population size: 1
+[156277] WARN AstorCoreEngine - ----------Running generation: 307, population size: 1
+[156311] WARN AstorCoreEngine - ----------Running generation: 308, population size: 1
+[156343] WARN AstorCoreEngine - ----------Running generation: 309, population size: 1
+[156363] WARN AstorCoreEngine - ----------Running generation: 310, population size: 1
+[156400] WARN AstorCoreEngine - ----------Running generation: 311, population size: 1
+[156416] WARN AstorCoreEngine - ----------Running generation: 312, population size: 1
+[156435] WARN AstorCoreEngine - ----------Running generation: 313, population size: 1
+[156449] WARN AstorCoreEngine - ----------Running generation: 314, population size: 1
+[156899] WARN AstorCoreEngine - ----------Running generation: 315, population size: 1
+[157353] WARN AstorCoreEngine - ----------Running generation: 316, population size: 1
+[157370] WARN AstorCoreEngine - ----------Running generation: 317, population size: 1
+[157840] WARN AstorCoreEngine - ----------Running generation: 318, population size: 1
+[157863] WARN AstorCoreEngine - ----------Running generation: 319, population size: 1
+[158421] WARN AstorCoreEngine - ----------Running generation: 320, population size: 1
+[158913] WARN AstorCoreEngine - ----------Running generation: 321, population size: 1
+[158924] WARN AstorCoreEngine - ----------Running generation: 322, population size: 1
+[158934] WARN AstorCoreEngine - ----------Running generation: 323, population size: 1
+[158964] WARN AstorCoreEngine - ----------Running generation: 324, population size: 1
+[159015] WARN AstorCoreEngine - ----------Running generation: 325, population size: 1
+[159525] WARN AstorCoreEngine - ----------Running generation: 326, population size: 1
+[159536] WARN AstorCoreEngine - ----------Running generation: 327, population size: 1
+[159578] WARN AstorCoreEngine - ----------Running generation: 328, population size: 1
+[159600] WARN AstorCoreEngine - ----------Running generation: 329, population size: 1
+[159639] WARN AstorCoreEngine - ----------Running generation: 330, population size: 1
+[159661] WARN AstorCoreEngine - ----------Running generation: 331, population size: 1
+[159710] WARN AstorCoreEngine - ----------Running generation: 332, population size: 1
+[160233] WARN AstorCoreEngine - ----------Running generation: 333, population size: 1
+[160665] WARN AstorCoreEngine - ----------Running generation: 334, population size: 1
+[173381] INFO AstorCoreEngine - -Found Solution, child variant #335
+[173450] INFO AstorCoreEngine - Generation 1
+[173451] INFO AstorCoreEngine - Generation 2
+[173451] INFO AstorCoreEngine - Generation 3
+[173452] INFO AstorCoreEngine - Generation 4
+[173452] INFO AstorCoreEngine - Generation 5
+[173453] INFO AstorCoreEngine - Generation 6
+[173453] INFO AstorCoreEngine - Generation 7
+[173453] INFO AstorCoreEngine - Generation 8
+[173454] INFO AstorCoreEngine - Generation 9
+[173454] INFO AstorCoreEngine - Generation 10
+[173454] INFO AstorCoreEngine - Generation 11
+[173455] INFO AstorCoreEngine - Generation 12
+[173455] INFO AstorCoreEngine - Generation 13
+[173455] INFO AstorCoreEngine - Generation 14
+[173456] INFO AstorCoreEngine - Generation 15
+[173456] INFO AstorCoreEngine - Generation 16
+[173457] INFO AstorCoreEngine - Generation 17
+[173457] INFO AstorCoreEngine - Generation 18
+[173457] INFO AstorCoreEngine - Generation 19
+[173458] INFO AstorCoreEngine - Generation 20
+[173459] INFO AstorCoreEngine - Generation 21
+[173460] INFO AstorCoreEngine - Generation 22
+[173460] INFO AstorCoreEngine - Generation 23
+[173461] INFO AstorCoreEngine - Generation 24
+[173461] INFO AstorCoreEngine - Generation 25
+[173461] INFO AstorCoreEngine - Generation 26
+[173462] INFO AstorCoreEngine - Generation 27
+[173462] INFO AstorCoreEngine - Generation 28
+[173462] INFO AstorCoreEngine - Generation 29
+[173463] INFO AstorCoreEngine - Generation 30
+[173463] INFO AstorCoreEngine - Generation 31
+[173463] INFO AstorCoreEngine - Generation 32
+[173464] INFO AstorCoreEngine - Generation 33
+[173464] INFO AstorCoreEngine - Generation 34
+[173465] INFO AstorCoreEngine - Generation 35
+[173465] INFO AstorCoreEngine - Generation 36
+[173465] INFO AstorCoreEngine - Generation 37
+[173466] INFO AstorCoreEngine - Generation 38
+[173466] INFO AstorCoreEngine - Generation 39
+[173467] INFO AstorCoreEngine - Generation 40
+[173467] INFO AstorCoreEngine - Generation 41
+[173467] INFO AstorCoreEngine - Generation 42
+[173468] INFO AstorCoreEngine - Generation 43
+[173468] INFO AstorCoreEngine - Generation 44
+[173468] INFO AstorCoreEngine - Generation 45
+[173469] INFO AstorCoreEngine - Generation 46
+[173469] INFO AstorCoreEngine - Generation 47
+[173471] INFO AstorCoreEngine - Generation 48
+[173471] INFO AstorCoreEngine - Generation 49
+[173472] INFO AstorCoreEngine - Generation 50
+[173472] INFO AstorCoreEngine - Generation 51
+[173472] INFO AstorCoreEngine - Generation 52
+[173473] INFO AstorCoreEngine - Generation 53
+[173473] INFO AstorCoreEngine - Generation 54
+[173473] INFO AstorCoreEngine - Generation 55
+[173474] INFO AstorCoreEngine - Generation 56
+[173474] INFO AstorCoreEngine - Generation 57
+[173475] INFO AstorCoreEngine - Generation 58
+[173475] INFO AstorCoreEngine - Generation 59
+[173475] INFO AstorCoreEngine - Generation 60
+[173476] INFO AstorCoreEngine - Generation 61
+[173478] INFO AstorCoreEngine - Generation 62
+[173478] INFO AstorCoreEngine - Generation 63
+[173478] INFO AstorCoreEngine - Generation 64
+[173479] INFO AstorCoreEngine - Generation 65
+[173479] INFO AstorCoreEngine - Generation 66
+[173479] INFO AstorCoreEngine - Generation 67
+[173480] INFO AstorCoreEngine - Generation 68
+[173480] INFO AstorCoreEngine - Generation 69
+[173480] INFO AstorCoreEngine - Generation 70
+[173481] INFO AstorCoreEngine - Generation 71
+[173481] INFO AstorCoreEngine - Generation 72
+[173482] INFO AstorCoreEngine - Generation 73
+[173482] INFO AstorCoreEngine - Generation 74
+[173482] INFO AstorCoreEngine - Generation 75
+[173483] INFO AstorCoreEngine - Generation 76
+[173483] INFO AstorCoreEngine - Generation 77
+[173483] INFO AstorCoreEngine - Generation 78
+[173484] INFO AstorCoreEngine - Generation 79
+[173484] INFO AstorCoreEngine - Generation 80
+[173484] INFO AstorCoreEngine - Generation 81
+[173485] INFO AstorCoreEngine - Generation 82
+[173485] INFO AstorCoreEngine - Generation 83
+[173485] INFO AstorCoreEngine - Generation 84
+[173486] INFO AstorCoreEngine - Generation 85
+[173486] INFO AstorCoreEngine - Generation 86
+[173487] INFO AstorCoreEngine - Generation 87
+[173487] INFO AstorCoreEngine - Generation 88
+[173487] INFO AstorCoreEngine - Generation 89
+[173488] INFO AstorCoreEngine - Generation 90
+[173488] INFO AstorCoreEngine - Generation 91
+[173488] INFO AstorCoreEngine - Generation 92
+[173489] INFO AstorCoreEngine - Generation 93
+[173489] INFO AstorCoreEngine - Generation 94
+[173489] INFO AstorCoreEngine - Generation 95
+[173490] INFO AstorCoreEngine - Generation 96
+[173490] INFO AstorCoreEngine - Generation 97
+[173491] INFO AstorCoreEngine - Generation 98
+[173491] INFO AstorCoreEngine - Generation 99
+[173491] INFO AstorCoreEngine - Generation 100
+[173492] INFO AstorCoreEngine - Generation 101
+[173492] INFO AstorCoreEngine - Generation 102
+[173492] INFO AstorCoreEngine - Generation 103
+[173493] INFO AstorCoreEngine - Generation 104
+[173493] INFO AstorCoreEngine - Generation 105
+[173493] INFO AstorCoreEngine - Generation 106
+[173494] INFO AstorCoreEngine - Generation 107
+[173494] INFO AstorCoreEngine - Generation 108
+[173495] INFO AstorCoreEngine - Generation 109
+[173495] INFO AstorCoreEngine - Generation 110
+[173495] INFO AstorCoreEngine - Generation 111
+[173496] INFO AstorCoreEngine - Generation 112
+[173496] INFO AstorCoreEngine - Generation 113
+[173496] INFO AstorCoreEngine - Generation 114
+[173497] INFO AstorCoreEngine - Generation 115
+[173497] INFO AstorCoreEngine - Generation 116
+[173497] INFO AstorCoreEngine - Generation 117
+[173498] INFO AstorCoreEngine - Generation 118
+[173498] INFO AstorCoreEngine - Generation 119
+[173498] INFO AstorCoreEngine - Generation 120
+[173499] INFO AstorCoreEngine - Generation 121
+[173499] INFO AstorCoreEngine - Generation 122
+[173499] INFO AstorCoreEngine - Generation 123
+[173500] INFO AstorCoreEngine - Generation 124
+[173500] INFO AstorCoreEngine - Generation 125
+[173501] INFO AstorCoreEngine - Generation 126
+[173502] INFO AstorCoreEngine - Generation 127
+[173502] INFO AstorCoreEngine - Generation 128
+[173503] INFO AstorCoreEngine - Generation 129
+[173503] INFO AstorCoreEngine - Generation 130
+[173503] INFO AstorCoreEngine - Generation 131
+[173504] INFO AstorCoreEngine - Generation 132
+[173504] INFO AstorCoreEngine - Generation 133
+[173504] INFO AstorCoreEngine - Generation 134
+[173505] INFO AstorCoreEngine - Generation 135
+[173505] INFO AstorCoreEngine - Generation 136
+[173505] INFO AstorCoreEngine - Generation 137
+[173506] INFO AstorCoreEngine - Generation 138
+[173506] INFO AstorCoreEngine - Generation 139
+[173507] INFO AstorCoreEngine - Generation 140
+[173507] INFO AstorCoreEngine - Generation 141
+[173507] INFO AstorCoreEngine - Generation 142
+[173508] INFO AstorCoreEngine - Generation 143
+[173508] INFO AstorCoreEngine - Generation 144
+[173508] INFO AstorCoreEngine - Generation 145
+[173509] INFO AstorCoreEngine - Generation 146
+[173509] INFO AstorCoreEngine - Generation 147
+[173509] INFO AstorCoreEngine - Generation 148
+[173510] INFO AstorCoreEngine - Generation 149
+[173510] INFO AstorCoreEngine - Generation 150
+[173510] INFO AstorCoreEngine - Generation 151
+[173511] INFO AstorCoreEngine - Generation 152
+[173511] INFO AstorCoreEngine - Generation 153
+[173512] INFO AstorCoreEngine - Generation 154
+[173512] INFO AstorCoreEngine - Generation 155
+[173512] INFO AstorCoreEngine - Generation 156
+[173513] INFO AstorCoreEngine - Generation 157
+[173513] INFO AstorCoreEngine - Generation 158
+[173513] INFO AstorCoreEngine - Generation 159
+[173514] INFO AstorCoreEngine - Generation 160
+[173514] INFO AstorCoreEngine - Generation 161
+[173514] INFO AstorCoreEngine - Generation 162
+[173515] INFO AstorCoreEngine - Generation 163
+[173515] INFO AstorCoreEngine - Generation 164
+[173515] INFO AstorCoreEngine - Generation 165
+[173516] INFO AstorCoreEngine - Generation 166
+[173516] INFO AstorCoreEngine - Generation 167
+[173517] INFO AstorCoreEngine - Generation 168
+[173517] INFO AstorCoreEngine - Generation 169
+[173517] INFO AstorCoreEngine - Generation 170
+[173518] INFO AstorCoreEngine - Generation 171
+[173518] INFO AstorCoreEngine - Generation 172
+[173518] INFO AstorCoreEngine - Generation 173
+[173519] INFO AstorCoreEngine - Generation 174
+[173519] INFO AstorCoreEngine - Generation 175
+[173522] INFO AstorCoreEngine - Generation 176
+[173523] INFO AstorCoreEngine - Generation 177
+[173523] INFO AstorCoreEngine - Generation 178
+[173523] INFO AstorCoreEngine - Generation 179
+[173524] INFO AstorCoreEngine - Generation 180
+[173524] INFO AstorCoreEngine - Generation 181
+[173525] INFO AstorCoreEngine - Generation 182
+[173525] INFO AstorCoreEngine - Generation 183
+[173525] INFO AstorCoreEngine - Generation 184
+[173526] INFO AstorCoreEngine - Generation 185
+[173526] INFO AstorCoreEngine - Generation 186
+[173526] INFO AstorCoreEngine - Generation 187
+[173527] INFO AstorCoreEngine - Generation 188
+[173527] INFO AstorCoreEngine - Generation 189
+[173527] INFO AstorCoreEngine - Generation 190
+[173528] INFO AstorCoreEngine - Generation 191
+[173528] INFO AstorCoreEngine - Generation 192
+[173530] INFO AstorCoreEngine - Generation 193
+[173535] INFO AstorCoreEngine - Generation 194
+[173535] INFO AstorCoreEngine - Generation 195
+[173535] INFO AstorCoreEngine - Generation 196
+[173536] INFO AstorCoreEngine - Generation 197
+[173536] INFO AstorCoreEngine - Generation 198
+[173536] INFO AstorCoreEngine - Generation 199
+[173537] INFO AstorCoreEngine - Generation 200
+[173537] INFO AstorCoreEngine - Generation 201
+[173537] INFO AstorCoreEngine - Generation 202
+[173538] INFO AstorCoreEngine - Generation 203
+[173538] INFO AstorCoreEngine - Generation 204
+[173539] INFO AstorCoreEngine - Generation 205
+[173539] INFO AstorCoreEngine - Generation 206
+[173539] INFO AstorCoreEngine - Generation 207
+[173541] INFO AstorCoreEngine - Generation 208
+[173541] INFO AstorCoreEngine - Generation 209
+[173542] INFO AstorCoreEngine - Generation 210
+[173542] INFO AstorCoreEngine - Generation 211
+[173543] INFO AstorCoreEngine - Generation 212
+[173543] INFO AstorCoreEngine - Generation 213
+[173550] INFO AstorCoreEngine - Generation 214
+[173551] INFO AstorCoreEngine - Generation 215
+[173551] INFO AstorCoreEngine - Generation 216
+[173552] INFO AstorCoreEngine - Generation 217
+[173552] INFO AstorCoreEngine - Generation 218
+[173552] INFO AstorCoreEngine - Generation 219
+[173553] INFO AstorCoreEngine - Generation 220
+[173553] INFO AstorCoreEngine - Generation 221
+[173553] INFO AstorCoreEngine - Generation 222
+[173554] INFO AstorCoreEngine - Generation 223
+[173554] INFO AstorCoreEngine - Generation 224
+[173554] INFO AstorCoreEngine - Generation 225
+[173555] INFO AstorCoreEngine - Generation 226
+[173555] INFO AstorCoreEngine - Generation 227
+[173555] INFO AstorCoreEngine - Generation 228
+[173556] INFO AstorCoreEngine - Generation 229
+[173556] INFO AstorCoreEngine - Generation 230
+[173557] INFO AstorCoreEngine - Generation 231
+[173557] INFO AstorCoreEngine - Generation 232
+[173557] INFO AstorCoreEngine - Generation 233
+[173558] INFO AstorCoreEngine - Generation 234
+[173558] INFO AstorCoreEngine - Generation 235
+[173558] INFO AstorCoreEngine - Generation 236
+[173559] INFO AstorCoreEngine - Generation 237
+[173559] INFO AstorCoreEngine - Generation 238
+[173559] INFO AstorCoreEngine - Generation 239
+[173560] INFO AstorCoreEngine - Generation 240
+[173560] INFO AstorCoreEngine - Generation 241
+[173560] INFO AstorCoreEngine - Generation 242
+[173561] INFO AstorCoreEngine - Generation 243
+[173561] INFO AstorCoreEngine - Generation 244
+[173561] INFO AstorCoreEngine - Generation 245
+[173562] INFO AstorCoreEngine - Generation 246
+[173562] INFO AstorCoreEngine - Generation 247
+[173563] INFO AstorCoreEngine - Generation 248
+[173563] INFO AstorCoreEngine - Generation 249
+[173563] INFO AstorCoreEngine - Generation 250
+[173564] INFO AstorCoreEngine - Generation 251
+[173564] INFO AstorCoreEngine - Generation 252
+[173564] INFO AstorCoreEngine - Generation 253
+[173564] INFO AstorCoreEngine - Generation 254
+[173565] INFO AstorCoreEngine - Generation 255
+[173565] INFO AstorCoreEngine - Generation 256
+[173565] INFO AstorCoreEngine - Generation 257
+[173566] INFO AstorCoreEngine - Generation 258
+[173566] INFO AstorCoreEngine - Generation 259
+[173567] INFO AstorCoreEngine - Generation 260
+[173567] INFO AstorCoreEngine - Generation 261
+[173568] INFO AstorCoreEngine - Generation 262
+[173568] INFO AstorCoreEngine - Generation 263
+[173568] INFO AstorCoreEngine - Generation 264
+[173570] INFO AstorCoreEngine - Generation 265
+[173571] INFO AstorCoreEngine - Generation 266
+[173571] INFO AstorCoreEngine - Generation 267
+[173571] INFO AstorCoreEngine - Generation 268
+[173572] INFO AstorCoreEngine - Generation 269
+[173572] INFO AstorCoreEngine - Generation 270
+[173572] INFO AstorCoreEngine - Generation 271
+[173572] INFO AstorCoreEngine - Generation 272
+[173573] INFO AstorCoreEngine - Generation 273
+[173573] INFO AstorCoreEngine - Generation 274
+[173574] INFO AstorCoreEngine - Generation 275
+[173574] INFO AstorCoreEngine - Generation 276
+[173574] INFO AstorCoreEngine - Generation 277
+[173575] INFO AstorCoreEngine - Generation 278
+[173575] INFO AstorCoreEngine - Generation 279
+[173576] INFO AstorCoreEngine - Generation 280
+[173576] INFO AstorCoreEngine - Generation 281
+[173576] INFO AstorCoreEngine - Generation 282
+[173577] INFO AstorCoreEngine - Generation 283
+[173577] INFO AstorCoreEngine - Generation 284
+[173578] INFO AstorCoreEngine - Generation 285
+[173578] INFO AstorCoreEngine - Generation 286
+[173578] INFO AstorCoreEngine - Generation 287
+[173579] INFO AstorCoreEngine - Generation 288
+[173582] INFO AstorCoreEngine - Generation 289
+[173582] INFO AstorCoreEngine - Generation 290
+[173583] INFO AstorCoreEngine - Generation 291
+[173583] INFO AstorCoreEngine - Generation 292
+[173584] INFO AstorCoreEngine - Generation 293
+[173584] INFO AstorCoreEngine - Generation 294
+[173584] INFO AstorCoreEngine - Generation 295
+[173585] INFO AstorCoreEngine - Generation 296
+[173585] INFO AstorCoreEngine - Generation 297
+[173586] INFO AstorCoreEngine - Generation 298
+[173586] INFO AstorCoreEngine - Generation 299
+[173586] INFO AstorCoreEngine - Generation 300
+[173587] INFO AstorCoreEngine - Generation 301
+[173587] INFO AstorCoreEngine - Generation 302
+[173587] INFO AstorCoreEngine - Generation 303
+[173588] INFO AstorCoreEngine - Generation 304
+[173588] INFO AstorCoreEngine - Generation 305
+[173588] INFO AstorCoreEngine - Generation 306
+[173589] INFO AstorCoreEngine - Generation 307
+[173589] INFO AstorCoreEngine - Generation 308
+[173589] INFO AstorCoreEngine - Generation 309
+[173590] INFO AstorCoreEngine - Generation 310
+[173590] INFO AstorCoreEngine - Generation 311
+[173590] INFO AstorCoreEngine - Generation 312
+[173591] INFO AstorCoreEngine - Generation 313
+[173591] INFO AstorCoreEngine - Generation 314
+[173591] INFO AstorCoreEngine - Generation 315
+[173592] INFO AstorCoreEngine - Generation 316
+[173592] INFO AstorCoreEngine - Generation 317
+[173592] INFO AstorCoreEngine - Generation 318
+[173593] INFO AstorCoreEngine - Generation 319
+[173593] INFO AstorCoreEngine - Generation 320
+[173593] INFO AstorCoreEngine - Generation 321
+[173594] INFO AstorCoreEngine - Generation 322
+[173594] INFO AstorCoreEngine - Generation 323
+[173594] INFO AstorCoreEngine - Generation 324
+[173595] INFO AstorCoreEngine - Generation 325
+[173595] INFO AstorCoreEngine - Generation 326
+[173595] INFO AstorCoreEngine - Generation 327
+[173596] INFO AstorCoreEngine - Generation 328
+[173596] INFO AstorCoreEngine - Generation 329
+[173596] INFO AstorCoreEngine - Generation 330
+[173597] INFO AstorCoreEngine - Generation 331
+[173597] INFO AstorCoreEngine - Generation 332
+[173597] INFO AstorCoreEngine - Generation 333
+[173598] INFO AstorCoreEngine - Generation 334
+[173779] INFO AstorCoreEngine - Storing ing JSON at ./diffSolutions/patchinfo_335.json
+[173780] INFO AstorCoreEngine - ./diffSolutions/patchinfo_335.json:
+{"VARIANT_ID":"335","VALIDATION":"|true|0|2163|[]|","patchhunks":[{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"1","INGREDIENT_PARENT":"return solve(f, min, max)","PATCH_HUNK_TYPE":"CtReturnImpl|CtBlockImpl","ORIGINAL_CODE":"return solve(min, max)","BUGGY_CODE_TYPE":"CtReturnImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-335\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"72","MP_RANKING":"0","PATCH_HUNK_CODE":"return solve(f, min, max)"}],"TIME":"80","GENERATION":"334","FOLDER_SOLUTION_CODE":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-335","PATCH_DIFF_ORIG":"--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n\\n"}
+Saving patch info at ./diffSolutions/patchinfo_335.json
+[173787] INFO AstorCoreEngine - Storing ing JSON at /builds/workspace/astor/./diffSolutions/patch_80617_335.diff
+[173791] INFO AstorCoreEngine - /builds/workspace/astor/./diffSolutions/patch_80617_335.diff:
+{"VARIANT_ID":"335","VALIDATION":"|true|0|2163|[]|","patchhunks":[{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"1","INGREDIENT_PARENT":"return solve(f, min, max)","PATCH_HUNK_TYPE":"CtReturnImpl|CtBlockImpl","ORIGINAL_CODE":"return solve(min, max)","BUGGY_CODE_TYPE":"CtReturnImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-335\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"72","MP_RANKING":"0","PATCH_HUNK_CODE":"return solve(f, min, max)"}],"TIME":"80","GENERATION":"334","FOLDER_SOLUTION_CODE":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-335","PATCH_DIFF_ORIG":"--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n\\n"}
+Saving patch diff at /builds/workspace/astor/./diffSolutions/patch_80617_335.diff
+[173792] WARN AstorCoreEngine - ----------Running generation: 335, population size: 1
+[173835] WARN AstorCoreEngine - ----------Running generation: 336, population size: 1
+[186461] INFO AstorCoreEngine - -Found Solution, child variant #337
+[186476] INFO AstorCoreEngine - Generation 1
+[186477] INFO AstorCoreEngine - Generation 2
+[186477] INFO AstorCoreEngine - Generation 3
+[186478] INFO AstorCoreEngine - Generation 4
+[186478] INFO AstorCoreEngine - Generation 5
+[186478] INFO AstorCoreEngine - Generation 6
+[186479] INFO AstorCoreEngine - Generation 7
+[186479] INFO AstorCoreEngine - Generation 8
+[186479] INFO AstorCoreEngine - Generation 9
+[186480] INFO AstorCoreEngine - Generation 10
+[186480] INFO AstorCoreEngine - Generation 11
+[186480] INFO AstorCoreEngine - Generation 12
+[186481] INFO AstorCoreEngine - Generation 13
+[186481] INFO AstorCoreEngine - Generation 14
+[186481] INFO AstorCoreEngine - Generation 15
+[186482] INFO AstorCoreEngine - Generation 16
+[186482] INFO AstorCoreEngine - Generation 17
+[186483] INFO AstorCoreEngine - Generation 18
+[186483] INFO AstorCoreEngine - Generation 19
+[186483] INFO AstorCoreEngine - Generation 20
+[186484] INFO AstorCoreEngine - Generation 21
+[186484] INFO AstorCoreEngine - Generation 22
+[186484] INFO AstorCoreEngine - Generation 23
+[186485] INFO AstorCoreEngine - Generation 24
+[186485] INFO AstorCoreEngine - Generation 25
+[186485] INFO AstorCoreEngine - Generation 26
+[186486] INFO AstorCoreEngine - Generation 27
+[186486] INFO AstorCoreEngine - Generation 28
+[186486] INFO AstorCoreEngine - Generation 29
+[186487] INFO AstorCoreEngine - Generation 30
+[186487] INFO AstorCoreEngine - Generation 31
+[186487] INFO AstorCoreEngine - Generation 32
+[186488] INFO AstorCoreEngine - Generation 33
+[186488] INFO AstorCoreEngine - Generation 34
+[186488] INFO AstorCoreEngine - Generation 35
+[186489] INFO AstorCoreEngine - Generation 36
+[186489] INFO AstorCoreEngine - Generation 37
+[186489] INFO AstorCoreEngine - Generation 38
+[186490] INFO AstorCoreEngine - Generation 39
+[186490] INFO AstorCoreEngine - Generation 40
+[186490] INFO AstorCoreEngine - Generation 41
+[186491] INFO AstorCoreEngine - Generation 42
+[186491] INFO AstorCoreEngine - Generation 43
+[186491] INFO AstorCoreEngine - Generation 44
+[186492] INFO AstorCoreEngine - Generation 45
+[186492] INFO AstorCoreEngine - Generation 46
+[186493] INFO AstorCoreEngine - Generation 47
+[186493] INFO AstorCoreEngine - Generation 48
+[186493] INFO AstorCoreEngine - Generation 49
+[186494] INFO AstorCoreEngine - Generation 50
+[186494] INFO AstorCoreEngine - Generation 51
+[186494] INFO AstorCoreEngine - Generation 52
+[186496] INFO AstorCoreEngine - Generation 53
+[186496] INFO AstorCoreEngine - Generation 54
+[186496] INFO AstorCoreEngine - Generation 55
+[186497] INFO AstorCoreEngine - Generation 56
+[186497] INFO AstorCoreEngine - Generation 57
+[186498] INFO AstorCoreEngine - Generation 58
+[186498] INFO AstorCoreEngine - Generation 59
+[186498] INFO AstorCoreEngine - Generation 60
+[186499] INFO AstorCoreEngine - Generation 61
+[186499] INFO AstorCoreEngine - Generation 62
+[186499] INFO AstorCoreEngine - Generation 63
+[186500] INFO AstorCoreEngine - Generation 64
+[186500] INFO AstorCoreEngine - Generation 65
+[186500] INFO AstorCoreEngine - Generation 66
+[186501] INFO AstorCoreEngine - Generation 67
+[186501] INFO AstorCoreEngine - Generation 68
+[186502] INFO AstorCoreEngine - Generation 69
+[186502] INFO AstorCoreEngine - Generation 70
+[186502] INFO AstorCoreEngine - Generation 71
+[186503] INFO AstorCoreEngine - Generation 72
+[186503] INFO AstorCoreEngine - Generation 73
+[186503] INFO AstorCoreEngine - Generation 74
+[186504] INFO AstorCoreEngine - Generation 75
+[186504] INFO AstorCoreEngine - Generation 76
+[186504] INFO AstorCoreEngine - Generation 77
+[186505] INFO AstorCoreEngine - Generation 78
+[186505] INFO AstorCoreEngine - Generation 79
+[186505] INFO AstorCoreEngine - Generation 80
+[186506] INFO AstorCoreEngine - Generation 81
+[186506] INFO AstorCoreEngine - Generation 82
+[186506] INFO AstorCoreEngine - Generation 83
+[186507] INFO AstorCoreEngine - Generation 84
+[186507] INFO AstorCoreEngine - Generation 85
+[186508] INFO AstorCoreEngine - Generation 86
+[186508] INFO AstorCoreEngine - Generation 87
+[186508] INFO AstorCoreEngine - Generation 88
+[186509] INFO AstorCoreEngine - Generation 89
+[186509] INFO AstorCoreEngine - Generation 90
+[186509] INFO AstorCoreEngine - Generation 91
+[186510] INFO AstorCoreEngine - Generation 92
+[186510] INFO AstorCoreEngine - Generation 93
+[186510] INFO AstorCoreEngine - Generation 94
+[186511] INFO AstorCoreEngine - Generation 95
+[186511] INFO AstorCoreEngine - Generation 96
+[186512] INFO AstorCoreEngine - Generation 97
+[186513] INFO AstorCoreEngine - Generation 98
+[186513] INFO AstorCoreEngine - Generation 99
+[186513] INFO AstorCoreEngine - Generation 100
+[186514] INFO AstorCoreEngine - Generation 101
+[186514] INFO AstorCoreEngine - Generation 102
+[186514] INFO AstorCoreEngine - Generation 103
+[186515] INFO AstorCoreEngine - Generation 104
+[186515] INFO AstorCoreEngine - Generation 105
+[186515] INFO AstorCoreEngine - Generation 106
+[186516] INFO AstorCoreEngine - Generation 107
+[186516] INFO AstorCoreEngine - Generation 108
+[186516] INFO AstorCoreEngine - Generation 109
+[186517] INFO AstorCoreEngine - Generation 110
+[186517] INFO AstorCoreEngine - Generation 111
+[186517] INFO AstorCoreEngine - Generation 112
+[186518] INFO AstorCoreEngine - Generation 113
+[186518] INFO AstorCoreEngine - Generation 114
+[186524] INFO AstorCoreEngine - Generation 115
+[186525] INFO AstorCoreEngine - Generation 116
+[186525] INFO AstorCoreEngine - Generation 117
+[186526] INFO AstorCoreEngine - Generation 118
+[186526] INFO AstorCoreEngine - Generation 119
+[186526] INFO AstorCoreEngine - Generation 120
+[186527] INFO AstorCoreEngine - Generation 121
+[186527] INFO AstorCoreEngine - Generation 122
+[186527] INFO AstorCoreEngine - Generation 123
+[186528] INFO AstorCoreEngine - Generation 124
+[186528] INFO AstorCoreEngine - Generation 125
+[186528] INFO AstorCoreEngine - Generation 126
+[186529] INFO AstorCoreEngine - Generation 127
+[186529] INFO AstorCoreEngine - Generation 128
+[186529] INFO AstorCoreEngine - Generation 129
+[186530] INFO AstorCoreEngine - Generation 130
+[186530] INFO AstorCoreEngine - Generation 131
+[186531] INFO AstorCoreEngine - Generation 132
+[186531] INFO AstorCoreEngine - Generation 133
+[186531] INFO AstorCoreEngine - Generation 134
+[186532] INFO AstorCoreEngine - Generation 135
+[186532] INFO AstorCoreEngine - Generation 136
+[186533] INFO AstorCoreEngine - Generation 137
+[186533] INFO AstorCoreEngine - Generation 138
+[186533] INFO AstorCoreEngine - Generation 139
+[186534] INFO AstorCoreEngine - Generation 140
+[186534] INFO AstorCoreEngine - Generation 141
+[186535] INFO AstorCoreEngine - Generation 142
+[186535] INFO AstorCoreEngine - Generation 143
+[186535] INFO AstorCoreEngine - Generation 144
+[186536] INFO AstorCoreEngine - Generation 145
+[186536] INFO AstorCoreEngine - Generation 146
+[186537] INFO AstorCoreEngine - Generation 147
+[186537] INFO AstorCoreEngine - Generation 148
+[186537] INFO AstorCoreEngine - Generation 149
+[186538] INFO AstorCoreEngine - Generation 150
+[186538] INFO AstorCoreEngine - Generation 151
+[186539] INFO AstorCoreEngine - Generation 152
+[186539] INFO AstorCoreEngine - Generation 153
+[186539] INFO AstorCoreEngine - Generation 154
+[186540] INFO AstorCoreEngine - Generation 155
+[186540] INFO AstorCoreEngine - Generation 156
+[186541] INFO AstorCoreEngine - Generation 157
+[186541] INFO AstorCoreEngine - Generation 158
+[186542] INFO AstorCoreEngine - Generation 159
+[186542] INFO AstorCoreEngine - Generation 160
+[186542] INFO AstorCoreEngine - Generation 161
+[186543] INFO AstorCoreEngine - Generation 162
+[186543] INFO AstorCoreEngine - Generation 163
+[186544] INFO AstorCoreEngine - Generation 164
+[186544] INFO AstorCoreEngine - Generation 165
+[186544] INFO AstorCoreEngine - Generation 166
+[186545] INFO AstorCoreEngine - Generation 167
+[186545] INFO AstorCoreEngine - Generation 168
+[186546] INFO AstorCoreEngine - Generation 169
+[186546] INFO AstorCoreEngine - Generation 170
+[186546] INFO AstorCoreEngine - Generation 171
+[186547] INFO AstorCoreEngine - Generation 172
+[186547] INFO AstorCoreEngine - Generation 173
+[186548] INFO AstorCoreEngine - Generation 174
+[186548] INFO AstorCoreEngine - Generation 175
+[186549] INFO AstorCoreEngine - Generation 176
+[186549] INFO AstorCoreEngine - Generation 177
+[186549] INFO AstorCoreEngine - Generation 178
+[186550] INFO AstorCoreEngine - Generation 179
+[186550] INFO AstorCoreEngine - Generation 180
+[186551] INFO AstorCoreEngine - Generation 181
+[186551] INFO AstorCoreEngine - Generation 182
+[186551] INFO AstorCoreEngine - Generation 183
+[186552] INFO AstorCoreEngine - Generation 184
+[186552] INFO AstorCoreEngine - Generation 185
+[186553] INFO AstorCoreEngine - Generation 186
+[186553] INFO AstorCoreEngine - Generation 187
+[186553] INFO AstorCoreEngine - Generation 188
+[186554] INFO AstorCoreEngine - Generation 189
+[186554] INFO AstorCoreEngine - Generation 190
+[186555] INFO AstorCoreEngine - Generation 191
+[186555] INFO AstorCoreEngine - Generation 192
+[186555] INFO AstorCoreEngine - Generation 193
+[186556] INFO AstorCoreEngine - Generation 194
+[186556] INFO AstorCoreEngine - Generation 195
+[186557] INFO AstorCoreEngine - Generation 196
+[186557] INFO AstorCoreEngine - Generation 197
+[186558] INFO AstorCoreEngine - Generation 198
+[186558] INFO AstorCoreEngine - Generation 199
+[186558] INFO AstorCoreEngine - Generation 200
+[186559] INFO AstorCoreEngine - Generation 201
+[186559] INFO AstorCoreEngine - Generation 202
+[186560] INFO AstorCoreEngine - Generation 203
+[186560] INFO AstorCoreEngine - Generation 204
+[186561] INFO AstorCoreEngine - Generation 205
+[186561] INFO AstorCoreEngine - Generation 206
+[186561] INFO AstorCoreEngine - Generation 207
+[186562] INFO AstorCoreEngine - Generation 208
+[186562] INFO AstorCoreEngine - Generation 209
+[186563] INFO AstorCoreEngine - Generation 210
+[186563] INFO AstorCoreEngine - Generation 211
+[186563] INFO AstorCoreEngine - Generation 212
+[186564] INFO AstorCoreEngine - Generation 213
+[186564] INFO AstorCoreEngine - Generation 214
+[186565] INFO AstorCoreEngine - Generation 215
+[186565] INFO AstorCoreEngine - Generation 216
+[186566] INFO AstorCoreEngine - Generation 217
+[186566] INFO AstorCoreEngine - Generation 218
+[186566] INFO AstorCoreEngine - Generation 219
+[186567] INFO AstorCoreEngine - Generation 220
+[186567] INFO AstorCoreEngine - Generation 221
+[186568] INFO AstorCoreEngine - Generation 222
+[186568] INFO AstorCoreEngine - Generation 223
+[186568] INFO AstorCoreEngine - Generation 224
+[186569] INFO AstorCoreEngine - Generation 225
+[186569] INFO AstorCoreEngine - Generation 226
+[186569] INFO AstorCoreEngine - Generation 227
+[186570] INFO AstorCoreEngine - Generation 228
+[186570] INFO AstorCoreEngine - Generation 229
+[186571] INFO AstorCoreEngine - Generation 230
+[186571] INFO AstorCoreEngine - Generation 231
+[186571] INFO AstorCoreEngine - Generation 232
+[186572] INFO AstorCoreEngine - Generation 233
+[186572] INFO AstorCoreEngine - Generation 234
+[186572] INFO AstorCoreEngine - Generation 235
+[186573] INFO AstorCoreEngine - Generation 236
+[186573] INFO AstorCoreEngine - Generation 237
+[186573] INFO AstorCoreEngine - Generation 238
+[186574] INFO AstorCoreEngine - Generation 239
+[186574] INFO AstorCoreEngine - Generation 240
+[186574] INFO AstorCoreEngine - Generation 241
+[186575] INFO AstorCoreEngine - Generation 242
+[186576] INFO AstorCoreEngine - Generation 243
+[186576] INFO AstorCoreEngine - Generation 244
+[186579] INFO AstorCoreEngine - Generation 245
+[186579] INFO AstorCoreEngine - Generation 246
+[186579] INFO AstorCoreEngine - Generation 247
+[186580] INFO AstorCoreEngine - Generation 248
+[186580] INFO AstorCoreEngine - Generation 249
+[186580] INFO AstorCoreEngine - Generation 250
+[186581] INFO AstorCoreEngine - Generation 251
+[186581] INFO AstorCoreEngine - Generation 252
+[186581] INFO AstorCoreEngine - Generation 253
+[186582] INFO AstorCoreEngine - Generation 254
+[186582] INFO AstorCoreEngine - Generation 255
+[186582] INFO AstorCoreEngine - Generation 256
+[186583] INFO AstorCoreEngine - Generation 257
+[186583] INFO AstorCoreEngine - Generation 258
+[186583] INFO AstorCoreEngine - Generation 259
+[186584] INFO AstorCoreEngine - Generation 260
+[186584] INFO AstorCoreEngine - Generation 261
+[186584] INFO AstorCoreEngine - Generation 262
+[186585] INFO AstorCoreEngine - Generation 263
+[186585] INFO AstorCoreEngine - Generation 264
+[186586] INFO AstorCoreEngine - Generation 265
+[186586] INFO AstorCoreEngine - Generation 266
+[186586] INFO AstorCoreEngine - Generation 267
+[186587] INFO AstorCoreEngine - Generation 268
+[186587] INFO AstorCoreEngine - Generation 269
+[186588] INFO AstorCoreEngine - Generation 270
+[186588] INFO AstorCoreEngine - Generation 271
+[186589] INFO AstorCoreEngine - Generation 272
+[186589] INFO AstorCoreEngine - Generation 273
+[186589] INFO AstorCoreEngine - Generation 274
+[186589] INFO AstorCoreEngine - Generation 275
+[186590] INFO AstorCoreEngine - Generation 276
+[186590] INFO AstorCoreEngine - Generation 277
+[186591] INFO AstorCoreEngine - Generation 278
+[186591] INFO AstorCoreEngine - Generation 279
+[186592] INFO AstorCoreEngine - Generation 280
+[186592] INFO AstorCoreEngine - Generation 281
+[186593] INFO AstorCoreEngine - Generation 282
+[186593] INFO AstorCoreEngine - Generation 283
+[186593] INFO AstorCoreEngine - Generation 284
+[186594] INFO AstorCoreEngine - Generation 285
+[186594] INFO AstorCoreEngine - Generation 286
+[186595] INFO AstorCoreEngine - Generation 287
+[186595] INFO AstorCoreEngine - Generation 288
+[186596] INFO AstorCoreEngine - Generation 289
+[186596] INFO AstorCoreEngine - Generation 290
+[186597] INFO AstorCoreEngine - Generation 291
+[186597] INFO AstorCoreEngine - Generation 292
+[186597] INFO AstorCoreEngine - Generation 293
+[186598] INFO AstorCoreEngine - Generation 294
+[186598] INFO AstorCoreEngine - Generation 295
+[186599] INFO AstorCoreEngine - Generation 296
+[186599] INFO AstorCoreEngine - Generation 297
+[186599] INFO AstorCoreEngine - Generation 298
+[186600] INFO AstorCoreEngine - Generation 299
+[186600] INFO AstorCoreEngine - Generation 300
+[186601] INFO AstorCoreEngine - Generation 301
+[186601] INFO AstorCoreEngine - Generation 302
+[186601] INFO AstorCoreEngine - Generation 303
+[186602] INFO AstorCoreEngine - Generation 304
+[186602] INFO AstorCoreEngine - Generation 305
+[186603] INFO AstorCoreEngine - Generation 306
+[186603] INFO AstorCoreEngine - Generation 307
+[186603] INFO AstorCoreEngine - Generation 308
+[186604] INFO AstorCoreEngine - Generation 309
+[186604] INFO AstorCoreEngine - Generation 310
+[186605] INFO AstorCoreEngine - Generation 311
+[186605] INFO AstorCoreEngine - Generation 312
+[186605] INFO AstorCoreEngine - Generation 313
+[186606] INFO AstorCoreEngine - Generation 314
+[186606] INFO AstorCoreEngine - Generation 315
+[186607] INFO AstorCoreEngine - Generation 316
+[186607] INFO AstorCoreEngine - Generation 317
+[186607] INFO AstorCoreEngine - Generation 318
+[186608] INFO AstorCoreEngine - Generation 319
+[186608] INFO AstorCoreEngine - Generation 320
+[186609] INFO AstorCoreEngine - Generation 321
+[186609] INFO AstorCoreEngine - Generation 322
+[186611] INFO AstorCoreEngine - Generation 323
+[186614] INFO AstorCoreEngine - Generation 324
+[186615] INFO AstorCoreEngine - Generation 325
+[186615] INFO AstorCoreEngine - Generation 326
+[186615] INFO AstorCoreEngine - Generation 327
+[186616] INFO AstorCoreEngine - Generation 328
+[186616] INFO AstorCoreEngine - Generation 329
+[186617] INFO AstorCoreEngine - Generation 330
+[186617] INFO AstorCoreEngine - Generation 331
+[186617] INFO AstorCoreEngine - Generation 332
+[186621] INFO AstorCoreEngine - Generation 333
+[186621] INFO AstorCoreEngine - Generation 334
+[186627] INFO AstorCoreEngine - Generation 335
+[186628] INFO AstorCoreEngine - Generation 336
+[186637] INFO AstorCoreEngine - Storing ing JSON at ./diffSolutions/patchinfo_337.json
+[186639] INFO AstorCoreEngine - ./diffSolutions/patchinfo_337.json:
+{"VARIANT_ID":"337","VALIDATION":"|true|0|2163|[]|","patchhunks":[{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"1","INGREDIENT_PARENT":"return solve(f, min, max)","PATCH_HUNK_TYPE":"CtReturnImpl|CtBlockImpl","ORIGINAL_CODE":"return solve(min, max)","BUGGY_CODE_TYPE":"CtReturnImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-337\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"72","MP_RANKING":"0","PATCH_HUNK_CODE":"return solve(f, min, max)"},{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"-","ORIGINAL_CODE":"clearResult()","BUGGY_CODE_TYPE":"CtInvocationImpl|CtBlockImpl","OPERATOR":"RemoveOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-337\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"80","SUSPICIOUNESS":"0.5","MP_RANKING":"2"}],"TIME":"93","GENERATION":"336","FOLDER_SOLUTION_CODE":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-337","PATCH_DIFF_ORIG":"--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n\\n"}
+Saving patch info at ./diffSolutions/patchinfo_337.json
+[186639] INFO AstorCoreEngine - Storing ing JSON at /builds/workspace/astor/./diffSolutions/patch_93469_337.diff
+[186640] INFO AstorCoreEngine - /builds/workspace/astor/./diffSolutions/patch_93469_337.diff:
+{"VARIANT_ID":"337","VALIDATION":"|true|0|2163|[]|","patchhunks":[{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"1","INGREDIENT_PARENT":"return solve(f, min, max)","PATCH_HUNK_TYPE":"CtReturnImpl|CtBlockImpl","ORIGINAL_CODE":"return solve(min, max)","BUGGY_CODE_TYPE":"CtReturnImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-337\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"72","MP_RANKING":"0","PATCH_HUNK_CODE":"return solve(f, min, max)"},{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"-","ORIGINAL_CODE":"clearResult()","BUGGY_CODE_TYPE":"CtInvocationImpl|CtBlockImpl","OPERATOR":"RemoveOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-337\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"80","SUSPICIOUNESS":"0.5","MP_RANKING":"2"}],"TIME":"93","GENERATION":"336","FOLDER_SOLUTION_CODE":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-337","PATCH_DIFF_ORIG":"--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n\\n"}
+Saving patch diff at /builds/workspace/astor/./diffSolutions/patch_93469_337.diff
+[186640] WARN AstorCoreEngine - ----------Running generation: 337, population size: 1
+[198706] INFO AstorCoreEngine - -Found Solution, child variant #338
+[198719] INFO AstorCoreEngine - Generation 1
+[198719] INFO AstorCoreEngine - Generation 2
+[198720] INFO AstorCoreEngine - Generation 3
+[198720] INFO AstorCoreEngine - Generation 4
+[198720] INFO AstorCoreEngine - Generation 5
+[198721] INFO AstorCoreEngine - Generation 6
+[198721] INFO AstorCoreEngine - Generation 7
+[198722] INFO AstorCoreEngine - Generation 8
+[198722] INFO AstorCoreEngine - Generation 9
+[198723] INFO AstorCoreEngine - Generation 10
+[198723] INFO AstorCoreEngine - Generation 11
+[198723] INFO AstorCoreEngine - Generation 12
+[198724] INFO AstorCoreEngine - Generation 13
+[198724] INFO AstorCoreEngine - Generation 14
+[198724] INFO AstorCoreEngine - Generation 15
+[198725] INFO AstorCoreEngine - Generation 16
+[198725] INFO AstorCoreEngine - Generation 17
+[198725] INFO AstorCoreEngine - Generation 18
+[198726] INFO AstorCoreEngine - Generation 19
+[198726] INFO AstorCoreEngine - Generation 20
+[198726] INFO AstorCoreEngine - Generation 21
+[198727] INFO AstorCoreEngine - Generation 22
+[198727] INFO AstorCoreEngine - Generation 23
+[198727] INFO AstorCoreEngine - Generation 24
+[198728] INFO AstorCoreEngine - Generation 25
+[198728] INFO AstorCoreEngine - Generation 26
+[198728] INFO AstorCoreEngine - Generation 27
+[198729] INFO AstorCoreEngine - Generation 28
+[198729] INFO AstorCoreEngine - Generation 29
+[198730] INFO AstorCoreEngine - Generation 30
+[198730] INFO AstorCoreEngine - Generation 31
+[198730] INFO AstorCoreEngine - Generation 32
+[198731] INFO AstorCoreEngine - Generation 33
+[198731] INFO AstorCoreEngine - Generation 34
+[198731] INFO AstorCoreEngine - Generation 35
+[198732] INFO AstorCoreEngine - Generation 36
+[198732] INFO AstorCoreEngine - Generation 37
+[198732] INFO AstorCoreEngine - Generation 38
+[198733] INFO AstorCoreEngine - Generation 39
+[198733] INFO AstorCoreEngine - Generation 40
+[198733] INFO AstorCoreEngine - Generation 41
+[198734] INFO AstorCoreEngine - Generation 42
+[198734] INFO AstorCoreEngine - Generation 43
+[198734] INFO AstorCoreEngine - Generation 44
+[198735] INFO AstorCoreEngine - Generation 45
+[198735] INFO AstorCoreEngine - Generation 46
+[198736] INFO AstorCoreEngine - Generation 47
+[198736] INFO AstorCoreEngine - Generation 48
+[198736] INFO AstorCoreEngine - Generation 49
+[198737] INFO AstorCoreEngine - Generation 50
+[198737] INFO AstorCoreEngine - Generation 51
+[198737] INFO AstorCoreEngine - Generation 52
+[198738] INFO AstorCoreEngine - Generation 53
+[198738] INFO AstorCoreEngine - Generation 54
+[198738] INFO AstorCoreEngine - Generation 55
+[198739] INFO AstorCoreEngine - Generation 56
+[198739] INFO AstorCoreEngine - Generation 57
+[198739] INFO AstorCoreEngine - Generation 58
+[198740] INFO AstorCoreEngine - Generation 59
+[198740] INFO AstorCoreEngine - Generation 60
+[198740] INFO AstorCoreEngine - Generation 61
+[198741] INFO AstorCoreEngine - Generation 62
+[198741] INFO AstorCoreEngine - Generation 63
+[198741] INFO AstorCoreEngine - Generation 64
+[198742] INFO AstorCoreEngine - Generation 65
+[198742] INFO AstorCoreEngine - Generation 66
+[198742] INFO AstorCoreEngine - Generation 67
+[198743] INFO AstorCoreEngine - Generation 68
+[198743] INFO AstorCoreEngine - Generation 69
+[198743] INFO AstorCoreEngine - Generation 70
+[198744] INFO AstorCoreEngine - Generation 71
+[198744] INFO AstorCoreEngine - Generation 72
+[198744] INFO AstorCoreEngine - Generation 73
+[198745] INFO AstorCoreEngine - Generation 74
+[198745] INFO AstorCoreEngine - Generation 75
+[198745] INFO AstorCoreEngine - Generation 76
+[198746] INFO AstorCoreEngine - Generation 77
+[198746] INFO AstorCoreEngine - Generation 78
+[198747] INFO AstorCoreEngine - Generation 79
+[198747] INFO AstorCoreEngine - Generation 80
+[198747] INFO AstorCoreEngine - Generation 81
+[198748] INFO AstorCoreEngine - Generation 82
+[198748] INFO AstorCoreEngine - Generation 83
+[198748] INFO AstorCoreEngine - Generation 84
+[198749] INFO AstorCoreEngine - Generation 85
+[198749] INFO AstorCoreEngine - Generation 86
+[198749] INFO AstorCoreEngine - Generation 87
+[198750] INFO AstorCoreEngine - Generation 88
+[198750] INFO AstorCoreEngine - Generation 89
+[198751] INFO AstorCoreEngine - Generation 90
+[198751] INFO AstorCoreEngine - Generation 91
+[198751] INFO AstorCoreEngine - Generation 92
+[198752] INFO AstorCoreEngine - Generation 93
+[198752] INFO AstorCoreEngine - Generation 94
+[198752] INFO AstorCoreEngine - Generation 95
+[198753] INFO AstorCoreEngine - Generation 96
+[198753] INFO AstorCoreEngine - Generation 97
+[198753] INFO AstorCoreEngine - Generation 98
+[198754] INFO AstorCoreEngine - Generation 99
+[198754] INFO AstorCoreEngine - Generation 100
+[198754] INFO AstorCoreEngine - Generation 101
+[198755] INFO AstorCoreEngine - Generation 102
+[198755] INFO AstorCoreEngine - Generation 103
+[198756] INFO AstorCoreEngine - Generation 104
+[198756] INFO AstorCoreEngine - Generation 105
+[198756] INFO AstorCoreEngine - Generation 106
+[198757] INFO AstorCoreEngine - Generation 107
+[198757] INFO AstorCoreEngine - Generation 108
+[198757] INFO AstorCoreEngine - Generation 109
+[198758] INFO AstorCoreEngine - Generation 110
+[198758] INFO AstorCoreEngine - Generation 111
+[198758] INFO AstorCoreEngine - Generation 112
+[198759] INFO AstorCoreEngine - Generation 113
+[198759] INFO AstorCoreEngine - Generation 114
+[198759] INFO AstorCoreEngine - Generation 115
+[198760] INFO AstorCoreEngine - Generation 116
+[198760] INFO AstorCoreEngine - Generation 117
+[198760] INFO AstorCoreEngine - Generation 118
+[198761] INFO AstorCoreEngine - Generation 119
+[198761] INFO AstorCoreEngine - Generation 120
+[198761] INFO AstorCoreEngine - Generation 121
+[198762] INFO AstorCoreEngine - Generation 122
+[198762] INFO AstorCoreEngine - Generation 123
+[198762] INFO AstorCoreEngine - Generation 124
+[198763] INFO AstorCoreEngine - Generation 125
+[198763] INFO AstorCoreEngine - Generation 126
+[198763] INFO AstorCoreEngine - Generation 127
+[198764] INFO AstorCoreEngine - Generation 128
+[198764] INFO AstorCoreEngine - Generation 129
+[198765] INFO AstorCoreEngine - Generation 130
+[198765] INFO AstorCoreEngine - Generation 131
+[198765] INFO AstorCoreEngine - Generation 132
+[198766] INFO AstorCoreEngine - Generation 133
+[198766] INFO AstorCoreEngine - Generation 134
+[198766] INFO AstorCoreEngine - Generation 135
+[198767] INFO AstorCoreEngine - Generation 136
+[198767] INFO AstorCoreEngine - Generation 137
+[198767] INFO AstorCoreEngine - Generation 138
+[198768] INFO AstorCoreEngine - Generation 139
+[198768] INFO AstorCoreEngine - Generation 140
+[198768] INFO AstorCoreEngine - Generation 141
+[198769] INFO AstorCoreEngine - Generation 142
+[198769] INFO AstorCoreEngine - Generation 143
+[198770] INFO AstorCoreEngine - Generation 144
+[198770] INFO AstorCoreEngine - Generation 145
+[198770] INFO AstorCoreEngine - Generation 146
+[198772] INFO AstorCoreEngine - Generation 147
+[198772] INFO AstorCoreEngine - Generation 148
+[198772] INFO AstorCoreEngine - Generation 149
+[198773] INFO AstorCoreEngine - Generation 150
+[198773] INFO AstorCoreEngine - Generation 151
+[198774] INFO AstorCoreEngine - Generation 152
+[198774] INFO AstorCoreEngine - Generation 153
+[198774] INFO AstorCoreEngine - Generation 154
+[198775] INFO AstorCoreEngine - Generation 155
+[198775] INFO AstorCoreEngine - Generation 156
+[198775] INFO AstorCoreEngine - Generation 157
+[198776] INFO AstorCoreEngine - Generation 158
+[198776] INFO AstorCoreEngine - Generation 159
+[198776] INFO AstorCoreEngine - Generation 160
+[198777] INFO AstorCoreEngine - Generation 161
+[198777] INFO AstorCoreEngine - Generation 162
+[198777] INFO AstorCoreEngine - Generation 163
+[198778] INFO AstorCoreEngine - Generation 164
+[198778] INFO AstorCoreEngine - Generation 165
+[198778] INFO AstorCoreEngine - Generation 166
+[198779] INFO AstorCoreEngine - Generation 167
+[198780] INFO AstorCoreEngine - Generation 168
+[198781] INFO AstorCoreEngine - Generation 169
+[198781] INFO AstorCoreEngine - Generation 170
+[198787] INFO AstorCoreEngine - Generation 171
+[198787] INFO AstorCoreEngine - Generation 172
+[198787] INFO AstorCoreEngine - Generation 173
+[198788] INFO AstorCoreEngine - Generation 174
+[198788] INFO AstorCoreEngine - Generation 175
+[198788] INFO AstorCoreEngine - Generation 176
+[198789] INFO AstorCoreEngine - Generation 177
+[198789] INFO AstorCoreEngine - Generation 178
+[198789] INFO AstorCoreEngine - Generation 179
+[198790] INFO AstorCoreEngine - Generation 180
+[198790] INFO AstorCoreEngine - Generation 181
+[198790] INFO AstorCoreEngine - Generation 182
+[198791] INFO AstorCoreEngine - Generation 183
+[198791] INFO AstorCoreEngine - Generation 184
+[198791] INFO AstorCoreEngine - Generation 185
+[198792] INFO AstorCoreEngine - Generation 186
+[198792] INFO AstorCoreEngine - Generation 187
+[198792] INFO AstorCoreEngine - Generation 188
+[198793] INFO AstorCoreEngine - Generation 189
+[198793] INFO AstorCoreEngine - Generation 190
+[198793] INFO AstorCoreEngine - Generation 191
+[198794] INFO AstorCoreEngine - Generation 192
+[198794] INFO AstorCoreEngine - Generation 193
+[198794] INFO AstorCoreEngine - Generation 194
+[198795] INFO AstorCoreEngine - Generation 195
+[198795] INFO AstorCoreEngine - Generation 196
+[198795] INFO AstorCoreEngine - Generation 197
+[198796] INFO AstorCoreEngine - Generation 198
+[198796] INFO AstorCoreEngine - Generation 199
+[198796] INFO AstorCoreEngine - Generation 200
+[198797] INFO AstorCoreEngine - Generation 201
+[198797] INFO AstorCoreEngine - Generation 202
+[198797] INFO AstorCoreEngine - Generation 203
+[198798] INFO AstorCoreEngine - Generation 204
+[198798] INFO AstorCoreEngine - Generation 205
+[198798] INFO AstorCoreEngine - Generation 206
+[198799] INFO AstorCoreEngine - Generation 207
+[198799] INFO AstorCoreEngine - Generation 208
+[198800] INFO AstorCoreEngine - Generation 209
+[198800] INFO AstorCoreEngine - Generation 210
+[198800] INFO AstorCoreEngine - Generation 211
+[198800] INFO AstorCoreEngine - Generation 212
+[198801] INFO AstorCoreEngine - Generation 213
+[198801] INFO AstorCoreEngine - Generation 214
+[198801] INFO AstorCoreEngine - Generation 215
+[198802] INFO AstorCoreEngine - Generation 216
+[198802] INFO AstorCoreEngine - Generation 217
+[198802] INFO AstorCoreEngine - Generation 218
+[198804] INFO AstorCoreEngine - Generation 219
+[198811] INFO AstorCoreEngine - Generation 220
+[198811] INFO AstorCoreEngine - Generation 221
+[198811] INFO AstorCoreEngine - Generation 222
+[198812] INFO AstorCoreEngine - Generation 223
+[198812] INFO AstorCoreEngine - Generation 224
+[198812] INFO AstorCoreEngine - Generation 225
+[198813] INFO AstorCoreEngine - Generation 226
+[198813] INFO AstorCoreEngine - Generation 227
+[198813] INFO AstorCoreEngine - Generation 228
+[198813] INFO AstorCoreEngine - Generation 229
+[198814] INFO AstorCoreEngine - Generation 230
+[198814] INFO AstorCoreEngine - Generation 231
+[198814] INFO AstorCoreEngine - Generation 232
+[198814] INFO AstorCoreEngine - Generation 233
+[198815] INFO AstorCoreEngine - Generation 234
+[198815] INFO AstorCoreEngine - Generation 235
+[198815] INFO AstorCoreEngine - Generation 236
+[198816] INFO AstorCoreEngine - Generation 237
+[198816] INFO AstorCoreEngine - Generation 238
+[198816] INFO AstorCoreEngine - Generation 239
+[198816] INFO AstorCoreEngine - Generation 240
+[198816] INFO AstorCoreEngine - Generation 241
+[198816] INFO AstorCoreEngine - Generation 242
+[198816] INFO AstorCoreEngine - Generation 243
+[198816] INFO AstorCoreEngine - Generation 244
+[198816] INFO AstorCoreEngine - Generation 245
+[198816] INFO AstorCoreEngine - Generation 246
+[198816] INFO AstorCoreEngine - Generation 247
+[198817] INFO AstorCoreEngine - Generation 248
+[198817] INFO AstorCoreEngine - Generation 249
+[198817] INFO AstorCoreEngine - Generation 250
+[198817] INFO AstorCoreEngine - Generation 251
+[198817] INFO AstorCoreEngine - Generation 252
+[198817] INFO AstorCoreEngine - Generation 253
+[198817] INFO AstorCoreEngine - Generation 254
+[198817] INFO AstorCoreEngine - Generation 255
+[198818] INFO AstorCoreEngine - Generation 256
+[198818] INFO AstorCoreEngine - Generation 257
+[198818] INFO AstorCoreEngine - Generation 258
+[198818] INFO AstorCoreEngine - Generation 259
+[198818] INFO AstorCoreEngine - Generation 260
+[198818] INFO AstorCoreEngine - Generation 261
+[198818] INFO AstorCoreEngine - Generation 262
+[198818] INFO AstorCoreEngine - Generation 263
+[198818] INFO AstorCoreEngine - Generation 264
+[198818] INFO AstorCoreEngine - Generation 265
+[198818] INFO AstorCoreEngine - Generation 266
+[198818] INFO AstorCoreEngine - Generation 267
+[198819] INFO AstorCoreEngine - Generation 268
+[198819] INFO AstorCoreEngine - Generation 269
+[198819] INFO AstorCoreEngine - Generation 270
+[198819] INFO AstorCoreEngine - Generation 271
+[198819] INFO AstorCoreEngine - Generation 272
+[198819] INFO AstorCoreEngine - Generation 273
+[198819] INFO AstorCoreEngine - Generation 274
+[198820] INFO AstorCoreEngine - Generation 275
+[198820] INFO AstorCoreEngine - Generation 276
+[198820] INFO AstorCoreEngine - Generation 277
+[198820] INFO AstorCoreEngine - Generation 278
+[198820] INFO AstorCoreEngine - Generation 279
+[198820] INFO AstorCoreEngine - Generation 280
+[198820] INFO AstorCoreEngine - Generation 281
+[198820] INFO AstorCoreEngine - Generation 282
+[198820] INFO AstorCoreEngine - Generation 283
+[198820] INFO AstorCoreEngine - Generation 284
+[198821] INFO AstorCoreEngine - Generation 285
+[198822] INFO AstorCoreEngine - Generation 286
+[198822] INFO AstorCoreEngine - Generation 287
+[198822] INFO AstorCoreEngine - Generation 288
+[198823] INFO AstorCoreEngine - Generation 289
+[198823] INFO AstorCoreEngine - Generation 290
+[198823] INFO AstorCoreEngine - Generation 291
+[198824] INFO AstorCoreEngine - Generation 292
+[198824] INFO AstorCoreEngine - Generation 293
+[198824] INFO AstorCoreEngine - Generation 294
+[198825] INFO AstorCoreEngine - Generation 295
+[198825] INFO AstorCoreEngine - Generation 296
+[198825] INFO AstorCoreEngine - Generation 297
+[198826] INFO AstorCoreEngine - Generation 298
+[198826] INFO AstorCoreEngine - Generation 299
+[198826] INFO AstorCoreEngine - Generation 300
+[198827] INFO AstorCoreEngine - Generation 301
+[198827] INFO AstorCoreEngine - Generation 302
+[198827] INFO AstorCoreEngine - Generation 303
+[198827] INFO AstorCoreEngine - Generation 304
+[198828] INFO AstorCoreEngine - Generation 305
+[198828] INFO AstorCoreEngine - Generation 306
+[198829] INFO AstorCoreEngine - Generation 307
+[198829] INFO AstorCoreEngine - Generation 308
+[198829] INFO AstorCoreEngine - Generation 309
+[198830] INFO AstorCoreEngine - Generation 310
+[198830] INFO AstorCoreEngine - Generation 311
+[198830] INFO AstorCoreEngine - Generation 312
+[198831] INFO AstorCoreEngine - Generation 313
+[198831] INFO AstorCoreEngine - Generation 314
+[198831] INFO AstorCoreEngine - Generation 315
+[198832] INFO AstorCoreEngine - Generation 316
+[198832] INFO AstorCoreEngine - Generation 317
+[198832] INFO AstorCoreEngine - Generation 318
+[198833] INFO AstorCoreEngine - Generation 319
+[198833] INFO AstorCoreEngine - Generation 320
+[198833] INFO AstorCoreEngine - Generation 321
+[198834] INFO AstorCoreEngine - Generation 322
+[198834] INFO AstorCoreEngine - Generation 323
+[198835] INFO AstorCoreEngine - Generation 324
+[198835] INFO AstorCoreEngine - Generation 325
+[198835] INFO AstorCoreEngine - Generation 326
+[198837] INFO AstorCoreEngine - Generation 327
+[198837] INFO AstorCoreEngine - Generation 328
+[198837] INFO AstorCoreEngine - Generation 329
+[198838] INFO AstorCoreEngine - Generation 330
+[198838] INFO AstorCoreEngine - Generation 331
+[198838] INFO AstorCoreEngine - Generation 332
+[198839] INFO AstorCoreEngine - Generation 333
+[198839] INFO AstorCoreEngine - Generation 334
+[198840] INFO AstorCoreEngine - Generation 335
+[198846] INFO AstorCoreEngine - Generation 336
+[198847] INFO AstorCoreEngine - Generation 337
+[198853] INFO AstorCoreEngine - Storing ing JSON at ./diffSolutions/patchinfo_338.json
+[198855] INFO AstorCoreEngine - ./diffSolutions/patchinfo_338.json:
+{"VARIANT_ID":"338","VALIDATION":"|true|0|2163|[]|","patchhunks":[{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"1","INGREDIENT_PARENT":"return solve(f, min, max)","PATCH_HUNK_TYPE":"CtReturnImpl|CtBlockImpl","ORIGINAL_CODE":"return solve(min, max)","BUGGY_CODE_TYPE":"CtReturnImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-338\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"72","MP_RANKING":"0","PATCH_HUNK_CODE":"return solve(f, min, max)"},{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"-","ORIGINAL_CODE":"verifyInterval(min, max)","BUGGY_CODE_TYPE":"CtInvocationImpl|CtBlockImpl","OPERATOR":"RemoveOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-338\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"81","SUSPICIOUNESS":"0.5","MP_RANKING":"3"}],"TIME":"105","GENERATION":"337","FOLDER_SOLUTION_CODE":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-338","PATCH_DIFF_ORIG":"--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n\\n"}
+Saving patch info at ./diffSolutions/patchinfo_338.json
+[198856] INFO AstorCoreEngine - Storing ing JSON at /builds/workspace/astor/./diffSolutions/patch_105686_338.diff
+[198857] INFO AstorCoreEngine - /builds/workspace/astor/./diffSolutions/patch_105686_338.diff:
+{"VARIANT_ID":"338","VALIDATION":"|true|0|2163|[]|","patchhunks":[{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"LOCAL","SUSPICIOUNESS":"1","INGREDIENT_PARENT":"return solve(f, min, max)","PATCH_HUNK_TYPE":"CtReturnImpl|CtBlockImpl","ORIGINAL_CODE":"return solve(min, max)","BUGGY_CODE_TYPE":"CtReturnImpl|CtBlockImpl","OPERATOR":"ReplaceOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-338\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"72","MP_RANKING":"0","PATCH_HUNK_CODE":"return solve(f, min, max)"},{"LOCATION":"org.apache.commons.math.analysis.solvers.BisectionSolver","PATH":"\\\/builds\\\/workspace\\\/astor\\\/examples\\\/math_70\\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","INGREDIENT_SCOPE":"-","ORIGINAL_CODE":"verifyInterval(min, max)","BUGGY_CODE_TYPE":"CtInvocationImpl|CtBlockImpl","OPERATOR":"RemoveOp","MODIFIED_FILE_PATH":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-338\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java","LINE":"81","SUSPICIOUNESS":"0.5","MP_RANKING":"3"}],"TIME":"105","GENERATION":"337","FOLDER_SOLUTION_CODE":"\\\/builds\\\/workspace\\\/astor\\\/.\\\/output_astor\\\/AstorMain-math_70\\\/\\\/src\\\/\\\/variant-338","PATCH_DIFF_ORIG":"--- \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n+++ \\\/src\\\/main\\\/java\\\/org\\\/apache\\\/commons\\\/math\\\/analysis\\\/solvers\\\/BisectionSolver.java\\n@@ -71,2 +71,2 @@\\n-\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {\\n-\\t\\treturn solve(min, max);\\n+\\t *\\\/ \\tpublic double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { \\t\\treturn solve(f, min, max);\\n+\\n\\n"}
+Saving patch diff at /builds/workspace/astor/./diffSolutions/patch_105686_338.diff
+[198861] INFO AstorCoreEngine - Time Repair Loop (s): 105.691
+[198863] INFO AstorCoreEngine - generationsexecuted: 337
+[198863] WARN AstorCoreEngine - ----SUMMARY_EXECUTION---
+[198863] WARN AstorCoreEngine - End Repair Search: Found solution
+[198864] WARN AstorCoreEngine - Solution stored at: /builds/workspace/astor/./output_astor/AstorMain-math_70//src/
+[198864] WARN AstorCoreEngine - Number solutions:3
+[198864] INFO AstorCoreEngine - f (sol): 0.0, [Variant id: 335 (SOL) , #gens: 8, #ops: 1, parent:1]
+[198865] INFO AstorCoreEngine - f (sol): 0.0, [Variant id: 337 (SOL) , #gens: 7, #ops: 2, parent:335]
+[198865] INFO AstorCoreEngine - f (sol): 0.0, [Variant id: 338 (SOL) , #gens: 7, #ops: 2, parent:335]
+[198866] WARN AstorCoreEngine - Number suspicious:1
+[198896] INFO AstorCoreEngine - 
+ --SOLUTIONS DESCRIPTION--
+
+ ----
+ProgramVariant 335
+ 
+time(sec)= 80
+operation: ReplaceOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 72
+lineSuspiciousness= 1
+lineSuspiciousness= 0
+original statement= return solve(min, max)
+buggy kind= CtReturnImpl|CtBlockImpl
+fixed statement= return solve(f, min, max)
+Patch kind= CtReturnImpl|CtBlockImpl
+generation= 334
+ingredientScope= LOCAL
+validation=|true|0|2163|[]|
+diffpatch=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -53 +53 @@
+-		return solve(min, max);
++		return solve(f, min, max);
+
+
+diffpatchoriginal=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	 */ 	public double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	 */ 	public double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+
+
+ ----
+ProgramVariant 337
+ 
+time(sec)= 93
+operation: ReplaceOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 72
+lineSuspiciousness= 1
+lineSuspiciousness= 0
+original statement= return solve(min, max)
+buggy kind= CtReturnImpl|CtBlockImpl
+fixed statement= return solve(f, min, max)
+Patch kind= CtReturnImpl|CtBlockImpl
+generation= 334
+ingredientScope= LOCAL
+operation: RemoveOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 80
+lineSuspiciousness= 0.5
+lineSuspiciousness= 2
+original statement= clearResult()
+buggy kind= CtInvocationImpl|CtBlockImpl
+fixed statement= 
+generation= 336
+ingredientScope= -
+validation=|true|0|2163|[]|
+diffpatch=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -53 +53 @@
+-		return solve(min, max);
++		return solve(f, min, max);
+
+
+diffpatchoriginal=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	 */ 	public double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	 */ 	public double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+
+
+ ----
+ProgramVariant 338
+ 
+time(sec)= 105
+operation: ReplaceOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 72
+lineSuspiciousness= 1
+lineSuspiciousness= 0
+original statement= return solve(min, max)
+buggy kind= CtReturnImpl|CtBlockImpl
+fixed statement= return solve(f, min, max)
+Patch kind= CtReturnImpl|CtBlockImpl
+generation= 334
+ingredientScope= LOCAL
+operation: RemoveOp
+location= org.apache.commons.math.analysis.solvers.BisectionSolver
+line= 81
+lineSuspiciousness= 0.5
+lineSuspiciousness= 3
+original statement= verifyInterval(min, max)
+buggy kind= CtInvocationImpl|CtBlockImpl
+fixed statement= 
+generation= 337
+ingredientScope= -
+validation=|true|0|2163|[]|
+diffpatch=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -53 +53 @@
+-		return solve(min, max);
++		return solve(f, min, max);
+
+
+diffpatchoriginal=--- /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ /src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+@@ -71,2 +71,2 @@
+-	 */ 	public double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException {
+-		return solve(min, max);
++	 */ 	public double solve(final org.apache.commons.math.analysis.UnivariateRealFunction f, double min, double max, double initial) throws org.apache.commons.math.MaxIterationsExceededException, org.apache.commons.math.FunctionEvaluationException { 		return solve(f, min, max);
++
+
+
+
+Astor Output:
+
+General stats:
+EXECUTION_IDENTIFIER=
+TOTAL_TIME=105.691
+NR_GENERATIONS=337
+NR_RIGHT_COMPILATIONS=107
+NR_FAILLING_COMPILATIONS=214
+NR_ERRONEOUS_VARIANCES=null
+NR_FAILING_VALIDATION_PROCESS=null
+OUTPUT_STATUS=STOP_BY_PATCH_FOUND
+FAULT_LOCALIZATION=fr.inria.astor.core.faultlocalization.flacoco.FlacocoFaultLocalization
+
+Patch stats:
+
+[198914] INFO Stats - Storing ing JSON at /builds/workspace/astor/./output_astor/AstorMain-math_70//astor_output.json
+[198916] INFO Stats - astor_output:
+{"general":{"NR_RIGHT_COMPILATIONS":107,"NR_ERRONEOUS_VARIANCES":null,"EXECUTION_IDENTIFIER":"","FAULT_LOCALIZATION":"fr.inria.astor.core.faultlocalization.flacoco.FlacocoFaultLocalization","OUTPUT_STATUS":"STOP_BY_PATCH_FOUND","NR_FAILLING_COMPILATIONS":214,"NR_GENERATIONS":337,"TOTAL_TIME":105.691,"NR_FAILING_VALIDATION_PROCESS":null},"patches":[]}
+[198924] INFO AstorMain - Time Total(s): 198.911
+[198925] INFO main - -->[[OP_INSTANCE:
+ReplaceOp:(spoon.support.reflect.code.CtReturnImpl) `return solve(min, max) ` -topatch--> `return solve(f, min, max)` (spoon.support.reflect.code.CtReturnImpl) ]]
+[198926] INFO main - -->[[OP_INSTANCE:
+RemoveOp:(spoon.support.reflect.code.CtInvocationImpl) `clearResult() ` -topatch--> `-` (null) ], [OP_INSTANCE:
+ReplaceOp:(spoon.support.reflect.code.CtReturnImpl) `return solve(min, max) ` -topatch--> `return solve(f, min, max)` (spoon.support.reflect.code.CtReturnImpl) ]]
+[198926] INFO main - -->[[OP_INSTANCE:
+RemoveOp:(spoon.support.reflect.code.CtInvocationImpl) `verifyInterval(min, max) ` -topatch--> `-` (null) ], [OP_INSTANCE:
+ReplaceOp:(spoon.support.reflect.code.CtReturnImpl) `return solve(min, max) ` -topatch--> `return solve(f, min, max)` (spoon.support.reflect.code.CtReturnImpl) ]]
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 200.022 sec - in fr.inria.astor.test.repair.approaches.JGenProgEvolutionaryTest
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.7:report (report) @ astor ---
+[INFO] Loading execution data file /builds/workspace/astor/target/jacoco.exec
+[INFO] Analyzed bundle 'ASTOR' with 355 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:44 min
+[INFO] Finished at: 2022-04-03T12:30:51+02:00
+[INFO] ------------------------------------------------------------------------
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] done
+Finished: SUCCESS

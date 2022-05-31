@@ -1,0 +1,145 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu18 (lin) in workspace /builds/workspace/Commons-codec
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /builds/workspace/Commons-codec/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/apache/commons-codec.git # timeout=10
+Fetching upstream changes from https://github.com/apache/commons-codec.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/apache/commons-codec.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse origin/master^{commit} # timeout=10
+Checking out Revision 7847c114b8960571bfe56552e5e9c27972a9e115 (origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 7847c114b8960571bfe56552e5e9c27972a9e115 # timeout=10
+Commit message: "Bump animal-sniffer-maven-plugin from 1.19 to 1.21"
+ > git rev-list --no-walk 607bd7f37a7296e3f97433028d87c70062de6635 # timeout=10
+[Commons-codec] $ /bin/sh -xe /tmp/jenkins12048796752296400707.sh
++ bash
++ curl https://spoon.gforge.inria.fr/jenkins/build.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0 
+-------------------------------------------------------
+Initizalizes project
+-------------------------------------------------------
+ 
+100 21399  100 21399    0     0   120k      0 --:--:-- --:--:-- --:--:--  120k
+HEAD is now at 7847c114 Bump animal-sniffer-maven-plugin from 1.19 to 1.21
+
+--- Displays variables used in the build ---
+Artifact id: commons-codec
+Version: 1.16-SNAPSHOT
+Modules job:
+- Commons-codec
+Has checkstyle: true
+Has enforcer: true
+Git version id: 7847c114b8960571bfe56552e5e9c27972a9e115
+Java version: Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+openjdk version "11.0.15" 2022-04-19
+OpenJDK Runtime Environment (build 11.0.15+10-Ubuntu-0ubuntu0.18.04.1)
+OpenJDK 64-Bit Server VM (build 11.0.15+10-Ubuntu-0ubuntu0.18.04.1, mixed mode, sharing)
+Java home: /usr/lib/jvm/java-11-openjdk-amd64
+ 
+-------------------------------------------------------
+Compiles project (at the root project if it's a multi module project) without spoon
+-------------------------------------------------------
+ 
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< commons-codec:commons-codec >---------------------
+[INFO] Building Apache Commons Codec 1.16-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from central: https://repo.maven.apache.org/maven2/org/jacoco/jacoco-maven-plugin/0.8.8/jacoco-maven-plugin-0.8.8.pom
+Progress (1): 2.7/3.8 kBProgress (1): 3.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/jacoco/jacoco-maven-plugin/0.8.8/jacoco-maven-plugin-0.8.8.pom (3.8 kB at 7.0 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/jacoco/jacoco-maven-plugin/0.8.8/jacoco-maven-plugin-0.8.8.jar
+Progress (1): 2.7/56 kBProgress (1): 5.5/56 kBProgress (1): 8.2/56 kBProgress (1): 11/56 kB Progress (1): 14/56 kBProgress (1): 16/56 kBProgress (1): 19/56 kBProgress (1): 21/56 kBProgress (1): 24/56 kBProgress (1): 27/56 kBProgress (1): 30/56 kBProgress (1): 32/56 kBProgress (1): 35/56 kBProgress (1): 38/56 kBProgress (1): 40/56 kBProgress (1): 43/56 kBProgress (1): 46/56 kBProgress (1): 49/56 kBProgress (1): 51/56 kBProgress (1): 54/56 kBProgress (1): 56 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/org/jacoco/jacoco-maven-plugin/0.8.8/jacoco-maven-plugin-0.8.8.jar (56 kB at 259 kB/s)
+[INFO] 
+[INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ commons-codec ---
+[INFO] Deleting /builds/workspace/Commons-codec/target
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.0.0:enforce (enforce-maven-version) @ commons-codec ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.0.0:enforce (enforce-java-version) @ commons-codec ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.0.0:enforce (enforce-output-timestamp-property) @ commons-codec ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.0.0:enforce (enforce-maven-3) @ commons-codec ---
+[INFO] 
+[INFO] --- apache-rat-plugin:0.13:check (rat-check) @ commons-codec ---
+[INFO] RAT will not execute since it is configured to be skipped via system property 'rat.skip'.
+[INFO] 
+[INFO] --- build-helper-maven-plugin:3.2.0:parse-version (parse-version) @ commons-codec ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:3.0.0:run (javadoc.resources) @ commons-codec ---
+[INFO] Executing tasks
+[INFO]      [copy] Copying 2 files to /builds/workspace/Commons-codec/target/apidocs/META-INF
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.7.0:process (process-resource-bundles) @ commons-codec ---
+[INFO] Skipping remote resources execution.
+[INFO] 
+[INFO] --- buildnumber-maven-plugin:3.0.0:create (default) @ commons-codec ---
+[INFO] Executing: /bin/sh -c cd '/builds/workspace/Commons-codec' && 'git' 'rev-parse' '--verify' 'HEAD'
+[INFO] Working directory: /builds/workspace/Commons-codec
+[INFO] Storing buildNumber: null at timestamp: 1653243790417
+[WARNING] Cannot get the branch information from the git repository: 
+Detecting the current branch failed: fatal: ref HEAD is not a symbolic ref
+
+[INFO] Executing: /bin/sh -c cd '/builds/workspace/Commons-codec' && 'git' 'rev-parse' '--verify' 'HEAD'
+[INFO] Working directory: /builds/workspace/Commons-codec
+[INFO] Storing buildScmBranch: UNKNOWN
+[INFO] 
+[INFO] --- maven-resources-plugin:3.2.0:resources (default-resources) @ commons-codec ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 128 resources
+[INFO] Copying 2 resources to META-INF
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ commons-codec ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 74 source files to /builds/workspace/Commons-codec/target/classes
+[INFO] 
+[INFO] --- maven-bundle-plugin:5.1.4:manifest (bundle-manifest) @ commons-codec ---
+[INFO] Writing manifest: /builds/workspace/Commons-codec/target/osgi/MANIFEST.MF
+[INFO] 
+[INFO] --- maven-resources-plugin:3.2.0:testResources (default-testResources) @ commons-codec ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 4 resources
+[INFO] Copying 2 resources to META-INF
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:testCompile (default-testCompile) @ commons-codec ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 74 source files to /builds/workspace/Commons-codec/target/test-classes
+[INFO] /builds/workspace/Commons-codec/src/test/java/org/apache/commons/codec/digest/MurmurHash3Test.java: /builds/workspace/Commons-codec/src/test/java/org/apache/commons/codec/digest/MurmurHash3Test.java uses or overrides a deprecated API.
+[INFO] /builds/workspace/Commons-codec/src/test/java/org/apache/commons/codec/digest/MurmurHash3Test.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- animal-sniffer-maven-plugin:1.21:check (checkAPIcompatibility) @ commons-codec ---
+[INFO] Checking unresolved references to org.codehaus.mojo.signature:java18:1.0
+[ERROR] /builds/workspace/Commons-codec/src/main/java/org/apache/commons/codec/binary/Hex.java:348: Undefined reference: java.nio.ByteBuffer java.nio.ByteBuffer.position(int)
+[ERROR] /builds/workspace/Commons-codec/src/main/java/org/apache/commons/codec/digest/DigestUtils.java:1437: Undefined reference: java.nio.ByteBuffer java.nio.ByteBuffer.flip()
+[ERROR] /builds/workspace/Commons-codec/src/main/java/org/apache/commons/codec/digest/DigestUtils.java:1439: Undefined reference: java.nio.ByteBuffer java.nio.ByteBuffer.clear()
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  20.746 s
+[INFO] Finished at: 2022-05-22T20:23:24+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.codehaus.mojo:animal-sniffer-maven-plugin:1.21:check (checkAPIcompatibility) on project commons-codec: Signature errors found. Verify them and ignore them with the proper annotation if needed. -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+Error: Maven compile original project unsuccessful!
+Build step 'Execute shell' marked build as failure
+Archiving artifacts
+/net/www/ci/sos/jobs/Commons-codec/builds/2463/archive does not exist.
+ERROR: Step ‘Publish XML Summary Reports’ failed: /net/www/ci/sos/jobs/Commons-codec/builds/2463/archive does not exist.
+Finished: FAILURE
