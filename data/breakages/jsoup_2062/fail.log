@@ -1,374 +1,0 @@
-Started by timer
-Running as SYSTEM
-[EnvInject] - Loading node environment variables.
-Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/Jsoup
-[WS-CLEANUP] Deleting project workspace...
-[WS-CLEANUP] Deferred wipeout is used...
-[WS-CLEANUP] Done
-The recommended git tool is: NONE
-No credentials specified
-Cloning the remote Git repository
-Cloning repository https://github.com/monperrus/jsoup.git
- > git init /builds/workspace/Jsoup # timeout=10
-Fetching upstream changes from https://github.com/monperrus/jsoup.git
- > git --version # timeout=10
- > git --version # 'git version 2.17.1'
- > git fetch --tags --progress -- https://github.com/monperrus/jsoup.git +refs/heads/*:refs/remotes/origin/* # timeout=10
- > git config remote.origin.url https://github.com/monperrus/jsoup.git # timeout=10
- > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
-Avoid second fetch
- > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
-Checking out Revision a3633bcd2e21e1c16c22c36e1085b5e024089181 (refs/remotes/origin/master)
- > git config core.sparsecheckout # timeout=10
- > git checkout -f a3633bcd2e21e1c16c22c36e1085b5e024089181 # timeout=10
-Commit message: "Delete FuzzFixesTest.java"
- > git rev-list --no-walk a3633bcd2e21e1c16c22c36e1085b5e024089181 # timeout=10
-[Jsoup] $ /bin/sh -xe /tmp/jenkins6914397431103204370.sh
-+ stdbuf -i 50k bash
-+ curl https://spoon.gforge.inria.fr/jenkins/build.sh
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0 
--------------------------------------------------------
-Initizalizes project
--------------------------------------------------------
- 
-100 21399  100 21399    0     0   151k      0 --:--:-- --:--:-- --:--:--  151k
-HEAD is now at a3633bcd Delete FuzzFixesTest.java
-
---- Displays variables used in the build ---
-Artifact id: jsoup
-Version: 1.15.1-SNAPSHOT
-Modules job:
-- Jsoup
-Has checkstyle: true
-Has enforcer: true
-Git version id: a3633bcd2e21e1c16c22c36e1085b5e024089181
-Java version: Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-openjdk version "11.0.9.1" 2020-11-04
-OpenJDK Runtime Environment (build 11.0.9.1+1-Ubuntu-0ubuntu1.18.04)
-OpenJDK 64-Bit Server VM (build 11.0.9.1+1-Ubuntu-0ubuntu1.18.04, mixed mode, sharing)
-Java home: /usr/lib/jvm/java-11-openjdk-amd64
- 
--------------------------------------------------------
-Compiles project (at the root project if it's a multi module project) without spoon
--------------------------------------------------------
- 
-Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
-WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
-WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-WARNING: All illegal access operations will be denied in a future release
-[[1;34mINFO[m] Scanning for projects...
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--------------------------< [0;36morg.jsoup:jsoup[0;1m >---------------------------[m
-[[1;34mINFO[m] [1mBuilding jsoup Java HTML Parser 1.15.1-SNAPSHOT[m
-[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:2.5:clean[m [1m(default-clean)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.2.0:resources[m [1m(default-resources)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
-[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered properties files.
-[[1;34mINFO[m] Copying 3 resources to META-INF/
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.1:compile[m [1m(default-compile)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Compiling 72 source files to /builds/workspace/Jsoup/target/classes
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32manimal-sniffer-maven-plugin:1.20:check[m [1m(animal-sniffer)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Checking unresolved references to net.sf.androidscents.signature:android-api-level-10:2.3.3_r2
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-bundle-plugin:5.1.2:manifest[m [1m(bundle-manifest)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.2.0:testResources[m [1m(default-testResources)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
-[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered properties files.
-[[1;34mINFO[m] Copying 65 resources
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.1:testCompile[m [1m(default-testCompile)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Compiling 57 source files to /builds/workspace/Jsoup/target/test-classes
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:3.0.0-M5:test[m [1m(default-test)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] -------------------------------------------------------
-[[1;34mINFO[m]  T E S T S
-[[1;34mINFO[m] -------------------------------------------------------
-[[1;31mERROR[m] Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-[[1;34mINFO[m] Running org.jsoup.safety.[1mCleanerTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m37[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.85 s - in org.jsoup.safety.[1mCleanerTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mTokeniserStateTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m21[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.229 s - in org.jsoup.parser.[1mTokeniserStateTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mCharacterReaderTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m28[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 s - in org.jsoup.parser.[1mCharacterReaderTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mXmlTreeBuilderTest[m
-[[1;33mWARNING[m] [1;33mTests [0;1mrun: [0;1m31[m, Failures: 0, Errors: 0, [1;33mSkipped: [0;1;33m1[m, Time elapsed: 0.147 s - in org.jsoup.parser.[1mXmlTreeBuilderTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mParserTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s - in org.jsoup.parser.[1mParserTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mHtmlParserTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m167[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.789 s - in org.jsoup.parser.[1mHtmlParserTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mTokenQueueTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m10[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s - in org.jsoup.parser.[1mTokenQueueTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mHtmlTreeBuilderTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s - in org.jsoup.parser.[1mHtmlTreeBuilderTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mAttributeParseTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m8[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s - in org.jsoup.parser.[1mAttributeParseTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mTokeniserTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m12[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 s - in org.jsoup.parser.[1mTokeniserTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mHtmlTreeBuilderStateTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s - in org.jsoup.parser.[1mHtmlTreeBuilderStateTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mParserSettingsTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s - in org.jsoup.parser.[1mParserSettingsTest[m
-[[1;34mINFO[m] Running org.jsoup.parser.[1mTagTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m12[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s - in org.jsoup.parser.[1mTagTest[m
-[[1;34mINFO[m] Running org.jsoup.integration.[1mParseTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m15[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.554 s - in org.jsoup.integration.[1mParseTest[m
-[[1;34mINFO[m] Running org.jsoup.integration.[1mConnectTest[m
-2022-05-21 03:23:31.676:INFO::main: Logging initialized @5895ms to org.eclipse.jetty.util.log.StdErrLog
-2022-05-21 03:23:31.774:INFO:oejs.Server:main: jetty-9.4.44.v20210927; built: 2021-09-27T23:02:44.612Z; git: 8da83308eeca865e495e53ef315a249d63ba9332; jvm 11.0.9.1+1-Ubuntu-0ubuntu1.18.04
-2022-05-21 03:23:31.888:INFO:oejs.AbstractConnector:main: Started ServerConnector@2b58f754{HTTP/1.1, (http/1.1)}{0.0.0.0:46435}
-2022-05-21 03:23:31.888:INFO:oejs.Server:main: Started @6108ms
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m44[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.61 s - in org.jsoup.integration.[1mConnectTest[m
-[[1;34mINFO[m] Running org.jsoup.integration.[1mSafelistExtensionTest[m
-[[1;33mWARNING[m] [1;33mTests [0;1mrun: [0;1m2[m, Failures: 0, Errors: 0, [1;33mSkipped: [0;1;33m1[m, Time elapsed: 0.007 s - in org.jsoup.integration.[1mSafelistExtensionTest[m
-[[1;34mINFO[m] Running org.jsoup.integration.[1mSessionTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s - in org.jsoup.integration.[1mSessionTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mDocumentTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m34[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.199 s - in org.jsoup.nodes.[1mDocumentTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mEntitiesTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m16[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s - in org.jsoup.nodes.[1mEntitiesTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mAttributesTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m18[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s - in org.jsoup.nodes.[1mAttributesTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mTextNodeTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m10[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.jsoup.nodes.[1mTextNodeTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mDocumentTypeTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.02 s - in org.jsoup.nodes.[1mDocumentTypeTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mLeafNodeTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s - in org.jsoup.nodes.[1mLeafNodeTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mNodeTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m26[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s - in org.jsoup.nodes.[1mNodeTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mElementTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m134[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.236 s - in org.jsoup.nodes.[1mElementTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mAttributeTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m8[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.02 s - in org.jsoup.nodes.[1mAttributeTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mCommentTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m7[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s - in org.jsoup.nodes.[1mCommentTest[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mFormElementTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m12[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s - in org.jsoup.nodes.[1mFormElementTest[m
-[[1;34mINFO[m] Running org.jsoup.select.[1mSelectorTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m87[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.135 s - in org.jsoup.select.[1mSelectorTest[m
-[[1;34mINFO[m] Running org.jsoup.select.[1mQueryParserTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m9[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in org.jsoup.select.[1mQueryParserTest[m
-[[1;34mINFO[m] Running org.jsoup.select.[1mElementsTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m38[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 s - in org.jsoup.select.[1mElementsTest[m
-[[1;34mINFO[m] Running org.jsoup.select.[1mXpathTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m13[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.173 s - in org.jsoup.select.[1mXpathTest[m
-[[1;34mINFO[m] Running org.jsoup.select.[1mCssTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m17[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.091 s - in org.jsoup.select.[1mCssTest[m
-[[1;34mINFO[m] Running org.jsoup.select.[1mTraversorTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m7[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s - in org.jsoup.select.[1mTraversorTest[m
-[[1;34mINFO[m] Running org.jsoup.helper.[1mW3CDomTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m12[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.379 s - in org.jsoup.helper.[1mW3CDomTest[m
-[[1;34mINFO[m] Running org.jsoup.helper.[1mValidateTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in org.jsoup.helper.[1mValidateTest[m
-[[1;34mINFO[m] Running org.jsoup.helper.[1mDataUtilTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m20[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s - in org.jsoup.helper.[1mDataUtilTest[m
-[[1;34mINFO[m] Running org.jsoup.helper.[1mHttpConnectionTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m28[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.111 s - in org.jsoup.helper.[1mHttpConnectionTest[m
-[[1;34mINFO[m] Running org.jsoup.internal.[1mStringUtilTest[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m10[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s - in org.jsoup.internal.[1mStringUtilTest[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] Results:
-[[1;34mINFO[m] 
-[[1;33mWARNING[m] [1;33mTests run: 919, Failures: 0, Errors: 0, Skipped: 2[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:3.2.0:jar[m [1m(default-jar)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Building jar: /builds/workspace/Jsoup/target/jsoup-1.15.1-SNAPSHOT.jar
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mjapicmp-maven-plugin:0.15.4:cmp[m [1m(default)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Written file '/builds/workspace/Jsoup/target/japicmp/japicmp.diff'.
-[[1;34mINFO[m] Written file '/builds/workspace/Jsoup/target/japicmp/japicmp.xml'.
-[[1;34mINFO[m] Written file '/builds/workspace/Jsoup/target/japicmp/japicmp.html'.
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-failsafe-plugin:3.0.0-M5:integration-test[m [1m(default)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] -------------------------------------------------------
-[[1;34mINFO[m]  T E S T S
-[[1;34mINFO[m] -------------------------------------------------------
-[[1;31mERROR[m] Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-[[1;34mINFO[m] Running org.jsoup.parser.[1mParserIT[m
-[[1;33mWARNING[m] [1;33mTests [0;1mrun: [0;1m2[m, Failures: 0, Errors: 0, [1;33mSkipped: [0;1;33m1[m, Time elapsed: 0.971 s - in org.jsoup.parser.[1mParserIT[m
-[[1;34mINFO[m] Running org.jsoup.integration.[1mSessionIT[m
-2022-05-21 03:23:46.615:INFO::main: Logging initialized @2406ms to org.eclipse.jetty.util.log.StdErrLog
-2022-05-21 03:23:46.711:INFO:oejs.Server:main: jetty-9.4.44.v20210927; built: 2021-09-27T23:02:44.612Z; git: 8da83308eeca865e495e53ef315a249d63ba9332; jvm 11.0.9.1+1-Ubuntu-0ubuntu1.18.04
-2022-05-21 03:23:46.805:INFO:oejs.AbstractConnector:main: Started ServerConnector@68f1b17f{HTTP/1.1, (http/1.1)}{0.0.0.0:37085}
-2022-05-21 03:23:46.805:INFO:oejs.Server:main: Started @2596ms
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.941 s - in org.jsoup.integration.[1mSessionIT[m
-[[1;34mINFO[m] Running org.jsoup.nodes.[1mElementIT[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.912 s - in org.jsoup.nodes.[1mElementIT[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] Results:
-[[1;34mINFO[m] 
-[[1;33mWARNING[m] [1;33mTests run: 6, Failures: 0, Errors: 0, Skipped: 1[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-javadoc-plugin:3.3.1:jar[m [1m(attach-javadoc)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Skipping javadoc generation
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m>>> [0;32mmaven-source-plugin:3.2.1:jar[m [1m(attach-sources)[0;1m > [0;1mgenerate-sources[m @ [36mjsoup[0;1m >>>[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m<<< [0;32mmaven-source-plugin:3.2.1:jar[m [1m(attach-sources)[0;1m < [0;1mgenerate-sources[m @ [36mjsoup[0;1m <<<[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-source-plugin:3.2.1:jar[m [1m(attach-sources)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Building jar: /builds/workspace/Jsoup/target/jsoup-1.15.1-SNAPSHOT-sources.jar
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-failsafe-plugin:3.0.0-M5:verify[m [1m(default)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-install-plugin:2.4:install[m [1m(default-install)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Installing /builds/workspace/Jsoup/target/jsoup-1.15.1-SNAPSHOT.jar to /builds/.m2/repository/org/jsoup/jsoup/1.15.1-SNAPSHOT/jsoup-1.15.1-SNAPSHOT.jar
-[[1;34mINFO[m] Installing /builds/workspace/Jsoup/pom.xml to /builds/.m2/repository/org/jsoup/jsoup/1.15.1-SNAPSHOT/jsoup-1.15.1-SNAPSHOT.pom
-[[1;34mINFO[m] Installing /builds/workspace/Jsoup/target/jsoup-1.15.1-SNAPSHOT-sources.jar to /builds/.m2/repository/org/jsoup/jsoup/1.15.1-SNAPSHOT/jsoup-1.15.1-SNAPSHOT-sources.jar
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] Total time:  01:01 min
-[[1;34mINFO[m] Finished at: 2022-05-21T03:24:07+02:00
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-bash: line 97: bc: command not found
- 
---- Displays results of the maven compile ---
-Time to compile: 
-Number of tests: 919
-Number of tests skipped: 2
-Number of failures in tests: 0
-Number of errors in tests: 0
- 
--------------------------------------------------------
-Inserts the maven plugin to spoon the project
--------------------------------------------------------
- 
-bash: line 169: pom.bak9.xml: No space left on device
-bash: line 170: pom.bak10.xml: No space left on device
-bash: line 171: pom.bak11.xml: No space left on device
-bash: line 172: pom.bak12.xml: No space left on device
-bash: line 173: pom.bak14.xml: No space left on device
-bash: line 174: pom.bak19.xml: No space left on device
-bash: line 175: pom.bak20.xml: No space left on device
-bash: line 176: pom.bak21.xml: No space left on device
-bash: line 177: pom.bak22.xml: No space left on device
-mv: cannot stat 'pom.bak22.xml': No such file or directory
-Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
-WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
-WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-WARNING: All illegal access operations will be denied in a future release
-[[1;34mINFO[m] Scanning for projects...
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--------------------------< [0;36morg.jsoup:jsoup[0;1m >---------------------------[m
-[[1;34mINFO[m] [1mBuilding jsoup Java HTML Parser 1.15.1-SNAPSHOT[m
-[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:2.8:purge-local-repository[m [1m(default-cli)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] Total time:  2.722 s
-[[1;34mINFO[m] Finished at: 2022-05-21T03:24:14+02:00
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
-WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
-WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-WARNING: All illegal access operations will be denied in a future release
-[[1;34mINFO[m] Scanning for projects...
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--------------------------< [0;36morg.jsoup:jsoup[0;1m >---------------------------[m
-[[1;34mINFO[m] [1mBuilding jsoup Java HTML Parser 1.15.1-SNAPSHOT[m
-[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:2.5:clean[m [1m(default-clean)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Deleting /builds/workspace/Jsoup/target
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.2.0:resources[m [1m(default-resources)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
-[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered properties files.
-[[1;34mINFO[m] Copying 3 resources to META-INF/
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.1:compile[m [1m(default-compile)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Compiling 72 source files to /builds/workspace/Jsoup/target/classes
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32manimal-sniffer-maven-plugin:1.20:check[m [1m(animal-sniffer)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Checking unresolved references to net.sf.androidscents.signature:android-api-level-10:2.3.3_r2
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-bundle-plugin:5.1.2:manifest[m [1m(bundle-manifest)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.2.0:testResources[m [1m(default-testResources)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
-[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered properties files.
-[[1;34mINFO[m] Copying 65 resources
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.1:testCompile[m [1m(default-testCompile)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Compiling 57 source files to /builds/workspace/Jsoup/target/test-classes
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:3.0.0-M5:test[m [1m(default-test)[m @ [36mjsoup[0;1m ---[m
-[[1;34mINFO[m] Tests are skipped.
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] Total time:  16.378 s
-[[1;34mINFO[m] Finished at: 2022-05-21T03:24:33+02:00
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-bash: line 193: bc: command not found
-Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
-WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
-WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-WARNING: All illegal access operations will be denied in a future release
-[[1;34mINFO[m] Scanning for projects...
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/maven-metadata.xml
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/maven-metadata.xml
-Progress (1): 331 BProgress (2): 331 B | 810 B                           Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/maven-metadata.xml (810 B at 1.2 kB/s)
-Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/maven-metadata.xml (331 B at 504 B/s)
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.pom
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.pom
-Progress (1): 1.4/8.6 kBProgress (1): 2.7/8.6 kBProgress (1): 4.1/8.6 kBProgress (1): 5.5/8.6 kBProgress (1): 6.9/8.6 kBProgress (1): 8.2/8.6 kBProgress (1): 8.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.pom (8.6 kB at 319 kB/s)
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.jar
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.jar
-Progress (1): 1.4/36 kBProgress (1): 2.7/36 kBProgress (1): 4.1/36 kBProgress (1): 5.5/36 kBProgress (1): 6.9/36 kBProgress (1): 8.2/36 kBProgress (1): 9.6/36 kBProgress (1): 11/36 kB Progress (1): 12/36 kBProgress (1): 14/36 kBProgress (1): 15/36 kBProgress (1): 16/36 kBProgress (1): 17/36 kBProgress (1): 19/36 kBProgress (1): 20/36 kBProgress (1): 21/36 kBProgress (1): 23/36 kBProgress (1): 24/36 kBProgress (1): 25/36 kBProgress (1): 27/36 kBProgress (1): 28/36 kBProgress (1): 30/36 kBProgress (1): 31/36 kBProgress (1): 32/36 kBProgress (1): 34/36 kBProgress (1): 35/36 kBProgress (1): 36 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.jar (36 kB at 258 kB/s)
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--------------------------< [0;36morg.jsoup:jsoup[0;1m >---------------------------[m
-[[1;34mINFO[m] [1mBuilding jsoup Java HTML Parser 1.15.1-SNAPSHOT[m
-[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mspoon-maven-plugin:3.5:generate[m [1m(default-cli)[m @ [36mjsoup[0;1m ---[m
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.pom
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.pom
-Progress (1): 1.4/11 kBProgress (1): 2.7/11 kBProgress (1): 4.1/11 kBProgress (1): 5.5/11 kBProgress (1): 6.9/11 kBProgress (1): 8.2/11 kBProgress (1): 9.6/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.pom (11 kB at 413 kB/s)
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.jar
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.jar
-Progress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8 MB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.jar (1.8 MB at 2.8 MB/s)
-[[1;34mINFO[m] Running in FULLCLASSPATH mode (doc: http://spoon.gforge.inria.fr/launcher.html).
-[[1;34mINFO[m] Spoon version ${project.version}
-[[1;34mINFO[m] running Spoon...
-[[1;34mINFO[m] start processing...
-[[1;34mINFO[m] spoon.support.JavaOutputProcessor
-[[1;34mINFO[m] end of processing: 
-[[1;34mINFO[m] no errors, no warnings
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] Total time:  19.130 s
-[[1;34mINFO[m] Finished at: 2022-05-21T03:24:55+02:00
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-ERROR: no tag class, spoon has failed
-Build step 'Execute shell' marked build as failure
-Archiving artifacts
-/net/www/ci/sos/jobs/Jsoup/builds/2062/archive does not exist.
-ERROR: Step ?Publish XML Summary Reports? failed: /net/www/ci/sos/jobs/Jsoup/builds/2062/archive does not exist.
-Sending e-mails to: spoon-devel@lists.gforge.inria.fr
-Finished: FAILURE
