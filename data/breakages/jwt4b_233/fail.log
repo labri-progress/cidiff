@@ -1,624 +1,0 @@
-Started by timer
-Running as SYSTEM
-[EnvInject] - Loading node environment variables.
-Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/JWT4B
-[WS-CLEANUP] Deleting project workspace...
-[WS-CLEANUP] Deferred wipeout is used...
-[WS-CLEANUP] Done
-The recommended git tool is: NONE
-No credentials specified
-Cloning the remote Git repository
-Cloning repository https://github.com/ozzi-/JWT4B.git
- > git init /builds/workspace/JWT4B # timeout=10
-Fetching upstream changes from https://github.com/ozzi-/JWT4B.git
- > git --version # timeout=10
- > git --version # 'git version 2.17.1'
- > git fetch --tags --progress -- https://github.com/ozzi-/JWT4B.git +refs/heads/*:refs/remotes/origin/* # timeout=10
- > git config remote.origin.url https://github.com/ozzi-/JWT4B.git # timeout=10
- > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
-Avoid second fetch
- > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
-Checking out Revision c7073ae31dc6b155a8985b90fe08c34bab395e6e (refs/remotes/origin/master)
- > git config core.sparsecheckout # timeout=10
- > git checkout -f c7073ae31dc6b155a8985b90fe08c34bab395e6e # timeout=10
-Commit message: "Move stdout and stderr PrintWriter instances to Output and make private. (#68)"
- > git rev-list --no-walk c7073ae31dc6b155a8985b90fe08c34bab395e6e # timeout=10
-[JWT4B] $ /bin/sh -xe /tmp/jenkins8951888410244276091.sh
-+ stdbuf -i 50k bash
-+ curl https://spoon.gforge.inria.fr/jenkins/build.sh
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0 
--------------------------------------------------------
-Initizalizes project
--------------------------------------------------------
- 
-100 21399  100 21399    0     0   152k      0 --:--:-- --:--:-- --:--:--  152k
-HEAD is now at c7073ae Move stdout and stderr PrintWriter instances to Output and make private. (#68)
-
---- Displays variables used in the build ---
-Artifact id: JWT4B
-Version: 0.0.4-SNAPSHOT
-Modules job:
-- JWT4B
-Has checkstyle: true
-Has enforcer: true
-Git version id: c7073ae31dc6b155a8985b90fe08c34bab395e6e
-Java version: Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-openjdk version "11.0.9.1" 2020-11-04
-OpenJDK Runtime Environment (build 11.0.9.1+1-Ubuntu-0ubuntu1.18.04)
-OpenJDK 64-Bit Server VM (build 11.0.9.1+1-Ubuntu-0ubuntu1.18.04, mixed mode, sharing)
-Java home: /usr/lib/jvm/java-11-openjdk-amd64
- 
--------------------------------------------------------
-Compiles project (at the root project if it's a multi module project) without spoon
--------------------------------------------------------
- 
-Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
-WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
-WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-WARNING: All illegal access operations will be denied in a future release
-[[1;34mINFO[m] Scanning for projects...
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m----------------------------< [0;36mJWT4B:JWT4B[0;1m >-----------------------------[m
-[[1;34mINFO[m] [1mBuilding JWT4B 0.0.4-SNAPSHOT[m
-[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:2.5:clean[m [1m(default-clean)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36mJWT4B[0;1m ---[m
-[[1;33mWARNING[m] Using platform encoding (UTF8 actually) to copy filtered resources, i.e. build is platform dependent!
-[[1;34mINFO[m] skip non existing resourceDirectory /builds/workspace/JWT4B/src/main/resources
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.1:compile[m [1m(default-compile)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] Changes detected - recompiling the module!
-[[1;34mINFO[m] Compiling 38 source files to /builds/workspace/JWT4B/target/classes
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:testResources[m [1m(default-testResources)[m @ [36mJWT4B[0;1m ---[m
-[[1;33mWARNING[m] Using platform encoding (UTF8 actually) to copy filtered resources, i.e. build is platform dependent!
-[[1;34mINFO[m] skip non existing resourceDirectory /builds/workspace/JWT4B/src/test/resources
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.1:testCompile[m [1m(default-testCompile)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] Changes detected - recompiling the module!
-[[1;34mINFO[m] Compiling 12 source files to /builds/workspace/JWT4B/target/test-classes
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:3.0.0-M5:test[m [1m(default-test)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] -------------------------------------------------------
-[[1;34mINFO[m]  T E S T S
-[[1;34mINFO[m] -------------------------------------------------------
-[[1;31mERROR[m] Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-[[1;34mINFO[m] Running app.[1mTestAlgorithmWrapper[m
-08:25:16.401 | java.security.InvalidKeyException: EC domain parameters must be encoded in the algorithm identifier
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.904 s - in app.[1mTestAlgorithmWrapper[m
-[[1;34mINFO[m] Running app.[1mTestJWTValidCheck[m
-com.fasterxml.jackson.core.JsonParseException: Unexpected character ('H' (code 72)): was expecting a colon to separate field name and value
- at [Source: (String)"{"alV�:"HS256","typ":"JWT"}"; line: 1, column: 10]
-	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1851)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:707)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportUnexpectedChar(ParserMinimalBase.java:632)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser._skipColon2(ReaderBasedJsonParser.java:2251)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser._skipColon(ReaderBasedJsonParser.java:2230)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser.nextFieldName(ReaderBasedJsonParser.java:939)
-	at com.fasterxml.jackson.databind.deser.std.BaseNodeDeserializer.deserializeObject(JsonNodeDeserializer.java:249)
-	at com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer.deserialize(JsonNodeDeserializer.java:68)
-	at com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer.deserialize(JsonNodeDeserializer.java:15)
-	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4526)
-	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3468)
-	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3436)
-	at model.CustomJWToken.isMinified(CustomJWToken.java:84)
-	at model.CustomJWToken.<init>(CustomJWToken.java:53)
-	at model.CustomJWToken.isValidJWT(CustomJWToken.java:217)
-	at app.TestJWTValidCheck.testInValid(TestJWTValidCheck.java:18)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
-	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
-	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:188)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:154)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:128)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:428)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:562)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:548)
-08:25:16.612 | Could not parse header - Expected ':' at 1:8
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.107 s - in app.[1mTestJWTValidCheck[m
-[[1;34mINFO[m] Running app.controllers.[1mReadableTokenFormatTest[m
-08:25:16.731 | Exception beautifying JSON: Unexpected end of input at 1:20
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m10[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.119 s - in app.controllers.[1mReadableTokenFormatTest[m
-[[1;34mINFO[m] Running app.[1mTestSetCookieDetection[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m13[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s - in app.[1mTestSetCookieDetection[m
-[[1;34mINFO[m] Running app.[1mTestPostDetection[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s - in app.[1mTestPostDetection[m
-[[1;34mINFO[m] Running app.[1mTestKeyHelper[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s - in app.[1mTestKeyHelper[m
-[[1;34mINFO[m] Running app.[1mTestAuthorizationDetection[m
-com.fasterxml.jackson.core.JsonParseException: Unexpected character ('H' (code 72)): was expecting a colon to separate field name and value
- at [Source: (String)"{"alV�:"HS256","typ":"JWT"}"; line: 1, column: 10]
-	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1851)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:707)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportUnexpectedChar(ParserMinimalBase.java:632)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser._skipColon2(ReaderBasedJsonParser.java:2251)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser._skipColon(ReaderBasedJsonParser.java:2230)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser.nextFieldName(ReaderBasedJsonParser.java:939)
-	at com.fasterxml.jackson.databind.deser.std.BaseNodeDeserializer.deserializeObject(JsonNodeDeserializer.java:249)
-	at com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer.deserialize(JsonNodeDeserializer.java:68)
-	at com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer.deserialize(JsonNodeDeserializer.java:15)
-	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4526)
-	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3468)
-	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3436)
-	at model.CustomJWToken.isMinified(CustomJWToken.java:84)
-	at model.CustomJWToken.<init>(CustomJWToken.java:53)
-	at model.CustomJWToken.isValidJWT(CustomJWToken.java:217)
-	at app.tokenposition.AuthorizationBearerHeader.headerContainsKeyWordAndIsJWT(AuthorizationBearerHeader.java:33)
-	at app.tokenposition.AuthorizationBearerHeader.positionFound(AuthorizationBearerHeader.java:21)
-	at app.TestAuthorizationDetection.testAuthInvalid(TestAuthorizationDetection.java:38)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
-	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
-	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:188)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:154)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:128)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:428)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:562)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:548)
-08:25:17.105 | Could not parse header - Expected ':' at 1:8
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 s - in app.[1mTestAuthorizationDetection[m
-[[1;34mINFO[m] Running app.[1mTestInvalidJSONToken[m
-com.fasterxml.jackson.core.JsonParseException: Unexpected character ('H' (code 72)): was expecting comma to separate Object entries
- at [Source: (String)"{"sub":"1234567890","name":"John Doe","iat":151623907H��"; line: 1, column: 55]
-	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1851)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:707)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportUnexpectedChar(ParserMinimalBase.java:632)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser._skipComma(ReaderBasedJsonParser.java:2324)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser.nextFieldName(ReaderBasedJsonParser.java:921)
-	at com.fasterxml.jackson.databind.deser.std.BaseNodeDeserializer.deserializeObject(JsonNodeDeserializer.java:250)
-	at com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer.deserialize(JsonNodeDeserializer.java:68)
-	at com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer.deserialize(JsonNodeDeserializer.java:15)
-	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4526)
-	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3468)
-	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3436)
-	at model.CustomJWToken.isMinified(CustomJWToken.java:84)
-	at model.CustomJWToken.<init>(CustomJWToken.java:53)
-	at app.TestInvalidJSONToken.newTest(TestInvalidJSONToken.java:16)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
-	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
-	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:188)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:154)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:128)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:428)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:562)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:548)
-08:25:17.171 | Could not parse claims - Expected ',' or '}' at 1:53
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s - in app.[1mTestInvalidJSONToken[m
-[[1;34mINFO[m] Running app.[1mTestCustomJWTDecoder[m
-com.fasterxml.jackson.core.JsonParseException: Unexpected character ('H' (code 72)): was expecting a colon to separate field name and value
- at [Source: (String)"{"alV�:"HS256","typ":"JWT"}"; line: 1, column: 10]
-	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1851)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:707)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportUnexpectedChar(ParserMinimalBase.java:632)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser._skipColon2(ReaderBasedJsonParser.java:2251)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser._skipColon(ReaderBasedJsonParser.java:2230)
-	at com.fasterxml.jackson.core.json.ReaderBasedJsonParser.nextFieldName(ReaderBasedJsonParser.java:939)
-	at com.fasterxml.jackson.databind.deser.std.BaseNodeDeserializer.deserializeObject(JsonNodeDeserializer.java:249)
-	at com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer.deserialize(JsonNodeDeserializer.java:68)
-	at com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer.deserialize(JsonNodeDeserializer.java:15)
-	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4526)
-	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3468)
-	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3436)
-	at model.CustomJWToken.isMinified(CustomJWToken.java:84)
-	at model.CustomJWToken.<init>(CustomJWToken.java:53)
-	at app.TestCustomJWTDecoder.testBrokenToken(TestCustomJWTDecoder.java:20)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
-	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
-	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
-	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:188)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:154)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:128)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:428)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:562)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:548)
-08:25:17.206 | Could not parse header - Expected ':' at 1:8
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 s - in app.[1mTestCustomJWTDecoder[m
-[[1;34mINFO[m] Running app.[1mTestBodyDetection[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m19[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.182 s - in app.[1mTestBodyDetection[m
-[[1;34mINFO[m] Running app.[1mTestCookieDetection[m
-[[1;34mINFO[m] [1;32mTests run: [0;1;32m10[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.083 s - in app.[1mTestCookieDetection[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] Results:
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1;32mTests run: 77, Failures: 0, Errors: 0, Skipped: 0[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:2.4:jar[m [1m(default-jar)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] Building jar: /builds/workspace/JWT4B/target/JWT4B.jar
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-assembly-plugin:3.0.0:single[m [1m(make-assembly)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] Building jar: /builds/workspace/JWT4B/target/JWT4B-jar-with-dependencies.jar
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-install-plugin:2.4:install[m [1m(default-install)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] Installing /builds/workspace/JWT4B/target/JWT4B.jar to /builds/.m2/repository/JWT4B/JWT4B/0.0.4-SNAPSHOT/JWT4B-0.0.4-SNAPSHOT.jar
-[[1;34mINFO[m] Installing /builds/workspace/JWT4B/pom.xml to /builds/.m2/repository/JWT4B/JWT4B/0.0.4-SNAPSHOT/JWT4B-0.0.4-SNAPSHOT.pom
-[[1;34mINFO[m] Installing /builds/workspace/JWT4B/target/JWT4B-jar-with-dependencies.jar to /builds/.m2/repository/JWT4B/JWT4B/0.0.4-SNAPSHOT/JWT4B-0.0.4-SNAPSHOT-jar-with-dependencies.jar
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] Total time:  19.510 s
-[[1;34mINFO[m] Finished at: 2022-05-28T10:25:25+02:00
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-bash: line 97: bc: command not found
- 
---- Displays results of the maven compile ---
-Time to compile: 
-Number of tests: 77
-Number of tests skipped: 0
-Number of failures in tests: 0
-Number of errors in tests: 0
- 
--------------------------------------------------------
-Inserts the maven plugin to spoon the project
--------------------------------------------------------
- 
-bash: line 169: pom.bak9.xml: No space left on device
-bash: line 170: pom.bak10.xml: No space left on device
-bash: line 171: pom.bak11.xml: No space left on device
-bash: line 172: pom.bak12.xml: No space left on device
-bash: line 173: pom.bak14.xml: No space left on device
-bash: line 174: pom.bak19.xml: No space left on device
-bash: line 175: pom.bak20.xml: No space left on device
-bash: line 176: pom.bak21.xml: No space left on device
-bash: line 177: pom.bak22.xml: No space left on device
-mv: cannot stat 'pom.bak22.xml': No such file or directory
-Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
-WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
-WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-WARNING: All illegal access operations will be denied in a future release
-[[1;34mINFO[m] Scanning for projects...
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m----------------------------< [0;36mJWT4B:JWT4B[0;1m >-----------------------------[m
-[[1;34mINFO[m] [1mBuilding JWT4B 0.0.4-SNAPSHOT[m
-[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:2.8:purge-local-repository[m [1m(default-cli)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] Total time:  2.529 s
-[[1;34mINFO[m] Finished at: 2022-05-28T10:25:30+02:00
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
-WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
-WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-WARNING: All illegal access operations will be denied in a future release
-[[1;34mINFO[m] Scanning for projects...
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m----------------------------< [0;36mJWT4B:JWT4B[0;1m >-----------------------------[m
-[[1;34mINFO[m] [1mBuilding JWT4B 0.0.4-SNAPSHOT[m
-[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:2.5:clean[m [1m(default-clean)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] Deleting /builds/workspace/JWT4B/target
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36mJWT4B[0;1m ---[m
-[[1;33mWARNING[m] Using platform encoding (UTF8 actually) to copy filtered resources, i.e. build is platform dependent!
-[[1;34mINFO[m] skip non existing resourceDirectory /builds/workspace/JWT4B/src/main/resources
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.1:compile[m [1m(default-compile)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] Changes detected - recompiling the module!
-[[1;34mINFO[m] Compiling 38 source files to /builds/workspace/JWT4B/target/classes
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:testResources[m [1m(default-testResources)[m @ [36mJWT4B[0;1m ---[m
-[[1;33mWARNING[m] Using platform encoding (UTF8 actually) to copy filtered resources, i.e. build is platform dependent!
-[[1;34mINFO[m] skip non existing resourceDirectory /builds/workspace/JWT4B/src/test/resources
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.1:testCompile[m [1m(default-testCompile)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] Changes detected - recompiling the module!
-[[1;34mINFO[m] Compiling 12 source files to /builds/workspace/JWT4B/target/test-classes
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:3.0.0-M5:test[m [1m(default-test)[m @ [36mJWT4B[0;1m ---[m
-[[1;34mINFO[m] Tests are skipped.
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] Total time:  7.158 s
-[[1;34mINFO[m] Finished at: 2022-05-28T10:25:40+02:00
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-bash: line 193: bc: command not found
-Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
-WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
-WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-WARNING: All illegal access operations will be denied in a future release
-[[1;34mINFO[m] Scanning for projects...
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/maven-metadata.xml
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/maven-metadata.xml
-Progress (1): 810 BProgress (2): 810 B | 331 B                           Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/maven-metadata.xml (810 B at 1.3 kB/s)
-Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/maven-metadata.xml (331 B at 464 B/s)
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.pom
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.pom
-Progress (1): 1.4/8.6 kBProgress (1): 2.7/8.6 kBProgress (1): 4.1/8.6 kBProgress (1): 5.5/8.6 kBProgress (1): 6.9/8.6 kBProgress (1): 8.2/8.6 kBProgress (1): 8.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.pom (8.6 kB at 43 kB/s)
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.jar
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.jar
-Progress (1): 1.4/36 kBProgress (1): 2.7/36 kBProgress (1): 4.1/36 kBProgress (1): 5.5/36 kBProgress (1): 6.9/36 kBProgress (1): 8.2/36 kBProgress (1): 9.6/36 kBProgress (1): 11/36 kB Progress (1): 12/36 kBProgress (1): 14/36 kBProgress (1): 15/36 kBProgress (1): 16/36 kBProgress (1): 17/36 kBProgress (1): 19/36 kBProgress (1): 20/36 kBProgress (1): 21/36 kBProgress (1): 23/36 kBProgress (1): 24/36 kBProgress (1): 25/36 kBProgress (1): 27/36 kBProgress (1): 28/36 kBProgress (1): 30/36 kBProgress (1): 31/36 kBProgress (1): 32/36 kBProgress (1): 34/36 kBProgress (1): 35/36 kBProgress (1): 36 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-maven-plugin/3.5/spoon-maven-plugin-3.5.jar (36 kB at 619 kB/s)
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m----------------------------< [0;36mJWT4B:JWT4B[0;1m >-----------------------------[m
-[[1;34mINFO[m] [1mBuilding JWT4B 0.0.4-SNAPSHOT[m
-[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
-[[1;34mINFO[m] 
-[[1;34mINFO[m] [1m--- [0;32mspoon-maven-plugin:3.5:generate[m [1m(default-cli)[m @ [36mJWT4B[0;1m ---[m
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.pom
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.pom
-Progress (1): 1.4/11 kBProgress (1): 2.7/11 kBProgress (1): 4.1/11 kBProgress (1): 5.5/11 kBProgress (1): 6.9/11 kBProgress (1): 8.2/11 kBProgress (1): 9.6/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.pom (11 kB at 383 kB/s)
-Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.jar
-Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.jar
-Progress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8 MB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.jar (1.8 MB at 3.5 MB/s)
-[[1;34mINFO[m] Running in FULLCLASSPATH mode (doc: http://spoon.gforge.inria.fr/launcher.html).
-[[1;34mINFO[m] Spoon version ${project.version}
-[[1;34mINFO[m] running Spoon...
-[[1;34mINFO[m] start processing...
-[[1;34mINFO[m] spoon.support.JavaOutputProcessor
-[[1;34mINFO[m] end of processing: 
-[[1;34mINFO[m] no errors, no warnings
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-[[1;34mINFO[m] Total time:  12.629 s
-[[1;34mINFO[m] Finished at: 2022-05-28T10:25:56+02:00
-[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
-ERROR: no tag class, spoon has failed
-Build step 'Execute shell' marked build as failure
-Archiving artifacts
-/net/www/ci/sos/jobs/JWT4B/builds/233/archive does not exist.
-ERROR: Step ?Publish XML Summary Reports? failed: /net/www/ci/sos/jobs/JWT4B/builds/233/archive does not exist.
-GitHub Issue Notifier: Build has started failing again, reopend GitHub issue #4581
-Finished: FAILURE
