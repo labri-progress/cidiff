@@ -15,7 +15,7 @@ public class Pair<T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Pair<?> pair = (Pair<?>) o;
+        final Pair<?> pair = (Pair<?>) o;
         return Objects.equals(left, pair.left) && Objects.equals(right, pair.right);
     }
 

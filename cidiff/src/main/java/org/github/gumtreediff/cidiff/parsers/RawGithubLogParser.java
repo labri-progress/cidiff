@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Properties;
 
 public final class RawGithubLogParser extends AbstractLogParser {
-    private final static int TIMESTAMP_SIZE = 29; // GitHub logs have a 29 characters prefix
+    private static final int TIMESTAMP_SIZE = 29; // GitHub logs have a 29 characters prefix
 
     public RawGithubLogParser(Properties options) {
         super(options);
@@ -20,5 +20,3 @@ public final class RawGithubLogParser extends AbstractLogParser {
                 .toList();
     }
 }
-
-

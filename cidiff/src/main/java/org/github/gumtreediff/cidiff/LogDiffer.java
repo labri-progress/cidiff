@@ -1,12 +1,12 @@
 package org.github.gumtreediff.cidiff;
 
+import java.util.List;
+import java.util.Properties;
+
 import org.github.gumtreediff.cidiff.differs.AlternatingBruteForceLogDiffer;
 import org.github.gumtreediff.cidiff.differs.BruteForceLogDiffer;
 import org.github.gumtreediff.cidiff.differs.LcsLogDiffer;
 import org.github.gumtreediff.cidiff.differs.SeedExtendDiffer;
-
-import java.util.List;
-import java.util.Properties;
 
 public interface LogDiffer {
     enum Algorithm {

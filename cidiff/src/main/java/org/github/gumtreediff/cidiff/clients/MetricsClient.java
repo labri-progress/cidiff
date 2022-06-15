@@ -1,8 +1,8 @@
 package org.github.gumtreediff.cidiff.clients;
 
-import org.github.gumtreediff.cidiff.Action;
-
 import java.util.Properties;
+
+import org.github.gumtreediff.cidiff.Action;
 
 public class MetricsClient extends AbstractDiffClient {
     public MetricsClient(String leftFile, String rightFile, Properties options) {
@@ -13,7 +13,7 @@ public class MetricsClient extends AbstractDiffClient {
     public void execute() {
         System.out.println("Left log: " + lines.left.size() + " lines.");
         System.out.println("Right log: " + lines.right.size() + " lines.");
-        Metrics metrics = getMetrics();
+        final Metrics metrics = getMetrics();
         System.out.println("Added lines: " + metrics.added + " lines.");
         System.out.println("Deleted lines: " + metrics.deleted + " lines.");
         System.out.println("Unchanged lines: " + metrics.unchanged + " lines.");
@@ -21,7 +21,7 @@ public class MetricsClient extends AbstractDiffClient {
     }
 
     private Metrics getMetrics() {
-        Metrics metrics = new Metrics();
+        final Metrics metrics = new Metrics();
         for (Action a: actions.left)
             if (a.type == Action.Type.DELETED)
                 metrics.deleted++;

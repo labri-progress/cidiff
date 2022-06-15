@@ -1,7 +1,10 @@
 package org.github.gumtreediff.cidiff;
 
 public final class Utils {
-    private final static String TOKEN_SEPARATORS = "\\s+";
+    private static final String TOKEN_SEPARATORS = "\\s+";
+
+    private Utils() {
+    }
 
     public static double rewriteSim(String leftLine, String rightLine) {
         final String[] leftTokens = leftLine.split(TOKEN_SEPARATORS);
@@ -26,23 +29,23 @@ public final class Utils {
         if (sameValue == 0)
             return 0.0;
 
-        return (double) (sameLength) / (double) leftTokens.length;
+        return (double) sameLength / (double) leftTokens.length;
     }
 
     public static int fastExponentiation(int base, int exponent) {
-        if (exponent == 0)
+        int myExponent = exponent;
+        int myBase = base;
+        if (myExponent == 0)
             return 1;
-        if (exponent == 1)
+        if (myExponent == 1)
             return base;
         int result = 1;
-        while (exponent > 0) {
-            if ((exponent & 1) != 0)
-                result *= base;
-            exponent >>= 1;
-            base *= base;
+        while (myExponent > 0) {
+            if ((myExponent & 1) != 0)
+                result *= myBase;
+            myExponent >>= 1;
+            myBase *= myBase;
         }
         return result;
     }
-
-    private Utils() {}
 }

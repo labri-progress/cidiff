@@ -1,22 +1,22 @@
 package org.github.gumtreediff.cidiff.clients;
 
+import java.util.Properties;
+
 import org.github.gumtreediff.cidiff.Action;
 import org.github.gumtreediff.cidiff.Options;
 import org.github.gumtreediff.cidiff.Pair;
 
-import java.util.Properties;
+public final class ConsoleClient extends AbstractDiffClient {
+    static final String RED_FONT = "\033[0;31m";
+    static final String GREEN_FONT = "\033[0;32m";
+    static final String NO_COLOR_FONT = "\033[0m";
+    static final String BOLD_FONT = "\033[1m";
+    static final String REGULAR_FONT = "\033[0m";
 
-public class ConsoleClient extends AbstractDiffClient {
     final boolean displayUpdated;
     final boolean displayUnchanged;
     final boolean displayAdded;
     final boolean displayDeleted;
-
-    final static String RED_FONT = "\033[0;31m";
-    final static String GREEN_FONT = "\033[0;32m";
-    final static String NO_COLOR_FONT = "\033[0m";
-    final static String BOLD_FONT = "\033[1m";
-    final static String REGULAR_FONT = "\033[0m";
 
     public ConsoleClient(String leftFile, String rightFile, Properties options) {
         super(leftFile, rightFile, options);
@@ -39,7 +39,7 @@ public class ConsoleClient extends AbstractDiffClient {
 
             if (action.type == Action.Type.UPDATED) {
                 if (displayUpdated) {
-                    boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
+                    final boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
                     if (newLine)
                         System.out.println();
 
@@ -56,7 +56,7 @@ public class ConsoleClient extends AbstractDiffClient {
             }
             else if (action.type == Action.Type.UNCHANGED) {
                 if (displayUnchanged) {
-                    boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
+                    final boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
                     if (newLine)
                         System.out.println();
 
@@ -73,7 +73,7 @@ public class ConsoleClient extends AbstractDiffClient {
             }
             else if (action.type == Action.Type.DELETED) {
                 if (displayDeleted) {
-                    boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
+                    final boolean newLine = lastDisplayed != 0 && lastDisplayed != i - 1;
                     if (newLine)
                         System.out.println();
 
@@ -91,7 +91,7 @@ public class ConsoleClient extends AbstractDiffClient {
             final var action = actions.right[i];
             if (action.type == Action.Type.ADDED) {
                 if (displayAdded) {
-                    boolean newLine = lastDisplayed == 0 || lastDisplayed != i - 1;
+                    final boolean newLine = lastDisplayed == 0 || lastDisplayed != i - 1;
                     if (newLine)
                         System.out.println();
 

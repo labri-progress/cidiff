@@ -9,8 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FullGithubLogParser extends AbstractLogParser {
-    final static Pattern LOG_LINE_REGEXP = Pattern.compile("([^\\t]+)\\t([^\\t]+)\\t(.*)");
-    final static int TIMESTAMP_SIZE = 29; // GitHub logs have a 29 characters timestamp
+    static final Pattern LOG_LINE_REGEXP = Pattern.compile("([^\\t]+)\\t([^\\t]+)\\t(.*)");
+    static final int TIMESTAMP_SIZE = 29; // GitHub logs have a 29 characters timestamp
 
     public FullGithubLogParser(Properties options) {
         super(options);

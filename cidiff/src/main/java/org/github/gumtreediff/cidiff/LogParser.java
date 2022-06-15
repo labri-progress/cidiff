@@ -1,11 +1,11 @@
 package org.github.gumtreediff.cidiff;
 
+import java.io.IOException;
+import java.util.*;
+
 import org.github.gumtreediff.cidiff.parsers.DefaultLogParser;
 import org.github.gumtreediff.cidiff.parsers.FullGithubLogParser;
 import org.github.gumtreediff.cidiff.parsers.RawGithubLogParser;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Abstract class for log parsers.
@@ -22,7 +22,7 @@ public interface LogParser {
     }
 
     static LogParser get(Properties options) {
-        Type type = Type.valueOf(options.getProperty(Options.PARSER, DEFAULT_PARSER));
+        final Type type = Type.valueOf(options.getProperty(Options.PARSER, DEFAULT_PARSER));
         return switch (type) {
             case RAW_GITHUB -> new RawGithubLogParser(options);
             case FULL_GITHUB -> new FullGithubLogParser(options);
@@ -31,7 +31,7 @@ public interface LogParser {
     }
 
     static List<String> parseLog(String file, Properties options) {
-        LogParser parser = get(options);
+        final LogParser parser = get(options);
         try {
             return parser.parse(file);
         }

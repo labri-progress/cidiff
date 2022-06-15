@@ -1,14 +1,14 @@
 package org.github.gumtreediff.cidiff.differs;
 
-import org.github.gumtreediff.cidiff.*;
-
 import java.util.*;
 
+import org.github.gumtreediff.cidiff.*;
+
 public class SeedExtendDiffer extends AbstractLogDiffer {
-    private final static int PRIME = 31;
-    private final static String DEFAULT_REWRITE_MIN = "0.5";
-    private final static String DEFAULT_BLOCK_SIZE = "3";
-    private final static String DEFAULT_WINDOW_SIZE = "30";
+    private static final int PRIME = 31;
+    private static final String DEFAULT_REWRITE_MIN = "0.5";
+    private static final String DEFAULT_BLOCK_SIZE = "3";
+    private static final String DEFAULT_WINDOW_SIZE = "30";
 
     private final int blockSize;
     private final int windowSize;
@@ -27,8 +27,8 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                 || lines.right.size() < blockSize + 2 * windowSize)
             return new BruteForceLogDiffer(options).diff(lines); // Fallback to brute force for small logs
 
-        Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
-        Pair<Map<Integer, List<Integer>>> hashes = new Pair<>(new HashMap<>(), new HashMap<>());
+        final Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
+        final Pair<Map<Integer, List<Integer>>> hashes = new Pair<>(new HashMap<>(), new HashMap<>());
         fillHash(lines.left, hashes.left);
         fillHash(lines.right, hashes.right);
 
@@ -67,7 +67,7 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                     step = 0;
                     while (true) {
                         if (leftInit + blockSize + step >= lines.left.size()
-                                ||  rightInit + blockSize + step >= lines.right.size())
+                                || rightInit + blockSize + step >= lines.right.size())
                             break;
                         if (actions.left[leftInit + blockSize + step] != null
                                 || actions.right[rightInit + blockSize + step] != null)
@@ -86,7 +86,7 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                     final var leftMinBound = Math.max(0, leftInit - windowSize);
                     final var leftMaxBound = Math.min(leftInit + blockSize + windowSize, lines.left.size());
                     for (int i = leftMinBound; i < leftMaxBound; i++) {
-                        if (actions.left[i] != null || (i >= leftInit && i < leftInit + blockSize))
+                        if (actions.left[i] != null || i >= leftInit && i < leftInit + blockSize)
                             continue;
 
                         final String leftLine = lines.left.get(i);
@@ -94,7 +94,7 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                         final var rightMinBound = Math.max(0, rightInit - windowSize);
                         final var rightMaxBound = Math.min(rightInit + blockSize + windowSize, lines.right.size());
                         for (int j = rightMinBound; j < rightMaxBound; j++) {
-                            if (actions.right[j] != null || (j >= rightInit && i < rightInit + blockSize))
+                            if (actions.right[j] != null || j >= rightInit && i < rightInit + blockSize)
                                 continue;
 
                             final String rightLine = lines.right.get(j);
@@ -137,10 +137,10 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
     }
 
     private List<Pair<Integer>> mappings(int hash, Pair<Map<Integer, List<Integer>>> hashes, Pair<List<String>> lines) {
-        List<Pair<Integer>> results = new ArrayList<>();
-        Set<Integer> rightMatched = new HashSet<>();
-        List<Integer> leftMatches = hashes.left.get(hash);
-        List<Integer> rightMatches = hashes.right.get(hash);
+        final List<Pair<Integer>> results = new ArrayList<>();
+        final Set<Integer> rightMatched = new HashSet<>();
+        final List<Integer> leftMatches = hashes.left.get(hash);
+        final List<Integer> rightMatches = hashes.right.get(hash);
 
         for (int leftMatch : leftMatches) {
             int bestDist = Integer.MAX_VALUE;
@@ -158,7 +158,7 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                 }
 
                 if (ensureEquals) {
-                    var dist = Math.abs(leftMatch - rightMatch);
+                    final var dist = Math.abs(leftMatch - rightMatch);
                     if (dist < bestDist) {
                         bestDist = dist;
                         bestMatch = rightMatch;

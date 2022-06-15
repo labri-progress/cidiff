@@ -1,8 +1,8 @@
 package org.github.gumtreediff.cidiff.differs;
 
-import org.github.gumtreediff.cidiff.LogDiffer;
-
 import java.util.Properties;
+
+import org.github.gumtreediff.cidiff.LogDiffer;
 
 public abstract class AbstractLogDiffer implements LogDiffer {
     protected final Properties options;

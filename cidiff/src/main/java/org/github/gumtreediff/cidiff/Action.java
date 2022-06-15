@@ -3,6 +3,8 @@ package org.github.gumtreediff.cidiff;
 import java.util.Objects;
 
 public final class Action {
+    public static final int NO_LOCATION = -1;
+
     public enum Type {
         ADDED,
         DELETED,
@@ -13,8 +15,6 @@ public final class Action {
     public final int leftLocation;
     public final int rightLocation;
     public final Type type;
-
-    public static final int NO_LOCATION = -1;
 
     private Action(int leftLocation, int rightLocation, Type type) {
         this.leftLocation = leftLocation;
@@ -33,8 +33,10 @@ public final class Action {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Action action = (Action) o;
-        return leftLocation == action.leftLocation && rightLocation == action.rightLocation && type == action.type;
+        final Action action = (Action) o;
+        return leftLocation == action.leftLocation
+                && rightLocation == action.rightLocation
+                && type == action.type;
     }
 
     @Override

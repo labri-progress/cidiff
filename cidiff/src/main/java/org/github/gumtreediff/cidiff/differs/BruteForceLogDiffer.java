@@ -1,23 +1,27 @@
 package org.github.gumtreediff.cidiff.differs;
 
-import org.github.gumtreediff.cidiff.*;
-
 import java.util.List;
 import java.util.Properties;
 
+import org.github.gumtreediff.cidiff.*;
+
 public final class BruteForceLogDiffer extends AbstractLogDiffer {
-    private final static String DEFAULT_REWRITE_MIN = "0.5";
+    private static final String DEFAULT_REWRITE_MIN = "0.5";
 
     private final double rewriteMin;
 
     public BruteForceLogDiffer(Properties options) {
         super(options);
-        rewriteMin = Double.parseDouble(options.getProperty(Options.DIFFER_REWRITE_MIN, DEFAULT_REWRITE_MIN));
+        rewriteMin = Double.parseDouble(
+                options.getProperty(Options.DIFFER_REWRITE_MIN, DEFAULT_REWRITE_MIN)
+        );
     }
 
     @Override
     public Pair<Action[]> diff(Pair<List<String>> lines) {
-        Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
+        final Pair<Action[]> actions = new Pair<>(
+                new Action[lines.left.size()], new Action[lines.right.size()]
+        );
 
         // Identify unchanged lines
         for (int i = 0; i < lines.left.size(); i++) {
@@ -28,7 +32,7 @@ public final class BruteForceLogDiffer extends AbstractLogDiffer {
 
                 final String rightLine = lines.right.get(j);
                 if (leftLine.equals(rightLine)) {
-                    Action action = Action.unchanged(i, j);
+                    final Action action = Action.unchanged(i, j);
                     actions.left[i] = action;
                     actions.right[j] = action;
                     break;
@@ -49,7 +53,7 @@ public final class BruteForceLogDiffer extends AbstractLogDiffer {
                 final String rightLine = lines.right.get(j);
                 final double sim = Utils.rewriteSim(leftLine, rightLine);
                 if (sim >= rewriteMin) {
-                    Action action = Action.updated(i, j);
+                    final Action action = Action.updated(i, j);
                     actions.left[i] = action;
                     actions.right[j] = action;
                     break;

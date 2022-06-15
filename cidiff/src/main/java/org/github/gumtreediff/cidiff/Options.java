@@ -22,12 +22,13 @@ public final class Options {
     public static final String CONSOLE_ADDED = "console.added";
     public static final String CONSOLE_DELETED = "console.deleted";
 
-    private Options() {}
+    private Options() {
+    }
 
     public static Set<String> allOptions() {
-        var fields = Arrays.stream(Options.class.getDeclaredFields())
+        final var fields = Arrays.stream(Options.class.getDeclaredFields())
                 .filter(f -> Modifier.isStatic(f.getModifiers())).toList();
-        Set<String> options = new HashSet<>();
+        final Set<String> options = new HashSet<>();
         try {
             for (Field f : fields)
                 options.add((String) f.get(null));

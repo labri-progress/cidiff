@@ -1,12 +1,12 @@
 package org.github.gumtreediff.cidiff.differs;
 
-import org.github.gumtreediff.cidiff.Action;
-import org.github.gumtreediff.cidiff.Pair;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+
+import org.github.gumtreediff.cidiff.Action;
+import org.github.gumtreediff.cidiff.Pair;
 
 public final class LcsLogDiffer extends AbstractLogDiffer {
     public LcsLogDiffer(Properties options) {
@@ -15,12 +15,12 @@ public final class LcsLogDiffer extends AbstractLogDiffer {
 
     @Override
     public Pair<Action[]> diff(Pair<List<String>> lines) {
-        Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
+        final Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
 
         // Identify unchanged lines
-        List<int[]> lcs = longestCommonSubsequence(lines.left, lines.right);
+        final List<int[]> lcs = longestCommonSubsequence(lines.left, lines.right);
         for (int[] match : lcs) {
-            Action action = Action.unchanged(match[0], match[1]);
+            final Action action = Action.unchanged(match[0], match[1]);
             actions.left[match[0]] = action;
             actions.right[match[1]] = action;
         }
@@ -44,7 +44,7 @@ public final class LcsLogDiffer extends AbstractLogDiffer {
      * to match of index in left sequence to index in right sequence.
      */
     static List<int[]> longestCommonSubsequence(List<String> left, List<String> right) {
-        int[][] lengths = new int[left.size() + 1][right.size() + 1];
+        final int[][] lengths = new int[left.size() + 1][right.size() + 1];
         for (int i = 0; i < left.size(); i++)
             for (int j = 0; j < right.size(); j++)
                 if (left.get(i).equals(right.get(j)))
@@ -56,9 +56,9 @@ public final class LcsLogDiffer extends AbstractLogDiffer {
     }
 
     static List<int[]> extractIndexes(int[][] lengths, int leftSize, int rightSize) {
-        List<int[]> indexes = new ArrayList<>();
+        final List<int[]> indexes = new ArrayList<>();
 
-        for (int x = leftSize, y = rightSize; x != 0 && y != 0; ) {
+        for (int x = leftSize, y = rightSize; x != 0 && y != 0;) {
             if (lengths[x][y] == lengths[x - 1][y]) x--;
             else if (lengths[x][y] == lengths[x][y - 1]) y--;
             else {

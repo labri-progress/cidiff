@@ -1,13 +1,13 @@
 package org.github.gumtreediff.cidiff.clients;
 
-import org.github.gumtreediff.cidiff.Action;
-import org.github.gumtreediff.cidiff.Pair;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
-public class JsonClient extends AbstractDiffClient {
+import org.github.gumtreediff.cidiff.Action;
+import org.github.gumtreediff.cidiff.Pair;
+
+public final class JsonClient extends AbstractDiffClient {
 
     public JsonClient(String leftFile, String rightFile, Properties options) {
         super(leftFile, rightFile, options);
@@ -18,7 +18,7 @@ public class JsonClient extends AbstractDiffClient {
         final var rightLines = lines.right;
         final var actions = differ.diff(new Pair<>(leftLines, rightLines));
 
-        final var sb = new StringBuffer("[");
+        final var sb = new StringBuilder("[");
 
         // deduplicate the list of actions
         final var actionList = new ArrayList<>(Arrays.asList(actions.left));
@@ -29,9 +29,11 @@ public class JsonClient extends AbstractDiffClient {
         actionList.sort((a, b) -> {
             if (a.leftLocation == -1 && b.leftLocation == -1) {
                 return 0;
-            } else if (a.leftLocation == -1 || b.leftLocation == -1) {
+            }
+            else if (a.leftLocation == -1 || b.leftLocation == -1) {
                 return a.rightLocation - b.rightLocation;
-            } else {
+            }
+            else {
                 return a.leftLocation - b.leftLocation;
             }
         });

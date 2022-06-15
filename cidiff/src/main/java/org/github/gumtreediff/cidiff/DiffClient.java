@@ -1,11 +1,11 @@
 package org.github.gumtreediff.cidiff;
 
+import java.util.Properties;
+
 import org.github.gumtreediff.cidiff.clients.ConsoleClient;
 import org.github.gumtreediff.cidiff.clients.JsonClient;
 import org.github.gumtreediff.cidiff.clients.MetricsClient;
 import org.github.gumtreediff.cidiff.clients.SwingClient;
-
-import java.util.Properties;
 
 public interface DiffClient {
     enum Type {
