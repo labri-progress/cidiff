@@ -11,15 +11,13 @@ import java.util.List;
 import java.util.Properties;
 
 public class PrecisionBenchmark {
-    private final static String HEADER1 = " ; ;ALTERNATING_BRUTE_FORCE;ALTERNATING_BRUTE_FORCE;BRUTE_FORCE;BRUTE_FORCE;LCS;LCS;SEED_EXTEND;SEED_EXTEND";
-    private final static String HEADER2 = "left;right;precision;recall;precision;recall;precision;recall;precision;recall";
+    private final static String HEADER = "LEFT;RIGHT;ALTERNATING_BRUTE_FORCE_P;ALTERNATING_BRUTE_FORCE_R;BRUTE_FORCE_P;BRUTE_FORCE_R;LCS_P;LCS_R;SEED_EXTEND_P;SEED_EXTEND_R";
     private final static String PATH_TO_DATA = "data/breakages/";
     private final static String PATH_TO_OUTPUT = "benchmark/precision_recall.csv";
 
     public static void main(String[] args) throws Exception {
         FileWriter csv = new FileWriter(PATH_TO_OUTPUT);
-        csv.append(HEADER1 + "\n");
-        csv.append(HEADER2 + "\n");
+        csv.append(HEADER + "\n");
 
         File breakagesFolder = new File(PATH_TO_DATA);
         File[] casesFolders = breakagesFolder.listFiles(File::isDirectory);
