@@ -30,8 +30,22 @@ Options can be provided after these two mandatory arguments using the following 
 
 Available options are:
 
-* `parser`: `CLASSIC` or `GITHUB` (default: `CLASSIC`)
-* `parser.classic.timestampSize`: any integer greater or equals to 0 (default: `0`)
-* `differ.updated`: `true` or `false` (default: `false`)
-* `differ.added`: `true` or `false` (default: `true`)
-* `differ.deleted`: `true` or `false` (default: `true`)
+### Parsing
+
+* `parser`: parser type `CLASSIC`, `RAW_GITHUB` or `FULL_GITHUB` (default: `CLASSIC`)
+* `parser.classic.timestampSize`: timestamp size (default: `0`)
+
+### Diffing
+
+* `differ`: `ALTERNATING_BRUTE_FORCE`, `BRUTE_FORCE`, `LCS`, `SEED_EXTEND` (default: `BRUTE_FORCE`)
+* `differ.rewrite.min`: min rewrite similarity (default `0.5`)
+* `differ.seed.block`: min block size for seed differ (default `3`)
+* `differ.seed.window`: max window size for updated detection for seed differ (default `30`)
+
+### Output
+
+* `client`: client type `SWING`, `JSON`, `CONSOLE`, `METRICS`
+* `console.updated`: show updated lines in console `true` or `false` (default: `false`)
+* `console.added`: show added lines in console `true` or `false` (default: `true`)
+* `console.deleted`: show deleted lines in console `true` or `false` (default: `true`)
+* `console.unchanged`: show unchanged lines in console `true` or `false` (default: `false`)
