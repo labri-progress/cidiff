@@ -1,4 +1,6 @@
-package org.github.gumtreediff.cidiff;
+package org.github.gumtreediff.cidiff.benchmarks;
+
+import org.github.gumtreediff.cidiff.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,8 +11,11 @@ import java.util.List;
 import java.util.Properties;
 
 public final class PrecisionBenchmark {
-    private static final String HEADER = "LEFT;RIGHT;ALTERNATING_BRUTE_FORCE_P;ALTERNATING_BRUTE_FORCE_R;"
-            + "BRUTE_FORCE_P;BRUTE_FORCE_R;LCS_P;LCS_R;SEED_EXTEND_P;SEED_EXTEND_R";
+    private static final String HEADER = "LEFT;RIGHT;"
+            + "ALTERNATING_BRUTE_FORCE_P;ALTERNATING_BRUTE_FORCE_R;ALTERNATING_BRUTE_FORCE_T;"
+            + "BRUTE_FORCE_P;BRUTE_FORCE_R;BRUTE_FORCE_T;"
+            + "LCS_P;LCS_R;LCS_T;"
+            + "SEED_EXTEND_P;SEED_EXTEND_R;SEED_EXTEND_T";
     private static final String PATH_TO_DATA = "data/breakages/";
     private static final String PATH_TO_OUTPUT = "benchmark/precision_recall.csv";
 
@@ -37,14 +42,15 @@ public final class PrecisionBenchmark {
             final Properties options = new Properties();
             options.setProperty(Options.PARSER, parser);
             final Pair<String> logs = new Pair<>(left, right);
-            String csv_string = left + ";" + right + ";";
-
+            final StringBuilder b = new StringBuilder();
+            b.append(left + ";" + right);
             for (LogDiffer.Algorithm algorithm : LogDiffer.Algorithm.values()) {
-
                 final LogDiffer differ = LogDiffer.get(LogDiffer.Algorithm.valueOf(
                     options.getProperty(Options.DIFFER, String.valueOf(algorithm))), options);
                 final Pair<List<String>> lines = LogParser.parseLogs(logs, options);
+                final long start = System.currentTimeMillis();
                 final Pair<Action[]> actions = differ.diff(lines);
+                final long stop = System.currentTimeMillis();
 
                 final List<int[]> intervalsCidiff = getIntervalsCidiff(actions);
                 final List<int[]> intervalsGroundtruth = getIntervalsGroundtruth(groundtruth);
@@ -56,10 +62,9 @@ public final class PrecisionBenchmark {
                 final float precision = truePositive / (truePositive + falsePositive);
                 final float recall = truePositive / (truePositive + falseNegative);
 
-                csv_string += precision + ";" + recall + ";";
+                b.append(";" + precision + ";" + recall + ";" + (stop - start));
             }
-            csv.append(csv_string + "\n");
-
+            csv.append(b + "\n");
         }
         csv.close();
     }

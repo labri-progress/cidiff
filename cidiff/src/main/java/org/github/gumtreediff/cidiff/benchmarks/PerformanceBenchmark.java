@@ -1,4 +1,4 @@
-package org.github.gumtreediff.cidiff;
+package org.github.gumtreediff.cidiff.benchmarks;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -8,14 +8,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import org.github.gumtreediff.cidiff.Options;
 import org.github.gumtreediff.cidiff.clients.ConsoleClient;
 
-public final class BenchmarkHarness {
+public final class PerformanceBenchmark {
     private static final int RUNS = 5;
     private static final String HEADER =
             "left;right;config;t1;t2;t3;t4;t5;unchanged;updated;deleted;added";
 
-    private BenchmarkHarness() {
+    private PerformanceBenchmark() {
     }
 
     public static void main(String[] args) throws IOException {
