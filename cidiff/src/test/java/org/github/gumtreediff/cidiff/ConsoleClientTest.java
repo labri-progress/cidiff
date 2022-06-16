@@ -2,14 +2,14 @@ package org.github.gumtreediff.cidiff;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.Properties;
+
 import org.github.gumtreediff.cidiff.clients.ConsoleClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.Properties;
 
 class ConsoleClientTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -33,7 +33,8 @@ class ConsoleClientTest {
     void testGithubParsingMock() {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER, "RAW_GITHUB");
-        ConsoleClient d = new ConsoleClient("../data/test-gh-parser-left.log", "../data/test-gh-parser-right.log", options);
+        final ConsoleClient d = new ConsoleClient("../data/test-gh-parser-left.log",
+                "../data/test-gh-parser-right.log", options);
         assertEquals(4, d.lines.left.size());
         assertEquals(4, d.lines.right.size());
         assertEquals(4, d.lines.left.size());
@@ -46,7 +47,8 @@ class ConsoleClientTest {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER, "RAW_GITHUB");
         options.setProperty(Options.CONSOLE_UPDATED, "true");
-        DiffClient d = new ConsoleClient("../data/test-gh-parser-left.log", "../data/test-gh-parser-right.log", options);
+        final DiffClient d = new ConsoleClient("../data/test-gh-parser-left.log",
+                "../data/test-gh-parser-right.log", options);
         d.execute();
         assertTrue(outContent.toString().contains("- 3 Fooo"));
         assertTrue(outContent.toString().contains("+ 4 Bar"));
@@ -58,7 +60,8 @@ class ConsoleClientTest {
     void testGithubParsing() {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER, "FULL_GITHUB");
-        ConsoleClient d = new ConsoleClient("../data/test-fullgh-left.log", "../data/test-fullgh-right.log", options);
+        final ConsoleClient d = new ConsoleClient("../data/test-fullgh-left.log",
+                "../data/test-fullgh-right.log", options);
         //FIXME
     }
 
@@ -66,7 +69,8 @@ class ConsoleClientTest {
     void testClassicParsing() {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER, "DEFAULT");
-        ConsoleClient d = new ConsoleClient("../data/test-classic-parser-left.log", "../data/test-classic-parser-right.log", options);
+        final ConsoleClient d = new ConsoleClient("../data/test-classic-parser-left.log",
+                "../data/test-classic-parser-right.log", options);
         //FIXME
     }
 
@@ -75,7 +79,9 @@ class ConsoleClientTest {
         final Properties options = new Properties();
         options.setProperty(Options.PARSER_DEFAULT_TRIM, "29");
         options.setProperty(Options.PARSER, "DEFAULT");
-        ConsoleClient d = new ConsoleClient("../data/budibase_left.log", "../data/budibase_right.log", options);
-        assertEquals("Found online and idle hosted runner in the current repository's organization account that matches the required labels: 'ubuntu-latest'", d.lines.left.get(0));
+        final ConsoleClient d = new ConsoleClient("../data/budibase_left.log",
+                "../data/budibase_right.log", options);
+        assertEquals("Found online and idle hosted runner in the current repository's"
+                + " organization account that matches the required labels: 'ubuntu-latest'", d.lines.left.get(0));
     }
 }

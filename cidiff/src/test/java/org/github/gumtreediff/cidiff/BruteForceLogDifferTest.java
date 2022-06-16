@@ -1,23 +1,23 @@
 package org.github.gumtreediff.cidiff;
 
-import org.github.gumtreediff.cidiff.differs.BruteForceLogDiffer;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.github.gumtreediff.cidiff.differs.BruteForceLogDiffer;
+import org.junit.jupiter.api.Test;
 
 public class BruteForceLogDifferTest {
-    private static final Properties options = new Properties();
+    private static final Properties DEFAULT_OPTIONS = new Properties();
 
     @Test
     void testUnchangedCode1() {
-        List<String> leftLines = Arrays.asList("Foo", "Bar", "Foo");
-        List<String> rightLines = Arrays.asList("Foo", "Bar");
-        LogDiffer d = new BruteForceLogDiffer(options);
-        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
+        final List<String> leftLines = Arrays.asList("Foo", "Bar", "Foo");
+        final List<String> rightLines = Arrays.asList("Foo", "Bar");
+        final LogDiffer d = new BruteForceLogDiffer(DEFAULT_OPTIONS);
+        final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
         assertEquals(Action.unchanged(1, 1), actions.left[1]);
@@ -27,10 +27,10 @@ public class BruteForceLogDifferTest {
 
     @Test
     void testUnchangedCode2() {
-        List<String> leftLines = Arrays.asList("Foo", "Foo");
-        List<String> rightLines = Arrays.asList("Foo", "Foo", "Foo");
-        LogDiffer d = new BruteForceLogDiffer(options);
-        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
+        final List<String> leftLines = Arrays.asList("Foo", "Foo");
+        final List<String> rightLines = Arrays.asList("Foo", "Foo", "Foo");
+        final LogDiffer d = new BruteForceLogDiffer(DEFAULT_OPTIONS);
+        final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
         assertEquals(Action.unchanged(1, 1), actions.left[1]);
@@ -40,10 +40,10 @@ public class BruteForceLogDifferTest {
 
     @Test
     void testDeletedCode() {
-        List<String> leftLines = Arrays.asList("Foo", "Baz", "Foo");
-        List<String> rightLines = Arrays.asList("Foo", "Foo");
-        LogDiffer d = new BruteForceLogDiffer(options);
-        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
+        final List<String> leftLines = Arrays.asList("Foo", "Baz", "Foo");
+        final List<String> rightLines = Arrays.asList("Foo", "Foo");
+        final LogDiffer d = new BruteForceLogDiffer(DEFAULT_OPTIONS);
+        final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
         assertEquals(Action.deleted(1), actions.left[1]);
@@ -53,10 +53,10 @@ public class BruteForceLogDifferTest {
 
     @Test
     void testAddedCode() {
-        List<String> leftLines = Arrays.asList("Foo", "Foo");
-        List<String> rightLines = Arrays.asList("Foo", "Baz", "Foo");
-        LogDiffer d = new BruteForceLogDiffer(options);
-        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
+        final List<String> leftLines = Arrays.asList("Foo", "Foo");
+        final List<String> rightLines = Arrays.asList("Foo", "Baz", "Foo");
+        final LogDiffer d = new BruteForceLogDiffer(DEFAULT_OPTIONS);
+        final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
         assertEquals(Action.added(1), actions.right[1]);
@@ -66,10 +66,12 @@ public class BruteForceLogDifferTest {
 
     @Test
     void testUpdatedCode() {
-        List<String> leftLines = Arrays.asList("Build status failed", "Running time: 22s", "Foo Bar", "Foo", "Foo Foo");
-        List<String> rightLines = Arrays.asList("Build status OK", "Running times: 22s", "Foo Baz", "Bar", "Fooo Fooo");
-        LogDiffer d = new BruteForceLogDiffer(options);
-        Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
+        final List<String> leftLines = Arrays.asList("Build status failed",
+                "Running time: 22s", "Foo Bar", "Foo", "Foo Foo");
+        final List<String> rightLines = Arrays.asList("Build status OK",
+                "Running times: 22s", "Foo Baz", "Bar", "Fooo Fooo");
+        final LogDiffer d = new BruteForceLogDiffer(DEFAULT_OPTIONS);
+        final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.updated(0, 0), actions.left[0]);
         assertEquals(Action.updated(0, 0), actions.right[0]);
         assertEquals(Action.updated(1, 1), actions.left[1]);
