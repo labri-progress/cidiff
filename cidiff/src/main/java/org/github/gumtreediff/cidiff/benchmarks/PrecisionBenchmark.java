@@ -17,22 +17,22 @@ public final class PrecisionBenchmark {
             + "BRUTE_FORCE_P;BRUTE_FORCE_R;BRUTE_FORCE_T;"
             + "LCS_P;LCS_R;LCS_T;"
             + "SEED_EXTEND_P;SEED_EXTEND_R;SEED_EXTEND_T";
-    private static String PATH_TO_DATA = "data/breakages/";
-    private static String PATH_TO_OUTPUT = "benchmark/precision_recall.csv";
+    private static String pathToData = "data/breakages/";
+    private static String pathToOutput = "benchmark/precision_recall.csv";
 
     private PrecisionBenchmark() {
     }
 
     public static void main(String[] args) throws Exception {
         if (args.length == 2) {
-            PATH_TO_DATA = args[0];
-            PATH_TO_OUTPUT = args[1];
+            pathToData = args[0];
+            pathToOutput = args[1];
         }
 
-        final FileWriter csv = new FileWriter(PATH_TO_OUTPUT);
+        final FileWriter csv = new FileWriter(pathToOutput);
         csv.append(HEADER + "\n");
 
-        final File breakagesFolder = new File(PATH_TO_DATA);
+        final File breakagesFolder = new File(pathToData);
         final File[] casesFolders = breakagesFolder.listFiles(File::isDirectory);
         for (File oneCaseFolder: casesFolders) {
             System.out.println(oneCaseFolder);
