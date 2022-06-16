@@ -13,10 +13,17 @@ jobs:
     if: "!(contains(github.event.head_commit.message, '[no ci]') || startsWith(github.event.head_commit.message, 'doc'))"
     steps:
       - name: checkout cidiff
-        uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+        uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'zulu'
       - name: build cidiff
-        run: ./gradlew build
+        run: |
+          ./gradlew build
+          ./gradlew runBenchmark
+      - name: upload benchmark results
+        uses: actions/upload-artifact@v3
+        with:
+          name: benchmark-results
+          path: benchmark/precision_recall.csv
