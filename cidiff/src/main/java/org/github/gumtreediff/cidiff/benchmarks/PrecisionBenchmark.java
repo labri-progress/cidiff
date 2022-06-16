@@ -1,7 +1,5 @@
 package org.github.gumtreediff.cidiff.benchmarks;
 
-import org.github.gumtreediff.cidiff.*;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,6 +7,8 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import org.github.gumtreediff.cidiff.*;
 
 public final class PrecisionBenchmark {
     private static final String HEADER = "LEFT;RIGHT;"
