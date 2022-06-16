@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.github.gumtreediff.cidiff.*;
@@ -16,25 +17,28 @@ public final class PrecisionBenchmark {
             + "BRUTE_FORCE_P;BRUTE_FORCE_R;BRUTE_FORCE_T;"
             + "LCS_P;LCS_R;LCS_T;"
             + "SEED_EXTEND_P;SEED_EXTEND_R;SEED_EXTEND_T";
-    private static final String PATH_TO_DATA = "data/breakages/";
-    private static final String PATH_TO_OUTPUT = "benchmark/precision_recall.csv";
+    private static String PATH_TO_DATA = "data/breakages/";
+    private static String PATH_TO_OUTPUT = "benchmark/precision_recall.csv";
 
     private PrecisionBenchmark() {
     }
 
     public static void main(String[] args) throws Exception {
+        if (args.length == 2) {
+            PATH_TO_DATA = args[0];
+            PATH_TO_OUTPUT = args[1];
+        }
+
         final FileWriter csv = new FileWriter(PATH_TO_OUTPUT);
         csv.append(HEADER + "\n");
 
         final File breakagesFolder = new File(PATH_TO_DATA);
         final File[] casesFolders = breakagesFolder.listFiles(File::isDirectory);
-
         for (File oneCaseFolder: casesFolders) {
             System.out.println(oneCaseFolder);
             final File oneCase = new File(oneCaseFolder.getAbsolutePath());
             final File[] files = oneCase.listFiles();
-
-            final String left = files[0].getAbsolutePath();
+            final String left = Objects.requireNonNull(files)[0].getAbsolutePath();
             final String right = files[1].getAbsolutePath();
             final String groundtruth = files[2].getAbsolutePath();
             final String parser = getParser(groundtruth);
@@ -78,7 +82,7 @@ public final class PrecisionBenchmark {
 
     private static List<int[]> getIntervalsCidiff(Pair<Action[]> actions) {
         int start = -1;
-        final List<int[]> intervals = new ArrayList<int[]>();
+        final List<int[]> intervals = new ArrayList<>();
 
         for (Action a: actions.right) {
             if (a.type == Action.Type.ADDED && start == -1) {
@@ -97,7 +101,7 @@ public final class PrecisionBenchmark {
     }
 
     private static List<int[]> getIntervalsGroundtruth(String groundtruth) throws Exception {
-        final List<int[]> intervals = new ArrayList<int[]>();
+        final List<int[]> intervals = new ArrayList<>();
         final BufferedReader br = new BufferedReader(new FileReader(groundtruth));
         String oneLine;
 
