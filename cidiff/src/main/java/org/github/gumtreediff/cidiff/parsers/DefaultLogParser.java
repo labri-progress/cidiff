@@ -1,11 +1,13 @@
 package org.github.gumtreediff.cidiff.parsers;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.github.gumtreediff.cidiff.LogLine;
 import org.github.gumtreediff.cidiff.Options;
 
 public final class DefaultLogParser extends AbstractLogParser {
@@ -18,10 +20,19 @@ public final class DefaultLogParser extends AbstractLogParser {
                 Options.PARSER_DEFAULT_TRIM, DEFAULT_TRIM));
     }
 
-    public List<String> parse(String file) throws IOException {
-        return Files.lines(Paths.get(file))
-                .filter(line -> line.length() > trim)
-                .map(line -> line.substring(trim))
-                .toList();
+    public List<LogLine> parse(String file) throws IOException {
+        final List<LogLine> log = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            int lineNumber = 0;
+            for (String line; (line = br.readLine()) != null;) {
+                lineNumber++;
+                if (line.length() > trim) {
+                    final String value = line.substring(trim);
+                    log.add(new LogLine(value, lineNumber, trim + 1, trim + value.length() + 1));
+                }
+            }
+        }
+
+        return log;
     }
 }

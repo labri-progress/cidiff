@@ -51,7 +51,7 @@ public final class PrecisionBenchmark {
             for (LogDiffer.Algorithm algorithm : LogDiffer.Algorithm.values()) {
                 final LogDiffer differ = LogDiffer.get(LogDiffer.Algorithm.valueOf(
                     options.getProperty(Options.DIFFER, String.valueOf(algorithm))), options);
-                final Pair<List<String>> lines = LogParser.parseLogs(logs, options);
+                final Pair<List<LogLine>> lines = LogParser.parseLogs(logs, options);
                 final long start = System.currentTimeMillis();
                 final Pair<Action[]> actions = differ.diff(lines);
                 final long stop = System.currentTimeMillis();

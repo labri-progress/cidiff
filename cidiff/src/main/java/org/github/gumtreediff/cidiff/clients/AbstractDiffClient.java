@@ -11,7 +11,7 @@ public abstract class AbstractDiffClient implements DiffClient {
     public final Properties options;
     public final LogDiffer differ;
     public final Pair<String> files;
-    public final Pair<List<String>> lines;
+    public final Pair<List<LogLine>> lines;
     public final Pair<Action[]> actions;
 
     public AbstractDiffClient(String leftFile, String rightFile, Properties options) {

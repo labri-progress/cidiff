@@ -16,7 +16,7 @@ public interface LogDiffer {
         SEED_EXTEND,
     }
 
-    Pair<Action[]> diff(Pair<List<String>> lines);
+    Pair<Action[]> diff(Pair<List<LogLine>> lines);
 
     static LogDiffer get(Algorithm algorithm, Properties options) {
         return switch (algorithm) {

@@ -18,19 +18,19 @@ public final class BruteForceLogDiffer extends AbstractLogDiffer {
     }
 
     @Override
-    public Pair<Action[]> diff(Pair<List<String>> lines) {
+    public Pair<Action[]> diff(Pair<List<LogLine>> lines) {
         final Pair<Action[]> actions = new Pair<>(
                 new Action[lines.left.size()], new Action[lines.right.size()]
         );
 
         // Identify unchanged lines
         for (int i = 0; i < lines.left.size(); i++) {
-            final String leftLine = lines.left.get(i);
+            final String leftLine = lines.left.get(i).value;
             for (int j = 0; j < lines.right.size(); j++) {
                 if (actions.right[j] != null)
                     continue;
 
-                final String rightLine = lines.right.get(j);
+                final String rightLine = lines.right.get(j).value;
                 if (leftLine.equals(rightLine)) {
                     final Action action = Action.unchanged(i, j);
                     actions.left[i] = action;
@@ -45,12 +45,12 @@ public final class BruteForceLogDiffer extends AbstractLogDiffer {
             if (actions.left[i] != null)
                 continue;
 
-            final String leftLine = lines.left.get(i);
+            final String leftLine = lines.left.get(i).value;
             for (int j = 0; j < lines.right.size(); j++) {
                 if (actions.right[j] != null)
                     continue;
 
-                final String rightLine = lines.right.get(j);
+                final String rightLine = lines.right.get(j).value;
                 final double sim = Utils.rewriteSim(leftLine, rightLine);
                 if (sim >= rewriteMin) {
                     final Action action = Action.updated(i, j);

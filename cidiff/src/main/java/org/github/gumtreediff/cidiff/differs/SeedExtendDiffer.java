@@ -22,7 +22,7 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
     }
 
     @Override
-    public Pair<Action[]> diff(Pair<List<String>> lines) {
+    public Pair<Action[]> diff(Pair<List<LogLine>> lines) {
         if (lines.left.size() < blockSize + 2 * windowSize
                 || lines.right.size() < blockSize + 2 * windowSize)
             return new BruteForceLogDiffer(options).diff(lines); // Fallback to brute force for small logs
@@ -53,8 +53,8 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                         if (actions.left[leftInit - step] != null || actions.right[rightInit - step] != null)
                             break;
 
-                        final String leftLine = lines.left.get(leftInit - step);
-                        final String rightLine = lines.right.get(rightInit - step);
+                        final String leftLine = lines.left.get(leftInit - step).value;
+                        final String rightLine = lines.right.get(rightInit - step).value;
                         final var action = makeAction(actions, leftLine, rightLine,
                                 leftInit - step, rightInit - step);
                         if (action == null)
@@ -73,8 +73,8 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                                 || actions.right[rightInit + blockSize + step] != null)
                             break;
 
-                        final String leftLine = lines.left.get(leftInit + blockSize + step);
-                        final String rightLine = lines.right.get(rightInit + blockSize + step);
+                        final String leftLine = lines.left.get(leftInit + blockSize + step).value;
+                        final String rightLine = lines.right.get(rightInit + blockSize + step).value;
                         final var action = makeAction(actions, leftLine, rightLine,
                                 leftInit + blockSize + step, rightInit + blockSize + step);
                         if (action == null)
@@ -89,7 +89,7 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                         if (actions.left[i] != null || i >= leftInit && i < leftInit + blockSize)
                             continue;
 
-                        final String leftLine = lines.left.get(i);
+                        final String leftLine = lines.left.get(i).value;
 
                         final var rightMinBound = Math.max(0, rightInit - windowSize);
                         final var rightMaxBound = Math.min(rightInit + blockSize + windowSize, lines.right.size());
@@ -97,7 +97,7 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                             if (actions.right[j] != null || j >= rightInit && i < rightInit + blockSize)
                                 continue;
 
-                            final String rightLine = lines.right.get(j);
+                            final String rightLine = lines.right.get(j).value;
                             if (makeAction(actions, leftLine, rightLine, i, j) != null)
                                 break;
                         }
@@ -136,7 +136,8 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
         return null;
     }
 
-    private List<Pair<Integer>> mappings(int hash, Pair<Map<Integer, List<Integer>>> hashes, Pair<List<String>> lines) {
+    private List<Pair<Integer>> mappings(int hash, Pair<Map<Integer,
+            List<Integer>>> hashes, Pair<List<LogLine>> lines) {
         final List<Pair<Integer>> results = new ArrayList<>();
         final Set<Integer> rightMatched = new HashSet<>();
         final List<Integer> leftMatches = hashes.left.get(hash);
@@ -151,7 +152,8 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
 
                 boolean ensureEquals = true;
                 for (int i = 0; i < blockSize; i++) {
-                    if (lines.left.get(leftMatch + i).length() != lines.right.get(rightMatch + i).length()) {
+                    if (lines.left.get(leftMatch + i).value.length()
+                            != lines.right.get(rightMatch + i).value.length()) {
                         ensureEquals = false;
                         break;
                     }
@@ -175,7 +177,7 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
         return results;
     }
 
-    private void fillHash(final List<String> lines, final Map<Integer, List<Integer>> hashes) {
+    private void fillHash(final List<LogLine> lines, final Map<Integer, List<Integer>> hashes) {
         if (lines.size() < blockSize)
             return;
 

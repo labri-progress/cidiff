@@ -1,10 +1,13 @@
 package org.github.gumtreediff.cidiff.parsers;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import org.github.gumtreediff.cidiff.LogLine;
 
 public final class RawGithubLogParser extends AbstractLogParser {
     private static final int TIMESTAMP_SIZE = 29; // GitHub logs have a 29 characters prefix
@@ -13,10 +16,20 @@ public final class RawGithubLogParser extends AbstractLogParser {
         super(options);
     }
 
-    public List<String> parse(String file) throws IOException {
-        return Files.lines(Paths.get(file))
-                .filter(line -> line.length() > TIMESTAMP_SIZE)
-                .map(line -> line.substring(TIMESTAMP_SIZE))
-                .toList();
+    public List<LogLine> parse(String file) throws IOException {
+        final List<LogLine> log = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            int lineNumber = 0;
+            for (String line; (line = br.readLine()) != null;) {
+                lineNumber++;
+                if (line.length() > TIMESTAMP_SIZE) {
+                    final String value = line.substring(TIMESTAMP_SIZE);
+                    log.add(new LogLine(value, lineNumber,
+                            TIMESTAMP_SIZE + 1, TIMESTAMP_SIZE + value.length() + 1));
+                }
+            }
+        }
+
+        return log;
     }
 }

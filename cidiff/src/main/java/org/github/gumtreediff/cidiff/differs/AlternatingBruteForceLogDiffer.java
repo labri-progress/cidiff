@@ -18,7 +18,7 @@ public final class AlternatingBruteForceLogDiffer extends AbstractLogDiffer {
     }
 
     @Override
-    public Pair<Action[]> diff(Pair<List<String>> lines) {
+    public Pair<Action[]> diff(Pair<List<LogLine>> lines) {
         final Pair<Action[]> actions = new Pair<>(
                 new Action[lines.left.size()], new Action[lines.right.size()]
         );
@@ -26,11 +26,11 @@ public final class AlternatingBruteForceLogDiffer extends AbstractLogDiffer {
         // Identify unchanged lines
         int lastRightUnchanged = 0; // Last mapped right position
         for (int i = 0; i < lines.left.size(); i++) {
-            final String leftLine = lines.left.get(i);
+            final String leftLine = lines.left.get(i).value;
             for (int j = 0; j < lines.right.size(); j++) {
                 final int upperIndex = lastRightUnchanged + j;
                 if (upperIndex < actions.right.length && actions.right[upperIndex] == null) {
-                    final String upperRightLine = lines.right.get(upperIndex);
+                    final String upperRightLine = lines.right.get(upperIndex).value;
                     if (leftLine.equals(upperRightLine)) {
                         lastRightUnchanged = upperIndex;
                         final Action action = Action.unchanged(i, upperIndex);
@@ -43,7 +43,7 @@ public final class AlternatingBruteForceLogDiffer extends AbstractLogDiffer {
                 final int lowerIndex = lastRightUnchanged - j;
                 if (lowerIndex > 0 && lowerIndex != upperIndex
                         && actions.right[lowerIndex] == null) {
-                    final String lowerRightLine = lines.right.get(lowerIndex);
+                    final String lowerRightLine = lines.right.get(lowerIndex).value;
                     if (leftLine.equals(lowerRightLine)) {
                         lastRightUnchanged = lowerIndex;
                         final Action action = Action.unchanged(i, lowerIndex);
@@ -61,11 +61,11 @@ public final class AlternatingBruteForceLogDiffer extends AbstractLogDiffer {
             if (actions.left[i] != null) // Left line already mapped
                 continue;
 
-            final String leftLine = lines.left.get(i);
+            final String leftLine = lines.left.get(i).value;
             for (int j = 0; j < lines.right.size(); j++) {
                 final int upperIndex = lastRightUpdated + j;
                 if (upperIndex < actions.right.length && actions.right[upperIndex] == null) {
-                    final String upperRightLine = lines.right.get(upperIndex);
+                    final String upperRightLine = lines.right.get(upperIndex).value;
                     final double upperSim = Utils.rewriteSim(leftLine, upperRightLine);
                     if (upperSim >= rewriteMin) {
                         lastRightUpdated = upperIndex;
@@ -79,7 +79,7 @@ public final class AlternatingBruteForceLogDiffer extends AbstractLogDiffer {
                 final int lowerIndex = lastRightUpdated - j;
                 if (lowerIndex > 0 && lowerIndex
                         != upperIndex && actions.right[lowerIndex] == null) {
-                    final String lowerRightLine = lines.right.get(lowerIndex);
+                    final String lowerRightLine = lines.right.get(lowerIndex).value;
                     final double lowerSim = Utils.rewriteSim(leftLine, lowerRightLine);
                     if (lowerSim >= rewriteMin) {
                         lastRightUpdated = lowerIndex;

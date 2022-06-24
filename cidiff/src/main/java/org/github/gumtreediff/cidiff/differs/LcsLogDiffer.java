@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.github.gumtreediff.cidiff.Action;
+import org.github.gumtreediff.cidiff.LogLine;
 import org.github.gumtreediff.cidiff.Pair;
 
 public final class LcsLogDiffer extends AbstractLogDiffer {
@@ -14,7 +15,7 @@ public final class LcsLogDiffer extends AbstractLogDiffer {
     }
 
     @Override
-    public Pair<Action[]> diff(Pair<List<String>> lines) {
+    public Pair<Action[]> diff(Pair<List<LogLine>> lines) {
         final Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
 
         // Identify unchanged lines
@@ -43,7 +44,7 @@ public final class LcsLogDiffer extends AbstractLogDiffer {
      * @return a list of size 2 int arrays that corresponds
      * to match of index in left sequence to index in right sequence.
      */
-    static List<int[]> longestCommonSubsequence(List<String> left, List<String> right) {
+    static List<int[]> longestCommonSubsequence(List<LogLine> left, List<LogLine> right) {
         final int[][] lengths = new int[left.size() + 1][right.size() + 1];
         for (int i = 0; i < left.size(); i++)
             for (int j = 0; j < right.size(); j++)

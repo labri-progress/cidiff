@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import org.github.gumtreediff.cidiff.Action;
+import org.github.gumtreediff.cidiff.LogLine;
 import org.github.gumtreediff.cidiff.Pair;
 
 public class LogsPanel extends JPanel {
@@ -24,16 +25,16 @@ public class LogsPanel extends JPanel {
     static final Color COLOR_NORMAL = new Color(0, 0, 0);
     static final Color COLOR_SELECTED = new Color(0, 0, 255);
 
-    final JList<String> leftLines;
-    final JList<String> rightLines;
+    final JList<LogLine> leftLines;
+    final JList<LogLine> rightLines;
     final JScrollBar leftBar = new JScrollBar(JScrollBar.VERTICAL);
     final JScrollBar rightBar = new JScrollBar(JScrollBar.VERTICAL);
     final Pair<Action[]> actions;
 
-    public LogsPanel(Pair<List<String>> lines, Pair<Action[]> actions) {
+    public LogsPanel(Pair<List<LogLine>> lines, Pair<Action[]> actions) {
         super(new GridLayout(1, 2));
         this.actions = actions;
-        final String[] leftData = new String[lines.left.size()];
+        final LogLine[] leftData = new LogLine[lines.left.size()];
         lines.left.toArray(leftData);
         leftLines = new JList<>(leftData);
         leftLines.setCellRenderer(new LogLineCellRenderer(actions.left));
@@ -45,7 +46,7 @@ public class LogsPanel extends JPanel {
         panLeftLines.setVerticalScrollBar(leftBar);
         this.add(panLeftLines);
 
-        final String[] rightData = new String[lines.right.size()];
+        final LogLine[] rightData = new LogLine[lines.right.size()];
         lines.right.toArray(rightData);
         rightLines = new JList<>(rightData);
         rightLines.setCellRenderer(new LogLineCellRenderer(actions.right));
@@ -60,7 +61,7 @@ public class LogsPanel extends JPanel {
         this.setPreferredSize(new Dimension(1024, 768));
     }
 
-    private BasicScrollBarUI makeScrollBarUi(JList<String> lines, Action[] scrollActions) {
+    private BasicScrollBarUI makeScrollBarUi(JList<LogLine> lines, Action[] scrollActions) {
         return new BasicScrollBarUI() {
             @Override protected void paintTrack(
                     Graphics g, JComponent c, Rectangle trackBounds) {
@@ -108,7 +109,9 @@ public class LogsPanel extends JPanel {
                 boolean cellHasFocus) {
             final Component res = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-            setToolTipText(Integer.toString(index));
+            final LogLine logLine = (LogLine) value;
+
+            setToolTipText(logLine.lineNumber + " - " + index);
 
             if (!isSelected) {
                 setForeground(COLOR_NORMAL);
@@ -126,7 +129,7 @@ public class LogsPanel extends JPanel {
                 setBackground(COLOR_DELETED);
             else if (action.type == Action.Type.UPDATED) {
                 setBackground(COLOR_UPDATED);
-                setText(toHtml(action, (String) value));
+                setText(toHtml(action, logLine));
             }
             else
                 setBackground(COLOR_UNCHANGED);
@@ -134,11 +137,11 @@ public class LogsPanel extends JPanel {
             return res;
         }
 
-        private String toHtml(Action action, String text) {
+        private String toHtml(Action action, LogLine line) {
             final String otherText = this.cellActions == actions.left
-                    ? rightLines.getModel().getElementAt(action.rightLocation)
-                    : leftLines.getModel().getElementAt(action.leftLocation);
-            final String[] tokens = text.split("\\s+");
+                    ? rightLines.getModel().getElementAt(action.rightLocation).value
+                    : leftLines.getModel().getElementAt(action.leftLocation).value;
+            final String[] tokens = line.value.split("\\s+");
             final String[] otherTokens = otherText.split("\\s+");
             final StringBuilder b = new StringBuilder();
             b.append("<html>");

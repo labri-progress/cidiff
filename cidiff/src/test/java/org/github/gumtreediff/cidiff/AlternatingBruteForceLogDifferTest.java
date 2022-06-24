@@ -2,21 +2,17 @@ package org.github.gumtreediff.cidiff;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 import org.github.gumtreediff.cidiff.differs.AlternatingBruteForceLogDiffer;
 import org.junit.jupiter.api.Test;
 
 public class AlternatingBruteForceLogDifferTest {
-    private static final Properties DEFAULT_OPTIONS = new Properties();
-
     @Test
     void testUnchangedCode1() {
-        final List<String> leftLines = Arrays.asList("Foo", "Bar", "Foo");
-        final List<String> rightLines = Arrays.asList("Foo", "Bar");
-        final AlternatingBruteForceLogDiffer d = new AlternatingBruteForceLogDiffer(DEFAULT_OPTIONS);
+        final List<LogLine> leftLines = TestHelpers.makeLog("Foo", "Bar", "Foo");
+        final List<LogLine> rightLines = TestHelpers.makeLog("Foo", "Bar");
+        final AlternatingBruteForceLogDiffer d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
         final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
@@ -27,9 +23,9 @@ public class AlternatingBruteForceLogDifferTest {
 
     @Test
     void testUnchangedCode2() {
-        final List<String> leftLines = Arrays.asList("Foo", "Foo");
-        final List<String> rightLines = Arrays.asList("Foo", "Foo", "Foo");
-        final LogDiffer d = new AlternatingBruteForceLogDiffer(DEFAULT_OPTIONS);
+        final List<LogLine> leftLines = TestHelpers.makeLog("Foo", "Foo");
+        final List<LogLine> rightLines = TestHelpers.makeLog("Foo", "Foo", "Foo");
+        final LogDiffer d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
         final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
@@ -40,9 +36,9 @@ public class AlternatingBruteForceLogDifferTest {
 
     @Test
     void testDeletedCode() {
-        final List<String> leftLines = Arrays.asList("Foo", "Baz", "Foo");
-        final List<String> rightLines = Arrays.asList("Foo", "Foo");
-        final LogDiffer d = new AlternatingBruteForceLogDiffer(DEFAULT_OPTIONS);
+        final List<LogLine> leftLines = TestHelpers.makeLog("Foo", "Baz", "Foo");
+        final List<LogLine> rightLines = TestHelpers.makeLog("Foo", "Foo");
+        final LogDiffer d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
         final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
@@ -53,9 +49,9 @@ public class AlternatingBruteForceLogDifferTest {
 
     @Test
     void testAddedCode() {
-        final List<String> leftLines = Arrays.asList("Foo", "Foo");
-        final List<String> rightLines = Arrays.asList("Foo", "Baz", "Foo");
-        final LogDiffer d = new AlternatingBruteForceLogDiffer(DEFAULT_OPTIONS);
+        final List<LogLine> leftLines = TestHelpers.makeLog("Foo", "Foo");
+        final List<LogLine> rightLines = TestHelpers.makeLog("Foo", "Baz", "Foo");
+        final LogDiffer d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
         final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.unchanged(0, 0), actions.left[0]);
         assertEquals(Action.unchanged(0, 0), actions.right[0]);
@@ -66,11 +62,11 @@ public class AlternatingBruteForceLogDifferTest {
 
     @Test
     void testUpdatedCode() {
-        final List<String> leftLines = Arrays.asList("Build status failed",
+        final List<LogLine> leftLines = TestHelpers.makeLog("Build status failed",
                 "Running time: 22s", "Foo Bar", "Foo", "Foo Foo");
-        final List<String> rightLines = Arrays.asList("Build status OK",
+        final List<LogLine> rightLines = TestHelpers.makeLog("Build status OK",
                 "Running times: 22s", "Foo Baz", "Bar", "Fooo Fooo");
-        final LogDiffer d = new AlternatingBruteForceLogDiffer(DEFAULT_OPTIONS);
+        final LogDiffer d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
         final Pair<Action[]> actions = d.diff(new Pair<>(leftLines, rightLines));
         assertEquals(Action.updated(0, 0), actions.left[0]);
         assertEquals(Action.updated(0, 0), actions.right[0]);

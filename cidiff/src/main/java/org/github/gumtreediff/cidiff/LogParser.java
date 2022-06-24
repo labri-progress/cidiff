@@ -30,7 +30,7 @@ public interface LogParser {
         };
     }
 
-    static List<String> parseLog(String file, Properties options) {
+    static List<LogLine> parseLog(String file, Properties options) {
         final LogParser parser = get(options);
         try {
             return parser.parse(file);
@@ -40,9 +40,9 @@ public interface LogParser {
         }
     }
 
-    static Pair<List<String>> parseLogs(Pair<String> files, Properties options) {
+    static Pair<List<LogLine>> parseLogs(Pair<String> files, Properties options) {
         return new Pair<>(parseLog(files.left, options), parseLog(files.right, options));
     }
 
-    List<String> parse(String file) throws IOException;
+    List<LogLine> parse(String file) throws IOException;
 }
