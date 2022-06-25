@@ -30,24 +30,23 @@ public final class PrecisionBenchmark {
         }
 
         final FileWriter csv = new FileWriter(pathToOutput);
-        csv.append(HEADER + "\n");
+        csv.append(HEADER).append("\n");
 
         final File breakagesFolder = new File(pathToData);
         final File[] casesFolders = breakagesFolder.listFiles(File::isDirectory);
+        Objects.requireNonNull(casesFolders);
         for (File oneCaseFolder: casesFolders) {
             System.out.println(oneCaseFolder);
-            final File oneCase = new File(oneCaseFolder.getAbsolutePath());
-            final File[] files = oneCase.listFiles();
-            final String left = Objects.requireNonNull(files)[0].getAbsolutePath();
-            final String right = files[1].getAbsolutePath();
-            final String groundtruth = files[2].getAbsolutePath();
+            final String left = oneCaseFolder.toPath().resolve("pass.log").toString();
+            final String right = oneCaseFolder.toPath().resolve("fail.log").toString();
+            final String groundtruth = oneCaseFolder.toPath().resolve("groundtruth").toString();
             final String parser = getParser(groundtruth);
 
             final Properties options = new Properties();
             options.setProperty(Options.PARSER, parser);
             final Pair<String> logs = new Pair<>(left, right);
             final StringBuilder b = new StringBuilder();
-            b.append(left + ";" + right);
+            b.append(left).append(";").append(right);
             for (LogDiffer.Algorithm algorithm : LogDiffer.Algorithm.values()) {
                 final LogDiffer differ = LogDiffer.get(LogDiffer.Algorithm.valueOf(
                     options.getProperty(Options.DIFFER, String.valueOf(algorithm))), options);
@@ -66,9 +65,9 @@ public final class PrecisionBenchmark {
                 final float precision = truePositive / (truePositive + falsePositive);
                 final float recall = truePositive / (truePositive + falseNegative);
 
-                b.append(";" + precision + ";" + recall + ";" + (stop - start));
+                b.append(";").append(precision).append(";").append(recall).append(";").append(stop - start);
             }
-            csv.append(b + "\n");
+            csv.append(b).append("\n");
         }
         csv.close();
     }
