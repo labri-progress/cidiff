@@ -44,7 +44,7 @@ Available options are:
 
 ### Output
 
-* `client`: client type `SWING`, `JSON`, `CONSOLE`, `METRICS`
+* `client`: client type `SWING`, `JSON`, `CONSOLE`, `METRICS` (default: `CONSOLE`)
 * `console.updated`: show updated lines in console `true` or `false` (default: `false`)
 * `console.added`: show added lines in console `true` or `false` (default: `true`)
 * `console.deleted`: show deleted lines in console `true` or `false` (default: `true`)
