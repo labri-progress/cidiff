@@ -20,12 +20,14 @@ public final class RawGithubLogParser extends AbstractLogParser {
         final List<LogLine> log = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             int lineNumber = 0;
+            int relativeIndex = 0;
             for (String line; (line = br.readLine()) != null;) {
                 lineNumber++;
                 if (line.length() > TIMESTAMP_SIZE) {
                     final String value = line.substring(TIMESTAMP_SIZE);
-                    log.add(new LogLine(value, lineNumber,
+                    log.add(new LogLine(value, lineNumber, relativeIndex,
                             TIMESTAMP_SIZE + 1, TIMESTAMP_SIZE + value.length() + 1));
+                    relativeIndex++;
                 }
             }
         }

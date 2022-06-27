@@ -7,14 +7,17 @@ public class LogLine {
 
     public final int lineNumber;
 
+    public final int relativeIndex;
+
     public final int startOffset;
 
     public final int endOffset;
 
-    public LogLine(String value, int lineNumber, int startOffset, int endOffset) {
+    public LogLine(String value, int lineNumber, int relativeIndex, int startOffset, int endOffset) {
         Objects.requireNonNull(value);
         this.value = value;
         this.lineNumber = lineNumber;
+        this.relativeIndex = relativeIndex;
         this.startOffset = startOffset;
         this.endOffset = endOffset;
     }

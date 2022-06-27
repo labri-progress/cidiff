@@ -6,6 +6,18 @@ public final class Utils {
     private Utils() {
     }
 
+    public static int[] termsHash(LogLine line) {
+        final String[] terms = split(line);
+        final int[] hash = new int[terms.length];
+        for (int i = 0; i < terms.length; i++)
+            hash[i] = terms[i].length();
+        return hash;
+    }
+
+    public static String[] split(LogLine line) {
+        return line.value.split(TOKEN_SEPARATORS);
+    }
+
     public static double rewriteSim(String leftLine, String rightLine) {
         final String[] leftTokens = leftLine.split(TOKEN_SEPARATORS);
         final String[] rightTokens = rightLine.split(TOKEN_SEPARATORS);

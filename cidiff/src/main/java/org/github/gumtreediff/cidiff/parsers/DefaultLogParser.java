@@ -24,11 +24,14 @@ public final class DefaultLogParser extends AbstractLogParser {
         final List<LogLine> log = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             int lineNumber = 0;
+            int relativeIndex = 0;
             for (String line; (line = br.readLine()) != null;) {
                 lineNumber++;
                 if (line.length() > trim) {
                     final String value = line.substring(trim);
-                    log.add(new LogLine(value, lineNumber, trim + 1, trim + value.length() + 1));
+                    log.add(new LogLine(value, lineNumber, relativeIndex,
+                            trim + 1, trim + value.length() + 1));
+                    relativeIndex++;
                 }
             }
         }

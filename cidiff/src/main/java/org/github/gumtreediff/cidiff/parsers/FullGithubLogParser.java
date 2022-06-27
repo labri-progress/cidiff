@@ -24,6 +24,7 @@ public class FullGithubLogParser extends AbstractLogParser {
         final List<LogLine> log = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             int lineNumber = 0;
+            int relativeIndex = 0;
             for (String line; (line = br.readLine()) != null;) {
                 lineNumber++;
                 final Matcher m = LOG_LINE_REGEXP.matcher(line);
@@ -37,9 +38,11 @@ public class FullGithubLogParser extends AbstractLogParser {
                 log.add(new LogLine(
                         content.substring(TIMESTAMP_SIZE),
                         lineNumber,
+                        relativeIndex,
                         m.start(3) + TIMESTAMP_SIZE + 1,
                         line.length() + 1
                 ));
+                relativeIndex++;
             }
         }
 

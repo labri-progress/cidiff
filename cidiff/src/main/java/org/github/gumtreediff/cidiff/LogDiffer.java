@@ -3,10 +3,7 @@ package org.github.gumtreediff.cidiff;
 import java.util.List;
 import java.util.Properties;
 
-import org.github.gumtreediff.cidiff.differs.AlternatingBruteForceLogDiffer;
-import org.github.gumtreediff.cidiff.differs.BruteForceLogDiffer;
-import org.github.gumtreediff.cidiff.differs.LcsLogDiffer;
-import org.github.gumtreediff.cidiff.differs.SeedExtendDiffer;
+import org.github.gumtreediff.cidiff.differs.*;
 
 public interface LogDiffer {
     enum Algorithm {
@@ -14,6 +11,7 @@ public interface LogDiffer {
         BRUTE_FORCE,
         LCS,
         SEED_EXTEND,
+        HASH,
     }
 
     Pair<Action[]> diff(Pair<List<LogLine>> lines);
@@ -24,6 +22,7 @@ public interface LogDiffer {
             case ALTERNATING_BRUTE_FORCE -> new AlternatingBruteForceLogDiffer(options);
             case LCS -> new LcsLogDiffer(options);
             case SEED_EXTEND -> new SeedExtendDiffer(options);
+            case HASH -> new HashDiffer(options);
         };
     }
 }

@@ -11,7 +11,7 @@ public final class TestHelpers {
     public static List<LogLine> makeLog(String... lines) {
         final List<LogLine> log = new ArrayList<>(lines.length);
         for (int i = 0; i < lines.length; i++)
-            log.add(new LogLine(lines[i], i, 0, lines[i].length()));
+            log.add(new LogLine(lines[i], i, i, 0, lines[i].length()));
 
         return log;
     }

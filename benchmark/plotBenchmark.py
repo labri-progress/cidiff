@@ -6,7 +6,7 @@ import pandas as pd
 
 sns.set_theme(style="whitegrid", palette="colorblind")
 
-algorithms = ["ABF", "BF", "LCS", "SE"]
+algorithms = ["ABF", "BF", "LCS", "SE", "H"]
 
 #load dataframe
 path_to_csv = "benchmark/precision_recall.csv"
