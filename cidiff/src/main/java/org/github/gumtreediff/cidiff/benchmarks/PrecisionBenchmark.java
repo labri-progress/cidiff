@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -109,7 +110,7 @@ public final class PrecisionBenchmark {
         final BufferedReader br = new BufferedReader(new FileReader(groundtruth));
         String oneLine;
 
-        final HashMap<Integer, Integer> logHashMap = new HashMap<Integer, Integer>();
+        final Map<Integer, Integer> logHashMap = new HashMap<Integer, Integer>();
         for (int i = 0; i < lines.size(); i++) {
             logHashMap.put(lines.get(i).lineNumber, i);
         }
