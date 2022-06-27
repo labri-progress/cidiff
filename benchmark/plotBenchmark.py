@@ -26,6 +26,7 @@ plt.xlabel("Algorithm")
 plt.ylabel("Precision / Recall")
 plt.title("Precision and recall scores")
 plt.savefig('benchmark/fig-p-r.png')
+plt.clf()
 
 #plot F-score
 df_fscore = df[df['metric'].isin(['FSCORE'])]
@@ -36,6 +37,7 @@ plt.xlabel("Algorithm")
 plt.ylabel("F-score")
 plt.title("F-scores")
 plt.savefig('benchmark/fig-f1.png')
+plt.clf()
 
 #plot time
 df_time = df[df['metric'].isin(['TIME'])]
