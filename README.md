@@ -1,4 +1,4 @@
-# CIDiff
+# CiDiff
 
 Awesome differ for CI build logs
 
