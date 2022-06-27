@@ -20,8 +20,8 @@ public interface LogDiffer {
 
     static LogDiffer get(Algorithm algorithm, Properties options) {
         return switch (algorithm) {
-            case BRUTE_FORCE -> new AlternatingBruteForceLogDiffer(options);
-            case ALTERNATING_BRUTE_FORCE -> new BruteForceLogDiffer(options);
+            case BRUTE_FORCE -> new BruteForceLogDiffer(options);
+            case ALTERNATING_BRUTE_FORCE -> new AlternatingBruteForceLogDiffer(options);
             case LCS -> new LcsLogDiffer(options);
             case SEED_EXTEND -> new SeedExtendDiffer(options);
         };
