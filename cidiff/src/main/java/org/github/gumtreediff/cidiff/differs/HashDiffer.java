@@ -23,13 +23,13 @@ public class HashDiffer extends AbstractLogDiffer {
         );
 
         final Map<Integer, List<LogLine>> leftHashs = new HashMap<>();
-        final Map<int[], List<LogLine>> leftTermHashs = new HashMap<>();
+        final Map<Integer, List<LogLine>> leftTermsNumbers = new HashMap<>();
         for (LogLine leftLine : lines.left) {
             leftHashs.putIfAbsent(leftLine.hashCode(), new ArrayList<>());
             leftHashs.get(leftLine.hashCode()).add(leftLine);
-            final int[] leftTermHash = Utils.termsHash(leftLine);
-            leftTermHashs.putIfAbsent(leftTermHash, new ArrayList<>());
-            leftTermHashs.get(leftTermHash).add(leftLine);
+            final int leftTermNumber = Utils.termsHash(leftLine).length;
+            leftTermsNumbers.putIfAbsent(leftTermNumber, new ArrayList<>());
+            leftTermsNumbers.get(leftTermNumber).add(leftLine);
         }
 
         for (LogLine rightLine : lines.right) {
@@ -38,7 +38,7 @@ public class HashDiffer extends AbstractLogDiffer {
                 LogLine bestLine = null;
                 int minDist = Integer.MAX_VALUE;
                 for (LogLine leftLine : leftHashs.get(rightHash)) {
-                    if (!leftLine.equals(rightLine))
+                    if (!leftLine.value.equals(rightLine.value))
                         continue;
 
                     final int dist = Math.abs(rightLine.lineNumber - leftLine.lineNumber);
@@ -52,15 +52,15 @@ public class HashDiffer extends AbstractLogDiffer {
                     final Action action = Action.unchanged(bestLine.relativeIndex, rightLine.relativeIndex);
                     actions.left[bestLine.relativeIndex] = action;
                     actions.right[rightLine.relativeIndex] = action;
-                    break;
+                    continue;
                 }
             }
 
-            final int[] rightLineTermsHash = Utils.termsHash(rightLine);
-            if (leftTermHashs.containsKey(rightLineTermsHash)) {
+            final int rightLineTermsNumber = Utils.termsHash(rightLine).length;
+            if (leftTermsNumbers.containsKey(rightLineTermsNumber)) {
                 LogLine bestLine = null;
                 int minDist = Integer.MAX_VALUE;
-                for (LogLine leftLine : leftHashs.get(rightLineTermsHash)) {
+                for (LogLine leftLine : leftTermsNumbers.get(rightLineTermsNumber)) {
                     final double sim = Utils.rewriteSim(leftLine.value, rightLine.value);
                     if (sim < rewriteMin)
                         continue;
@@ -76,7 +76,6 @@ public class HashDiffer extends AbstractLogDiffer {
                     final Action action = Action.updated(bestLine.relativeIndex, rightLine.relativeIndex);
                     actions.left[bestLine.relativeIndex] = action;
                     actions.right[rightLine.relativeIndex] = action;
-                    break;
                 }
             }
         }
