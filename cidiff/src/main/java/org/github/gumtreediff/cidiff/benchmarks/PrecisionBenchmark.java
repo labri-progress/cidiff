@@ -41,17 +41,16 @@ public final class PrecisionBenchmark {
             final String groundtruth = oneCaseFolder.toPath().resolve("groundtruth").toString();
 
             final GroundtruthContent groundtruthContent = GroundtruthContent.fromFile(groundtruth);
-
             final Properties options = new Properties();
             options.setProperty(Options.PARSER, groundtruthContent.parser());
-            final Pair<String> logs = new Pair<>(left, right);
+            final Pair<String> logFiles = new Pair<>(left, right);
 
             for (LogDiffer.Algorithm algorithm : LogDiffer.Algorithm.values()) {
                 final StringBuilder b = new StringBuilder();
                 b.append(left).append(";").append(right).append(";").append(algorithm);
                 final LogDiffer differ = LogDiffer.get(LogDiffer.Algorithm.valueOf(
                     options.getProperty(Options.DIFFER, String.valueOf(algorithm))), options);
-                final Pair<List<LogLine>> lines = LogParser.parseLogs(logs, options);
+                final Pair<List<LogLine>> lines = LogParser.parseLogs(logFiles, options);
                 final long start = System.currentTimeMillis();
                 final Pair<Action[]> actions = differ.diff(lines);
                 final long stop = System.currentTimeMillis();
@@ -133,11 +132,7 @@ public final class PrecisionBenchmark {
                 if (oneLine.charAt(0) == 'E' || oneLine.charAt(0) == 'C') {
                     final String[] errors = oneLine.substring(2).split("-");
                     final int l = Integer.parseInt(errors[0]);
-                    final int r;
-                    if (errors.length > 1)
-                        r = Integer.parseInt(errors[1]);
-                    else
-                        r = l;
+                    final int r = errors.length > 1 ? Integer.parseInt(errors[1]) : l;
                     intervals.add(new int[] {l, r + 1});
                 }
             }
