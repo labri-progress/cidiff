@@ -74,23 +74,38 @@ public final class PrecisionBenchmark {
         csv.close();
     }
 
-    private static List<int[]> getIntervalsCiDiff(Action[] rightActions, List<LogLine> rightLog) {
-        int start = -1;
+    public static List<int[]> getIntervalsCiDiff(Action[] rightActions, List<LogLine> rightLog) {
         final List<int[]> intervals = new ArrayList<>();
-
+        int start = -1;
+        int end = -1;
         for (int i = 0; i < rightActions.length; i++) {
             final Action a = rightActions[i];
-            if (a.type == Action.Type.ADDED && start == -1)
-                start = rightLog.get(i).lineNumber;
-            else if (a.type != Action.Type.ADDED && start != -1) {
-                intervals.add(new int[]{start, rightLog.get(i).lineNumber});
-                start = -1;
+            if (a.type == Action.Type.ADDED) {
+                if (start == -1) {
+                    start = rightLog.get(i).lineNumber;
+                }
+                else {
+                    if (rightLog.get(i).lineNumber != start + 1) {
+                        intervals.add(new int[] {start, start + 1});
+                        start = rightLog.get(i).lineNumber;
+                        end = -1;
+                    }
+                    else {
+                        end = rightLog.get(i).lineNumber;
+                    }
+                }
             }
-            else if (a.type == Action.Type.ADDED && i == rightActions.length - 1) {
-                intervals.add(new int[] {start, rightLog.get(i).lineNumber});
-                start = -1;
+            else {
+                if (start != -1) {
+                    intervals.add(new int[] {start, (end == -1) ? start + 1 : end + 1});
+                    start = -1;
+                    end = -1;
+                }
             }
         }
+
+        if (start != -1)
+            intervals.add(new int[] {start, (end == -1) ? start + 1 : end + 1});
 
         return intervals;
     }
