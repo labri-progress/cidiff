@@ -23,13 +23,9 @@ public class HashDiffer extends AbstractLogDiffer {
         );
 
         final Map<Integer, List<LogLine>> leftHashs = new HashMap<>();
-        final Map<Integer, List<LogLine>> leftTermsNumbers = new HashMap<>();
         for (LogLine leftLine : lines.left) {
             leftHashs.putIfAbsent(leftLine.hashCode(), new ArrayList<>());
             leftHashs.get(leftLine.hashCode()).add(leftLine);
-            final int leftTermNumber = Utils.termsHash(leftLine).length;
-            leftTermsNumbers.putIfAbsent(leftTermNumber, new ArrayList<>());
-            leftTermsNumbers.get(leftTermNumber).add(leftLine);
         }
 
         for (LogLine rightLine : lines.right) {
@@ -55,28 +51,53 @@ public class HashDiffer extends AbstractLogDiffer {
                     continue;
                 }
             }
+        }
 
-            final int rightLineTermsNumber = Utils.termsHash(rightLine).length;
-            if (leftTermsNumbers.containsKey(rightLineTermsNumber)) {
-                LogLine bestLine = null;
-                int minDist = Integer.MAX_VALUE;
-                for (LogLine leftLine : leftTermsNumbers.get(rightLineTermsNumber)) {
-                    final double sim = Utils.rewriteSim(leftLine.value, rightLine.value);
-                    if (sim < rewriteMin)
-                        continue;
+        final Map<Bucket, Integer> termsFrequencies = buildTermsFrequencies(lines);
+        final Map<Bucket, List<LogLine>> leftTermsHashs = new HashMap<>();
+        final Map<LogLine, int[]> logLineFingerprints = new HashMap<>();
+        for (LogLine leftLine : lines.left) {
+            if (actions.left[leftLine.relativeIndex] != null)
+                continue;
 
-                    final int dist = Math.abs(rightLine.lineNumber - leftLine.lineNumber);
-                    if (dist < minDist) {
-                        minDist = dist;
-                        bestLine = leftLine;
-                    }
+            final String[] terms = Utils.split(leftLine);
+            final Bucket bucket = buildBucket(terms, termsFrequencies);
+            leftTermsHashs.putIfAbsent(bucket, new ArrayList<>());
+            leftTermsHashs.get(bucket).add(leftLine);
+            logLineFingerprints.put(leftLine, fingerprint(terms));
+        }
+
+        for (LogLine rightLine : lines.right) {
+            if (actions.right[rightLine.relativeIndex] != null)
+                continue;
+
+            final String[] terms = Utils.split(rightLine);
+            final Bucket bucket = buildBucket(terms, termsFrequencies);
+            logLineFingerprints.put(rightLine, fingerprint(terms));
+
+            if (!leftTermsHashs.containsKey(bucket))
+                continue;
+
+            LogLine bestLine = null;
+            int minDist = Integer.MAX_VALUE;
+            for (LogLine leftLine : leftTermsHashs.get(bucket)) {
+                final double similarity = similarity(logLineFingerprints.get(leftLine),
+                        logLineFingerprints.get(rightLine));
+                if (similarity < rewriteMin)
+                    continue;
+
+                final int dist = Math.abs(rightLine.lineNumber - leftLine.lineNumber);
+                if (dist < minDist) {
+                    minDist = dist;
+                    bestLine = leftLine;
                 }
+            }
 
-                if (bestLine != null) {
-                    final Action action = Action.updated(bestLine.relativeIndex, rightLine.relativeIndex);
-                    actions.left[bestLine.relativeIndex] = action;
-                    actions.right[rightLine.relativeIndex] = action;
-                }
+            if (bestLine != null) {
+                final Action action = Action.updated(bestLine.relativeIndex, rightLine.relativeIndex);
+                actions.left[bestLine.relativeIndex] = action;
+                actions.right[rightLine.relativeIndex] = action;
+                continue;
             }
         }
 
@@ -91,5 +112,63 @@ public class HashDiffer extends AbstractLogDiffer {
                 actions.right[i] = Action.added(i);
 
         return actions;
+    }
+
+    private static double similarity(int[] leftFingerprint, int[] rightFingerprint) {
+        if (leftFingerprint.length != rightFingerprint.length)
+            return 0.0;
+        else {
+            int same = 0;
+            for (int i = 0; i < leftFingerprint.length; i++)
+                if (leftFingerprint[i] == rightFingerprint[i])
+                    same++;
+
+            return (double) same / (double) leftFingerprint.length;
+        }
+    }
+
+    private static int[] fingerprint(String[] terms) {
+        final int[] fingerprint = new int[terms.length];
+        for (int i = 0; i < terms.length; i++)
+            fingerprint[i] = terms[i].length();
+        return fingerprint;
+    }
+
+    private static Bucket buildBucket(String[] terms, Map<Bucket, Integer> termsFrequencies) {
+        Bucket bestBucket = null;
+        int bestFrequency = -1;
+        for (int i = 0; i < terms.length; i++) {
+            final Bucket currentBucket = new Bucket(i, terms[i]);
+            if (termsFrequencies.get(currentBucket) > bestFrequency) {
+                bestFrequency = termsFrequencies.get(currentBucket);
+                bestBucket = currentBucket;
+            }
+        }
+
+        return bestBucket;
+    }
+
+    private static Map<Bucket, Integer> buildTermsFrequencies(Pair<List<LogLine>> logs) {
+        final Map<Bucket, Integer> termMap = new HashMap<>();
+        for (LogLine line : logs.left) {
+            final String[] terms = Utils.split(line);
+            for (int i = 0; i < terms.length; i++) {
+                final Bucket b = new Bucket(i, terms[i]);
+                termMap.put(b, termMap.getOrDefault(b, 0) + 1);
+            }
+        }
+
+        for (LogLine line : logs.right) {
+            final String[] terms = Utils.split(line);
+            for (int i = 0; i < terms.length; i++) {
+                final Bucket b = new Bucket(i, terms[i]);
+                termMap.put(b, termMap.getOrDefault(b, 0) + 1);
+            }
+        }
+
+        return termMap;
+    }
+
+    private record Bucket(int pos, String term) {
     }
 }
