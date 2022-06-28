@@ -68,7 +68,7 @@ public final class PrecisionBenchmarkLine {
                         / (double) (truePositives.size() + falsePositives.size());
                 final double recall = (double) truePositives.size()
                         / (double) (truePositives.size() + falseNegatives.size());
-                final double fscore = (2 * precision * recall) / (precision + recall);
+                final double fscore = (2D * precision * recall) / (precision + recall);
 
                 b.append(";").append(precision).append(";").append(recall);
                 b.append(";").append(fscore).append(";").append(stop - start);
