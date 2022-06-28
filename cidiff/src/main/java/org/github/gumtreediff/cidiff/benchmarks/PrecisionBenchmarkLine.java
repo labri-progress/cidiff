@@ -1,9 +1,9 @@
 package org.github.gumtreediff.cidiff.benchmarks;
 
-import org.github.gumtreediff.cidiff.*;
-
 import java.io.*;
 import java.util.*;
+
+import org.github.gumtreediff.cidiff.*;
 
 public final class PrecisionBenchmarkLine {
     private static final String HEADER = "LEFT;"
