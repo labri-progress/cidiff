@@ -59,7 +59,7 @@ public final class PrecisionBenchmarkLine {
                 falseNegatives.removeAll(linesCiDiff);
 
                 final Set<Integer> falsePositives = new HashSet<>(linesCiDiff);
-                falseNegatives.removeAll(linesGroundtruth);
+                falsePositives.removeAll(linesGroundtruth);
 
                 final double precision = (double) truePositives.size()
                         / (double) (truePositives.size() + falsePositives.size());
