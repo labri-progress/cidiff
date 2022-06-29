@@ -38,7 +38,7 @@ tasks.named('test') {
 
 task runBenchmark(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'org.github.gumtreediff.cidiff.benchmarks.PrecisionBenchmark'
+    mainClass = 'org.github.gumtreediff.cidiff.benchmarks.PrecisionBenchmarkLine'
     args "${rootProject.projectDir}/data/breakages/", "${rootProject.projectDir}/benchmark/precision_recall.csv"
 }
 

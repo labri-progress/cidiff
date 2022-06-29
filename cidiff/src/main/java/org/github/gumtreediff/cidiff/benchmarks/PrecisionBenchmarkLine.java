@@ -12,7 +12,8 @@ public final class PrecisionBenchmarkLine {
             + "PRECISION;"
             + "RECALL;"
             + "FSCORE;"
-            + "TIME";
+            + "TIME"
+            + "\n";
     private static String pathToData = "data/breakages/";
     private static String pathToOutput = "benchmark/precision_recall.csv";
 
@@ -26,33 +27,29 @@ public final class PrecisionBenchmarkLine {
         }
 
         final FileWriter csv = new FileWriter(pathToOutput);
-        csv.append(HEADER).append("\n");
+        csv.append(HEADER);
 
         final File breakagesFolder = new File(pathToData);
         final File[] casesFolders = breakagesFolder.listFiles(File::isDirectory);
         Objects.requireNonNull(casesFolders);
-        for (File oneCaseFolder: casesFolders) {
-            System.out.println(oneCaseFolder);
-            final String left = oneCaseFolder.toPath().resolve("pass.log").toString();
-            final String right = oneCaseFolder.toPath().resolve("fail.log").toString();
-            final String groundtruth = oneCaseFolder.toPath().resolve("groundtruth").toString();
+        for (File caseFolder: casesFolders) {
+            System.out.println(caseFolder);
+            final String left = caseFolder.toPath().resolve("pass.log").toString();
+            final String right = caseFolder.toPath().resolve("fail.log").toString();
+            final String groundtruth = caseFolder.toPath().resolve("groundtruth").toString();
 
             final GroundtruthContent groundtruthContent = GroundtruthContent.fromFile(groundtruth);
             final Properties options = new Properties();
             options.setProperty(Options.PARSER, groundtruthContent.parser());
             final Pair<String> logFiles = new Pair<>(left, right);
-
+            final Pair<List<LogLine>> logs = LogParser.parseLogs(logFiles, options);
             for (LogDiffer.Algorithm algorithm : LogDiffer.Algorithm.values()) {
-                final StringBuilder b = new StringBuilder();
-                b.append(left).append(";").append(right).append(";").append(algorithm);
-                final LogDiffer differ = LogDiffer.get(LogDiffer.Algorithm.valueOf(
-                    options.getProperty(Options.DIFFER, String.valueOf(algorithm))), options);
-                final Pair<List<LogLine>> lines = LogParser.parseLogs(logFiles, options);
+                final LogDiffer differ = LogDiffer.get(algorithm, options);
                 final long start = System.currentTimeMillis();
-                final Pair<Action[]> actions = differ.diff(lines);
+                final Pair<Action[]> actions = differ.diff(logs);
                 final long stop = System.currentTimeMillis();
 
-                final Set<Integer> linesCiDiff = getAddedLines(actions.right, lines.right);
+                final Set<Integer> linesCiDiff = getAddedLines(actions.right, logs.right);
                 final Set<Integer> linesGroundtruth = groundtruthContent.lines();
 
                 final Set<Integer> truePositives = new HashSet<>(linesCiDiff);
@@ -70,9 +67,10 @@ public final class PrecisionBenchmarkLine {
                         / (double) (truePositives.size() + falseNegatives.size());
                 final double fscore = (2D * precision * recall) / (precision + recall);
 
-                b.append(";").append(precision).append(";").append(recall);
-                b.append(";").append(fscore).append(";").append(stop - start);
-                csv.append(b).append("\n");
+                final String csvLine = String.format(Locale.US, "%s;%s;%s;%.02f;%.02f;%.02f;%d\n",
+                        left, right, algorithm, precision, recall, fscore, stop - start);
+
+                csv.append(csvLine);
             }
         }
         csv.close();
@@ -87,7 +85,7 @@ public final class PrecisionBenchmarkLine {
         return lines;
     }
 
-    private record GroundtruthContent(String parser, Set<Integer> lines) {
+    public record GroundtruthContent(String parser, Set<Integer> lines) {
         static GroundtruthContent fromFile(String file) throws IOException {
             final BufferedReader br = new BufferedReader(new FileReader(file));
             final String parser = br.readLine();
