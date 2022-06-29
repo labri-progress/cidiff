@@ -1,16 +1,16 @@
 package org.github.gumtreediff.cidiff;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.github.gumtreediff.cidiff.differs.AlternatingBruteForceLogDiffer;
+import org.github.gumtreediff.cidiff.differs.HashDiffer;
 import org.junit.jupiter.api.Test;
 
-public class AlternatingBruteForceLogDifferTest {
+public class HashDifferTest {
     @Test
     void testUnchangedCode1() {
         final var leftLog = TestHelpers.makeLog("Foo", "Bar", "Foo");
         final var rightLog = TestHelpers.makeLog("Foo", "Bar");
-        final var d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
+        final var d = new HashDiffer(TestHelpers.makeOptions());
         final var actions = d.diff(new Pair<>(leftLog, rightLog));
         assertEquals(Action.unchanged(leftLog.get(0), rightLog.get(0)), actions.left.get(leftLog.get(0)));
         assertEquals(Action.unchanged(leftLog.get(0), rightLog.get(0)), actions.right.get(rightLog.get(0)));
@@ -23,7 +23,7 @@ public class AlternatingBruteForceLogDifferTest {
     void testUnchangedCode2() {
         final var leftLog = TestHelpers.makeLog("Foo", "Foo");
         final var rightLog = TestHelpers.makeLog("Foo", "Foo", "Foo");
-        final var d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
+        final var d = new HashDiffer(TestHelpers.makeOptions());
         final var actions = d.diff(new Pair<>(leftLog, rightLog));
         assertEquals(Action.unchanged(leftLog.get(0), rightLog.get(0)), actions.left.get(leftLog.get(0)));
         assertEquals(Action.unchanged(leftLog.get(0), rightLog.get(0)), actions.right.get(rightLog.get(0)));
@@ -36,7 +36,7 @@ public class AlternatingBruteForceLogDifferTest {
     void testDeletedCode() {
         final var leftLog = TestHelpers.makeLog("Foo", "Baz", "Foo");
         final var rightLog = TestHelpers.makeLog("Foo", "Foo");
-        final var d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
+        final var d = new HashDiffer(TestHelpers.makeOptions());
         final var actions = d.diff(new Pair<>(leftLog, rightLog));
         assertEquals(Action.unchanged(leftLog.get(0), rightLog.get(0)), actions.left.get(leftLog.get(0)));
         assertEquals(Action.unchanged(leftLog.get(0), rightLog.get(0)), actions.right.get(rightLog.get(0)));
@@ -49,7 +49,7 @@ public class AlternatingBruteForceLogDifferTest {
     void testAddedCode() {
         final var leftLog = TestHelpers.makeLog("Foo", "Foo");
         final var rightLog = TestHelpers.makeLog("Foo", "Baz", "Foo");
-        final var d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
+        final var d = new HashDiffer(TestHelpers.makeOptions());
         final var actions = d.diff(new Pair<>(leftLog, rightLog));
         assertEquals(Action.unchanged(leftLog.get(0), rightLog.get(0)), actions.left.get(leftLog.get(0)));
         assertEquals(Action.unchanged(leftLog.get(0), rightLog.get(0)), actions.right.get(rightLog.get(0)));
@@ -64,7 +64,7 @@ public class AlternatingBruteForceLogDifferTest {
                 "Running time: 22s", "Foo Bar", "Foo", "Foo Foo");
         final var rightLog = TestHelpers.makeLog("Build status OK",
                 "Running times: 22s", "Foo Baz", "Bar", "Fooo Fooo");
-        final var d = new AlternatingBruteForceLogDiffer(TestHelpers.makeOptions());
+        final var d = new HashDiffer(TestHelpers.makeOptions());
         final var actions = d.diff(new Pair<>(leftLog, rightLog));
 
         assertEquals(Action.updated(leftLog.get(0), rightLog.get(0)), actions.left.get(leftLog.get(0)));

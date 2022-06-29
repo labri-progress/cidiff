@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -29,9 +30,9 @@ public class LogsPanel extends JPanel {
     final JList<LogLine> rightLines;
     final JScrollBar leftBar = new JScrollBar(JScrollBar.VERTICAL);
     final JScrollBar rightBar = new JScrollBar(JScrollBar.VERTICAL);
-    final Pair<Action[]> actions;
+    final Pair<Map<LogLine, Action>> actions;
 
-    public LogsPanel(Pair<List<LogLine>> lines, Pair<Action[]> actions) {
+    public LogsPanel(Pair<List<LogLine>> lines, Pair<Map<LogLine, Action>> actions) {
         super(new GridLayout(1, 2));
         this.actions = actions;
         final LogLine[] leftData = new LogLine[lines.left.size()];
@@ -61,7 +62,7 @@ public class LogsPanel extends JPanel {
         this.setPreferredSize(new Dimension(1024, 768));
     }
 
-    private BasicScrollBarUI makeScrollBarUi(JList<LogLine> lines, Action[] scrollActions) {
+    private BasicScrollBarUI makeScrollBarUi(JList<LogLine> lines, Map<LogLine, Action> scrollActions) {
         return new BasicScrollBarUI() {
             @Override protected void paintTrack(
                     Graphics g, JComponent c, Rectangle trackBounds) {
@@ -69,8 +70,8 @@ public class LogsPanel extends JPanel {
                 final Rectangle rect = lines.getBounds();
                 final double sy = trackBounds.getHeight() / rect.getHeight();
                 final AffineTransform at = AffineTransform.getScaleInstance(1.0, sy);
-                for (int i = 0; i < scrollActions.length; i++) {
-                    final Action a = scrollActions[i];
+                for (int i = 0; i < lines.getModel().getSize(); i++) {
+                    final Action a = scrollActions.get(lines.getModel().getElementAt(i));
                     if (a.type == Action.Type.UNCHANGED)
                         continue;
 
@@ -95,9 +96,9 @@ public class LogsPanel extends JPanel {
     }
 
     private class LogLineCellRenderer extends DefaultListCellRenderer {
-        private final Action[] cellActions;
+        private final Map<LogLine, Action> cellActions;
 
-        LogLineCellRenderer(Action[] cellActions) {
+        LogLineCellRenderer(Map<LogLine, Action> cellActions) {
             this.cellActions = cellActions;
         }
 
@@ -122,7 +123,7 @@ public class LogsPanel extends JPanel {
                 setFont(FONT_SELECTED);
             }
 
-            final Action action = cellActions[index];
+            final Action action = cellActions.get(logLine);
             if (action.type == Action.Type.ADDED)
                 setBackground(COLOR_ADDED);
             else if (action.type == Action.Type.DELETED)
@@ -139,8 +140,8 @@ public class LogsPanel extends JPanel {
 
         private String toHtml(Action action, LogLine line) {
             final String otherText = this.cellActions == actions.left
-                    ? rightLines.getModel().getElementAt(action.rightLocation).value
-                    : leftLines.getModel().getElementAt(action.leftLocation).value;
+                    ? action.rightLogLine.value
+                    : action.leftLogLine.value;
             final String[] tokens = line.value.split("\\s+");
             final String[] otherTokens = otherText.split("\\s+");
             final StringBuilder b = new StringBuilder();
@@ -164,13 +165,9 @@ public class LogsPanel extends JPanel {
     private class LeftLinesSelectionListener implements MouseListener {
         @Override
         public void mouseClicked(MouseEvent e) {
-            final int leftIndex = leftLines.getSelectedIndex();
-            final Action action = actions.left[leftIndex];
-            if (action.type == Action.Type.UNCHANGED || action.type == Action.Type.UPDATED) {
-                final int rightIndex = action.rightLocation;
-                rightLines.ensureIndexIsVisible(rightIndex);
-                rightLines.setSelectedIndex(rightIndex);
-            }
+            final Action action = actions.left.get(leftLines.getSelectedValue());
+            if (action.type == Action.Type.UNCHANGED || action.type == Action.Type.UPDATED)
+                rightLines.setSelectedValue(action.rightLogLine, true);
         }
 
         @Override
@@ -193,13 +190,9 @@ public class LogsPanel extends JPanel {
     private class RightLinesSelectionListener implements MouseListener {
         @Override
         public void mouseClicked(MouseEvent e) {
-            final int rightIndex = rightLines.getSelectedIndex();
-            final Action action = actions.right[rightIndex];
-            if (action.type == Action.Type.UNCHANGED || action.type == Action.Type.UPDATED) {
-                final int leftIndex = action.leftLocation;
-                leftLines.ensureIndexIsVisible(leftIndex);
-                leftLines.setSelectedIndex(leftIndex);
-            }
+            final Action action = actions.right.get(rightLines.getSelectedValue());
+            if (action.type == Action.Type.UNCHANGED || action.type == Action.Type.UPDATED)
+                leftLines.setSelectedValue(action.leftLogLine, true);
         }
 
         @Override

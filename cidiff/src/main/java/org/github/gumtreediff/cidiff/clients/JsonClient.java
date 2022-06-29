@@ -1,7 +1,6 @@
 package org.github.gumtreediff.cidiff.clients;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Properties;
 
 import org.github.gumtreediff.cidiff.Action;
@@ -21,20 +20,20 @@ public final class JsonClient extends AbstractDiffClient {
         final var sb = new StringBuilder("[");
 
         // deduplicate the list of actions
-        final var actionList = new ArrayList<>(Arrays.asList(actions.left));
-        actionList.addAll(Arrays.asList(actions.right).stream()
+        final var actionList = new ArrayList<>(actions.left.values());
+        actionList.addAll(actions.right.values().stream()
                 .filter(a -> !a.type.equals(Action.Type.UNCHANGED) && !a.type.equals(Action.Type.UPDATED)).toList());
 
         // sort the actions by position
         actionList.sort((a, b) -> {
-            if (a.leftLocation == -1 && b.leftLocation == -1) {
+            if (a.leftLogLine == null && b.leftLogLine == null) {
                 return 0;
             }
-            else if (a.leftLocation == -1 || b.leftLocation == -1) {
-                return a.rightLocation - b.rightLocation;
+            else if (a.leftLogLine == null || b.leftLogLine == null) {
+                return a.rightLogLine.lineNumber - b.rightLogLine.lineNumber;
             }
             else {
-                return a.leftLocation - b.leftLocation;
+                return a.leftLogLine.lineNumber - b.leftLogLine.lineNumber;
             }
         });
 
@@ -44,8 +43,8 @@ public final class JsonClient extends AbstractDiffClient {
                 sb.append(",");
             sb.append("\n\t").append("{")
                     .append("\"type\":\"").append(a.type).append("\",")
-                    .append("\"left\":").append(a.leftLocation).append(",")
-                    .append("\"right\":").append(a.rightLocation)
+                    .append("\"left\":").append(a.leftLogLine.lineNumber).append(",")
+                    .append("\"right\":").append(a.rightLogLine.lineNumber)
                     .append("}");
         }
         sb.append("]");

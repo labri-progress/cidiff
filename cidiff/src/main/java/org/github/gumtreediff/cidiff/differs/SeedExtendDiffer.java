@@ -22,12 +22,15 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
     }
 
     @Override
-    public Pair<Action[]> diff(Pair<List<LogLine>> lines) {
+    public Pair<Map<LogLine, Action>> diff(Pair<List<LogLine>> lines) {
         if (lines.left.size() < blockSize + 2 * windowSize
                 || lines.right.size() < blockSize + 2 * windowSize)
             return new BruteForceLogDiffer(options).diff(lines); // Fallback to brute force for small logs
 
-        final Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
+        final Pair<Map<LogLine, Action>> actions = new Pair<>(
+                new HashMap<>(), new HashMap<>()
+        );
+
         final Pair<Map<Integer, List<Integer>>> hashes = new Pair<>(new HashMap<>(), new HashMap<>());
         fillHash(lines.left, hashes.left);
         fillHash(lines.right, hashes.right);
@@ -40,9 +43,11 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                     final int rightInit = matches.right;
 
                     for (int i = 0; i < blockSize; i++) {
-                        final var action = Action.unchanged(leftInit + i, rightInit + i);
-                        actions.left[leftInit + i] = action;
-                        actions.right[rightInit + i] = action;
+                        final LogLine leftLine = lines.left.get(leftInit + 1);
+                        final LogLine rightLine = lines.right.get(rightInit + 1);
+                        final var action = Action.unchanged(leftLine, rightLine);
+                        actions.left.put(leftLine, action);
+                        actions.right.put(rightLine, action);
                     }
 
                     // left extension
@@ -50,13 +55,13 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                     while (true) {
                         if (leftInit - step < 0 || rightInit - step < 0)
                             break;
-                        if (actions.left[leftInit - step] != null || actions.right[rightInit - step] != null)
+
+                        final LogLine leftLine = lines.left.get(leftInit - step);
+                        final LogLine rightLine = lines.right.get(rightInit - step);
+                        if (actions.left.containsKey(leftLine) || actions.right.containsKey(rightLine))
                             break;
 
-                        final String leftLine = lines.left.get(leftInit - step).value;
-                        final String rightLine = lines.right.get(rightInit - step).value;
-                        final var action = makeAction(actions, leftLine, rightLine,
-                                leftInit - step, rightInit - step);
+                        final var action = makeAction(actions, leftLine, rightLine);
                         if (action == null)
                             break;
 
@@ -69,14 +74,14 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                         if (leftInit + blockSize + step >= lines.left.size()
                                 || rightInit + blockSize + step >= lines.right.size())
                             break;
-                        if (actions.left[leftInit + blockSize + step] != null
-                                || actions.right[rightInit + blockSize + step] != null)
+
+                        final LogLine leftLine = lines.left.get(leftInit + blockSize + step);
+                        final LogLine rightLine = lines.right.get(rightInit + blockSize + step);
+
+                        if (actions.left.containsKey(leftLine) || actions.right.containsKey(rightLine))
                             break;
 
-                        final String leftLine = lines.left.get(leftInit + blockSize + step).value;
-                        final String rightLine = lines.right.get(rightInit + blockSize + step).value;
-                        final var action = makeAction(actions, leftLine, rightLine,
-                                leftInit + blockSize + step, rightInit + blockSize + step);
+                        final var action = makeAction(actions, leftLine, rightLine);
                         if (action == null)
                             break;
 
@@ -86,19 +91,18 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
                     final var leftMinBound = Math.max(0, leftInit - windowSize);
                     final var leftMaxBound = Math.min(leftInit + blockSize + windowSize, lines.left.size());
                     for (int i = leftMinBound; i < leftMaxBound; i++) {
-                        if (actions.left[i] != null || i >= leftInit && i < leftInit + blockSize)
+                        final LogLine leftLine = lines.left.get(i);
+                        if (actions.left.containsKey(leftLine) || i >= leftInit && i < leftInit + blockSize)
                             continue;
-
-                        final String leftLine = lines.left.get(i).value;
 
                         final var rightMinBound = Math.max(0, rightInit - windowSize);
                         final var rightMaxBound = Math.min(rightInit + blockSize + windowSize, lines.right.size());
                         for (int j = rightMinBound; j < rightMaxBound; j++) {
-                            if (actions.right[j] != null || j >= rightInit && i < rightInit + blockSize)
+                            final LogLine rightLine = lines.right.get(j);
+                            if (actions.right.containsKey(rightLine) || j >= rightInit && i < rightInit + blockSize)
                                 continue;
 
-                            final String rightLine = lines.right.get(j).value;
-                            if (makeAction(actions, leftLine, rightLine, i, j) != null)
+                            if (makeAction(actions, leftLine, rightLine) != null)
                                 break;
                         }
                     }
@@ -107,30 +111,29 @@ public class SeedExtendDiffer extends AbstractLogDiffer {
         }
 
         // Identify deleted lines
-        for (int i = 0; i < lines.left.size(); i++)
-            if (actions.left[i] == null)
-                actions.left[i] = Action.deleted(i);
+        for (LogLine leftLine : lines.left)
+            if (!actions.left.containsKey(leftLine))
+                actions.left.put(leftLine, Action.deleted(leftLine));
 
         // Identify added lines
-        for (int i = 0; i < lines.right.size(); i++)
-            if (actions.right[i] == null)
-                actions.right[i] = Action.added(i);
+        for (LogLine rightLine : lines.right)
+            if (!actions.right.containsKey(rightLine))
+                actions.right.put(rightLine, Action.added(rightLine));
 
         return actions;
     }
 
-    private Action makeAction(final Pair<Action[]> actions, final String leftLine, final String rightLine,
-                                     final int leftLocation, final int rightLocation) {
-        if (leftLine.equals(rightLine)) {
-            final var action = Action.unchanged(leftLocation, rightLocation);
-            actions.left[leftLocation] = action;
-            actions.right[rightLocation] = action;
+    private Action makeAction(Pair<Map<LogLine, Action>> actions, LogLine leftLine, LogLine rightLine) {
+        if (leftLine.hasSameValue(rightLine)) {
+            final var action = Action.unchanged(leftLine, rightLine);
+            actions.left.put(leftLine, action);
+            actions.right.put(rightLine, action);
             return action;
         }
         else if (Utils.rewriteSim(leftLine, rightLine) >= rewriteMin) {
-            final var action = Action.updated(leftLocation, rightLocation);
-            actions.left[leftLocation] = action;
-            actions.right[rightLocation] = action;
+            final var action = Action.updated(leftLine, rightLine);
+            actions.left.put(leftLine, action);
+            actions.right.put(rightLine, action);
             return action;
         }
         return null;

@@ -1,6 +1,7 @@
 package org.github.gumtreediff.cidiff.clients;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.github.gumtreediff.cidiff.*;
@@ -12,7 +13,7 @@ public abstract class AbstractDiffClient implements DiffClient {
     public final LogDiffer differ;
     public final Pair<String> files;
     public final Pair<List<LogLine>> lines;
-    public final Pair<Action[]> actions;
+    public final Pair<Map<LogLine, Action>> actions;
 
     public AbstractDiffClient(String leftFile, String rightFile, Properties options) {
         this.options = options;

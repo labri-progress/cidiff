@@ -1,9 +1,6 @@
 package org.github.gumtreediff.cidiff.differs;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import org.github.gumtreediff.cidiff.Action;
 import org.github.gumtreediff.cidiff.LogLine;
@@ -15,26 +12,31 @@ public final class LcsLogDiffer extends AbstractLogDiffer {
     }
 
     @Override
-    public Pair<Action[]> diff(Pair<List<LogLine>> lines) {
-        final Pair<Action[]> actions = new Pair<>(new Action[lines.left.size()], new Action[lines.right.size()]);
+    public Pair<Map<LogLine, Action>> diff(Pair<List<LogLine>> lines) {
+        final Pair<Map<LogLine, Action>> actions = new Pair<>(
+                new HashMap<>(), new HashMap<>()
+        );
 
         // Identify unchanged lines
         final List<int[]> lcs = longestCommonSubsequence(lines.left, lines.right);
         for (int[] match : lcs) {
-            final Action action = Action.unchanged(match[0], match[1]);
-            actions.left[match[0]] = action;
-            actions.right[match[1]] = action;
+            final LogLine leftLine = lines.left.get(match[0]);
+            final LogLine rightLine = lines.right.get(match[1]);
+            final Action action = Action.unchanged(leftLine, rightLine);
+            actions.left.put(leftLine, action);
+            actions.right.put(rightLine, action);
         }
 
         // Identify deleted lines
-        for (int i = 0; i < lines.left.size(); i++)
-            if (actions.left[i] == null)
-                actions.left[i] = Action.deleted(i);
+        for (LogLine leftLine : lines.left)
+            if (!actions.left.containsKey(leftLine))
+                actions.left.put(leftLine, Action.deleted(leftLine));
 
         // Identify added lines
-        for (int i = 0; i < lines.right.size(); i++)
-            if (actions.right[i] == null)
-                actions.right[i] = Action.added(i);
+        for (LogLine rightLine : lines.right)
+            if (!actions.right.containsKey(rightLine))
+                actions.right.put(rightLine, Action.added(rightLine));
+
         return actions;
     }
 
@@ -48,7 +50,7 @@ public final class LcsLogDiffer extends AbstractLogDiffer {
         final int[][] lengths = new int[left.size() + 1][right.size() + 1];
         for (int i = 0; i < left.size(); i++)
             for (int j = 0; j < right.size(); j++)
-                if (left.get(i).equals(right.get(j)))
+                if (left.get(i).hasSameValue(right.get(j)))
                     lengths[i + 1][j + 1] = lengths[i][j] + 1;
                 else
                     lengths[i + 1][j + 1] = Math.max(lengths[i + 1][j], lengths[i][j + 1]);

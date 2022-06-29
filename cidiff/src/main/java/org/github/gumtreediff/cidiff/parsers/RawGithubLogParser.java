@@ -25,7 +25,7 @@ public final class RawGithubLogParser extends AbstractLogParser {
                 lineNumber++;
                 if (line.length() > TIMESTAMP_SIZE) {
                     final String value = line.substring(TIMESTAMP_SIZE);
-                    log.add(new LogLine(value, lineNumber, relativeIndex,
+                    log.add(new LogLine(value, lineNumber,
                             TIMESTAMP_SIZE + 1, TIMESTAMP_SIZE + value.length() + 1));
                     relativeIndex++;
                 }

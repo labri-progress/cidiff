@@ -46,10 +46,10 @@ public final class PrecisionBenchmarkLine {
             for (LogDiffer.Algorithm algorithm : LogDiffer.Algorithm.values()) {
                 final LogDiffer differ = LogDiffer.get(algorithm, options);
                 final long start = System.currentTimeMillis();
-                final Pair<Action[]> actions = differ.diff(logs);
+                final Pair<Map<LogLine, Action>> actions = differ.diff(logs);
                 final long stop = System.currentTimeMillis();
 
-                final Set<Integer> linesCiDiff = getAddedLines(actions.right, logs.right);
+                final Set<Integer> linesCiDiff = getAddedLines(actions.right);
                 final Set<Integer> linesGroundtruth = groundtruthContent.lines();
 
                 final Set<Integer> truePositives = new HashSet<>(linesCiDiff);
@@ -76,11 +76,11 @@ public final class PrecisionBenchmarkLine {
         csv.close();
     }
 
-    public static Set<Integer> getAddedLines(Action[] rightActions, List<LogLine> rightLog) {
+    public static Set<Integer> getAddedLines(Map<LogLine, Action> rightActions) {
         final Set<Integer> lines = new HashSet<>();
-        for (int i = 0; i < rightActions.length; i++)
-            if (rightActions[i].type == Action.Type.ADDED)
-                lines.add(rightLog.get(i).lineNumber);
+        for (Action a : rightActions.values())
+            if (a.type == Action.Type.ADDED)
+                lines.add(a.rightLogLine.lineNumber);
 
         return lines;
     }

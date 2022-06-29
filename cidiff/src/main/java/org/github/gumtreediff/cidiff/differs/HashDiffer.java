@@ -17,63 +17,65 @@ public class HashDiffer extends AbstractLogDiffer {
     }
 
     @Override
-    public Pair<Action[]> diff(Pair<List<LogLine>> lines) {
-        final Pair<Action[]> actions = new Pair<>(
-                new Action[lines.left.size()], new Action[lines.right.size()]
+    public Pair<Map<LogLine, Action>> diff(Pair<List<LogLine>> lines) {
+        final Pair<Map<LogLine, Action>> actions = new Pair<>(
+                new HashMap<>(), new HashMap<>()
         );
 
         final Map<Integer, List<LogLine>> leftHashs = new HashMap<>();
         for (LogLine leftLine : lines.left) {
-            leftHashs.putIfAbsent(leftLine.hashCode(), new ArrayList<>());
-            leftHashs.get(leftLine.hashCode()).add(leftLine);
+            final int leftHash = leftLine.value.hashCode();
+            leftHashs.putIfAbsent(leftHash, new ArrayList<>());
+            leftHashs.get(leftHash).add(leftLine);
         }
 
         for (LogLine rightLine : lines.right) {
-            final int rightHash = rightLine.hashCode();
-            if (leftHashs.containsKey(rightHash)) {
-                LogLine bestLine = null;
-                int minDist = Integer.MAX_VALUE;
-                for (LogLine leftLine : leftHashs.get(rightHash)) {
-                    if (!leftLine.value.equals(rightLine.value))
-                        continue;
+            final int rightHash = rightLine.value.hashCode();
+            if (!leftHashs.containsKey(rightHash))
+                continue;
 
-                    final int dist = Math.abs(rightLine.lineNumber - leftLine.lineNumber);
-                    if (dist < minDist) {
-                        minDist = dist;
-                        bestLine = leftLine;
-                    }
-                }
+            LogLine bestLine = null;
+            int minDist = Integer.MAX_VALUE;
 
-                if (bestLine != null) {
-                    final Action action = Action.unchanged(bestLine.relativeIndex, rightLine.relativeIndex);
-                    actions.left[bestLine.relativeIndex] = action;
-                    actions.right[rightLine.relativeIndex] = action;
+            for (LogLine leftLine : leftHashs.get(rightHash)) {
+                if (actions.left.containsKey(leftLine) || !leftLine.hasSameValue(rightLine))
                     continue;
+
+                final int dist = Math.abs(rightLine.lineNumber - leftLine.lineNumber);
+                if (dist < minDist) {
+                    minDist = dist;
+                    bestLine = leftLine;
                 }
+            }
+
+            if (bestLine != null) {
+                final Action action = Action.unchanged(bestLine, rightLine);
+                actions.left.put(bestLine, action);
+                actions.right.put(rightLine, action);
             }
         }
 
         final Map<Bucket, Integer> termsFrequencies = buildTermsFrequencies(lines);
         final Map<Bucket, List<LogLine>> leftTermsHashs = new HashMap<>();
-        final Map<LogLine, int[]> logLineFingerprints = new HashMap<>();
+        final Map<String, int[]> valueFingerprints = new HashMap<>();
         for (LogLine leftLine : lines.left) {
-            if (actions.left[leftLine.relativeIndex] != null)
+            if (actions.left.containsKey(leftLine))
                 continue;
 
             final String[] terms = Utils.split(leftLine);
             final Bucket bucket = buildBucket(terms, termsFrequencies);
             leftTermsHashs.putIfAbsent(bucket, new ArrayList<>());
             leftTermsHashs.get(bucket).add(leftLine);
-            logLineFingerprints.put(leftLine, fingerprint(terms));
+            valueFingerprints.put(leftLine.value, fingerprint(terms));
         }
 
         for (LogLine rightLine : lines.right) {
-            if (actions.right[rightLine.relativeIndex] != null)
+            if (actions.right.containsKey(rightLine))
                 continue;
 
             final String[] terms = Utils.split(rightLine);
             final Bucket bucket = buildBucket(terms, termsFrequencies);
-            logLineFingerprints.put(rightLine, fingerprint(terms));
+            valueFingerprints.put(rightLine.value, fingerprint(terms));
 
             if (!leftTermsHashs.containsKey(bucket))
                 continue;
@@ -81,8 +83,11 @@ public class HashDiffer extends AbstractLogDiffer {
             LogLine bestLine = null;
             int minDist = Integer.MAX_VALUE;
             for (LogLine leftLine : leftTermsHashs.get(bucket)) {
-                final double similarity = similarity(logLineFingerprints.get(leftLine),
-                        logLineFingerprints.get(rightLine));
+                if (actions.left.containsKey(leftLine))
+                    continue;
+
+                final double similarity = similarity(valueFingerprints.get(leftLine.value),
+                        valueFingerprints.get(rightLine.value));
                 if (similarity < rewriteMin)
                     continue;
 
@@ -94,22 +99,21 @@ public class HashDiffer extends AbstractLogDiffer {
             }
 
             if (bestLine != null) {
-                final Action action = Action.updated(bestLine.relativeIndex, rightLine.relativeIndex);
-                actions.left[bestLine.relativeIndex] = action;
-                actions.right[rightLine.relativeIndex] = action;
-                continue;
+                final Action action = Action.updated(bestLine, rightLine);
+                actions.left.put(bestLine, action);
+                actions.right.put(rightLine, action);
             }
         }
 
         // Identify deleted lines
-        for (int i = 0; i < lines.left.size(); i++)
-            if (actions.left[i] == null)
-                actions.left[i] = Action.deleted(i);
+        for (LogLine leftLine : lines.left)
+            if (!actions.left.containsKey(leftLine))
+                actions.left.put(leftLine, Action.deleted(leftLine));
 
         // Identify added lines
-        for (int i = 0; i < lines.right.size(); i++)
-            if (actions.right[i] == null)
-                actions.right[i] = Action.added(i);
+        for (LogLine rightLine : lines.right)
+            if (!actions.right.containsKey(rightLine))
+                actions.right.put(rightLine, Action.added(rightLine));
 
         return actions;
     }

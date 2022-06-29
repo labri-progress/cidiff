@@ -29,7 +29,7 @@ public final class DefaultLogParser extends AbstractLogParser {
                 lineNumber++;
                 if (line.length() > trim) {
                     final String value = line.substring(trim);
-                    log.add(new LogLine(value, lineNumber, relativeIndex,
+                    log.add(new LogLine(value, lineNumber,
                             trim + 1, trim + value.length() + 1));
                     relativeIndex++;
                 }

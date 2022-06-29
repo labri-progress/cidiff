@@ -12,19 +12,24 @@ public final class Action {
         UNCHANGED,
     }
 
-    public final int leftLocation;
-    public final int rightLocation;
+    public final LogLine leftLogLine;
+    public final LogLine rightLogLine;
     public final Type type;
 
-    private Action(int leftLocation, int rightLocation, Type type) {
-        this.leftLocation = leftLocation;
-        this.rightLocation = rightLocation;
+    private Action(LogLine leftLogLine, LogLine rightLogLine, Type type) {
+        this.leftLogLine = leftLogLine;
+        this.rightLogLine = rightLogLine;
         this.type = type;
     }
 
     @Override
     public String toString() {
-        return type.toString() + " [" + leftLocation + "," + rightLocation + "]";
+        if (leftLogLine == null)
+            return type + " [" + rightLogLine.lineNumber + "]";
+        else if (rightLogLine == null)
+            return type + " [" + leftLogLine.lineNumber + "]";
+        else
+            return type + " [" + leftLogLine.lineNumber + "-" + rightLogLine.lineNumber + "]";
     }
 
     @Override
@@ -34,29 +39,29 @@ public final class Action {
         if (o == null || getClass() != o.getClass())
             return false;
         final Action action = (Action) o;
-        return leftLocation == action.leftLocation
-                && rightLocation == action.rightLocation
+        return leftLogLine == action.leftLogLine
+                && rightLogLine == action.rightLogLine
                 && type == action.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(leftLocation, rightLocation, type);
+        return Objects.hash(leftLogLine, rightLogLine, type);
     }
 
-    public static Action added(int rightLocation) {
-        return new Action(NO_LOCATION, rightLocation, Type.ADDED);
+    public static Action added(LogLine rightLogLine) {
+        return new Action(null, rightLogLine, Type.ADDED);
     }
 
-    public static Action deleted(int leftLocation) {
-        return new Action(leftLocation, NO_LOCATION, Type.DELETED);
+    public static Action deleted(LogLine leftLogLine) {
+        return new Action(leftLogLine, null, Type.DELETED);
     }
 
-    public static Action unchanged(int leftLocation, int rightLocation) {
-        return new Action(leftLocation, rightLocation, Type.UNCHANGED);
+    public static Action unchanged(LogLine leftLogLine, LogLine rightLogLine) {
+        return new Action(leftLogLine, rightLogLine, Type.UNCHANGED);
     }
 
-    public static Action updated(int leftLocation, int rightLocation) {
-        return new Action(leftLocation, rightLocation, Type.UPDATED);
+    public static Action updated(LogLine leftLogLine, LogLine rightLogLine) {
+        return new Action(leftLogLine, rightLogLine, Type.UPDATED);
     }
 }

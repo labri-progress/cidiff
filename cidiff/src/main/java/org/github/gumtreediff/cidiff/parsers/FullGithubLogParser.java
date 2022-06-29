@@ -38,7 +38,6 @@ public class FullGithubLogParser extends AbstractLogParser {
                 log.add(new LogLine(
                         content.substring(TIMESTAMP_SIZE),
                         lineNumber,
-                        relativeIndex,
                         m.start(3) + TIMESTAMP_SIZE + 1,
                         line.length() + 1
                 ));

@@ -1,6 +1,7 @@
 package org.github.gumtreediff.cidiff;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.github.gumtreediff.cidiff.differs.*;
@@ -14,7 +15,7 @@ public interface LogDiffer {
         HASH,
     }
 
-    Pair<Action[]> diff(Pair<List<LogLine>> lines);
+    Pair<Map<LogLine, Action>> diff(Pair<List<LogLine>> lines);
 
     static LogDiffer get(Algorithm algorithm, Properties options) {
         return switch (algorithm) {

@@ -1,6 +1,8 @@
 package org.github.gumtreediff.cidiff.differs;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.github.gumtreediff.cidiff.*;
@@ -18,23 +20,23 @@ public final class BruteForceLogDiffer extends AbstractLogDiffer {
     }
 
     @Override
-    public Pair<Action[]> diff(Pair<List<LogLine>> lines) {
-        final Pair<Action[]> actions = new Pair<>(
-                new Action[lines.left.size()], new Action[lines.right.size()]
+    public Pair<Map<LogLine, Action>> diff(Pair<List<LogLine>> lines) {
+        final Pair<Map<LogLine, Action>> actions = new Pair<>(
+                new HashMap<>(), new HashMap<>()
         );
 
         // Identify unchanged lines
         for (int i = 0; i < lines.left.size(); i++) {
-            final String leftLine = lines.left.get(i).value;
+            final LogLine leftLine = lines.left.get(i);
             for (int j = 0; j < lines.right.size(); j++) {
-                if (actions.right[j] != null)
+                final LogLine rightLine = lines.right.get(j);
+                if (actions.right.containsKey(rightLine))
                     continue;
 
-                final String rightLine = lines.right.get(j).value;
-                if (leftLine.equals(rightLine)) {
-                    final Action action = Action.unchanged(i, j);
-                    actions.left[i] = action;
-                    actions.right[j] = action;
+                if (leftLine.hasSameValue(rightLine)) {
+                    final Action action = Action.unchanged(leftLine, rightLine);
+                    actions.left.put(leftLine, action);
+                    actions.right.put(rightLine, action);
                     break;
                 }
             }
@@ -42,34 +44,34 @@ public final class BruteForceLogDiffer extends AbstractLogDiffer {
 
         // Identify updated lines
         for (int i = 0; i < lines.left.size(); i++) {
-            if (actions.left[i] != null)
+            final LogLine leftLine = lines.left.get(i);
+            if (actions.left.containsKey(leftLine))
                 continue;
 
-            final String leftLine = lines.left.get(i).value;
             for (int j = 0; j < lines.right.size(); j++) {
-                if (actions.right[j] != null)
+                final LogLine rightLine = lines.right.get(j);
+                if (actions.right.containsKey(rightLine))
                     continue;
 
-                final String rightLine = lines.right.get(j).value;
                 final double sim = Utils.rewriteSim(leftLine, rightLine);
                 if (sim >= rewriteMin) {
-                    final Action action = Action.updated(i, j);
-                    actions.left[i] = action;
-                    actions.right[j] = action;
+                    final Action action = Action.updated(leftLine, rightLine);
+                    actions.left.put(leftLine, action);
+                    actions.right.put(rightLine, action);
                     break;
                 }
             }
         }
 
         // Identify deleted lines
-        for (int i = 0; i < lines.left.size(); i++)
-            if (actions.left[i] == null)
-                actions.left[i] = Action.deleted(i);
+        for (LogLine leftLine : lines.left)
+            if (!actions.left.containsKey(leftLine))
+                actions.left.put(leftLine, Action.deleted(leftLine));
 
         // Identify added lines
-        for (int i = 0; i < lines.right.size(); i++)
-            if (actions.right[i] == null)
-                actions.right[i] = Action.added(i);
+        for (LogLine rightLine : lines.right)
+            if (!actions.right.containsKey(rightLine))
+                actions.right.put(rightLine, Action.added(rightLine));
 
         return actions;
     }

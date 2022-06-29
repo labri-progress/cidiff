@@ -22,7 +22,7 @@ public class MetricsClient extends AbstractDiffClient {
 
     private Metrics getMetrics() {
         final Metrics metrics = new Metrics();
-        for (Action a: actions.left)
+        for (Action a: actions.left.values())
             if (a.type == Action.Type.DELETED)
                 metrics.deleted++;
             else if (a.type == Action.Type.UNCHANGED)
@@ -30,7 +30,7 @@ public class MetricsClient extends AbstractDiffClient {
             else if (a.type == Action.Type.UPDATED)
                 metrics.updated++;
 
-        for (Action a: actions.right)
+        for (Action a: actions.right.values())
             if (a.type == Action.Type.ADDED)
                 metrics.added++;
 

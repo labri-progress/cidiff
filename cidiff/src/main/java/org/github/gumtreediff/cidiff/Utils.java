@@ -18,6 +18,10 @@ public final class Utils {
         return line.value.split(TOKEN_SEPARATORS);
     }
 
+    public static double rewriteSim(LogLine leftLine, LogLine rightLine) {
+        return rewriteSim(leftLine.value, rightLine.value);
+    }
+
     public static double rewriteSim(String leftLine, String rightLine) {
         final String[] leftTokens = leftLine.split(TOKEN_SEPARATORS);
         final String[] rightTokens = rightLine.split(TOKEN_SEPARATORS);
