@@ -26,15 +26,11 @@ public final class JsonClient extends AbstractDiffClient {
 
         // sort the actions by position
         actionList.sort((a, b) -> {
-            if (a.leftLogLine == null && b.leftLogLine == null) {
-                return 0;
-            }
-            else if (a.leftLogLine == null || b.leftLogLine == null) {
-                return a.rightLogLine.lineNumber - b.rightLogLine.lineNumber;
-            }
-            else {
-                return a.leftLogLine.lineNumber - b.leftLogLine.lineNumber;
-            }
+            final int aIndex = a.leftLogLine != null ? a.leftLogLine.lineNumber
+                    : a.rightLogLine != null ? a.rightLogLine.lineNumber : 0;
+            final int bIndex = b.leftLogLine != null ? b.leftLogLine.lineNumber
+                    : b.rightLogLine != null ? b.rightLogLine.lineNumber : 0;
+            return aIndex - bIndex;
         });
 
         // create the JSON string
@@ -42,10 +38,15 @@ public final class JsonClient extends AbstractDiffClient {
             if (sb.length() > 3)
                 sb.append(",");
             sb.append("\n\t").append("{")
-                    .append("\"type\":\"").append(a.type).append("\",")
-                    .append("\"left\":").append(a.leftLogLine.lineNumber).append(",")
-                    .append("\"right\":").append(a.rightLogLine.lineNumber)
-                    .append("}");
+                    .append("\"type\":\"").append(a.type).append("\",");
+
+            if (a.leftLogLine != null)
+                sb.append("\"left\":").append(a.leftLogLine.lineNumber).append(",");
+
+            if (a.rightLogLine != null)
+                sb.append("\"right\":").append(a.rightLogLine.lineNumber);
+
+            sb.append("}");
         }
         sb.append("]");
 
