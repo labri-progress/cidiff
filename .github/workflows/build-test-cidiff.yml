@@ -40,7 +40,7 @@ jobs:
           name: benchmark-results
       - shell: bash
         run: |
-          mv precision_recall.csv benchmark/
+          mv results.csv benchmark/
           python3 benchmark/plotBenchmark.py
       - name: Upload math result for job 2
         uses: actions/upload-artifact@v3
