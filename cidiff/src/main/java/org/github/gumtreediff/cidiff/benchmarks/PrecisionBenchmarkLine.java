@@ -1,6 +1,8 @@
 package org.github.gumtreediff.cidiff.benchmarks;
 
 import java.io.*;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 import org.github.gumtreediff.cidiff.*;
@@ -29,14 +31,12 @@ public final class PrecisionBenchmarkLine {
         final FileWriter csv = new FileWriter(pathToOutput);
         csv.append(HEADER);
 
-        final File breakagesFolder = new File(pathToData);
-        final File[] casesFolders = breakagesFolder.listFiles(File::isDirectory);
-        Objects.requireNonNull(casesFolders);
-        for (File caseFolder: casesFolders) {
+        final List<Path> casesFolders = collectCasesFolders(pathToData);
+        for (Path caseFolder: casesFolders) {
             System.out.println(caseFolder);
-            final String left = caseFolder.toPath().resolve("pass.log").toString();
-            final String right = caseFolder.toPath().resolve("fail.log").toString();
-            final String groundtruth = caseFolder.toPath().resolve("groundtruth").toString();
+            final String left = caseFolder.resolve("pass.log").toString();
+            final String right = caseFolder.resolve("fail.log").toString();
+            final String groundtruth = caseFolder.resolve("groundtruth").toString();
 
             final GroundtruthContent groundtruthContent = GroundtruthContent.fromFile(groundtruth);
             final Properties options = new Properties();
@@ -74,6 +74,20 @@ public final class PrecisionBenchmarkLine {
             }
         }
         csv.close();
+    }
+
+    public static List<Path> collectCasesFolders(String rootFolder) throws IOException {
+        final List<Path> casesFolders = new ArrayList<>();
+        final Path startPath = Paths.get(rootFolder);
+        Files.walkFileTree(startPath, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                if (Files.list(dir).anyMatch(d -> d.toFile().getName().equals("groundtruth")))
+                    casesFolders.add(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return casesFolders;
     }
 
     public static Set<Integer> getAddedLines(Map<LogLine, Action> rightActions) {
