@@ -1,0 +1,626 @@
+2022-04-22T21:22:51.1935854Z Requested labels: ubuntu-latest
+2022-04-22T21:22:51.1935901Z Job defined at: hashicorp/terraform/.github/workflows/checks.yml@refs/pull/30920/merge
+2022-04-22T21:22:51.1935921Z Waiting for a runner to pick up this job...
+2022-04-22T21:22:52.7941007Z Job is waiting for a hosted runner to come online.
+2022-04-22T21:22:58.4679502Z Job is about to start running on the hosted runner: GitHub Actions 19 (hosted)
+2022-04-22T21:23:02.9564585Z Current runner version: '2.290.1'
+2022-04-22T21:23:02.9594378Z ##[group]Operating System
+2022-04-22T21:23:02.9594919Z Ubuntu
+2022-04-22T21:23:02.9595226Z 20.04.4
+2022-04-22T21:23:02.9595632Z LTS
+2022-04-22T21:23:02.9595894Z ##[endgroup]
+2022-04-22T21:23:02.9596250Z ##[group]Virtual Environment
+2022-04-22T21:23:02.9596648Z Environment: ubuntu-20.04
+2022-04-22T21:23:02.9596956Z Version: 20220410.2
+2022-04-22T21:23:02.9597556Z Included Software: https://github.com/actions/virtual-environments/blob/ubuntu20/20220410.2/images/linux/Ubuntu2004-Readme.md
+2022-04-22T21:23:02.9598271Z Image Release: https://github.com/actions/virtual-environments/releases/tag/ubuntu20%2F20220410.2
+2022-04-22T21:23:02.9598705Z ##[endgroup]
+2022-04-22T21:23:02.9599089Z ##[group]Virtual Environment Provisioner
+2022-04-22T21:23:02.9599525Z 1.0.0.0-main-20220406-1
+2022-04-22T21:23:02.9599828Z ##[endgroup]
+2022-04-22T21:23:02.9600512Z ##[group]GITHUB_TOKEN Permissions
+2022-04-22T21:23:02.9601086Z Contents: read
+2022-04-22T21:23:02.9601657Z Metadata: read
+2022-04-22T21:23:02.9602003Z ##[endgroup]
+2022-04-22T21:23:02.9605728Z Secret source: Actions
+2022-04-22T21:23:02.9606204Z Prepare workflow directory
+2022-04-22T21:23:03.0449879Z Prepare all required actions
+2022-04-22T21:23:03.0638441Z Getting action download info
+2022-04-22T21:23:03.3132024Z Download action repository 'actions/checkout@v2' (SHA:7884fcad6b5d53d10323aee724dc68d8b9096a2e)
+2022-04-22T21:23:04.0701360Z Download action repository 'actions/setup-go@v2' (SHA:bfdd3570ce990073878bf10f6b2d79082de49492)
+2022-04-22T21:23:04.5747434Z Download action repository 'actions/cache@v3' (SHA:48af2dc4a9e8278b89d7fa154b955c30c6aaab09)
+2022-04-22T21:23:05.4571353Z ##[group]Run actions/checkout@v2
+2022-04-22T21:23:05.4571701Z with:
+2022-04-22T21:23:05.4571965Z   repository: hashicorp/terraform
+2022-04-22T21:23:05.4572442Z   token: ***
+2022-04-22T21:23:05.4572669Z   ssh-strict: true
+2022-04-22T21:23:05.4572938Z   persist-credentials: true
+2022-04-22T21:23:05.4573200Z   clean: true
+2022-04-22T21:23:05.4573421Z   fetch-depth: 1
+2022-04-22T21:23:05.4573642Z   lfs: false
+2022-04-22T21:23:05.4573862Z   submodules: false
+2022-04-22T21:23:05.4574104Z   set-safe-directory: true
+2022-04-22T21:23:05.4574355Z ##[endgroup]
+2022-04-22T21:23:05.7063267Z Syncing repository: hashicorp/terraform
+2022-04-22T21:23:05.7065141Z ##[group]Getting Git version info
+2022-04-22T21:23:05.7065802Z Working directory is '/home/runner/work/terraform/terraform'
+2022-04-22T21:23:05.7066378Z [command]/usr/bin/git version
+2022-04-22T21:23:05.7235448Z git version 2.35.1
+2022-04-22T21:23:05.7236637Z ##[endgroup]
+2022-04-22T21:23:05.7257589Z Temporarily overriding HOME='/home/runner/work/_temp/2e24fb7e-ad63-4012-abae-8531bfbbb776' before making global git config changes
+2022-04-22T21:23:05.7258170Z Adding repository directory to the temporary git global config as a safe directory
+2022-04-22T21:23:05.7263781Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/terraform/terraform
+2022-04-22T21:23:05.7304326Z Deleting the contents of '/home/runner/work/terraform/terraform'
+2022-04-22T21:23:05.7308443Z ##[group]Initializing the repository
+2022-04-22T21:23:05.7312124Z [command]/usr/bin/git init /home/runner/work/terraform/terraform
+2022-04-22T21:23:05.7416006Z hint: Using 'master' as the name for the initial branch. This default branch name
+2022-04-22T21:23:05.7417104Z hint: is subject to change. To configure the initial branch name to use in all
+2022-04-22T21:23:05.7417626Z hint: of your new repositories, which will suppress this warning, call:
+2022-04-22T21:23:05.7418101Z hint: 
+2022-04-22T21:23:05.7418661Z hint: 	git config --global init.defaultBranch <name>
+2022-04-22T21:23:05.7418961Z hint: 
+2022-04-22T21:23:05.7419363Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2022-04-22T21:23:05.7419891Z hint: 'development'. The just-created branch can be renamed via this command:
+2022-04-22T21:23:05.7420199Z hint: 
+2022-04-22T21:23:05.7420517Z hint: 	git branch -m <name>
+2022-04-22T21:23:05.7425051Z Initialized empty Git repository in /home/runner/work/terraform/terraform/.git/
+2022-04-22T21:23:05.7436570Z [command]/usr/bin/git remote add origin https://github.com/hashicorp/terraform
+2022-04-22T21:23:05.7479241Z ##[endgroup]
+2022-04-22T21:23:05.7480107Z ##[group]Disabling automatic garbage collection
+2022-04-22T21:23:05.7485176Z [command]/usr/bin/git config --local gc.auto 0
+2022-04-22T21:23:05.7517044Z ##[endgroup]
+2022-04-22T21:23:05.7518540Z ##[group]Setting up auth
+2022-04-22T21:23:05.7525703Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2022-04-22T21:23:05.7559865Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+2022-04-22T21:23:05.7926479Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2022-04-22T21:23:05.7960405Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+2022-04-22T21:23:05.8194491Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2022-04-22T21:23:05.8229654Z ##[endgroup]
+2022-04-22T21:23:05.8230313Z ##[group]Fetching the repository
+2022-04-22T21:23:05.8240386Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin +d2f1e910ef2ac0222fcf7194da9c6cfa1052bcfd:refs/remotes/pull/30920/merge
+2022-04-22T21:23:06.1700836Z remote: Enumerating objects: 3901, done.        
+2022-04-22T21:23:06.1762722Z remote: Counting objects:   0% (1/3901)        
+2022-04-22T21:23:06.1763119Z remote: Counting objects:   1% (40/3901)        
+2022-04-22T21:23:06.1763430Z remote: Counting objects:   2% (79/3901)        
+2022-04-22T21:23:06.1763748Z remote: Counting objects:   3% (118/3901)        
+2022-04-22T21:23:06.1764063Z remote: Counting objects:   4% (157/3901)        
+2022-04-22T21:23:06.1764383Z remote: Counting objects:   5% (196/3901)        
+2022-04-22T21:23:06.1764690Z remote: Counting objects:   6% (235/3901)        
+2022-04-22T21:23:06.1764987Z remote: Counting objects:   7% (274/3901)        
+2022-04-22T21:23:06.1765275Z remote: Counting objects:   8% (313/3901)        
+2022-04-22T21:23:06.1765576Z remote: Counting objects:   9% (352/3901)        
+2022-04-22T21:23:06.1765872Z remote: Counting objects:  10% (391/3901)        
+2022-04-22T21:23:06.1766169Z remote: Counting objects:  11% (430/3901)        
+2022-04-22T21:23:06.1766460Z remote: Counting objects:  12% (469/3901)        
+2022-04-22T21:23:06.1766753Z remote: Counting objects:  13% (508/3901)        
+2022-04-22T21:23:06.1767046Z remote: Counting objects:  14% (547/3901)        
+2022-04-22T21:23:06.1767327Z remote: Counting objects:  15% (586/3901)        
+2022-04-22T21:23:06.1767619Z remote: Counting objects:  16% (625/3901)        
+2022-04-22T21:23:06.1767911Z remote: Counting objects:  17% (664/3901)        
+2022-04-22T21:23:06.1768198Z remote: Counting objects:  18% (703/3901)        
+2022-04-22T21:23:06.1768487Z remote: Counting objects:  19% (742/3901)        
+2022-04-22T21:23:06.1768780Z remote: Counting objects:  20% (781/3901)        
+2022-04-22T21:23:06.1769145Z remote: Counting objects:  21% (820/3901)        
+2022-04-22T21:23:06.1769394Z remote: Counting objects:  22% (859/3901)        
+2022-04-22T21:23:06.1769648Z remote: Counting objects:  23% (898/3901)        
+2022-04-22T21:23:06.1769901Z remote: Counting objects:  24% (937/3901)        
+2022-04-22T21:23:06.1770148Z remote: Counting objects:  25% (976/3901)        
+2022-04-22T21:23:06.1770409Z remote: Counting objects:  26% (1015/3901)        
+2022-04-22T21:23:06.1770681Z remote: Counting objects:  27% (1054/3901)        
+2022-04-22T21:23:06.1770952Z remote: Counting objects:  28% (1093/3901)        
+2022-04-22T21:23:06.1771222Z remote: Counting objects:  29% (1132/3901)        
+2022-04-22T21:23:06.1771490Z remote: Counting objects:  30% (1171/3901)        
+2022-04-22T21:23:06.1771998Z remote: Counting objects:  31% (1210/3901)        
+2022-04-22T21:23:06.1772266Z remote: Counting objects:  32% (1249/3901)        
+2022-04-22T21:23:06.1772535Z remote: Counting objects:  33% (1288/3901)        
+2022-04-22T21:23:06.1772802Z remote: Counting objects:  34% (1327/3901)        
+2022-04-22T21:23:06.1773054Z remote: Counting objects:  35% (1366/3901)        
+2022-04-22T21:23:06.1773330Z remote: Counting objects:  36% (1405/3901)        
+2022-04-22T21:23:06.1773597Z remote: Counting objects:  37% (1444/3901)        
+2022-04-22T21:23:06.1773852Z remote: Counting objects:  38% (1483/3901)        
+2022-04-22T21:23:06.1774122Z remote: Counting objects:  39% (1522/3901)        
+2022-04-22T21:23:06.1774386Z remote: Counting objects:  40% (1561/3901)        
+2022-04-22T21:23:06.1774636Z remote: Counting objects:  41% (1600/3901)        
+2022-04-22T21:23:06.1774898Z remote: Counting objects:  42% (1639/3901)        
+2022-04-22T21:23:06.1775163Z remote: Counting objects:  43% (1678/3901)        
+2022-04-22T21:23:06.1775427Z remote: Counting objects:  44% (1717/3901)        
+2022-04-22T21:23:06.1775675Z remote: Counting objects:  45% (1756/3901)        
+2022-04-22T21:23:06.1775935Z remote: Counting objects:  46% (1795/3901)        
+2022-04-22T21:23:06.1776196Z remote: Counting objects:  47% (1834/3901)        
+2022-04-22T21:23:06.1776445Z remote: Counting objects:  48% (1873/3901)        
+2022-04-22T21:23:06.1776713Z remote: Counting objects:  49% (1912/3901)        
+2022-04-22T21:23:06.1776973Z remote: Counting objects:  50% (1951/3901)        
+2022-04-22T21:23:06.1777302Z remote: Counting objects:  51% (1990/3901)        
+2022-04-22T21:23:06.1777574Z remote: Counting objects:  52% (2029/3901)        
+2022-04-22T21:23:06.1777834Z remote: Counting objects:  53% (2068/3901)        
+2022-04-22T21:23:06.1778081Z remote: Counting objects:  54% (2107/3901)        
+2022-04-22T21:23:06.1778341Z remote: Counting objects:  55% (2146/3901)        
+2022-04-22T21:23:06.1778604Z remote: Counting objects:  56% (2185/3901)        
+2022-04-22T21:23:06.1778866Z remote: Counting objects:  57% (2224/3901)        
+2022-04-22T21:23:06.1779113Z remote: Counting objects:  58% (2263/3901)        
+2022-04-22T21:23:06.1779377Z remote: Counting objects:  59% (2302/3901)        
+2022-04-22T21:23:06.1780010Z remote: Counting objects:  60% (2341/3901)        
+2022-04-22T21:23:06.1780291Z remote: Counting objects:  61% (2380/3901)        
+2022-04-22T21:23:06.1780552Z remote: Counting objects:  62% (2419/3901)        
+2022-04-22T21:23:06.1780814Z remote: Counting objects:  63% (2458/3901)        
+2022-04-22T21:23:06.1781077Z remote: Counting objects:  64% (2497/3901)        
+2022-04-22T21:23:06.1781566Z remote: Counting objects:  65% (2536/3901)        
+2022-04-22T21:23:06.1782120Z remote: Counting objects:  66% (2575/3901)        
+2022-04-22T21:23:06.1782743Z remote: Counting objects:  67% (2614/3901)        
+2022-04-22T21:23:06.1783390Z remote: Counting objects:  68% (2653/3901)        
+2022-04-22T21:23:06.1783968Z remote: Counting objects:  69% (2692/3901)        
+2022-04-22T21:23:06.1784536Z remote: Counting objects:  70% (2731/3901)        
+2022-04-22T21:23:06.1785132Z remote: Counting objects:  71% (2770/3901)        
+2022-04-22T21:23:06.1785739Z remote: Counting objects:  72% (2809/3901)        
+2022-04-22T21:23:06.1786790Z remote: Counting objects:  73% (2848/3901)        
+2022-04-22T21:23:06.1787280Z remote: Counting objects:  74% (2887/3901)        
+2022-04-22T21:23:06.1787892Z remote: Counting objects:  75% (2926/3901)        
+2022-04-22T21:23:06.1788625Z remote: Counting objects:  76% (2965/3901)        
+2022-04-22T21:23:06.1789177Z remote: Counting objects:  77% (3004/3901)        
+2022-04-22T21:23:06.1789829Z remote: Counting objects:  78% (3043/3901)        
+2022-04-22T21:23:06.1790396Z remote: Counting objects:  79% (3082/3901)        
+2022-04-22T21:23:06.2366608Z remote: Counting objects:  80% (3121/3901)        
+2022-04-22T21:23:06.2368106Z remote: Counting objects:  81% (3160/3901)        
+2022-04-22T21:23:06.2368948Z remote: Counting objects:  82% (3199/3901)        
+2022-04-22T21:23:06.2369607Z remote: Counting objects:  83% (3238/3901)        
+2022-04-22T21:23:06.2370475Z remote: Counting objects:  84% (3277/3901)        
+2022-04-22T21:23:06.2371156Z remote: Counting objects:  85% (3316/3901)        
+2022-04-22T21:23:06.2371802Z remote: Counting objects:  86% (3355/3901)        
+2022-04-22T21:23:06.2372459Z remote: Counting objects:  87% (3394/3901)        
+2022-04-22T21:23:06.2373341Z remote: Counting objects:  88% (3433/3901)        
+2022-04-22T21:23:06.2374155Z remote: Counting objects:  89% (3472/3901)        
+2022-04-22T21:23:06.2374973Z remote: Counting objects:  90% (3511/3901)        
+2022-04-22T21:23:06.2375756Z remote: Counting objects:  91% (3550/3901)        
+2022-04-22T21:23:06.2376354Z remote: Counting objects:  92% (3589/3901)        
+2022-04-22T21:23:06.2376887Z remote: Counting objects:  93% (3628/3901)        
+2022-04-22T21:23:06.2377409Z remote: Counting objects:  94% (3667/3901)        
+2022-04-22T21:23:06.2378012Z remote: Counting objects:  95% (3706/3901)        
+2022-04-22T21:23:06.2378641Z remote: Counting objects:  96% (3745/3901)        
+2022-04-22T21:23:06.2379167Z remote: Counting objects:  97% (3784/3901)        
+2022-04-22T21:23:06.2379689Z remote: Counting objects:  98% (3823/3901)        
+2022-04-22T21:23:06.2380275Z remote: Counting objects:  99% (3862/3901)        
+2022-04-22T21:23:06.2380921Z remote: Counting objects: 100% (3901/3901)        
+2022-04-22T21:23:06.2381631Z remote: Counting objects: 100% (3901/3901), done.        
+2022-04-22T21:23:06.2382245Z remote: Compressing objects:   0% (1/2946)        
+2022-04-22T21:23:06.2382678Z remote: Compressing objects:   1% (30/2946)        
+2022-04-22T21:23:06.2383108Z remote: Compressing objects:   2% (59/2946)        
+2022-04-22T21:23:06.2383708Z remote: Compressing objects:   3% (89/2946)        
+2022-04-22T21:23:06.2384426Z remote: Compressing objects:   4% (118/2946)        
+2022-04-22T21:23:06.2385002Z remote: Compressing objects:   5% (148/2946)        
+2022-04-22T21:23:06.2385539Z remote: Compressing objects:   6% (177/2946)        
+2022-04-22T21:23:06.2386009Z remote: Compressing objects:   7% (207/2946)        
+2022-04-22T21:23:06.2386592Z remote: Compressing objects:   8% (236/2946)        
+2022-04-22T21:23:06.2387118Z remote: Compressing objects:   9% (266/2946)        
+2022-04-22T21:23:06.2387613Z remote: Compressing objects:  10% (295/2946)        
+2022-04-22T21:23:06.2388190Z remote: Compressing objects:  11% (325/2946)        
+2022-04-22T21:23:06.2388893Z remote: Compressing objects:  12% (354/2946)        
+2022-04-22T21:23:06.2389461Z remote: Compressing objects:  13% (383/2946)        
+2022-04-22T21:23:06.2390034Z remote: Compressing objects:  14% (413/2946)        
+2022-04-22T21:23:06.2666564Z remote: Compressing objects:  15% (442/2946)        
+2022-04-22T21:23:06.2667139Z remote: Compressing objects:  16% (472/2946)        
+2022-04-22T21:23:06.2667793Z remote: Compressing objects:  17% (501/2946)        
+2022-04-22T21:23:06.2668451Z remote: Compressing objects:  18% (531/2946)        
+2022-04-22T21:23:06.2710679Z remote: Compressing objects:  19% (560/2946)        
+2022-04-22T21:23:06.2799066Z remote: Compressing objects:  20% (590/2946)        
+2022-04-22T21:23:06.2888619Z remote: Compressing objects:  21% (619/2946)        
+2022-04-22T21:23:06.3031329Z remote: Compressing objects:  22% (649/2946)        
+2022-04-22T21:23:06.3150600Z remote: Compressing objects:  23% (678/2946)        
+2022-04-22T21:23:06.3330505Z remote: Compressing objects:  24% (708/2946)        
+2022-04-22T21:23:06.3331935Z remote: Compressing objects:  25% (737/2946)        
+2022-04-22T21:23:06.3485831Z remote: Compressing objects:  26% (766/2946)        
+2022-04-22T21:23:06.3638679Z remote: Compressing objects:  27% (796/2946)        
+2022-04-22T21:23:06.3776225Z remote: Compressing objects:  28% (825/2946)        
+2022-04-22T21:23:06.3931886Z remote: Compressing objects:  29% (855/2946)        
+2022-04-22T21:23:06.3990129Z remote: Compressing objects:  30% (884/2946)        
+2022-04-22T21:23:06.4085399Z remote: Compressing objects:  31% (914/2946)        
+2022-04-22T21:23:06.4156040Z remote: Compressing objects:  32% (943/2946)        
+2022-04-22T21:23:06.4210383Z remote: Compressing objects:  33% (973/2946)        
+2022-04-22T21:23:06.4266373Z remote: Compressing objects:  34% (1002/2946)        
+2022-04-22T21:23:06.4333213Z remote: Compressing objects:  35% (1032/2946)        
+2022-04-22T21:23:06.4475934Z remote: Compressing objects:  36% (1061/2946)        
+2022-04-22T21:23:06.4546008Z remote: Compressing objects:  37% (1091/2946)        
+2022-04-22T21:23:06.4613553Z remote: Compressing objects:  38% (1120/2946)        
+2022-04-22T21:23:06.4756478Z remote: Compressing objects:  39% (1149/2946)        
+2022-04-22T21:23:06.4822102Z remote: Compressing objects:  40% (1179/2946)        
+2022-04-22T21:23:06.4877357Z remote: Compressing objects:  41% (1208/2946)        
+2022-04-22T21:23:06.4912720Z remote: Compressing objects:  42% (1238/2946)        
+2022-04-22T21:23:06.4935834Z remote: Compressing objects:  43% (1267/2946)        
+2022-04-22T21:23:06.5048818Z remote: Compressing objects:  44% (1297/2946)        
+2022-04-22T21:23:06.5181407Z remote: Compressing objects:  45% (1326/2946)        
+2022-04-22T21:23:06.5271064Z remote: Compressing objects:  46% (1356/2946)        
+2022-04-22T21:23:06.5428858Z remote: Compressing objects:  47% (1385/2946)        
+2022-04-22T21:23:06.5553415Z remote: Compressing objects:  48% (1415/2946)        
+2022-04-22T21:23:06.5645595Z remote: Compressing objects:  49% (1444/2946)        
+2022-04-22T21:23:06.5698973Z remote: Compressing objects:  50% (1473/2946)        
+2022-04-22T21:23:06.5716138Z remote: Compressing objects:  51% (1503/2946)        
+2022-04-22T21:23:06.5856143Z remote: Compressing objects:  52% (1532/2946)        
+2022-04-22T21:23:06.5856618Z remote: Compressing objects:  53% (1562/2946)        
+2022-04-22T21:23:06.5883142Z remote: Compressing objects:  54% (1591/2946)        
+2022-04-22T21:23:06.5883517Z remote: Compressing objects:  55% (1621/2946)        
+2022-04-22T21:23:06.5889105Z remote: Compressing objects:  56% (1650/2946)        
+2022-04-22T21:23:06.5889498Z remote: Compressing objects:  57% (1680/2946)        
+2022-04-22T21:23:06.5893488Z remote: Compressing objects:  58% (1709/2946)        
+2022-04-22T21:23:06.5893968Z remote: Compressing objects:  59% (1739/2946)        
+2022-04-22T21:23:06.5894306Z remote: Compressing objects:  60% (1768/2946)        
+2022-04-22T21:23:06.5894631Z remote: Compressing objects:  61% (1798/2946)        
+2022-04-22T21:23:06.5897389Z remote: Compressing objects:  62% (1827/2946)        
+2022-04-22T21:23:06.5900552Z remote: Compressing objects:  63% (1856/2946)        
+2022-04-22T21:23:06.5901262Z remote: Compressing objects:  64% (1886/2946)        
+2022-04-22T21:23:06.5910981Z remote: Compressing objects:  65% (1915/2946)        
+2022-04-22T21:23:06.5911820Z remote: Compressing objects:  66% (1945/2946)        
+2022-04-22T21:23:06.5913808Z remote: Compressing objects:  67% (1974/2946)        
+2022-04-22T21:23:06.5914635Z remote: Compressing objects:  68% (2004/2946)        
+2022-04-22T21:23:06.5915537Z remote: Compressing objects:  69% (2033/2946)        
+2022-04-22T21:23:06.5916406Z remote: Compressing objects:  70% (2063/2946)        
+2022-04-22T21:23:06.5917907Z remote: Compressing objects:  71% (2092/2946)        
+2022-04-22T21:23:06.5918707Z remote: Compressing objects:  72% (2122/2946)        
+2022-04-22T21:23:06.5920164Z remote: Compressing objects:  73% (2151/2946)        
+2022-04-22T21:23:06.5920705Z remote: Compressing objects:  74% (2181/2946)        
+2022-04-22T21:23:06.5921633Z remote: Compressing objects:  75% (2210/2946)        
+2022-04-22T21:23:06.5922531Z remote: Compressing objects:  76% (2239/2946)        
+2022-04-22T21:23:06.5923454Z remote: Compressing objects:  77% (2269/2946)        
+2022-04-22T21:23:06.5924351Z remote: Compressing objects:  78% (2298/2946)        
+2022-04-22T21:23:06.5995850Z remote: Compressing objects:  79% (2328/2946)        
+2022-04-22T21:23:06.6000847Z remote: Compressing objects:  80% (2357/2946)        
+2022-04-22T21:23:06.6001629Z remote: Compressing objects:  81% (2387/2946)        
+2022-04-22T21:23:06.6002754Z remote: Compressing objects:  82% (2416/2946)        
+2022-04-22T21:23:06.6003219Z remote: Compressing objects:  83% (2446/2946)        
+2022-04-22T21:23:06.6003796Z remote: Compressing objects:  84% (2475/2946)        
+2022-04-22T21:23:06.6012336Z remote: Compressing objects:  85% (2505/2946)        
+2022-04-22T21:23:06.6018068Z remote: Compressing objects:  86% (2534/2946)        
+2022-04-22T21:23:06.6069015Z remote: Compressing objects:  87% (2564/2946)        
+2022-04-22T21:23:06.6071486Z remote: Compressing objects:  88% (2593/2946)        
+2022-04-22T21:23:06.6071850Z remote: Compressing objects:  89% (2622/2946)        
+2022-04-22T21:23:06.6072147Z remote: Compressing objects:  90% (2652/2946)        
+2022-04-22T21:23:06.6073213Z remote: Compressing objects:  91% (2681/2946)        
+2022-04-22T21:23:06.6073498Z remote: Compressing objects:  92% (2711/2946)        
+2022-04-22T21:23:06.6073784Z remote: Compressing objects:  93% (2740/2946)        
+2022-04-22T21:23:06.6074064Z remote: Compressing objects:  94% (2770/2946)        
+2022-04-22T21:23:06.6074327Z remote: Compressing objects:  95% (2799/2946)        
+2022-04-22T21:23:06.6074609Z remote: Compressing objects:  96% (2829/2946)        
+2022-04-22T21:23:06.6074887Z remote: Compressing objects:  97% (2858/2946)        
+2022-04-22T21:23:06.6075169Z remote: Compressing objects:  98% (2888/2946)        
+2022-04-22T21:23:06.6075685Z remote: Compressing objects:  99% (2917/2946)        
+2022-04-22T21:23:06.6075985Z remote: Compressing objects: 100% (2946/2946)        
+2022-04-22T21:23:06.6076279Z remote: Compressing objects: 100% (2946/2946), done.        
+2022-04-22T21:23:06.6377622Z Receiving objects:   0% (1/3901)
+2022-04-22T21:23:06.7523135Z Receiving objects:   1% (40/3901)
+2022-04-22T21:23:06.7765856Z Receiving objects:   2% (79/3901)
+2022-04-22T21:23:06.7784256Z Receiving objects:   3% (118/3901)
+2022-04-22T21:23:06.7799842Z Receiving objects:   4% (157/3901)
+2022-04-22T21:23:06.7815546Z Receiving objects:   5% (196/3901)
+2022-04-22T21:23:06.7850970Z Receiving objects:   6% (235/3901)
+2022-04-22T21:23:06.7863706Z Receiving objects:   7% (274/3901)
+2022-04-22T21:23:06.7878108Z Receiving objects:   8% (313/3901)
+2022-04-22T21:23:06.7899171Z Receiving objects:   9% (352/3901)
+2022-04-22T21:23:06.7915056Z Receiving objects:  10% (391/3901)
+2022-04-22T21:23:06.7932386Z Receiving objects:  11% (430/3901)
+2022-04-22T21:23:06.7932675Z Receiving objects:  12% (469/3901)
+2022-04-22T21:23:06.7958109Z Receiving objects:  13% (508/3901)
+2022-04-22T21:23:06.7991999Z Receiving objects:  14% (547/3901)
+2022-04-22T21:23:06.8036958Z Receiving objects:  15% (586/3901)
+2022-04-22T21:23:06.8121200Z Receiving objects:  16% (625/3901)
+2022-04-22T21:23:06.8121484Z Receiving objects:  17% (664/3901)
+2022-04-22T21:23:06.8125272Z Receiving objects:  18% (703/3901)
+2022-04-22T21:23:06.8127182Z Receiving objects:  19% (742/3901)
+2022-04-22T21:23:06.8135467Z Receiving objects:  20% (781/3901)
+2022-04-22T21:23:06.8137171Z Receiving objects:  21% (820/3901)
+2022-04-22T21:23:06.8137429Z Receiving objects:  22% (859/3901)
+2022-04-22T21:23:06.8137656Z Receiving objects:  23% (898/3901)
+2022-04-22T21:23:06.8140529Z Receiving objects:  24% (937/3901)
+2022-04-22T21:23:06.8145515Z Receiving objects:  25% (976/3901)
+2022-04-22T21:23:06.8145941Z Receiving objects:  26% (1015/3901)
+2022-04-22T21:23:06.8151128Z Receiving objects:  27% (1054/3901)
+2022-04-22T21:23:06.8153529Z Receiving objects:  28% (1093/3901)
+2022-04-22T21:23:06.8167139Z Receiving objects:  29% (1132/3901)
+2022-04-22T21:23:06.8187073Z Receiving objects:  30% (1171/3901)
+2022-04-22T21:23:06.8206969Z Receiving objects:  31% (1210/3901)
+2022-04-22T21:23:06.8211344Z Receiving objects:  32% (1249/3901)
+2022-04-22T21:23:06.8227972Z Receiving objects:  33% (1288/3901)
+2022-04-22T21:23:06.8257103Z Receiving objects:  34% (1327/3901)
+2022-04-22T21:23:06.8259942Z Receiving objects:  35% (1366/3901)
+2022-04-22T21:23:06.8260422Z Receiving objects:  36% (1405/3901)
+2022-04-22T21:23:06.8264564Z Receiving objects:  37% (1444/3901)
+2022-04-22T21:23:06.8264994Z Receiving objects:  38% (1483/3901)
+2022-04-22T21:23:06.8268748Z Receiving objects:  39% (1522/3901)
+2022-04-22T21:23:06.8269169Z Receiving objects:  40% (1561/3901)
+2022-04-22T21:23:06.8273813Z Receiving objects:  41% (1600/3901)
+2022-04-22T21:23:06.8286818Z Receiving objects:  42% (1639/3901)
+2022-04-22T21:23:06.8315925Z Receiving objects:  43% (1678/3901)
+2022-04-22T21:23:06.8319607Z Receiving objects:  44% (1717/3901)
+2022-04-22T21:23:06.8332078Z Receiving objects:  45% (1756/3901)
+2022-04-22T21:23:06.8344899Z Receiving objects:  46% (1795/3901)
+2022-04-22T21:23:06.8372536Z Receiving objects:  47% (1834/3901)
+2022-04-22T21:23:06.8381949Z Receiving objects:  48% (1873/3901)
+2022-04-22T21:23:06.8416346Z Receiving objects:  49% (1912/3901)
+2022-04-22T21:23:06.8465573Z Receiving objects:  50% (1951/3901)
+2022-04-22T21:23:06.8474532Z Receiving objects:  51% (1990/3901)
+2022-04-22T21:23:06.8501749Z Receiving objects:  52% (2029/3901)
+2022-04-22T21:23:06.8517673Z Receiving objects:  53% (2068/3901)
+2022-04-22T21:23:06.8526125Z Receiving objects:  54% (2107/3901)
+2022-04-22T21:23:06.8546953Z Receiving objects:  55% (2146/3901)
+2022-04-22T21:23:06.8581091Z Receiving objects:  56% (2185/3901)
+2022-04-22T21:23:06.8581951Z Receiving objects:  57% (2224/3901)
+2022-04-22T21:23:06.8586602Z Receiving objects:  58% (2263/3901)
+2022-04-22T21:23:06.8679291Z Receiving objects:  59% (2302/3901)
+2022-04-22T21:23:06.8707485Z Receiving objects:  60% (2341/3901)
+2022-04-22T21:23:06.8746944Z Receiving objects:  61% (2380/3901)
+2022-04-22T21:23:06.8755930Z Receiving objects:  62% (2419/3901)
+2022-04-22T21:23:06.8756422Z Receiving objects:  63% (2458/3901)
+2022-04-22T21:23:06.8759316Z Receiving objects:  64% (2497/3901)
+2022-04-22T21:23:06.8759852Z Receiving objects:  65% (2536/3901)
+2022-04-22T21:23:06.8761226Z Receiving objects:  66% (2575/3901)
+2022-04-22T21:23:06.8761683Z Receiving objects:  67% (2614/3901)
+2022-04-22T21:23:06.8763260Z Receiving objects:  68% (2653/3901)
+2022-04-22T21:23:06.8764707Z Receiving objects:  69% (2692/3901)
+2022-04-22T21:23:06.8765409Z Receiving objects:  70% (2731/3901)
+2022-04-22T21:23:06.8766852Z Receiving objects:  71% (2770/3901)
+2022-04-22T21:23:06.8769062Z Receiving objects:  72% (2809/3901)
+2022-04-22T21:23:06.8771259Z Receiving objects:  73% (2848/3901)
+2022-04-22T21:23:06.8772788Z Receiving objects:  74% (2887/3901)
+2022-04-22T21:23:06.8773495Z Receiving objects:  75% (2926/3901)
+2022-04-22T21:23:06.8775996Z Receiving objects:  76% (2965/3901)
+2022-04-22T21:23:06.8776464Z Receiving objects:  77% (3004/3901)
+2022-04-22T21:23:06.8778773Z Receiving objects:  78% (3043/3901)
+2022-04-22T21:23:06.8779220Z Receiving objects:  79% (3082/3901)
+2022-04-22T21:23:06.8780956Z Receiving objects:  80% (3121/3901)
+2022-04-22T21:23:06.8781422Z Receiving objects:  81% (3160/3901)
+2022-04-22T21:23:06.8783048Z Receiving objects:  82% (3199/3901)
+2022-04-22T21:23:06.8783482Z Receiving objects:  83% (3238/3901)
+2022-04-22T21:23:06.8786300Z Receiving objects:  84% (3277/3901)
+2022-04-22T21:23:06.8787000Z Receiving objects:  85% (3316/3901)
+2022-04-22T21:23:06.8794623Z Receiving objects:  86% (3355/3901)
+2022-04-22T21:23:06.8814971Z Receiving objects:  87% (3394/3901)
+2022-04-22T21:23:06.8848392Z Receiving objects:  88% (3433/3901)
+2022-04-22T21:23:06.8859855Z Receiving objects:  89% (3472/3901)
+2022-04-22T21:23:06.8882799Z Receiving objects:  90% (3511/3901)
+2022-04-22T21:23:06.8898312Z Receiving objects:  91% (3550/3901)
+2022-04-22T21:23:06.8926071Z Receiving objects:  92% (3589/3901)
+2022-04-22T21:23:06.8964001Z Receiving objects:  93% (3628/3901)
+2022-04-22T21:23:06.8973525Z Receiving objects:  94% (3667/3901)
+2022-04-22T21:23:06.8986703Z Receiving objects:  95% (3706/3901)
+2022-04-22T21:23:06.8996378Z Receiving objects:  96% (3745/3901)
+2022-04-22T21:23:06.9032595Z Receiving objects:  97% (3784/3901)
+2022-04-22T21:23:06.9062321Z Receiving objects:  98% (3823/3901)
+2022-04-22T21:23:06.9440855Z Receiving objects:  99% (3862/3901)
+2022-04-22T21:23:06.9441890Z remote: Total 3901 (delta 304), reused 2592 (delta 220), pack-reused 0        
+2022-04-22T21:23:06.9452903Z Receiving objects: 100% (3901/3901)
+2022-04-22T21:23:06.9453456Z Receiving objects: 100% (3901/3901), 5.07 MiB | 16.02 MiB/s, done.
+2022-04-22T21:23:06.9456517Z Resolving deltas:   0% (0/304)
+2022-04-22T21:23:06.9457744Z Resolving deltas:   1% (4/304)
+2022-04-22T21:23:06.9459084Z Resolving deltas:   2% (7/304)
+2022-04-22T21:23:06.9460189Z Resolving deltas:   3% (10/304)
+2022-04-22T21:23:06.9462318Z Resolving deltas:   4% (13/304)
+2022-04-22T21:23:06.9464635Z Resolving deltas:   5% (16/304)
+2022-04-22T21:23:06.9465137Z Resolving deltas:   6% (19/304)
+2022-04-22T21:23:06.9469994Z Resolving deltas:   7% (22/304)
+2022-04-22T21:23:06.9475277Z Resolving deltas:   8% (25/304)
+2022-04-22T21:23:06.9478447Z Resolving deltas:   9% (28/304)
+2022-04-22T21:23:06.9481367Z Resolving deltas:  10% (31/304)
+2022-04-22T21:23:06.9484254Z Resolving deltas:  11% (34/304)
+2022-04-22T21:23:06.9484703Z Resolving deltas:  12% (37/304)
+2022-04-22T21:23:06.9485344Z Resolving deltas:  13% (40/304)
+2022-04-22T21:23:06.9493197Z Resolving deltas:  14% (43/304)
+2022-04-22T21:23:06.9496215Z Resolving deltas:  15% (46/304)
+2022-04-22T21:23:06.9496692Z Resolving deltas:  16% (49/304)
+2022-04-22T21:23:06.9497928Z Resolving deltas:  17% (52/304)
+2022-04-22T21:23:06.9498396Z Resolving deltas:  18% (55/304)
+2022-04-22T21:23:06.9499658Z Resolving deltas:  19% (58/304)
+2022-04-22T21:23:06.9500335Z Resolving deltas:  20% (61/304)
+2022-04-22T21:23:06.9503993Z Resolving deltas:  21% (64/304)
+2022-04-22T21:23:06.9505160Z Resolving deltas:  22% (67/304)
+2022-04-22T21:23:06.9505837Z Resolving deltas:  23% (70/304)
+2022-04-22T21:23:06.9513783Z Resolving deltas:  24% (73/304)
+2022-04-22T21:23:06.9518058Z Resolving deltas:  25% (76/304)
+2022-04-22T21:23:06.9518540Z Resolving deltas:  26% (80/304)
+2022-04-22T21:23:06.9520191Z Resolving deltas:  27% (83/304)
+2022-04-22T21:23:06.9520632Z Resolving deltas:  28% (86/304)
+2022-04-22T21:23:06.9522793Z Resolving deltas:  29% (89/304)
+2022-04-22T21:23:06.9523251Z Resolving deltas:  30% (92/304)
+2022-04-22T21:23:06.9525214Z Resolving deltas:  31% (95/304)
+2022-04-22T21:23:06.9525645Z Resolving deltas:  32% (98/304)
+2022-04-22T21:23:06.9527907Z Resolving deltas:  33% (101/304)
+2022-04-22T21:23:06.9528334Z Resolving deltas:  34% (104/304)
+2022-04-22T21:23:06.9529939Z Resolving deltas:  35% (107/304)
+2022-04-22T21:23:06.9530363Z Resolving deltas:  36% (110/304)
+2022-04-22T21:23:06.9531932Z Resolving deltas:  37% (113/304)
+2022-04-22T21:23:06.9532357Z Resolving deltas:  38% (116/304)
+2022-04-22T21:23:06.9533522Z Resolving deltas:  39% (119/304)
+2022-04-22T21:23:06.9533936Z Resolving deltas:  40% (122/304)
+2022-04-22T21:23:06.9534524Z Resolving deltas:  41% (125/304)
+2022-04-22T21:23:06.9534931Z Resolving deltas:  42% (128/304)
+2022-04-22T21:23:06.9536158Z Resolving deltas:  43% (131/304)
+2022-04-22T21:23:06.9536580Z Resolving deltas:  44% (134/304)
+2022-04-22T21:23:06.9537160Z Resolving deltas:  45% (137/304)
+2022-04-22T21:23:06.9537580Z Resolving deltas:  46% (140/304)
+2022-04-22T21:23:06.9538178Z Resolving deltas:  47% (143/304)
+2022-04-22T21:23:06.9538556Z Resolving deltas:  48% (146/304)
+2022-04-22T21:23:06.9539745Z Resolving deltas:  49% (149/304)
+2022-04-22T21:23:06.9540225Z Resolving deltas:  50% (152/304)
+2022-04-22T21:23:06.9543897Z Resolving deltas:  51% (156/304)
+2022-04-22T21:23:06.9544327Z Resolving deltas:  52% (159/304)
+2022-04-22T21:23:06.9545483Z Resolving deltas:  53% (162/304)
+2022-04-22T21:23:06.9545904Z Resolving deltas:  54% (165/304)
+2022-04-22T21:23:06.9547116Z Resolving deltas:  55% (168/304)
+2022-04-22T21:23:06.9547533Z Resolving deltas:  56% (171/304)
+2022-04-22T21:23:06.9548128Z Resolving deltas:  57% (174/304)
+2022-04-22T21:23:06.9548535Z Resolving deltas:  58% (177/304)
+2022-04-22T21:23:06.9549669Z Resolving deltas:  59% (180/304)
+2022-04-22T21:23:06.9550393Z Resolving deltas:  60% (183/304)
+2022-04-22T21:23:06.9551693Z Resolving deltas:  61% (186/304)
+2022-04-22T21:23:06.9552109Z Resolving deltas:  62% (189/304)
+2022-04-22T21:23:06.9552862Z Resolving deltas:  63% (192/304)
+2022-04-22T21:23:06.9553261Z Resolving deltas:  64% (195/304)
+2022-04-22T21:23:06.9554631Z Resolving deltas:  65% (198/304)
+2022-04-22T21:23:06.9555038Z Resolving deltas:  66% (201/304)
+2022-04-22T21:23:06.9555632Z Resolving deltas:  67% (204/304)
+2022-04-22T21:23:06.9556033Z Resolving deltas:  68% (207/304)
+2022-04-22T21:23:06.9557989Z Resolving deltas:  69% (210/304)
+2022-04-22T21:23:06.9558418Z Resolving deltas:  70% (213/304)
+2022-04-22T21:23:06.9559016Z Resolving deltas:  71% (216/304)
+2022-04-22T21:23:06.9559479Z Resolving deltas:  72% (219/304)
+2022-04-22T21:23:06.9560056Z Resolving deltas:  73% (222/304)
+2022-04-22T21:23:06.9560448Z Resolving deltas:  74% (225/304)
+2022-04-22T21:23:06.9561035Z Resolving deltas:  75% (228/304)
+2022-04-22T21:23:06.9561431Z Resolving deltas:  76% (232/304)
+2022-04-22T21:23:06.9571086Z Resolving deltas:  77% (235/304)
+2022-04-22T21:23:06.9575619Z Resolving deltas:  78% (238/304)
+2022-04-22T21:23:06.9576948Z Resolving deltas:  79% (241/304)
+2022-04-22T21:23:06.9577393Z Resolving deltas:  80% (244/304)
+2022-04-22T21:23:06.9578011Z Resolving deltas:  81% (247/304)
+2022-04-22T21:23:06.9578426Z Resolving deltas:  82% (250/304)
+2022-04-22T21:23:06.9579021Z Resolving deltas:  83% (253/304)
+2022-04-22T21:23:06.9579406Z Resolving deltas:  84% (256/304)
+2022-04-22T21:23:06.9579991Z Resolving deltas:  85% (259/304)
+2022-04-22T21:23:06.9580562Z Resolving deltas:  86% (262/304)
+2022-04-22T21:23:06.9581186Z Resolving deltas:  87% (265/304)
+2022-04-22T21:23:06.9581572Z Resolving deltas:  88% (268/304)
+2022-04-22T21:23:06.9582155Z Resolving deltas:  89% (271/304)
+2022-04-22T21:23:06.9582546Z Resolving deltas:  90% (274/304)
+2022-04-22T21:23:06.9583183Z Resolving deltas:  91% (277/304)
+2022-04-22T21:23:06.9592029Z Resolving deltas:  92% (280/304)
+2022-04-22T21:23:06.9595492Z Resolving deltas:  93% (283/304)
+2022-04-22T21:23:06.9595958Z Resolving deltas:  94% (286/304)
+2022-04-22T21:23:06.9597127Z Resolving deltas:  95% (289/304)
+2022-04-22T21:23:06.9597540Z Resolving deltas:  96% (292/304)
+2022-04-22T21:23:06.9598216Z Resolving deltas:  97% (295/304)
+2022-04-22T21:23:06.9599598Z Resolving deltas:  98% (298/304)
+2022-04-22T21:23:06.9600333Z Resolving deltas:  99% (301/304)
+2022-04-22T21:23:06.9600731Z Resolving deltas: 100% (304/304)
+2022-04-22T21:23:06.9601332Z Resolving deltas: 100% (304/304), done.
+2022-04-22T21:23:06.9824807Z From https://github.com/hashicorp/terraform
+2022-04-22T21:23:06.9832706Z  * [new ref]         d2f1e910ef2ac0222fcf7194da9c6cfa1052bcfd -> pull/30920/merge
+2022-04-22T21:23:06.9875746Z ##[endgroup]
+2022-04-22T21:23:06.9876623Z ##[group]Determining the checkout info
+2022-04-22T21:23:06.9877736Z ##[endgroup]
+2022-04-22T21:23:06.9878312Z ##[group]Checking out the ref
+2022-04-22T21:23:06.9879429Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/30920/merge
+2022-04-22T21:23:07.1716833Z Note: switching to 'refs/remotes/pull/30920/merge'.
+2022-04-22T21:23:07.1717496Z 
+2022-04-22T21:23:07.1717959Z You are in 'detached HEAD' state. You can look around, make experimental
+2022-04-22T21:23:07.1718505Z changes and commit them, and you can discard any commits you make in this
+2022-04-22T21:23:07.1719786Z state without impacting any branches by switching back to a branch.
+2022-04-22T21:23:07.1720371Z 
+2022-04-22T21:23:07.1720658Z If you want to create a new branch to retain commits you create, you may
+2022-04-22T21:23:07.1721235Z do so (now or later) by using -c with the switch command. Example:
+2022-04-22T21:23:07.1721565Z 
+2022-04-22T21:23:07.1721877Z   git switch -c <new-branch-name>
+2022-04-22T21:23:07.1722063Z 
+2022-04-22T21:23:07.1722185Z Or undo this operation with:
+2022-04-22T21:23:07.1722340Z 
+2022-04-22T21:23:07.1722439Z   git switch -
+2022-04-22T21:23:07.1722585Z 
+2022-04-22T21:23:07.1722906Z Turn off this advice by setting config variable advice.detachedHead to false
+2022-04-22T21:23:07.1723542Z 
+2022-04-22T21:23:07.1746348Z HEAD is now at d2f1e91 Merge b50d17ef0f0e97b2a8be34d1e7078009546c52dc into 1252f8c9c53b023d2964c4574212198fa6c254db
+2022-04-22T21:23:07.1747608Z ##[endgroup]
+2022-04-22T21:23:07.1781981Z [command]/usr/bin/git log -1 --format='%H'
+2022-04-22T21:23:07.1814287Z 'd2f1e910ef2ac0222fcf7194da9c6cfa1052bcfd'
+2022-04-22T21:23:07.2219009Z Prepare all required actions
+2022-04-22T21:23:07.2251903Z ##[group]Run ./.github/actions/go-version
+2022-04-22T21:23:07.2252176Z ##[endgroup]
+2022-04-22T21:23:07.2539309Z ##[group]Run echo "Building with Go $(cat .go-version)"
+2022-04-22T21:23:07.2539738Z [36;1mecho "Building with Go $(cat .go-version)"[0m
+2022-04-22T21:23:07.2540053Z [36;1mecho "::set-output name=version::$(cat .go-version)"[0m
+2022-04-22T21:23:07.2597426Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2022-04-22T21:23:07.2597732Z ##[endgroup]
+2022-04-22T21:23:07.2782305Z Building with Go 1.18.0
+2022-04-22T21:23:07.2943463Z ##[group]Run actions/setup-go@v2
+2022-04-22T21:23:07.2943710Z with:
+2022-04-22T21:23:07.2943993Z   go-version: 1.18.0
+2022-04-22T21:23:07.2944214Z   check-latest: false
+2022-04-22T21:23:07.2944411Z   stable: true
+2022-04-22T21:23:07.2944752Z   token: ***
+2022-04-22T21:23:07.2944948Z ##[endgroup]
+2022-04-22T21:23:07.3447811Z Setup go stable version spec 1.18.0
+2022-04-22T21:23:07.3468916Z Found in cache @ /opt/hostedtoolcache/go/1.18.0/x64
+2022-04-22T21:23:07.3479104Z Added go to the path
+2022-04-22T21:23:07.3904012Z Successfully setup go version 1.18.0
+2022-04-22T21:23:07.3980009Z go version go1.18 linux/amd64
+2022-04-22T21:23:07.3980433Z 
+2022-04-22T21:23:07.3980969Z ##[group]go env
+2022-04-22T21:23:07.5175966Z GO111MODULE=""
+2022-04-22T21:23:07.5176665Z GOARCH="amd64"
+2022-04-22T21:23:07.5176964Z GOBIN=""
+2022-04-22T21:23:07.5177616Z GOCACHE="/home/runner/.cache/go-build"
+2022-04-22T21:23:07.5177981Z GOENV="/home/runner/.config/go/env"
+2022-04-22T21:23:07.5178309Z GOEXE=""
+2022-04-22T21:23:07.5178669Z GOEXPERIMENT=""
+2022-04-22T21:23:07.5178948Z GOFLAGS=""
+2022-04-22T21:23:07.5179239Z GOHOSTARCH="amd64"
+2022-04-22T21:23:07.5179534Z GOHOSTOS="linux"
+2022-04-22T21:23:07.5179808Z GOINSECURE=""
+2022-04-22T21:23:07.5180140Z GOMODCACHE="/home/runner/go/pkg/mod"
+2022-04-22T21:23:07.5180460Z GONOPROXY=""
+2022-04-22T21:23:07.5180744Z GONOSUMDB=""
+2022-04-22T21:23:07.5181009Z GOOS="linux"
+2022-04-22T21:23:07.5181307Z GOPATH="/home/runner/go"
+2022-04-22T21:23:07.5181605Z GOPRIVATE=""
+2022-04-22T21:23:07.5181989Z GOPROXY="https://proxy.golang.org,direct"
+2022-04-22T21:23:07.5182394Z GOROOT="/opt/hostedtoolcache/go/1.18.0/x64"
+2022-04-22T21:23:07.5182741Z GOSUMDB="sum.golang.org"
+2022-04-22T21:23:07.5183038Z GOTMPDIR=""
+2022-04-22T21:23:07.5183403Z GOTOOLDIR="/opt/hostedtoolcache/go/1.18.0/x64/pkg/tool/linux_amd64"
+2022-04-22T21:23:07.5183754Z GOVCS=""
+2022-04-22T21:23:07.5184035Z GOVERSION="go1.18"
+2022-04-22T21:23:07.5184312Z GCCGO="gccgo"
+2022-04-22T21:23:07.5184591Z GOAMD64="v1"
+2022-04-22T21:23:07.5184872Z AR="ar"
+2022-04-22T21:23:07.5185133Z CC="gcc"
+2022-04-22T21:23:07.5185388Z CXX="g++"
+2022-04-22T21:23:07.5185665Z CGO_ENABLED="1"
+2022-04-22T21:23:07.5186026Z GOMOD="/home/runner/work/terraform/terraform/go.mod"
+2022-04-22T21:23:07.5186361Z GOWORK=""
+2022-04-22T21:23:07.5186719Z CGO_CFLAGS="-g -O2"
+2022-04-22T21:23:07.5187023Z CGO_CPPFLAGS=""
+2022-04-22T21:23:07.5187371Z CGO_CXXFLAGS="-g -O2"
+2022-04-22T21:23:07.5187709Z CGO_FFLAGS="-g -O2"
+2022-04-22T21:23:07.5188053Z CGO_LDFLAGS="-g -O2"
+2022-04-22T21:23:07.5188418Z PKG_CONFIG="pkg-config"
+2022-04-22T21:23:07.5189107Z GOGCCFLAGS="-fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=/tmp/go-build1601363341=/tmp/go-build -gno-record-gcc-switches"
+2022-04-22T21:23:07.5189503Z 
+2022-04-22T21:23:07.5190187Z ##[endgroup]
+2022-04-22T21:23:07.6978330Z ##[group]Run actions/cache@v3
+2022-04-22T21:23:07.6978683Z with:
+2022-04-22T21:23:07.6978961Z   path: ~/go/pkg
+2022-04-22T21:23:07.6979392Z   key: go-mod-fffb2f2ac3ef5b8bff3fe3701a077a1f948c9a3295cdaaf039c6fe166190ea0c
+2022-04-22T21:23:07.6979982Z   restore-keys: go-mod-
+
+2022-04-22T21:23:07.6980284Z env:
+2022-04-22T21:23:07.6980597Z   GOROOT: /opt/hostedtoolcache/go/1.18.0/x64
+2022-04-22T21:23:07.6980863Z ##[endgroup]
+2022-04-22T21:23:09.3371112Z Received 41943040 of 314601614 (13.3%), 40.0 MBs/sec
+2022-04-22T21:23:10.3362658Z Received 180355072 of 314601614 (57.3%), 86.0 MBs/sec
+2022-04-22T21:23:11.3367672Z Received 306213006 of 314601614 (97.3%), 97.3 MBs/sec
+2022-04-22T21:23:12.2834724Z Received 314601614 of 314601614 (100.0%), 76.0 MBs/sec
+2022-04-22T21:23:12.2840891Z Cache Size: ~300 MB (314601614 B)
+2022-04-22T21:23:12.2938884Z [command]/usr/bin/tar --use-compress-program zstd -d -xf /home/runner/work/_temp/9b996942-e542-458f-be96-9efd38345ed8/cache.tzst -P -C /home/runner/work/terraform/terraform
+2022-04-22T21:23:18.9284855Z Cache restored successfully
+2022-04-22T21:23:19.0177611Z 
+2022-04-22T21:23:19.0181248Z Cache restored from key: go-mod-d0b5ba245c0409eeabcf66f1101b7094337c1793fda8d63863ef5a1a36b3ccbb
+2022-04-22T21:23:19.0338827Z ##[group]Run go test -race ./internal/terraform ./internal/command
+2022-04-22T21:23:19.0339304Z [36;1mgo test -race ./internal/terraform ./internal/command[0m
+2022-04-22T21:23:19.0390869Z shell: /usr/bin/bash -e {0}
+2022-04-22T21:23:19.0391329Z env:
+2022-04-22T21:23:19.0391655Z   GOROOT: /opt/hostedtoolcache/go/1.18.0/x64
+2022-04-22T21:23:19.0391980Z ##[endgroup]
+2022-04-22T21:23:19.1357865Z go: downloading github.com/hashicorp/hcl/v2 v2.12.0
+2022-04-22T21:23:19.6262073Z go: downloading github.com/go-test/deep v1.0.3
+2022-04-22T21:24:39.6893705Z ok  	github.com/hashicorp/terraform/internal/terraform	27.306s
+2022-04-22T21:26:55.0224221Z ok  	github.com/hashicorp/terraform/internal/command	62.808s
+2022-04-22T21:26:55.2738153Z Post job cleanup.
+2022-04-22T21:26:55.4478994Z [command]/usr/bin/tar --posix --use-compress-program zstd -T0 -cf cache.tzst -P -C /home/runner/work/terraform/terraform --files-from manifest.txt
+2022-04-22T21:26:59.3293483Z Unable to reserve cache with key go-mod-fffb2f2ac3ef5b8bff3fe3701a077a1f948c9a3295cdaaf039c6fe166190ea0c, another job may be creating this cache. More details: Cache already exists. Scope: refs/pull/30920/merge, Key: go-mod-fffb2f2ac3ef5b8bff3fe3701a077a1f948c9a3295cdaaf039c6fe166190ea0c, Version: fc1f9fc58bd85106f4f953a7caf3d5e8bd3e137b62336e89f4a4dd42372080cc
+2022-04-22T21:26:59.3414969Z Post job cleanup.
+2022-04-22T21:26:59.4667044Z [command]/usr/bin/git version
+2022-04-22T21:26:59.4720015Z git version 2.35.1
+2022-04-22T21:26:59.4776569Z Temporarily overriding HOME='/home/runner/work/_temp/4676e734-889b-4667-86d3-e0f7942e5414' before making global git config changes
+2022-04-22T21:26:59.4780285Z Adding repository directory to the temporary git global config as a safe directory
+2022-04-22T21:26:59.4788076Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/terraform/terraform
+2022-04-22T21:26:59.4835975Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2022-04-22T21:26:59.4874273Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+2022-04-22T21:26:59.5163948Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2022-04-22T21:26:59.5200086Z http.https://github.com/.extraheader
+2022-04-22T21:26:59.5209213Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2022-04-22T21:26:59.5247203Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+2022-04-22T21:26:59.5765732Z Cleaning up orphan processes

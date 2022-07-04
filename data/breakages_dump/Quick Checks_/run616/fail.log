@@ -1,0 +1,1233 @@
+2022-06-04T16:04:27.7867067Z Requested labels: ubuntu-latest
+2022-06-04T16:04:27.7867125Z Job defined at: hashicorp/terraform/.github/workflows/checks.yml@refs/pull/31187/merge
+2022-06-04T16:04:27.7867152Z Waiting for a runner to pick up this job...
+2022-06-04T16:04:29.3580141Z Job is waiting for a hosted runner to come online.
+2022-06-04T16:04:33.6491424Z Job is about to start running on the hosted runner: Hosted Agent (hosted)
+2022-06-04T16:04:35.5029008Z Current runner version: '2.292.0'
+2022-06-04T16:04:35.5053986Z ##[group]Operating System
+2022-06-04T16:04:35.5054520Z Ubuntu
+2022-06-04T16:04:35.5054822Z 20.04.4
+2022-06-04T16:04:35.5055063Z LTS
+2022-06-04T16:04:35.5055473Z ##[endgroup]
+2022-06-04T16:04:35.5055810Z ##[group]Virtual Environment
+2022-06-04T16:04:35.5056146Z Environment: ubuntu-20.04
+2022-06-04T16:04:35.5056494Z Version: 20220529.1
+2022-06-04T16:04:35.5057068Z Included Software: https://github.com/actions/virtual-environments/blob/ubuntu20/20220529.1/images/linux/Ubuntu2004-Readme.md
+2022-06-04T16:04:35.5057752Z Image Release: https://github.com/actions/virtual-environments/releases/tag/ubuntu20%2F20220529.1
+2022-06-04T16:04:35.5058177Z ##[endgroup]
+2022-06-04T16:04:35.5058536Z ##[group]Virtual Environment Provisioner
+2022-06-04T16:04:35.5058911Z 1.0.0.0-main-20220531-1
+2022-06-04T16:04:35.5059227Z ##[endgroup]
+2022-06-04T16:04:35.5059873Z ##[group]GITHUB_TOKEN Permissions
+2022-06-04T16:04:35.5060387Z Contents: read
+2022-06-04T16:04:35.5060817Z Metadata: read
+2022-06-04T16:04:35.5061275Z ##[endgroup]
+2022-06-04T16:04:35.5064670Z Secret source: None
+2022-06-04T16:04:35.5065167Z Prepare workflow directory
+2022-06-04T16:04:35.5885355Z Prepare all required actions
+2022-06-04T16:04:35.6066864Z Getting action download info
+2022-06-04T16:04:35.8312076Z Download action repository 'actions/checkout@v2' (SHA:7884fcad6b5d53d10323aee724dc68d8b9096a2e)
+2022-06-04T16:04:36.1666319Z Download action repository 'actions/setup-go@v2' (SHA:bfdd3570ce990073878bf10f6b2d79082de49492)
+2022-06-04T16:04:36.3490838Z Download action repository 'actions/cache@v3' (SHA:30f413bfed0a2bc738fdfd409e5a9e96b24545fd)
+2022-06-04T16:04:36.8037668Z ##[group]Run actions/checkout@v2
+2022-06-04T16:04:36.8037990Z with:
+2022-06-04T16:04:36.8038227Z   repository: hashicorp/terraform
+2022-06-04T16:04:36.8038704Z   token: ***
+2022-06-04T16:04:36.8038899Z   ssh-strict: true
+2022-06-04T16:04:36.8039154Z   persist-credentials: true
+2022-06-04T16:04:36.8039382Z   clean: true
+2022-06-04T16:04:36.8039587Z   fetch-depth: 1
+2022-06-04T16:04:36.8039791Z   lfs: false
+2022-06-04T16:04:36.8039988Z   submodules: false
+2022-06-04T16:04:36.8040200Z   set-safe-directory: true
+2022-06-04T16:04:36.8040425Z ##[endgroup]
+2022-06-04T16:04:37.0721969Z Syncing repository: hashicorp/terraform
+2022-06-04T16:04:37.0723666Z ##[group]Getting Git version info
+2022-06-04T16:04:37.0724168Z Working directory is '/home/runner/work/terraform/terraform'
+2022-06-04T16:04:37.0724686Z [command]/usr/bin/git version
+2022-06-04T16:04:37.0858934Z git version 2.36.1
+2022-06-04T16:04:37.0879156Z ##[endgroup]
+2022-06-04T16:04:37.0906256Z Temporarily overriding HOME='/home/runner/work/_temp/62459604-34b7-4050-bc64-efe19f336af0' before making global git config changes
+2022-06-04T16:04:37.0907019Z Adding repository directory to the temporary git global config as a safe directory
+2022-06-04T16:04:37.0907819Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/terraform/terraform
+2022-06-04T16:04:37.0941822Z Deleting the contents of '/home/runner/work/terraform/terraform'
+2022-06-04T16:04:37.0943866Z ##[group]Initializing the repository
+2022-06-04T16:04:37.0998712Z [command]/usr/bin/git init /home/runner/work/terraform/terraform
+2022-06-04T16:04:37.1074206Z hint: Using 'master' as the name for the initial branch. This default branch name
+2022-06-04T16:04:37.1075104Z hint: is subject to change. To configure the initial branch name to use in all
+2022-06-04T16:04:37.1075833Z hint: of your new repositories, which will suppress this warning, call:
+2022-06-04T16:04:37.1076120Z hint: 
+2022-06-04T16:04:37.1076613Z hint: 	git config --global init.defaultBranch <name>
+2022-06-04T16:04:37.1076930Z hint: 
+2022-06-04T16:04:37.1077297Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2022-06-04T16:04:37.1077748Z hint: 'development'. The just-created branch can be renamed via this command:
+2022-06-04T16:04:37.1078037Z hint: 
+2022-06-04T16:04:37.1078296Z hint: 	git branch -m <name>
+2022-06-04T16:04:37.1087424Z Initialized empty Git repository in /home/runner/work/terraform/terraform/.git/
+2022-06-04T16:04:37.1096760Z [command]/usr/bin/git remote add origin https://github.com/hashicorp/terraform
+2022-06-04T16:04:37.1136366Z ##[endgroup]
+2022-06-04T16:04:37.1136822Z ##[group]Disabling automatic garbage collection
+2022-06-04T16:04:37.1142684Z [command]/usr/bin/git config --local gc.auto 0
+2022-06-04T16:04:37.1173484Z ##[endgroup]
+2022-06-04T16:04:37.1174320Z ##[group]Setting up auth
+2022-06-04T16:04:37.1181651Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2022-06-04T16:04:37.1214361Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+2022-06-04T16:04:37.1664381Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2022-06-04T16:04:37.1688488Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+2022-06-04T16:04:37.1906752Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2022-06-04T16:04:37.1944170Z ##[endgroup]
+2022-06-04T16:04:37.1944648Z ##[group]Fetching the repository
+2022-06-04T16:04:37.1952708Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin +89c237f573bb60b63bd2fc7ae38c0c04662d36f1:refs/remotes/pull/31187/merge
+2022-06-04T16:04:37.4305583Z remote: Enumerating objects: 3944, done.        
+2022-06-04T16:04:37.4311450Z remote: Counting objects:   0% (1/3944)        
+2022-06-04T16:04:37.4312096Z remote: Counting objects:   1% (40/3944)        
+2022-06-04T16:04:37.4368587Z remote: Counting objects:   2% (79/3944)        
+2022-06-04T16:04:37.4368961Z remote: Counting objects:   3% (119/3944)        
+2022-06-04T16:04:37.4375317Z remote: Counting objects:   4% (158/3944)        
+2022-06-04T16:04:37.4375701Z remote: Counting objects:   5% (198/3944)        
+2022-06-04T16:04:37.4375999Z remote: Counting objects:   6% (237/3944)        
+2022-06-04T16:04:37.4376299Z remote: Counting objects:   7% (277/3944)        
+2022-06-04T16:04:37.4376601Z remote: Counting objects:   8% (316/3944)        
+2022-06-04T16:04:37.4376890Z remote: Counting objects:   9% (355/3944)        
+2022-06-04T16:04:37.4377188Z remote: Counting objects:  10% (395/3944)        
+2022-06-04T16:04:37.4377483Z remote: Counting objects:  11% (434/3944)        
+2022-06-04T16:04:37.4377778Z remote: Counting objects:  12% (474/3944)        
+2022-06-04T16:04:37.4378075Z remote: Counting objects:  13% (513/3944)        
+2022-06-04T16:04:37.4383418Z remote: Counting objects:  14% (553/3944)        
+2022-06-04T16:04:37.4383750Z remote: Counting objects:  15% (592/3944)        
+2022-06-04T16:04:37.4384047Z remote: Counting objects:  16% (632/3944)        
+2022-06-04T16:04:37.4384351Z remote: Counting objects:  17% (671/3944)        
+2022-06-04T16:04:37.4384674Z remote: Counting objects:  18% (710/3944)        
+2022-06-04T16:04:37.4384965Z remote: Counting objects:  19% (750/3944)        
+2022-06-04T16:04:37.4385262Z remote: Counting objects:  20% (789/3944)        
+2022-06-04T16:04:37.4385565Z remote: Counting objects:  21% (829/3944)        
+2022-06-04T16:04:37.4385850Z remote: Counting objects:  22% (868/3944)        
+2022-06-04T16:04:37.4386147Z remote: Counting objects:  23% (908/3944)        
+2022-06-04T16:04:37.4386441Z remote: Counting objects:  24% (947/3944)        
+2022-06-04T16:04:37.4386729Z remote: Counting objects:  25% (986/3944)        
+2022-06-04T16:04:37.4387039Z remote: Counting objects:  26% (1026/3944)        
+2022-06-04T16:04:37.4387353Z remote: Counting objects:  27% (1065/3944)        
+2022-06-04T16:04:37.4387688Z remote: Counting objects:  28% (1105/3944)        
+2022-06-04T16:04:37.4387981Z remote: Counting objects:  29% (1144/3944)        
+2022-06-04T16:04:37.4388291Z remote: Counting objects:  30% (1184/3944)        
+2022-06-04T16:04:37.4388840Z remote: Counting objects:  31% (1223/3944)        
+2022-06-04T16:04:37.4389133Z remote: Counting objects:  32% (1263/3944)        
+2022-06-04T16:04:37.4389441Z remote: Counting objects:  33% (1302/3944)        
+2022-06-04T16:04:37.4389747Z remote: Counting objects:  34% (1341/3944)        
+2022-06-04T16:04:37.4390040Z remote: Counting objects:  35% (1381/3944)        
+2022-06-04T16:04:37.4390350Z remote: Counting objects:  36% (1420/3944)        
+2022-06-04T16:04:37.4390657Z remote: Counting objects:  37% (1460/3944)        
+2022-06-04T16:04:37.4390964Z remote: Counting objects:  38% (1499/3944)        
+2022-06-04T16:04:37.4391254Z remote: Counting objects:  39% (1539/3944)        
+2022-06-04T16:04:37.4391557Z remote: Counting objects:  40% (1578/3944)        
+2022-06-04T16:04:37.4391863Z remote: Counting objects:  41% (1618/3944)        
+2022-06-04T16:04:37.4392148Z remote: Counting objects:  42% (1657/3944)        
+2022-06-04T16:04:37.4392452Z remote: Counting objects:  43% (1696/3944)        
+2022-06-04T16:04:37.4392811Z remote: Counting objects:  44% (1736/3944)        
+2022-06-04T16:04:37.4393032Z remote: Counting objects:  45% (1775/3944)        
+2022-06-04T16:04:37.4393269Z remote: Counting objects:  46% (1815/3944)        
+2022-06-04T16:04:37.4393502Z remote: Counting objects:  47% (1854/3944)        
+2022-06-04T16:04:37.4393724Z remote: Counting objects:  48% (1894/3944)        
+2022-06-04T16:04:37.4393957Z remote: Counting objects:  49% (1933/3944)        
+2022-06-04T16:04:37.4394193Z remote: Counting objects:  50% (1972/3944)        
+2022-06-04T16:04:37.4394499Z remote: Counting objects:  51% (2012/3944)        
+2022-06-04T16:04:37.4394728Z remote: Counting objects:  52% (2051/3944)        
+2022-06-04T16:04:37.4394961Z remote: Counting objects:  53% (2091/3944)        
+2022-06-04T16:04:37.4395199Z remote: Counting objects:  54% (2130/3944)        
+2022-06-04T16:04:37.4395418Z remote: Counting objects:  55% (2170/3944)        
+2022-06-04T16:04:37.4395661Z remote: Counting objects:  56% (2209/3944)        
+2022-06-04T16:04:37.4395904Z remote: Counting objects:  57% (2249/3944)        
+2022-06-04T16:04:37.4396132Z remote: Counting objects:  58% (2288/3944)        
+2022-06-04T16:04:37.4396572Z remote: Counting objects:  59% (2327/3944)        
+2022-06-04T16:04:37.4396817Z remote: Counting objects:  60% (2367/3944)        
+2022-06-04T16:04:37.4397058Z remote: Counting objects:  61% (2406/3944)        
+2022-06-04T16:04:37.4397278Z remote: Counting objects:  62% (2446/3944)        
+2022-06-04T16:04:37.4397520Z remote: Counting objects:  63% (2485/3944)        
+2022-06-04T16:04:37.4397888Z remote: Counting objects:  64% (2525/3944)        
+2022-06-04T16:04:37.4398128Z remote: Counting objects:  65% (2564/3944)        
+2022-06-04T16:04:37.4398351Z remote: Counting objects:  66% (2604/3944)        
+2022-06-04T16:04:37.4398588Z remote: Counting objects:  67% (2643/3944)        
+2022-06-04T16:04:37.4398827Z remote: Counting objects:  68% (2682/3944)        
+2022-06-04T16:04:37.4399057Z remote: Counting objects:  69% (2722/3944)        
+2022-06-04T16:04:37.4403316Z remote: Counting objects:  70% (2761/3944)        
+2022-06-04T16:04:37.4403622Z remote: Counting objects:  71% (2801/3944)        
+2022-06-04T16:04:37.4403853Z remote: Counting objects:  72% (2840/3944)        
+2022-06-04T16:04:37.4404092Z remote: Counting objects:  73% (2880/3944)        
+2022-06-04T16:04:37.4404332Z remote: Counting objects:  74% (2919/3944)        
+2022-06-04T16:04:37.4404576Z remote: Counting objects:  75% (2958/3944)        
+2022-06-04T16:04:37.4404811Z remote: Counting objects:  76% (2998/3944)        
+2022-06-04T16:04:37.4405054Z remote: Counting objects:  77% (3037/3944)        
+2022-06-04T16:04:37.4405293Z remote: Counting objects:  78% (3077/3944)        
+2022-06-04T16:04:37.4405514Z remote: Counting objects:  79% (3116/3944)        
+2022-06-04T16:04:37.4405749Z remote: Counting objects:  80% (3156/3944)        
+2022-06-04T16:04:37.4405985Z remote: Counting objects:  81% (3195/3944)        
+2022-06-04T16:04:37.4406401Z remote: Counting objects:  82% (3235/3944)        
+2022-06-04T16:04:37.4406641Z remote: Counting objects:  83% (3274/3944)        
+2022-06-04T16:04:37.4406884Z remote: Counting objects:  84% (3313/3944)        
+2022-06-04T16:04:37.4407127Z remote: Counting objects:  85% (3353/3944)        
+2022-06-04T16:04:37.4407353Z remote: Counting objects:  86% (3392/3944)        
+2022-06-04T16:04:37.4407598Z remote: Counting objects:  87% (3432/3944)        
+2022-06-04T16:04:37.4407836Z remote: Counting objects:  88% (3471/3944)        
+2022-06-04T16:04:37.4408060Z remote: Counting objects:  89% (3511/3944)        
+2022-06-04T16:04:37.4408303Z remote: Counting objects:  90% (3550/3944)        
+2022-06-04T16:04:37.4408543Z remote: Counting objects:  91% (3590/3944)        
+2022-06-04T16:04:37.4408765Z remote: Counting objects:  92% (3629/3944)        
+2022-06-04T16:04:37.4409002Z remote: Counting objects:  93% (3668/3944)        
+2022-06-04T16:04:37.4409239Z remote: Counting objects:  94% (3708/3944)        
+2022-06-04T16:04:37.4409463Z remote: Counting objects:  95% (3747/3944)        
+2022-06-04T16:04:37.4409708Z remote: Counting objects:  96% (3787/3944)        
+2022-06-04T16:04:37.4409948Z remote: Counting objects:  97% (3826/3944)        
+2022-06-04T16:04:37.4410183Z remote: Counting objects:  98% (3866/3944)        
+2022-06-04T16:04:37.4410427Z remote: Counting objects:  99% (3905/3944)        
+2022-06-04T16:04:37.4410666Z remote: Counting objects: 100% (3944/3944)        
+2022-06-04T16:04:37.4410916Z remote: Counting objects: 100% (3944/3944), done.        
+2022-06-04T16:04:37.4414512Z remote: Compressing objects:   0% (1/2980)        
+2022-06-04T16:04:37.4414942Z remote: Compressing objects:   1% (30/2980)        
+2022-06-04T16:04:37.4415215Z remote: Compressing objects:   2% (60/2980)        
+2022-06-04T16:04:37.4464558Z remote: Compressing objects:   3% (90/2980)        
+2022-06-04T16:04:37.4513432Z remote: Compressing objects:   4% (120/2980)        
+2022-06-04T16:04:37.4552588Z remote: Compressing objects:   5% (149/2980)        
+2022-06-04T16:04:37.4572674Z remote: Compressing objects:   6% (179/2980)        
+2022-06-04T16:04:37.4600793Z remote: Compressing objects:   7% (209/2980)        
+2022-06-04T16:04:37.4751290Z remote: Compressing objects:   8% (239/2980)        
+2022-06-04T16:04:37.4751917Z remote: Compressing objects:   9% (269/2980)        
+2022-06-04T16:04:37.4752434Z remote: Compressing objects:  10% (298/2980)        
+2022-06-04T16:04:37.4752751Z remote: Compressing objects:  11% (328/2980)        
+2022-06-04T16:04:37.4753051Z remote: Compressing objects:  12% (358/2980)        
+2022-06-04T16:04:37.4779834Z remote: Compressing objects:  13% (388/2980)        
+2022-06-04T16:04:37.4844849Z remote: Compressing objects:  14% (418/2980)        
+2022-06-04T16:04:37.4910517Z remote: Compressing objects:  15% (447/2980)        
+2022-06-04T16:04:37.5069697Z remote: Compressing objects:  16% (477/2980)        
+2022-06-04T16:04:37.5176897Z remote: Compressing objects:  17% (507/2980)        
+2022-06-04T16:04:37.5269018Z remote: Compressing objects:  18% (537/2980)        
+2022-06-04T16:04:37.5368816Z remote: Compressing objects:  19% (567/2980)        
+2022-06-04T16:04:37.5459037Z remote: Compressing objects:  20% (596/2980)        
+2022-06-04T16:04:37.5537907Z remote: Compressing objects:  21% (626/2980)        
+2022-06-04T16:04:37.5689219Z remote: Compressing objects:  22% (656/2980)        
+2022-06-04T16:04:37.5793664Z remote: Compressing objects:  23% (686/2980)        
+2022-06-04T16:04:37.5837445Z remote: Compressing objects:  24% (716/2980)        
+2022-06-04T16:04:37.5970934Z remote: Compressing objects:  25% (745/2980)        
+2022-06-04T16:04:37.6095518Z remote: Compressing objects:  26% (775/2980)        
+2022-06-04T16:04:37.6263877Z remote: Compressing objects:  27% (805/2980)        
+2022-06-04T16:04:37.6413825Z remote: Compressing objects:  28% (835/2980)        
+2022-06-04T16:04:37.6586888Z remote: Compressing objects:  29% (865/2980)        
+2022-06-04T16:04:37.6642175Z remote: Compressing objects:  30% (894/2980)        
+2022-06-04T16:04:37.6750102Z remote: Compressing objects:  31% (924/2980)        
+2022-06-04T16:04:37.6816809Z remote: Compressing objects:  32% (954/2980)        
+2022-06-04T16:04:37.6880550Z remote: Compressing objects:  33% (984/2980)        
+2022-06-04T16:04:37.6943210Z remote: Compressing objects:  34% (1014/2980)        
+2022-06-04T16:04:37.7001036Z remote: Compressing objects:  35% (1043/2980)        
+2022-06-04T16:04:37.7133797Z remote: Compressing objects:  36% (1073/2980)        
+2022-06-04T16:04:37.7220650Z remote: Compressing objects:  37% (1103/2980)        
+2022-06-04T16:04:37.7280440Z remote: Compressing objects:  38% (1133/2980)        
+2022-06-04T16:04:37.7412554Z remote: Compressing objects:  39% (1163/2980)        
+2022-06-04T16:04:37.7484063Z remote: Compressing objects:  40% (1192/2980)        
+2022-06-04T16:04:37.7555013Z remote: Compressing objects:  41% (1222/2980)        
+2022-06-04T16:04:37.7600211Z remote: Compressing objects:  42% (1252/2980)        
+2022-06-04T16:04:37.7613425Z remote: Compressing objects:  43% (1282/2980)        
+2022-06-04T16:04:37.7706901Z remote: Compressing objects:  44% (1312/2980)        
+2022-06-04T16:04:37.7848861Z remote: Compressing objects:  45% (1341/2980)        
+2022-06-04T16:04:37.7935905Z remote: Compressing objects:  46% (1371/2980)        
+2022-06-04T16:04:37.8095176Z remote: Compressing objects:  47% (1401/2980)        
+2022-06-04T16:04:37.8219729Z remote: Compressing objects:  48% (1431/2980)        
+2022-06-04T16:04:37.8325549Z remote: Compressing objects:  49% (1461/2980)        
+2022-06-04T16:04:37.8381559Z remote: Compressing objects:  50% (1490/2980)        
+2022-06-04T16:04:37.8396635Z remote: Compressing objects:  51% (1520/2980)        
+2022-06-04T16:04:37.8539165Z remote: Compressing objects:  52% (1550/2980)        
+2022-06-04T16:04:37.8539568Z remote: Compressing objects:  53% (1580/2980)        
+2022-06-04T16:04:37.8549985Z remote: Compressing objects:  54% (1610/2980)        
+2022-06-04T16:04:37.8556031Z remote: Compressing objects:  55% (1639/2980)        
+2022-06-04T16:04:37.8560521Z remote: Compressing objects:  56% (1669/2980)        
+2022-06-04T16:04:37.8564134Z remote: Compressing objects:  57% (1699/2980)        
+2022-06-04T16:04:37.8564785Z remote: Compressing objects:  58% (1729/2980)        
+2022-06-04T16:04:37.8572078Z remote: Compressing objects:  59% (1759/2980)        
+2022-06-04T16:04:37.8573422Z remote: Compressing objects:  60% (1788/2980)        
+2022-06-04T16:04:37.8575221Z remote: Compressing objects:  61% (1818/2980)        
+2022-06-04T16:04:37.8576007Z remote: Compressing objects:  62% (1848/2980)        
+2022-06-04T16:04:37.8576497Z remote: Compressing objects:  63% (1878/2980)        
+2022-06-04T16:04:37.8576830Z remote: Compressing objects:  64% (1908/2980)        
+2022-06-04T16:04:37.8577294Z remote: Compressing objects:  65% (1937/2980)        
+2022-06-04T16:04:37.8578006Z remote: Compressing objects:  66% (1967/2980)        
+2022-06-04T16:04:37.8580437Z remote: Compressing objects:  67% (1997/2980)        
+2022-06-04T16:04:37.8581105Z remote: Compressing objects:  68% (2027/2980)        
+2022-06-04T16:04:37.8589620Z remote: Compressing objects:  69% (2057/2980)        
+2022-06-04T16:04:37.8592378Z remote: Compressing objects:  70% (2086/2980)        
+2022-06-04T16:04:37.8593585Z remote: Compressing objects:  71% (2116/2980)        
+2022-06-04T16:04:37.8594027Z remote: Compressing objects:  72% (2146/2980)        
+2022-06-04T16:04:37.8594681Z remote: Compressing objects:  73% (2176/2980)        
+2022-06-04T16:04:37.8595766Z remote: Compressing objects:  74% (2206/2980)        
+2022-06-04T16:04:37.8596663Z remote: Compressing objects:  75% (2235/2980)        
+2022-06-04T16:04:37.8597275Z remote: Compressing objects:  76% (2265/2980)        
+2022-06-04T16:04:37.8597904Z remote: Compressing objects:  77% (2295/2980)        
+2022-06-04T16:04:37.8601582Z remote: Compressing objects:  78% (2325/2980)        
+2022-06-04T16:04:37.8684126Z remote: Compressing objects:  79% (2355/2980)        
+2022-06-04T16:04:37.8685897Z remote: Compressing objects:  80% (2384/2980)        
+2022-06-04T16:04:37.8686838Z remote: Compressing objects:  81% (2414/2980)        
+2022-06-04T16:04:37.8687287Z remote: Compressing objects:  82% (2444/2980)        
+2022-06-04T16:04:37.8687719Z remote: Compressing objects:  83% (2474/2980)        
+2022-06-04T16:04:37.8688591Z remote: Compressing objects:  84% (2504/2980)        
+2022-06-04T16:04:37.8689662Z remote: Compressing objects:  85% (2533/2980)        
+2022-06-04T16:04:37.8690103Z remote: Compressing objects:  86% (2563/2980)        
+2022-06-04T16:04:37.8702085Z remote: Compressing objects:  87% (2593/2980)        
+2022-06-04T16:04:37.8705192Z remote: Compressing objects:  88% (2623/2980)        
+2022-06-04T16:04:37.8705550Z remote: Compressing objects:  89% (2653/2980)        
+2022-06-04T16:04:37.8705864Z remote: Compressing objects:  90% (2682/2980)        
+2022-06-04T16:04:37.8706698Z remote: Compressing objects:  91% (2712/2980)        
+2022-06-04T16:04:37.8707280Z remote: Compressing objects:  92% (2742/2980)        
+2022-06-04T16:04:37.8708034Z remote: Compressing objects:  93% (2772/2980)        
+2022-06-04T16:04:37.8708620Z remote: Compressing objects:  94% (2802/2980)        
+2022-06-04T16:04:37.8709329Z remote: Compressing objects:  95% (2831/2980)        
+2022-06-04T16:04:37.8710035Z remote: Compressing objects:  96% (2861/2980)        
+2022-06-04T16:04:37.8710614Z remote: Compressing objects:  97% (2891/2980)        
+2022-06-04T16:04:37.8711323Z remote: Compressing objects:  98% (2921/2980)        
+2022-06-04T16:04:37.8712108Z remote: Compressing objects:  99% (2951/2980)        
+2022-06-04T16:04:37.8712485Z remote: Compressing objects: 100% (2980/2980)        
+2022-06-04T16:04:37.8713221Z remote: Compressing objects: 100% (2980/2980), done.        
+2022-06-04T16:04:37.8796036Z Receiving objects:   0% (1/3944)
+2022-06-04T16:04:37.9504577Z Receiving objects:   1% (40/3944)
+2022-06-04T16:04:37.9558190Z Receiving objects:   2% (79/3944)
+2022-06-04T16:04:37.9597996Z Receiving objects:   3% (119/3944)
+2022-06-04T16:04:37.9615107Z Receiving objects:   4% (158/3944)
+2022-06-04T16:04:37.9653003Z Receiving objects:   5% (198/3944)
+2022-06-04T16:04:37.9714313Z Receiving objects:   6% (237/3944)
+2022-06-04T16:04:37.9730011Z Receiving objects:   7% (277/3944)
+2022-06-04T16:04:37.9763952Z Receiving objects:   8% (316/3944)
+2022-06-04T16:04:37.9786712Z Receiving objects:   9% (355/3944)
+2022-06-04T16:04:37.9826410Z Receiving objects:  10% (395/3944)
+2022-06-04T16:04:37.9844515Z Receiving objects:  11% (434/3944)
+2022-06-04T16:04:37.9847787Z Receiving objects:  12% (474/3944)
+2022-06-04T16:04:37.9893354Z Receiving objects:  13% (513/3944)
+2022-06-04T16:04:37.9950062Z Receiving objects:  14% (553/3944)
+2022-06-04T16:04:38.0002521Z Receiving objects:  15% (592/3944)
+2022-06-04T16:04:38.0013615Z Receiving objects:  16% (632/3944)
+2022-06-04T16:04:38.0016698Z Receiving objects:  17% (671/3944)
+2022-06-04T16:04:38.0019415Z Receiving objects:  18% (710/3944)
+2022-06-04T16:04:38.0022781Z Receiving objects:  19% (750/3944)
+2022-06-04T16:04:38.0025942Z Receiving objects:  20% (789/3944)
+2022-06-04T16:04:38.0031755Z Receiving objects:  21% (829/3944)
+2022-06-04T16:04:38.0039897Z Receiving objects:  22% (868/3944)
+2022-06-04T16:04:38.0043545Z Receiving objects:  23% (908/3944)
+2022-06-04T16:04:38.0047446Z Receiving objects:  24% (947/3944)
+2022-06-04T16:04:38.0051142Z Receiving objects:  25% (986/3944)
+2022-06-04T16:04:38.0054856Z Receiving objects:  26% (1026/3944)
+2022-06-04T16:04:38.0058785Z Receiving objects:  27% (1065/3944)
+2022-06-04T16:04:38.0070435Z Receiving objects:  28% (1105/3944)
+2022-06-04T16:04:38.0096246Z Receiving objects:  29% (1144/3944)
+2022-06-04T16:04:38.0114758Z Receiving objects:  30% (1184/3944)
+2022-06-04T16:04:38.0136462Z Receiving objects:  31% (1223/3944)
+2022-06-04T16:04:38.0140007Z Receiving objects:  32% (1263/3944)
+2022-06-04T16:04:38.0156937Z Receiving objects:  33% (1302/3944)
+2022-06-04T16:04:38.0185330Z Receiving objects:  34% (1341/3944)
+2022-06-04T16:04:38.0201790Z Receiving objects:  35% (1381/3944)
+2022-06-04T16:04:38.0205625Z Receiving objects:  36% (1420/3944)
+2022-06-04T16:04:38.0208287Z Receiving objects:  37% (1460/3944)
+2022-06-04T16:04:38.0211338Z Receiving objects:  38% (1499/3944)
+2022-06-04T16:04:38.0214752Z Receiving objects:  39% (1539/3944)
+2022-06-04T16:04:38.0219046Z Receiving objects:  40% (1578/3944)
+2022-06-04T16:04:38.0222130Z Receiving objects:  41% (1618/3944)
+2022-06-04T16:04:38.0241898Z Receiving objects:  42% (1657/3944)
+2022-06-04T16:04:38.0264268Z Receiving objects:  43% (1696/3944)
+2022-06-04T16:04:38.0281945Z Receiving objects:  44% (1736/3944)
+2022-06-04T16:04:38.0296278Z Receiving objects:  45% (1775/3944)
+2022-06-04T16:04:38.0304229Z Receiving objects:  46% (1815/3944)
+2022-06-04T16:04:38.0331245Z Receiving objects:  47% (1854/3944)
+2022-06-04T16:04:38.0341734Z Receiving objects:  48% (1894/3944)
+2022-06-04T16:04:38.0361462Z Receiving objects:  49% (1933/3944)
+2022-06-04T16:04:38.0446471Z Receiving objects:  50% (1972/3944)
+2022-06-04T16:04:38.0486467Z Receiving objects:  51% (2012/3944)
+2022-06-04T16:04:38.0571188Z Receiving objects:  52% (2051/3944)
+2022-06-04T16:04:38.0601340Z Receiving objects:  53% (2091/3944)
+2022-06-04T16:04:38.0621293Z Receiving objects:  54% (2130/3944)
+2022-06-04T16:04:38.0678276Z Receiving objects:  55% (2170/3944)
+2022-06-04T16:04:38.0711842Z Receiving objects:  56% (2209/3944)
+2022-06-04T16:04:38.0749078Z Receiving objects:  57% (2249/3944)
+2022-06-04T16:04:38.0788894Z Receiving objects:  58% (2288/3944)
+2022-06-04T16:04:38.1028741Z Receiving objects:  59% (2327/3944)
+2022-06-04T16:04:38.1102249Z Receiving objects:  60% (2367/3944)
+2022-06-04T16:04:38.1212665Z Receiving objects:  61% (2406/3944)
+2022-06-04T16:04:38.1248894Z Receiving objects:  62% (2446/3944)
+2022-06-04T16:04:38.1254752Z Receiving objects:  63% (2485/3944)
+2022-06-04T16:04:38.1255509Z Receiving objects:  64% (2525/3944)
+2022-06-04T16:04:38.1255829Z Receiving objects:  65% (2564/3944)
+2022-06-04T16:04:38.1256090Z Receiving objects:  66% (2604/3944)
+2022-06-04T16:04:38.1256313Z Receiving objects:  67% (2643/3944)
+2022-06-04T16:04:38.1259340Z Receiving objects:  68% (2682/3944)
+2022-06-04T16:04:38.1263473Z Receiving objects:  69% (2722/3944)
+2022-06-04T16:04:38.1264115Z Receiving objects:  70% (2761/3944)
+2022-06-04T16:04:38.1264685Z Receiving objects:  71% (2801/3944)
+2022-06-04T16:04:38.1266893Z Receiving objects:  72% (2840/3944)
+2022-06-04T16:04:38.1269861Z Receiving objects:  73% (2880/3944)
+2022-06-04T16:04:38.1270440Z Receiving objects:  74% (2919/3944)
+2022-06-04T16:04:38.1273599Z Receiving objects:  75% (2958/3944)
+2022-06-04T16:04:38.1274241Z Receiving objects:  76% (2998/3944)
+2022-06-04T16:04:38.1278330Z Receiving objects:  77% (3037/3944)
+2022-06-04T16:04:38.1278603Z Receiving objects:  78% (3077/3944)
+2022-06-04T16:04:38.1278940Z Receiving objects:  79% (3116/3944)
+2022-06-04T16:04:38.1280827Z Receiving objects:  80% (3156/3944)
+2022-06-04T16:04:38.1282479Z Receiving objects:  81% (3195/3944)
+2022-06-04T16:04:38.1282959Z Receiving objects:  82% (3235/3944)
+2022-06-04T16:04:38.1285625Z Receiving objects:  83% (3274/3944)
+2022-06-04T16:04:38.1286123Z Receiving objects:  84% (3313/3944)
+2022-06-04T16:04:38.1288388Z Receiving objects:  85% (3353/3944)
+2022-06-04T16:04:38.1299159Z Receiving objects:  86% (3392/3944)
+2022-06-04T16:04:38.1317562Z Receiving objects:  87% (3432/3944)
+2022-06-04T16:04:38.1403788Z Receiving objects:  88% (3471/3944)
+2022-06-04T16:04:38.1414511Z Receiving objects:  89% (3511/3944)
+2022-06-04T16:04:38.1479149Z Receiving objects:  90% (3550/3944)
+2022-06-04T16:04:38.1489835Z Receiving objects:  91% (3590/3944)
+2022-06-04T16:04:38.1537311Z Receiving objects:  92% (3629/3944)
+2022-06-04T16:04:38.1558851Z Receiving objects:  93% (3668/3944)
+2022-06-04T16:04:38.1566480Z Receiving objects:  94% (3708/3944)
+2022-06-04T16:04:38.1574737Z Receiving objects:  95% (3747/3944)
+2022-06-04T16:04:38.1592136Z Receiving objects:  96% (3787/3944)
+2022-06-04T16:04:38.1618943Z Receiving objects:  97% (3826/3944)
+2022-06-04T16:04:38.1654743Z Receiving objects:  98% (3866/3944)
+2022-06-04T16:04:38.2186367Z Receiving objects:  99% (3905/3944)
+2022-06-04T16:04:38.2187368Z remote: Total 3944 (delta 304), reused 2634 (delta 219), pack-reused 0        
+2022-06-04T16:04:38.2198159Z Receiving objects: 100% (3944/3944)
+2022-06-04T16:04:38.2198700Z Receiving objects: 100% (3944/3944), 5.59 MiB | 16.30 MiB/s, done.
+2022-06-04T16:04:38.2203881Z Resolving deltas:   0% (0/304)
+2022-06-04T16:04:38.2204397Z Resolving deltas:   1% (4/304)
+2022-06-04T16:04:38.2205824Z Resolving deltas:   2% (7/304)
+2022-06-04T16:04:38.2206957Z Resolving deltas:   3% (10/304)
+2022-06-04T16:04:38.2210838Z Resolving deltas:   4% (13/304)
+2022-06-04T16:04:38.2211951Z Resolving deltas:   5% (16/304)
+2022-06-04T16:04:38.2213366Z Resolving deltas:   6% (19/304)
+2022-06-04T16:04:38.2220575Z Resolving deltas:   7% (22/304)
+2022-06-04T16:04:38.2227783Z Resolving deltas:   8% (25/304)
+2022-06-04T16:04:38.2233784Z Resolving deltas:   9% (28/304)
+2022-06-04T16:04:38.2237045Z Resolving deltas:  10% (31/304)
+2022-06-04T16:04:38.2237549Z Resolving deltas:  11% (34/304)
+2022-06-04T16:04:38.2238321Z Resolving deltas:  12% (37/304)
+2022-06-04T16:04:38.2240759Z Resolving deltas:  13% (40/304)
+2022-06-04T16:04:38.2255094Z Resolving deltas:  14% (43/304)
+2022-06-04T16:04:38.2255535Z Resolving deltas:  15% (46/304)
+2022-06-04T16:04:38.2256256Z Resolving deltas:  16% (49/304)
+2022-06-04T16:04:38.2256654Z Resolving deltas:  17% (52/304)
+2022-06-04T16:04:38.2258171Z Resolving deltas:  18% (55/304)
+2022-06-04T16:04:38.2260768Z Resolving deltas:  19% (58/304)
+2022-06-04T16:04:38.2265238Z Resolving deltas:  20% (61/304)
+2022-06-04T16:04:38.2267726Z Resolving deltas:  21% (64/304)
+2022-06-04T16:04:38.2268885Z Resolving deltas:  22% (67/304)
+2022-06-04T16:04:38.2278560Z Resolving deltas:  23% (70/304)
+2022-06-04T16:04:38.2280952Z Resolving deltas:  24% (73/304)
+2022-06-04T16:04:38.2285848Z Resolving deltas:  25% (76/304)
+2022-06-04T16:04:38.2287558Z Resolving deltas:  26% (80/304)
+2022-06-04T16:04:38.2288393Z Resolving deltas:  27% (83/304)
+2022-06-04T16:04:38.2288801Z Resolving deltas:  28% (86/304)
+2022-06-04T16:04:38.2289521Z Resolving deltas:  29% (89/304)
+2022-06-04T16:04:38.2289902Z Resolving deltas:  30% (92/304)
+2022-06-04T16:04:38.2291384Z Resolving deltas:  31% (95/304)
+2022-06-04T16:04:38.2293220Z Resolving deltas:  32% (98/304)
+2022-06-04T16:04:38.2294606Z Resolving deltas:  33% (101/304)
+2022-06-04T16:04:38.2295583Z Resolving deltas:  34% (104/304)
+2022-06-04T16:04:38.2297685Z Resolving deltas:  35% (107/304)
+2022-06-04T16:04:38.2298143Z Resolving deltas:  36% (110/304)
+2022-06-04T16:04:38.2301140Z Resolving deltas:  37% (113/304)
+2022-06-04T16:04:38.2301608Z Resolving deltas:  38% (116/304)
+2022-06-04T16:04:38.2303319Z Resolving deltas:  39% (119/304)
+2022-06-04T16:04:38.2303746Z Resolving deltas:  40% (122/304)
+2022-06-04T16:04:38.2305949Z Resolving deltas:  41% (125/304)
+2022-06-04T16:04:38.2306384Z Resolving deltas:  42% (128/304)
+2022-06-04T16:04:38.2307145Z Resolving deltas:  43% (131/304)
+2022-06-04T16:04:38.2307535Z Resolving deltas:  44% (134/304)
+2022-06-04T16:04:38.2308283Z Resolving deltas:  45% (137/304)
+2022-06-04T16:04:38.2309418Z Resolving deltas:  46% (140/304)
+2022-06-04T16:04:38.2310223Z Resolving deltas:  47% (143/304)
+2022-06-04T16:04:38.2310607Z Resolving deltas:  48% (146/304)
+2022-06-04T16:04:38.2311364Z Resolving deltas:  49% (149/304)
+2022-06-04T16:04:38.2311758Z Resolving deltas:  50% (152/304)
+2022-06-04T16:04:38.2312469Z Resolving deltas:  51% (156/304)
+2022-06-04T16:04:38.2312850Z Resolving deltas:  52% (159/304)
+2022-06-04T16:04:38.2314372Z Resolving deltas:  53% (162/304)
+2022-06-04T16:04:38.2314790Z Resolving deltas:  54% (165/304)
+2022-06-04T16:04:38.2315739Z Resolving deltas:  55% (168/304)
+2022-06-04T16:04:38.2316149Z Resolving deltas:  56% (171/304)
+2022-06-04T16:04:38.2316866Z Resolving deltas:  57% (174/304)
+2022-06-04T16:04:38.2317261Z Resolving deltas:  58% (177/304)
+2022-06-04T16:04:38.2317957Z Resolving deltas:  59% (181/304)
+2022-06-04T16:04:38.2321267Z Resolving deltas:  60% (183/304)
+2022-06-04T16:04:38.2323325Z Resolving deltas:  61% (186/304)
+2022-06-04T16:04:38.2325278Z Resolving deltas:  62% (189/304)
+2022-06-04T16:04:38.2325775Z Resolving deltas:  63% (192/304)
+2022-06-04T16:04:38.2327248Z Resolving deltas:  64% (195/304)
+2022-06-04T16:04:38.2327666Z Resolving deltas:  65% (198/304)
+2022-06-04T16:04:38.2328377Z Resolving deltas:  66% (201/304)
+2022-06-04T16:04:38.2328778Z Resolving deltas:  67% (204/304)
+2022-06-04T16:04:38.2329490Z Resolving deltas:  68% (207/304)
+2022-06-04T16:04:38.2329874Z Resolving deltas:  69% (210/304)
+2022-06-04T16:04:38.2330601Z Resolving deltas:  70% (213/304)
+2022-06-04T16:04:38.2331051Z Resolving deltas:  71% (216/304)
+2022-06-04T16:04:38.2332547Z Resolving deltas:  72% (219/304)
+2022-06-04T16:04:38.2335033Z Resolving deltas:  73% (222/304)
+2022-06-04T16:04:38.2338293Z Resolving deltas:  74% (225/304)
+2022-06-04T16:04:38.2342881Z Resolving deltas:  75% (228/304)
+2022-06-04T16:04:38.2343313Z Resolving deltas:  76% (232/304)
+2022-06-04T16:04:38.2344110Z Resolving deltas:  77% (235/304)
+2022-06-04T16:04:38.2347445Z Resolving deltas:  78% (238/304)
+2022-06-04T16:04:38.2349435Z Resolving deltas:  79% (241/304)
+2022-06-04T16:04:38.2349963Z Resolving deltas:  80% (244/304)
+2022-06-04T16:04:38.2351036Z Resolving deltas:  81% (247/304)
+2022-06-04T16:04:38.2351280Z Resolving deltas:  82% (250/304)
+2022-06-04T16:04:38.2351498Z Resolving deltas:  83% (253/304)
+2022-06-04T16:04:38.2351735Z Resolving deltas:  84% (256/304)
+2022-06-04T16:04:38.2351973Z Resolving deltas:  85% (259/304)
+2022-06-04T16:04:38.2352348Z Resolving deltas:  86% (262/304)
+2022-06-04T16:04:38.2352571Z Resolving deltas:  87% (265/304)
+2022-06-04T16:04:38.2352833Z Resolving deltas:  88% (268/304)
+2022-06-04T16:04:38.2353067Z Resolving deltas:  89% (271/304)
+2022-06-04T16:04:38.2353298Z Resolving deltas:  90% (274/304)
+2022-06-04T16:04:38.2359552Z Resolving deltas:  91% (277/304)
+2022-06-04T16:04:38.2371353Z Resolving deltas:  92% (280/304)
+2022-06-04T16:04:38.2378369Z Resolving deltas:  93% (283/304)
+2022-06-04T16:04:38.2380792Z Resolving deltas:  94% (286/304)
+2022-06-04T16:04:38.2382366Z Resolving deltas:  95% (289/304)
+2022-06-04T16:04:38.2384460Z Resolving deltas:  96% (292/304)
+2022-06-04T16:04:38.2386623Z Resolving deltas:  97% (295/304)
+2022-06-04T16:04:38.2389019Z Resolving deltas:  98% (298/304)
+2022-06-04T16:04:38.2404416Z Resolving deltas:  99% (301/304)
+2022-06-04T16:04:38.2404995Z Resolving deltas: 100% (304/304)
+2022-06-04T16:04:38.2405517Z Resolving deltas: 100% (304/304), done.
+2022-06-04T16:04:38.4387734Z From https://github.com/hashicorp/terraform
+2022-06-04T16:04:38.4388605Z  * [new ref]         89c237f573bb60b63bd2fc7ae38c0c04662d36f1 -> pull/31187/merge
+2022-06-04T16:04:38.4402592Z ##[endgroup]
+2022-06-04T16:04:38.4403360Z ##[group]Determining the checkout info
+2022-06-04T16:04:38.4404560Z ##[endgroup]
+2022-06-04T16:04:38.4405159Z ##[group]Checking out the ref
+2022-06-04T16:04:38.4409506Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/31187/merge
+2022-06-04T16:04:38.6285315Z Note: switching to 'refs/remotes/pull/31187/merge'.
+2022-06-04T16:04:38.6286193Z 
+2022-06-04T16:04:38.6286938Z You are in 'detached HEAD' state. You can look around, make experimental
+2022-06-04T16:04:38.6287515Z changes and commit them, and you can discard any commits you make in this
+2022-06-04T16:04:38.6288266Z state without impacting any branches by switching back to a branch.
+2022-06-04T16:04:38.6288630Z 
+2022-06-04T16:04:38.6289150Z If you want to create a new branch to retain commits you create, you may
+2022-06-04T16:04:38.6289784Z do so (now or later) by using -c with the switch command. Example:
+2022-06-04T16:04:38.6290349Z 
+2022-06-04T16:04:38.6290686Z   git switch -c <new-branch-name>
+2022-06-04T16:04:38.6291209Z 
+2022-06-04T16:04:38.6291472Z Or undo this operation with:
+2022-06-04T16:04:38.6292226Z 
+2022-06-04T16:04:38.6292456Z   git switch -
+2022-06-04T16:04:38.6292938Z 
+2022-06-04T16:04:38.6293280Z Turn off this advice by setting config variable advice.detachedHead to false
+2022-06-04T16:04:38.6294431Z 
+2022-06-04T16:04:38.6294838Z HEAD is now at 89c237f Merge 4b01dfb397245216337e01406007e75cc9eff3a6 into 472df9686f2c043e0f4f0a4a2b75891b79d97df0
+2022-06-04T16:04:38.6305801Z ##[endgroup]
+2022-06-04T16:04:38.6363991Z [command]/usr/bin/git log -1 --format='%H'
+2022-06-04T16:04:38.6397390Z '89c237f573bb60b63bd2fc7ae38c0c04662d36f1'
+2022-06-04T16:04:38.6790734Z Prepare all required actions
+2022-06-04T16:04:38.6821916Z ##[group]Run ./.github/actions/go-version
+2022-06-04T16:04:38.6822179Z ##[endgroup]
+2022-06-04T16:04:38.7095086Z ##[group]Run echo "Building with Go $(cat .go-version)"
+2022-06-04T16:04:38.7095465Z [36;1mecho "Building with Go $(cat .go-version)"[0m
+2022-06-04T16:04:38.7095761Z [36;1mecho "::set-output name=version::$(cat .go-version)"[0m
+2022-06-04T16:04:38.7154834Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2022-06-04T16:04:38.7155139Z ##[endgroup]
+2022-06-04T16:04:38.7319175Z Building with Go 1.18.1
+2022-06-04T16:04:38.7479026Z ##[group]Run actions/setup-go@v2
+2022-06-04T16:04:38.7479250Z with:
+2022-06-04T16:04:38.7479446Z   go-version: 1.18.1
+2022-06-04T16:04:38.7479663Z   check-latest: false
+2022-06-04T16:04:38.7479860Z   stable: true
+2022-06-04T16:04:38.7480248Z   token: ***
+2022-06-04T16:04:38.7480444Z ##[endgroup]
+2022-06-04T16:04:38.7971219Z Setup go stable version spec 1.18.1
+2022-06-04T16:04:38.7989853Z Attempting to download 1.18.1...
+2022-06-04T16:04:39.0632548Z matching 1.18.1...
+2022-06-04T16:04:39.0681219Z Acquiring 1.18.1 from https://github.com/actions/go-versions/releases/download/1.18.1-2171178401/go-1.18.1-linux-x64.tar.gz
+2022-06-04T16:04:39.8731517Z Extracting Go...
+2022-06-04T16:04:39.8836020Z [command]/usr/bin/tar xz --warning=no-unknown-keyword -C /home/runner/work/_temp/90d167a9-9865-4472-9136-c57cdc7862fe -f /home/runner/work/_temp/ab9fbce7-666b-4e05-bfde-190760ed3e42
+2022-06-04T16:04:43.0153965Z Successfully extracted go to /home/runner/work/_temp/90d167a9-9865-4472-9136-c57cdc7862fe
+2022-06-04T16:04:43.0154724Z Adding to the cache ...
+2022-06-04T16:04:47.5169342Z Successfully cached go to /opt/hostedtoolcache/go/1.18.1/x64
+2022-06-04T16:04:47.5172700Z Added go to the path
+2022-06-04T16:04:47.5279851Z Successfully setup go version 1.18.1
+2022-06-04T16:04:47.5356283Z go version go1.18.1 linux/amd64
+2022-06-04T16:04:47.5356671Z 
+2022-06-04T16:04:47.5357412Z ##[group]go env
+2022-06-04T16:04:47.6680795Z GO111MODULE=""
+2022-06-04T16:04:47.6681597Z GOARCH="amd64"
+2022-06-04T16:04:47.6682648Z GOBIN=""
+2022-06-04T16:04:47.6686120Z GOCACHE="/home/runner/.cache/go-build"
+2022-06-04T16:04:47.6686895Z GOENV="/home/runner/.config/go/env"
+2022-06-04T16:04:47.6687292Z GOEXE=""
+2022-06-04T16:04:47.6687838Z GOEXPERIMENT=""
+2022-06-04T16:04:47.6688202Z GOFLAGS=""
+2022-06-04T16:04:47.6688749Z GOHOSTARCH="amd64"
+2022-06-04T16:04:47.6689101Z GOHOSTOS="linux"
+2022-06-04T16:04:47.6689645Z GOINSECURE=""
+2022-06-04T16:04:47.6690042Z GOMODCACHE="/home/runner/go/pkg/mod"
+2022-06-04T16:04:47.6690646Z GONOPROXY=""
+2022-06-04T16:04:47.6690979Z GONOSUMDB=""
+2022-06-04T16:04:47.6691510Z GOOS="linux"
+2022-06-04T16:04:47.6691887Z GOPATH="/home/runner/go"
+2022-06-04T16:04:47.6692475Z GOPRIVATE=""
+2022-06-04T16:04:47.6692918Z GOPROXY="https://proxy.golang.org,direct"
+2022-06-04T16:04:47.6693579Z GOROOT="/opt/hostedtoolcache/go/1.18.1/x64"
+2022-06-04T16:04:47.6694019Z GOSUMDB="sum.golang.org"
+2022-06-04T16:04:47.6694560Z GOTMPDIR=""
+2022-06-04T16:04:47.6718757Z GOTOOLDIR="/opt/hostedtoolcache/go/1.18.1/x64/pkg/tool/linux_amd64"
+2022-06-04T16:04:47.6725548Z GOVCS=""
+2022-06-04T16:04:47.6725971Z GOVERSION="go1.18.1"
+2022-06-04T16:04:47.6726560Z GCCGO="gccgo"
+2022-06-04T16:04:47.6726918Z GOAMD64="v1"
+2022-06-04T16:04:47.6727451Z AR="ar"
+2022-06-04T16:04:47.6727773Z CC="gcc"
+2022-06-04T16:04:47.6728296Z CXX="g++"
+2022-06-04T16:04:47.6728642Z CGO_ENABLED="1"
+2022-06-04T16:04:47.6729251Z GOMOD="/home/runner/work/terraform/terraform/go.mod"
+2022-06-04T16:04:47.6729650Z GOWORK=""
+2022-06-04T16:04:47.6730343Z CGO_CFLAGS="-g -O2"
+2022-06-04T16:04:47.6730964Z CGO_CPPFLAGS=""
+2022-06-04T16:04:47.6731582Z CGO_CXXFLAGS="-g -O2"
+2022-06-04T16:04:47.6732007Z CGO_FFLAGS="-g -O2"
+2022-06-04T16:04:47.6732620Z CGO_LDFLAGS="-g -O2"
+2022-06-04T16:04:47.6733044Z PKG_CONFIG="pkg-config"
+2022-06-04T16:04:47.6733736Z GOGCCFLAGS="-fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=/tmp/go-build1549785451=/tmp/go-build -gno-record-gcc-switches"
+2022-06-04T16:04:47.6734114Z 
+2022-06-04T16:04:47.6734631Z ##[endgroup]
+2022-06-04T16:04:47.8726142Z ##[group]Run actions/cache@v3
+2022-06-04T16:04:47.8726391Z with:
+2022-06-04T16:04:47.8726586Z   path: ~/go/pkg
+2022-06-04T16:04:47.8726896Z   key: go-mod-9a473cd8a5d217975d111fc1f81d69aaa65f7d90a3e103020d1af75baa7b5478
+2022-06-04T16:04:47.8727227Z   restore-keys: go-mod-
+
+2022-06-04T16:04:47.8727446Z env:
+2022-06-04T16:04:47.8727680Z   GOROOT: /opt/hostedtoolcache/go/1.18.1/x64
+2022-06-04T16:04:47.8728127Z ##[endgroup]
+2022-06-04T16:04:49.3761891Z Received 92274688 of 324582900 (28.4%), 87.9 MBs/sec
+2022-06-04T16:04:50.3760443Z Received 251658240 of 324582900 (77.5%), 119.9 MBs/sec
+2022-06-04T16:04:51.0118758Z Received 324582900 of 324582900 (100.0%), 117.4 MBs/sec
+2022-06-04T16:04:51.0125390Z Cache Size: ~310 MB (324582900 B)
+2022-06-04T16:04:51.0232102Z [command]/usr/bin/tar --use-compress-program zstd -d -xf /home/runner/work/_temp/1abdf795-348b-4081-b89e-211bf2907da8/cache.tzst -P -C /home/runner/work/terraform/terraform
+2022-06-04T16:04:57.4127336Z Cache restored successfully
+2022-06-04T16:04:57.8730129Z 
+2022-06-04T16:04:57.8734208Z Cache restored from key: go-mod-9a473cd8a5d217975d111fc1f81d69aaa65f7d90a3e103020d1af75baa7b5478
+2022-06-04T16:04:57.9278463Z ##[group]Run go test ./...
+2022-06-04T16:04:57.9278869Z [36;1mgo test ./...[0m
+2022-06-04T16:04:57.9346313Z shell: /usr/bin/bash -e {0}
+2022-06-04T16:04:57.9346825Z env:
+2022-06-04T16:04:57.9347156Z   GOROOT: /opt/hostedtoolcache/go/1.18.1/x64
+2022-06-04T16:04:57.9347504Z ##[endgroup]
+2022-06-04T16:04:58.1593858Z go: downloading github.com/go-test/deep v1.0.3
+2022-06-04T16:04:58.1698128Z go: downloading github.com/hashicorp/consul/sdk v0.8.0
+2022-06-04T16:04:58.2999891Z go: downloading github.com/apparentlymart/go-dump v0.0.0-20190214190832-042adf3cf4a0
+2022-06-04T16:04:58.3014592Z go: downloading github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
+2022-06-04T16:04:58.3188996Z go: downloading github.com/golang/mock v1.6.0
+2022-06-04T16:04:58.3905002Z go: downloading github.com/dylanmei/winrmtest v0.0.0-20210303004826-fbc9ae56efb6
+2022-06-04T16:04:58.4019804Z go: downloading github.com/zclconf/go-cty-debug v0.0.0-20191215020915-b22d67c1ba0b
+2022-06-04T16:04:58.4626145Z go: downloading github.com/creack/pty v1.1.18
+2022-06-04T16:04:58.4785971Z go: downloading github.com/antchfx/xmlquery v1.3.5
+2022-06-04T16:04:58.7010279Z go: downloading github.com/antchfx/xpath v1.1.10
+2022-06-04T16:06:36.2569285Z # github.com/hashicorp/terraform [github.com/hashicorp/terraform.test]
+2022-06-04T16:06:36.2637587Z ##[error]./commands.go:395:20: undefined: command.TfversionCommand
+2022-06-04T16:06:52.1754831Z FAIL	github.com/hashicorp/terraform [build failed]
+2022-06-04T16:06:53.9028118Z ok  	github.com/hashicorp/terraform/internal/addrs	0.036s
+2022-06-04T16:06:53.9029927Z ok  	github.com/hashicorp/terraform/internal/backend	0.037s
+2022-06-04T16:06:56.6888678Z ok  	github.com/hashicorp/terraform/internal/backend/init	0.054s
+2022-06-04T16:06:56.6890461Z ok  	github.com/hashicorp/terraform/internal/backend/local	0.191s
+2022-06-04T16:06:58.4752037Z --- FAIL: TestRemote_applyBasic (0.00s)
+2022-06-04T16:06:58.4797767Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4798494Z --- FAIL: TestRemote_applyCanceled (0.00s)
+2022-06-04T16:06:58.4799372Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4800195Z --- FAIL: TestRemote_applyWithoutPermissions (0.00s)
+2022-06-04T16:06:58.4801062Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4801565Z --- FAIL: TestRemote_applyWithVCS (0.00s)
+2022-06-04T16:06:58.4802408Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4802952Z --- FAIL: TestRemote_applyWithParallelism (0.00s)
+2022-06-04T16:06:58.4803807Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4804294Z --- FAIL: TestRemote_applyWithPlan (0.00s)
+2022-06-04T16:06:58.4805138Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4805676Z --- FAIL: TestRemote_applyWithoutRefresh (0.00s)
+2022-06-04T16:06:58.4806520Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4807133Z --- FAIL: TestRemote_applyWithoutRefreshIncompatibleAPIVersion (0.01s)
+2022-06-04T16:06:58.4808168Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4808711Z --- FAIL: TestRemote_applyWithRefreshOnly (0.00s)
+2022-06-04T16:06:58.4809543Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4810162Z --- FAIL: TestRemote_applyWithRefreshOnlyIncompatibleAPIVersion (0.00s)
+2022-06-04T16:06:58.4811080Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4811587Z --- FAIL: TestRemote_applyWithTarget (0.00s)
+2022-06-04T16:06:58.4812774Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4813464Z --- FAIL: TestRemote_applyWithTargetIncompatibleAPIVersion (0.00s)
+2022-06-04T16:06:58.4814447Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4815069Z --- FAIL: TestRemote_applyWithReplace (0.00s)
+2022-06-04T16:06:58.4815992Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4816658Z --- FAIL: TestRemote_applyWithReplaceIncompatibleAPIVersion (0.00s)
+2022-06-04T16:06:58.4817618Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4818218Z --- FAIL: TestRemote_applyWithVariables (0.00s)
+2022-06-04T16:06:58.4819145Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4819741Z --- FAIL: TestRemote_applyNoConfig (0.00s)
+2022-06-04T16:06:58.4820660Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4821248Z --- FAIL: TestRemote_applyNoChanges (0.00s)
+2022-06-04T16:06:58.4822157Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4822852Z --- FAIL: TestRemote_applyNoApprove (0.00s)
+2022-06-04T16:06:58.4823760Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4824352Z --- FAIL: TestRemote_applyAutoApprove (0.00s)
+2022-06-04T16:06:58.4825272Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4825886Z --- FAIL: TestRemote_applyApprovedExternally (0.00s)
+2022-06-04T16:06:58.4826802Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4827415Z --- FAIL: TestRemote_applyDiscardedExternally (0.00s)
+2022-06-04T16:06:58.4828344Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4828945Z --- FAIL: TestRemote_applyWithAutoApply (0.00s)
+2022-06-04T16:06:58.4829867Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4830452Z --- FAIL: TestRemote_applyForceLocal (0.00s)
+2022-06-04T16:06:58.4831443Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4832100Z --- FAIL: TestRemote_applyWorkspaceWithoutOperations (0.00s)
+2022-06-04T16:06:58.4833054Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4833669Z --- FAIL: TestRemote_applyLockTimeout (0.00s)
+2022-06-04T16:06:58.4834577Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4835130Z --- FAIL: TestRemote_applyDestroy (0.00s)
+2022-06-04T16:06:58.4839652Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4840377Z --- FAIL: TestRemote_applyDestroyNoConfig (0.00s)
+2022-06-04T16:06:58.4841310Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4841907Z --- FAIL: TestRemote_applyPolicyPass (0.00s)
+2022-06-04T16:06:58.4842824Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4843441Z --- FAIL: TestRemote_applyPolicyHardFail (0.00s)
+2022-06-04T16:06:58.4844365Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4844972Z --- FAIL: TestRemote_applyPolicySoftFail (0.00s)
+2022-06-04T16:06:58.4845891Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4846575Z --- FAIL: TestRemote_applyPolicySoftFailAutoApproveSuccess (0.00s)
+2022-06-04T16:06:58.4847557Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4848182Z --- FAIL: TestRemote_applyPolicySoftFailAutoApply (0.00s)
+2022-06-04T16:06:58.4849299Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4849912Z --- FAIL: TestRemote_applyWithRemoteError (0.00s)
+2022-06-04T16:06:58.4850836Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4851435Z --- FAIL: TestRemote_applyVersionCheck (0.00s)
+2022-06-04T16:06:58.4852117Z     --- FAIL: TestRemote_applyVersionCheck/versions_can_be_different_for_remote_apply (0.00s)
+2022-06-04T16:06:58.4853278Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4854076Z     --- FAIL: TestRemote_applyVersionCheck/versions_can_be_different_for_local_apply (0.00s)
+2022-06-04T16:06:58.4855243Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4856144Z     --- FAIL: TestRemote_applyVersionCheck/force_local_with_remote_operations_and_different_versions_is_acceptable (0.00s)
+2022-06-04T16:06:58.4857338Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4858200Z     --- FAIL: TestRemote_applyVersionCheck/no_error_if_versions_are_identical (0.00s)
+2022-06-04T16:06:58.4859350Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4860254Z     --- FAIL: TestRemote_applyVersionCheck/no_error_if_force_local_but_workspace_has_remote_operations_disabled (0.00s)
+2022-06-04T16:06:58.4861443Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4862175Z --- FAIL: TestRemoteContextWithVars (0.01s)
+2022-06-04T16:06:58.4862777Z     --- FAIL: TestRemoteContextWithVars/environment_variable (0.00s)
+2022-06-04T16:06:58.4863908Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4864639Z     --- FAIL: TestRemoteContextWithVars/Terraform_variable (0.01s)
+2022-06-04T16:06:58.4865763Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4866398Z --- FAIL: TestRemoteVariablesDoNotOverride (0.00s)
+2022-06-04T16:06:58.4867056Z     --- FAIL: TestRemoteVariablesDoNotOverride/no_local_variables (0.00s)
+2022-06-04T16:06:58.4868205Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4869043Z     --- FAIL: TestRemoteVariablesDoNotOverride/single_conflicting_local_variable (0.00s)
+2022-06-04T16:06:58.4870196Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4870986Z     --- FAIL: TestRemoteVariablesDoNotOverride/no_conflicting_local_variable (0.00s)
+2022-06-04T16:06:58.4872144Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4872713Z --- FAIL: TestRemote_planBasic (0.00s)
+2022-06-04T16:06:58.4873731Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4874311Z --- FAIL: TestRemote_planCanceled (0.00s)
+2022-06-04T16:06:58.4875228Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4876490Z --- FAIL: TestRemote_planLongLine (0.00s)
+2022-06-04T16:06:58.4877407Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4878022Z --- FAIL: TestRemote_planWithoutPermissions (0.00s)
+2022-06-04T16:06:58.4878958Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4879559Z --- FAIL: TestRemote_planWithParallelism (0.00s)
+2022-06-04T16:06:58.4880472Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4881048Z --- FAIL: TestRemote_planWithPlan (0.00s)
+2022-06-04T16:06:58.4881953Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4882541Z --- FAIL: TestRemote_planWithPath (0.00s)
+2022-06-04T16:06:58.4883594Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4884211Z --- FAIL: TestRemote_planWithoutRefresh (0.00s)
+2022-06-04T16:06:58.4885140Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4885838Z --- FAIL: TestRemote_planWithoutRefreshIncompatibleAPIVersion (0.00s)
+2022-06-04T16:06:58.4886819Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4887427Z --- FAIL: TestRemote_planWithRefreshOnly (0.00s)
+2022-06-04T16:06:58.4888345Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4889038Z --- FAIL: TestRemote_planWithRefreshOnlyIncompatibleAPIVersion (0.00s)
+2022-06-04T16:06:58.4890005Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4890592Z --- FAIL: TestRemote_planWithTarget (0.00s)
+2022-06-04T16:06:58.4891509Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4892177Z --- FAIL: TestRemote_planWithTargetIncompatibleAPIVersion (0.00s)
+2022-06-04T16:06:58.4893142Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4893737Z --- FAIL: TestRemote_planWithReplace (0.00s)
+2022-06-04T16:06:58.4894649Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4895326Z --- FAIL: TestRemote_planWithReplaceIncompatibleAPIVersion (0.00s)
+2022-06-04T16:06:58.4896289Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4896984Z --- FAIL: TestRemote_planWithVariables (0.00s)
+2022-06-04T16:06:58.4897906Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4898478Z --- FAIL: TestRemote_planNoConfig (0.00s)
+2022-06-04T16:06:58.4899372Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4899950Z --- FAIL: TestRemote_planNoChanges (0.00s)
+2022-06-04T16:06:58.4900859Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4901441Z --- FAIL: TestRemote_planForceLocal (0.00s)
+2022-06-04T16:06:58.4902345Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4902994Z --- FAIL: TestRemote_planWithoutOperationsEntitlement (0.00s)
+2022-06-04T16:06:58.4903954Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4904586Z --- FAIL: TestRemote_planWorkspaceWithoutOperations (0.00s)
+2022-06-04T16:06:58.4910207Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4910733Z --- FAIL: TestRemote_planLockTimeout (0.01s)
+2022-06-04T16:06:58.4911553Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4912040Z --- FAIL: TestRemote_planDestroy (0.00s)
+2022-06-04T16:06:58.4912878Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4913401Z --- FAIL: TestRemote_planDestroyNoConfig (0.00s)
+2022-06-04T16:06:58.4914243Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4914786Z --- FAIL: TestRemote_planWithWorkingDirectory (0.00s)
+2022-06-04T16:06:58.4916044Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4916663Z --- FAIL: TestRemote_planWithWorkingDirectoryFromCurrentPath (0.00s)
+2022-06-04T16:06:58.4917546Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4918069Z --- FAIL: TestRemote_planCostEstimation (0.00s)
+2022-06-04T16:06:58.4918911Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4919413Z --- FAIL: TestRemote_planPolicyPass (0.00s)
+2022-06-04T16:06:58.4920363Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4920908Z --- FAIL: TestRemote_planPolicyHardFail (0.00s)
+2022-06-04T16:06:58.4921772Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4922313Z --- FAIL: TestRemote_planPolicySoftFail (0.00s)
+2022-06-04T16:06:58.4923175Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4923824Z --- FAIL: TestRemote_planWithRemoteError (0.00s)
+2022-06-04T16:06:58.4924690Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4925206Z --- FAIL: TestRemote_planOtherError (0.00s)
+2022-06-04T16:06:58.4926066Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4926571Z --- FAIL: TestRemoteClient (0.00s)
+2022-06-04T16:06:58.4927405Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4927926Z --- FAIL: TestRemoteClient_stateLock (0.00s)
+2022-06-04T16:06:58.4928775Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4929288Z --- FAIL: TestRemoteClient_withRunID (0.00s)
+2022-06-04T16:06:58.4930127Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4930621Z --- FAIL: TestRemote_backendDefault (0.00s)
+2022-06-04T16:06:58.4931528Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4932062Z --- FAIL: TestRemote_backendNoDefault (0.00s)
+2022-06-04T16:06:58.4932906Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4933406Z --- FAIL: TestRemote_config (0.02s)
+2022-06-04T16:06:58.4934473Z     backend_test.go:151: with_a_nonexisting_organization: unexpected configure result: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4935160Z --- FAIL: TestRemote_localBackend (0.00s)
+2022-06-04T16:06:58.4936008Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4936600Z --- FAIL: TestRemote_addAndRemoveWorkspacesDefault (0.00s)
+2022-06-04T16:06:58.4937492Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4938062Z --- FAIL: TestRemote_addAndRemoveWorkspacesNoDefault (0.00s)
+2022-06-04T16:06:58.4938951Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4939472Z --- FAIL: TestRemote_checkConstraints (0.00s)
+2022-06-04T16:06:58.4940328Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4940870Z --- FAIL: TestRemote_StateMgr_versionCheck (0.00s)
+2022-06-04T16:06:58.4941731Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4942294Z --- FAIL: TestRemote_StateMgr_versionCheckLatest (0.00s)
+2022-06-04T16:06:58.4943159Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4943868Z --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion (0.00s)
+2022-06-04T16:06:58.4944519Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_0.13.5,_remote_0.13.5 (0.00s)
+2022-06-04T16:06:58.4945623Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4946349Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_0.14.0,_remote_0.13.5 (0.00s)
+2022-06-04T16:06:58.4947450Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4948192Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_0.14.0,_remote_0.13.5#01 (0.00s)
+2022-06-04T16:06:58.4949283Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4950025Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_0.14.0,_remote_0.14.1 (0.00s)
+2022-06-04T16:06:58.4951115Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4951922Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_0.14.0,_remote_1.0.99 (0.00s)
+2022-06-04T16:06:58.4953081Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4953886Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_0.14.0,_remote_1.1.0 (0.00s)
+2022-06-04T16:06:58.4954975Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4955848Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_0.14.0,_remote_1.3.0 (0.00s)
+2022-06-04T16:06:58.4956943Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4957731Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_1.2.0,_remote_1.2.99 (0.00s)
+2022-06-04T16:06:58.4958813Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4959541Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_1.2.0,_remote_1.3.0 (0.00s)
+2022-06-04T16:06:58.4960638Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4961423Z     --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion/local_0.15.0,_remote_latest (0.00s)
+2022-06-04T16:06:58.4962524Z         testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4963212Z --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion_workspaceErrors (0.00s)
+2022-06-04T16:06:58.4964135Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4964766Z --- FAIL: TestRemote_VerifyWorkspaceTerraformVersion_ignoreFlagSet (0.00s)
+2022-06-04T16:06:58.4965679Z     testing.go:132: Incompatible Terraform version v1.3.0-tfversion: The configured Terraform Enterprise backend is compatible with Terraform versions >= 0.1.0, <= 10.0.0.
+2022-06-04T16:06:58.4966072Z FAIL
+2022-06-04T16:06:58.4966380Z FAIL	github.com/hashicorp/terraform/internal/backend/remote	0.112s
+2022-06-04T16:06:58.4967008Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/artifactory	0.026s
+2022-06-04T16:06:59.7147786Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/azure	0.017s
+2022-06-04T16:07:00.3409731Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/consul	0.017s
+2022-06-04T16:07:01.1525185Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/cos	0.017s
+2022-06-04T16:07:01.6137991Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/etcdv2	0.016s
+2022-06-04T16:07:02.5849412Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/etcdv3	0.023s
+2022-06-04T16:07:03.0408127Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/gcs	0.019s
+2022-06-04T16:07:07.8720088Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/http	4.025s
+2022-06-04T16:07:07.8723435Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/inmem	0.021s
+2022-06-04T16:07:07.8726502Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/kubernetes	0.023s
+2022-06-04T16:07:07.8729502Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/manta	0.015s
+2022-06-04T16:07:08.5936796Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/oss	0.018s
+2022-06-04T16:07:09.1700830Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/pg	0.021s
+2022-06-04T16:07:10.3541304Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/s3	0.016s
+2022-06-04T16:07:10.5458875Z ok  	github.com/hashicorp/terraform/internal/backend/remote-state/swift	0.017s
+2022-06-04T16:07:13.0837773Z ok  	github.com/hashicorp/terraform/internal/builtin/providers/terraform	0.031s
+2022-06-04T16:07:13.0838612Z ok  	github.com/hashicorp/terraform/internal/builtin/provisioners/file	0.004s
+2022-06-04T16:07:13.0839923Z ok  	github.com/hashicorp/terraform/internal/builtin/provisioners/local-exec	0.073s
+2022-06-04T16:07:14.3426851Z ok  	github.com/hashicorp/terraform/internal/builtin/provisioners/remote-exec	2.011s
+2022-06-04T16:07:16.0617443Z 1.3.0-tfversion-dev
+2022-06-04T16:07:16.0617866Z --- FAIL: TestCloud_applyBasic (0.01s)
+2022-06-04T16:07:16.0618276Z panic: runtime error: invalid memory address or nil pointer dereference [recovered]
+2022-06-04T16:07:16.0618720Z 	panic: runtime error: invalid memory address or nil pointer dereference
+2022-06-04T16:07:16.0619095Z [signal SIGSEGV: segmentation violation code=0x1 addr=0x18 pc=0xff12b9]
+2022-06-04T16:07:16.0619303Z 
+2022-06-04T16:07:16.0619410Z goroutine 21 [running]:
+2022-06-04T16:07:16.0619704Z testing.tRunner.func1.2({0x11332a0, 0x1db8480})
+2022-06-04T16:07:16.0620145Z 	/opt/hostedtoolcache/go/1.18.1/x64/src/testing/testing.go:1389 +0x24e
+2022-06-04T16:07:16.0620448Z testing.tRunner.func1()
+2022-06-04T16:07:16.0620796Z 	/opt/hostedtoolcache/go/1.18.1/x64/src/testing/testing.go:1392 +0x39f
+2022-06-04T16:07:16.0621077Z panic({0x11332a0, 0x1db8480})
+2022-06-04T16:07:16.0621412Z 	/opt/hostedtoolcache/go/1.18.1/x64/src/runtime/panic.go:838 +0x207
+2022-06-04T16:07:16.0621817Z github.com/hashicorp/terraform/internal/cloud.TestCloud_applyBasic(0xc000207040)
+2022-06-04T16:07:16.0622278Z 	/home/runner/work/terraform/terraform/internal/cloud/backend_apply_test.go:112 +0x5b9
+2022-06-04T16:07:16.0622626Z testing.tRunner(0xc000207040, 0x131eec0)
+2022-06-04T16:07:16.0622985Z 	/opt/hostedtoolcache/go/1.18.1/x64/src/testing/testing.go:1439 +0x102
+2022-06-04T16:07:16.0623268Z created by testing.(*T).Run
+2022-06-04T16:07:16.0623611Z 	/opt/hostedtoolcache/go/1.18.1/x64/src/testing/testing.go:1486 +0x35f
+2022-06-04T16:07:16.0623968Z FAIL	github.com/hashicorp/terraform/internal/cloud	0.041s
+2022-06-04T16:07:18.3413558Z Could not run exec command: exit status 2
+2022-06-04T16:07:18.3414468Z FAIL	github.com/hashicorp/terraform/internal/cloud/e2e	2.054s
+2022-06-04T16:07:52.2759085Z --- FAIL: TestInit_checkRequiredVersion (0.00s)
+2022-06-04T16:07:52.2760108Z     init_test.go:2011: output should not point to met version constraint, but is:
+2022-06-04T16:07:52.2760734Z         
+2022-06-04T16:07:52.2761465Z         
+2022-06-04T16:07:52.2762027Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.2762412Z         
+2022-06-04T16:07:52.2843747Z           on main.tf line 2, in terraform:
+2022-06-04T16:07:52.2844200Z            2:     required_version = "~> 0.9.0"
+2022-06-04T16:07:52.2844452Z         
+2022-06-04T16:07:52.2845203Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.2845787Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.2846378Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.2846938Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.2847239Z         
+2022-06-04T16:07:52.2914643Z         
+2022-06-04T16:07:52.2915129Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.2915411Z         
+2022-06-04T16:07:52.2915880Z           on main.tf line 6, in terraform:
+2022-06-04T16:07:52.2916299Z            6:     required_version = ">= 0.13.0"
+2022-06-04T16:07:52.2916547Z         
+2022-06-04T16:07:52.2917300Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.2917889Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.2918464Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.2919047Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.2919346Z         
+2022-06-04T16:07:52.2919874Z Test:  valid pattern
+2022-06-04T16:07:52.2920148Z Test:  invalid pattern, only one asterisk allowed
+2022-06-04T16:07:52.2920447Z Test:  invalid pattern, missing asterisk
+2022-06-04T16:07:52.2920703Z Test:  invalid rename
+2022-06-04T16:07:52.2920932Z Test:  no rename
+2022-06-04T16:07:52.2921308Z --- FAIL: TestCommand_checkRequiredVersion (0.00s)
+2022-06-04T16:07:52.2921799Z     meta_test.go:413: output should not point to met version constraint, but is:
+2022-06-04T16:07:52.2922110Z         
+2022-06-04T16:07:52.2922312Z         
+2022-06-04T16:07:52.2922655Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.2922915Z         
+2022-06-04T16:07:52.2923441Z           on /tmp/TestCommand_checkRequiredVersion3168662157/001/main.tf line 2, in terraform:
+2022-06-04T16:07:52.2923904Z            2:   required_version = "~> 0.9.0"
+2022-06-04T16:07:52.2924146Z         
+2022-06-04T16:07:52.2924727Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.2925298Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.2925862Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.2926395Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.2926690Z         
+2022-06-04T16:07:52.2926892Z         
+2022-06-04T16:07:52.2927236Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.2927495Z         
+2022-06-04T16:07:52.2928016Z           on /tmp/TestCommand_checkRequiredVersion3168662157/001/main.tf line 6, in terraform:
+2022-06-04T16:07:52.2928473Z            6:   required_version = ">= 0.13.0"
+2022-06-04T16:07:52.2928713Z         
+2022-06-04T16:07:52.2929289Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.2929857Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.2930430Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.2930969Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.2931265Z         
+2022-06-04T16:07:52.2931605Z --- FAIL: TestStateMv_checkRequiredVersion (0.00s)
+2022-06-04T16:07:52.2932095Z     state_mv_test.go:1780: output should not point to met version constraint, but is:
+2022-06-04T16:07:52.2932507Z         
+2022-06-04T16:07:52.2932709Z         
+2022-06-04T16:07:52.2933042Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.2933301Z         
+2022-06-04T16:07:52.2933834Z           on /tmp/TestStateMv_checkRequiredVersion2929232679/001/main.tf line 2, in terraform:
+2022-06-04T16:07:52.2934302Z            2:   required_version = "~> 0.9.0"
+2022-06-04T16:07:52.2934543Z         
+2022-06-04T16:07:52.2935103Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.2935672Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.2936243Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.2936790Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.2937088Z         
+2022-06-04T16:07:52.2937293Z         
+2022-06-04T16:07:52.2937624Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.2937880Z         
+2022-06-04T16:07:52.2938412Z           on /tmp/TestStateMv_checkRequiredVersion2929232679/001/main.tf line 6, in terraform:
+2022-06-04T16:07:52.2938869Z            6:   required_version = ">= 0.13.0"
+2022-06-04T16:07:52.2939106Z         
+2022-06-04T16:07:52.2939663Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.2940232Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.2940801Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.2941419Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.2941718Z         
+2022-06-04T16:07:52.2942071Z --- FAIL: TestStatePull_checkRequiredVersion (0.00s)
+2022-06-04T16:07:52.3025786Z     state_pull_test.go:92: output should not point to met version constraint, but is:
+2022-06-04T16:07:52.3026221Z         
+2022-06-04T16:07:52.3026557Z         
+2022-06-04T16:07:52.3026923Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3027304Z         
+2022-06-04T16:07:52.3027953Z           on /tmp/TestStatePull_checkRequiredVersion232698799/001/main.tf line 2, in terraform:
+2022-06-04T16:07:52.3028425Z            2:   required_version = "~> 0.9.0"
+2022-06-04T16:07:52.3028776Z         
+2022-06-04T16:07:52.3029647Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3030338Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3031035Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3031604Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3032049Z         
+2022-06-04T16:07:52.3032256Z         
+2022-06-04T16:07:52.3032783Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3033053Z         
+2022-06-04T16:07:52.3033787Z           on /tmp/TestStatePull_checkRequiredVersion232698799/001/main.tf line 6, in terraform:
+2022-06-04T16:07:52.3034426Z            6:   required_version = ">= 0.13.0"
+2022-06-04T16:07:52.3034670Z         
+2022-06-04T16:07:52.3035318Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3036216Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3036845Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3037405Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3037862Z         
+2022-06-04T16:07:52.3038234Z --- FAIL: TestStatePush_checkRequiredVersion (0.00s)
+2022-06-04T16:07:52.3038796Z     state_push_test.go:314: output should not point to met version constraint, but is:
+2022-06-04T16:07:52.3039100Z         
+2022-06-04T16:07:52.3039304Z         
+2022-06-04T16:07:52.3039880Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3040138Z         
+2022-06-04T16:07:52.3040691Z           on /tmp/TestStatePush_checkRequiredVersion3148817062/001/main.tf line 2, in terraform:
+2022-06-04T16:07:52.3041157Z            2:   required_version = "~> 0.9.0"
+2022-06-04T16:07:52.3041580Z         
+2022-06-04T16:07:52.3042222Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3042790Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3043371Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3043920Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3044216Z         
+2022-06-04T16:07:52.3044418Z         
+2022-06-04T16:07:52.3044752Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3045012Z         
+2022-06-04T16:07:52.3045556Z           on /tmp/TestStatePush_checkRequiredVersion3148817062/001/main.tf line 6, in terraform:
+2022-06-04T16:07:52.3046021Z            6:   required_version = ">= 0.13.0"
+2022-06-04T16:07:52.3046259Z         
+2022-06-04T16:07:52.3046835Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3047385Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3047948Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3048807Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3049173Z         
+2022-06-04T16:07:52.3049598Z --- FAIL: TestStateReplaceProvider_checkRequiredVersion (0.00s)
+2022-06-04T16:07:52.3050164Z     state_replace_provider_test.go:386: output should not point to met version constraint, but is:
+2022-06-04T16:07:52.3050471Z         
+2022-06-04T16:07:52.3050675Z         
+2022-06-04T16:07:52.3051027Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3051286Z         
+2022-06-04T16:07:52.3051885Z           on /tmp/TestStateReplaceProvider_checkRequiredVersion1409985274/001/main.tf line 2, in terraform:
+2022-06-04T16:07:52.3052358Z            2:   required_version = "~> 0.9.0"
+2022-06-04T16:07:52.3052595Z         
+2022-06-04T16:07:52.3053169Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3053730Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3054302Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3054852Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3055133Z         
+2022-06-04T16:07:52.3055333Z         
+2022-06-04T16:07:52.3055681Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3055935Z         
+2022-06-04T16:07:52.3056536Z           on /tmp/TestStateReplaceProvider_checkRequiredVersion1409985274/001/main.tf line 6, in terraform:
+2022-06-04T16:07:52.3057012Z            6:   required_version = ">= 0.13.0"
+2022-06-04T16:07:52.3057252Z         
+2022-06-04T16:07:52.3057822Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3058388Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3058958Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3059510Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3059789Z         
+2022-06-04T16:07:52.3060137Z --- FAIL: TestStateRm_checkRequiredVersion (0.00s)
+2022-06-04T16:07:52.3060622Z     state_rm_test.go:556: output should not point to met version constraint, but is:
+2022-06-04T16:07:52.3060922Z         
+2022-06-04T16:07:52.3061123Z         
+2022-06-04T16:07:52.3061451Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3065284Z         
+2022-06-04T16:07:52.3066739Z           on /tmp/TestStateRm_checkRequiredVersion2710111886/001/main.tf line 2, in terraform:
+2022-06-04T16:07:52.3067218Z            2:   required_version = "~> 0.9.0"
+2022-06-04T16:07:52.3068370Z         
+2022-06-04T16:07:52.3069936Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3071396Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3072879Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3074361Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3074688Z         
+2022-06-04T16:07:52.3074894Z         
+2022-06-04T16:07:52.3075972Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3076221Z         
+2022-06-04T16:07:52.3077669Z           on /tmp/TestStateRm_checkRequiredVersion2710111886/001/main.tf line 6, in terraform:
+2022-06-04T16:07:52.3079048Z            6:   required_version = ">= 0.13.0"
+2022-06-04T16:07:52.3079297Z         
+2022-06-04T16:07:52.3081047Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3081612Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3084526Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3085097Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3085400Z         
+2022-06-04T16:07:52.3085949Z --- FAIL: TestTaint_checkRequiredVersion (0.00s)
+2022-06-04T16:07:52.3086449Z     taint_test.go:539: output should not point to met version constraint, but is:
+2022-06-04T16:07:52.3086731Z         
+2022-06-04T16:07:52.3086934Z         
+2022-06-04T16:07:52.3087281Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3087537Z         
+2022-06-04T16:07:52.3095416Z           on /tmp/TestTaint_checkRequiredVersion898384242/001/main.tf line 2, in terraform:
+2022-06-04T16:07:52.3095883Z            2:   required_version = "~> 0.9.0"
+2022-06-04T16:07:52.3096131Z         
+2022-06-04T16:07:52.3096774Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3097354Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3097924Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3098491Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3098776Z         
+2022-06-04T16:07:52.3098978Z         
+2022-06-04T16:07:52.3099332Z         Error: Unsupported Terraform Core version
+2022-06-04T16:07:52.3099592Z         
+2022-06-04T16:07:52.3100111Z           on /tmp/TestTaint_checkRequiredVersion898384242/001/main.tf line 6, in terraform:
+2022-06-04T16:07:52.3100562Z            6:   required_version = ">= 0.13.0"
+2022-06-04T16:07:52.3100803Z         
+2022-06-04T16:07:52.3101384Z         This configuration does not support Terraform version 1.3.0-tfversion-dev. To
+2022-06-04T16:07:52.3101950Z         proceed, either choose another supported Terraform version or update this
+2022-06-04T16:07:52.3102524Z         version constraint. Version constraints are normally set for good reason, so
+2022-06-04T16:07:52.3103075Z         updating the constraint may lead to other errors or unexpected behavior.
+2022-06-04T16:07:52.3103355Z         
+2022-06-04T16:07:52.3103539Z FAIL
+2022-06-04T16:07:52.3103819Z FAIL	github.com/hashicorp/terraform/internal/command	26.170s
+2022-06-04T16:07:52.3104191Z ok  	github.com/hashicorp/terraform/internal/command/arguments	0.039s
+2022-06-04T16:07:52.3104567Z ok  	github.com/hashicorp/terraform/internal/command/cliconfig	0.035s
+2022-06-04T16:07:52.3104939Z ok  	github.com/hashicorp/terraform/internal/command/clistate	0.014s
+2022-06-04T16:07:52.3105388Z # github.com/hashicorp/terraform
+2022-06-04T16:07:52.3106700Z ##[error]../../../commands.go:395:20: undefined: command.TfversionCommand
+2022-06-04T16:07:52.3144896Z panic: failed to build executable: exit status 2
+2022-06-04T16:07:52.3145110Z 
+2022-06-04T16:07:52.3145219Z goroutine 1 [running]:
+2022-06-04T16:07:52.3145580Z github.com/hashicorp/terraform/internal/e2e.GoBuild({0xffb8b1, 0x1e}, {0xfdf8a6?, 0x78?})
+2022-06-04T16:07:52.3146020Z 	/home/runner/work/terraform/terraform/internal/e2e/e2e.go:261 +0x227
+2022-06-04T16:07:52.3146398Z github.com/hashicorp/terraform/internal/command/e2etest.setup()
+2022-06-04T16:07:52.3146847Z 	/home/runner/work/terraform/terraform/internal/command/e2etest/main_test.go:48 +0x97
+2022-06-04T16:07:52.3147252Z github.com/hashicorp/terraform/internal/command/e2etest.TestMain(0x4424b1?)
+2022-06-04T16:07:52.3147691Z 	/home/runner/work/terraform/terraform/internal/command/e2etest/main_test.go:27 +0x1e
+2022-06-04T16:07:52.3147997Z main.main()
+2022-06-04T16:07:52.3148242Z 	_testmain.go:97 +0x1d3
+2022-06-04T16:07:52.3148563Z FAIL	github.com/hashicorp/terraform/internal/command/e2etest	1.883s
+2022-06-04T16:07:52.3148939Z ok  	github.com/hashicorp/terraform/internal/command/format	0.049s
+2022-06-04T16:07:52.3149307Z ok  	github.com/hashicorp/terraform/internal/command/jsonconfig	0.035s
+2022-06-04T16:07:52.3149686Z ok  	github.com/hashicorp/terraform/internal/command/jsonplan	0.017s
+2022-06-04T16:07:52.3150076Z ok  	github.com/hashicorp/terraform/internal/command/jsonprovider	0.018s
+2022-06-04T16:07:52.3150463Z ok  	github.com/hashicorp/terraform/internal/command/jsonstate	0.026s
+2022-06-04T16:07:52.3151020Z ok  	github.com/hashicorp/terraform/internal/command/views	3.157s
+2022-06-04T16:07:52.3151403Z ok  	github.com/hashicorp/terraform/internal/command/views/json	0.020s
+2022-06-04T16:07:52.3151776Z ok  	github.com/hashicorp/terraform/internal/command/webbrowser	0.005s
+2022-06-04T16:07:52.3152152Z ok  	github.com/hashicorp/terraform/internal/command/workdir	0.009s
+2022-06-04T16:07:52.3152526Z ok  	github.com/hashicorp/terraform/internal/communicator	1.036s
+2022-06-04T16:07:52.3152925Z ok  	github.com/hashicorp/terraform/internal/communicator/remote	0.004s [no tests to run]
+2022-06-04T16:07:52.3153331Z ok  	github.com/hashicorp/terraform/internal/communicator/shared	0.011s
+2022-06-04T16:07:52.3153716Z ok  	github.com/hashicorp/terraform/internal/communicator/ssh	2.336s
+2022-06-04T16:07:52.3154083Z ok  	github.com/hashicorp/terraform/internal/communicator/winrm	0.018s
+2022-06-04T16:07:52.3154450Z ok  	github.com/hashicorp/terraform/internal/configs	0.083s
+2022-06-04T16:07:52.3154819Z ok  	github.com/hashicorp/terraform/internal/configs/configload	0.062s
+2022-06-04T16:07:52.3155206Z ok  	github.com/hashicorp/terraform/internal/configs/configschema	0.013s
+2022-06-04T16:07:53.0769691Z ok  	github.com/hashicorp/terraform/internal/configs/hcl2shim	0.010s
+2022-06-04T16:07:53.0770530Z ok  	github.com/hashicorp/terraform/internal/copy	0.016s
+2022-06-04T16:07:54.1240747Z ok  	github.com/hashicorp/terraform/internal/dag	0.860s
+2022-06-04T16:07:54.2567987Z ok  	github.com/hashicorp/terraform/internal/depsfile	0.021s
+2022-06-04T16:07:54.3357428Z ok  	github.com/hashicorp/terraform/internal/didyoumean	0.003s
+2022-06-04T16:07:54.3358109Z ?   	github.com/hashicorp/terraform/internal/e2e	[no test files]
+2022-06-04T16:07:55.3051099Z ok  	github.com/hashicorp/terraform/internal/earlyconfig	0.015s
+2022-06-04T16:07:55.3053930Z ?   	github.com/hashicorp/terraform/internal/experiments	[no test files]
+2022-06-04T16:07:55.3056381Z ?   	github.com/hashicorp/terraform/internal/getmodules	[no test files]
+2022-06-04T16:08:00.2065594Z ok  	github.com/hashicorp/terraform/internal/getproviders	4.071s
+2022-06-04T16:08:00.2068370Z ?   	github.com/hashicorp/terraform/internal/grpcwrap	[no test files]
+2022-06-04T16:08:00.2071176Z ok  	github.com/hashicorp/terraform/internal/helper/slowmessage	0.108s
+2022-06-04T16:08:00.2073601Z ok  	github.com/hashicorp/terraform/internal/httpclient	0.005s
+2022-06-04T16:08:00.2076168Z ok  	github.com/hashicorp/terraform/internal/initwd	0.029s
+2022-06-04T16:08:00.2078757Z ok  	github.com/hashicorp/terraform/internal/instances	0.016s
+2022-06-04T16:08:00.2081127Z ok  	github.com/hashicorp/terraform/internal/ipaddr	0.002s
+2022-06-04T16:08:00.2083503Z ok  	github.com/hashicorp/terraform/internal/lang	0.036s
+2022-06-04T16:08:00.2085886Z ok  	github.com/hashicorp/terraform/internal/lang/blocktoattr	0.005s
+2022-06-04T16:08:01.5718797Z ok  	github.com/hashicorp/terraform/internal/lang/funcs	0.158s
+2022-06-04T16:08:01.6463075Z ok  	github.com/hashicorp/terraform/internal/lang/globalref	0.027s
+2022-06-04T16:08:01.6465817Z ?   	github.com/hashicorp/terraform/internal/lang/marks	[no test files]
+2022-06-04T16:08:01.6468041Z ?   	github.com/hashicorp/terraform/internal/lang/types	[no test files]
+2022-06-04T16:08:01.8693238Z ok  	github.com/hashicorp/terraform/internal/legacy/helper/acctest	0.003s
+2022-06-04T16:08:01.8693957Z ok  	github.com/hashicorp/terraform/internal/legacy/helper/hashcode	0.002s
+2022-06-04T16:08:05.1437338Z ok  	github.com/hashicorp/terraform/internal/legacy/helper/schema	0.099s
+2022-06-04T16:08:05.1440252Z ok  	github.com/hashicorp/terraform/internal/legacy/terraform	0.033s
+2022-06-04T16:08:05.1442669Z ok  	github.com/hashicorp/terraform/internal/logging	0.014s
+2022-06-04T16:08:05.1445135Z ?   	github.com/hashicorp/terraform/internal/modsdir	[no test files]
+2022-06-04T16:08:05.6213767Z ok  	github.com/hashicorp/terraform/internal/moduledeps	0.016s
+2022-06-04T16:08:06.2566236Z ok  	github.com/hashicorp/terraform/internal/moduletest	0.017s
+2022-06-04T16:08:06.8183382Z ok  	github.com/hashicorp/terraform/internal/plans	0.014s
+2022-06-04T16:08:06.8186558Z ?   	github.com/hashicorp/terraform/internal/plans/internal/planproto	[no test files]
+2022-06-04T16:08:08.8114301Z ok  	github.com/hashicorp/terraform/internal/plans/objchange	0.041s
+2022-06-04T16:08:08.8117519Z ok  	github.com/hashicorp/terraform/internal/plans/planfile	0.029s
+2022-06-04T16:08:09.8781103Z ok  	github.com/hashicorp/terraform/internal/plugin	0.016s
+2022-06-04T16:08:09.9471366Z ok  	github.com/hashicorp/terraform/internal/plugin/convert	0.019s
+2022-06-04T16:08:10.2628891Z ok  	github.com/hashicorp/terraform/internal/plugin/discovery	0.013s
+2022-06-04T16:08:10.2629612Z ?   	github.com/hashicorp/terraform/internal/plugin/mock_proto	[no test files]
+2022-06-04T16:08:11.2293008Z ok  	github.com/hashicorp/terraform/internal/plugin6	0.015s
+2022-06-04T16:08:11.2942587Z ok  	github.com/hashicorp/terraform/internal/plugin6/convert	0.023s
+2022-06-04T16:08:11.2944628Z ?   	github.com/hashicorp/terraform/internal/plugin6/mock_proto	[no test files]
+2022-06-04T16:08:11.2948023Z ?   	github.com/hashicorp/terraform/internal/provider-simple	[no test files]
+2022-06-04T16:08:11.3046396Z ?   	github.com/hashicorp/terraform/internal/provider-simple/main	[no test files]
+2022-06-04T16:08:11.3047249Z ?   	github.com/hashicorp/terraform/internal/provider-simple-v6	[no test files]
+2022-06-04T16:08:11.3589575Z ?   	github.com/hashicorp/terraform/internal/provider-simple-v6/main	[no test files]
+2022-06-04T16:08:11.3762212Z ?   	github.com/hashicorp/terraform/internal/provider-terraform/main	[no test files]
+2022-06-04T16:08:12.6965184Z ok  	github.com/hashicorp/terraform/internal/providercache	0.048s
+2022-06-04T16:08:12.6965622Z ok  	github.com/hashicorp/terraform/internal/providers	0.013s
+2022-06-04T16:08:12.6966530Z ?   	github.com/hashicorp/terraform/internal/provisioner-local-exec/main	[no test files]
+2022-06-04T16:08:12.6967057Z ?   	github.com/hashicorp/terraform/internal/provisioners	[no test files]
+2022-06-04T16:08:13.7819679Z ok  	github.com/hashicorp/terraform/internal/refactoring	0.039s
+2022-06-04T16:08:15.8037647Z ok  	github.com/hashicorp/terraform/internal/registry	2.022s
+2022-06-04T16:08:15.8039220Z ok  	github.com/hashicorp/terraform/internal/registry/regsrc	0.013s
+2022-06-04T16:08:15.8040519Z ok  	github.com/hashicorp/terraform/internal/registry/response	0.002s
+2022-06-04T16:08:15.8041811Z ?   	github.com/hashicorp/terraform/internal/registry/test	[no test files]
+2022-06-04T16:08:15.8043275Z ok  	github.com/hashicorp/terraform/internal/repl	0.033s
+2022-06-04T16:08:15.8044519Z ?   	github.com/hashicorp/terraform/internal/replacefile	[no test files]
+2022-06-04T16:08:17.0246473Z ok  	github.com/hashicorp/terraform/internal/states	0.022s
+2022-06-04T16:08:17.0510622Z --- FAIL: TestWriteStateForMigration (0.00s)
+2022-06-04T16:08:17.0511391Z     state_test.go:427: incorrect client requests for "can import lesser serial with force":
+2022-06-04T16:08:17.0521760Z           remote.mockClientRequest{
+2022-06-04T16:08:17.0522594Z         - 	Method: "Put",
+2022-06-04T16:08:17.0523122Z         + 	Method: "Get",
+2022-06-04T16:08:17.0523661Z           	Content: map[string]interface{}{
+2022-06-04T16:08:17.0524235Z           		"lineage":           string("mock-lineage"),
+2022-06-04T16:08:17.0525124Z           		"outputs":           map[string]interface{}{"foo": map[string]interface{}{"type": string("string"), "value": string("bar")}},
+2022-06-04T16:08:17.0525734Z           		"resources":         []interface{}{},
+2022-06-04T16:08:17.0526261Z         - 		"serial":            float64(2),
+2022-06-04T16:08:17.0526745Z         + 		"serial":            float64(3),
+2022-06-04T16:08:17.0527302Z         - 		"terraform_version": string("1.3.0-tfversion"),
+2022-06-04T16:08:17.0527824Z         + 		"terraform_version": string("0.0.0"),
+2022-06-04T16:08:17.0528319Z           		"version":           float64(4),
+2022-06-04T16:08:17.0528685Z           	},
+2022-06-04T16:08:17.0529017Z           }
+2022-06-04T16:08:17.0529520Z --- FAIL: TestWriteStateForMigrationWithForcePushClient (0.00s)
+2022-06-04T16:08:17.0530331Z     state_test.go:589: incorrect client requests for "can import lesser serial with force":
+2022-06-04T16:08:17.0530900Z           remote.mockClientRequest{
+2022-06-04T16:08:17.0531343Z         - 	Method: "Force Put",
+2022-06-04T16:08:17.0531758Z         + 	Method: "Get",
+2022-06-04T16:08:17.0532236Z           	Content: map[string]interface{}{
+2022-06-04T16:08:17.0532782Z           		"lineage":           string("mock-lineage"),
+2022-06-04T16:08:17.0533664Z           		"outputs":           map[string]interface{}{"foo": map[string]interface{}{"type": string("string"), "value": string("bar")}},
+2022-06-04T16:08:17.0534267Z           		"resources":         []interface{}{},
+2022-06-04T16:08:17.0534767Z         - 		"serial":            float64(2),
+2022-06-04T16:08:17.0535243Z         + 		"serial":            float64(3),
+2022-06-04T16:08:17.0535826Z         - 		"terraform_version": string("1.3.0-tfversion"),
+2022-06-04T16:08:17.0536366Z         + 		"terraform_version": string("0.0.0"),
+2022-06-04T16:08:17.0536875Z           		"version":           float64(4),
+2022-06-04T16:08:17.0537243Z           	},
+2022-06-04T16:08:17.0537575Z           }
+2022-06-04T16:08:17.0537823Z FAIL
+2022-06-04T16:08:17.0538186Z FAIL	github.com/hashicorp/terraform/internal/states/remote	0.018s
+2022-06-04T16:08:18.3312681Z ok  	github.com/hashicorp/terraform/internal/states/statefile	0.024s
+2022-06-04T16:08:21.1649473Z ok  	github.com/hashicorp/terraform/internal/states/statemgr	2.773s
+2022-06-04T16:08:21.1650355Z ok  	github.com/hashicorp/terraform/internal/terminal	0.003s
+2022-06-04T16:08:31.0723901Z ok  	github.com/hashicorp/terraform/internal/terraform	4.532s
+2022-06-04T16:08:31.0724930Z ok  	github.com/hashicorp/terraform/internal/tfdiags	0.018s
+2022-06-04T16:08:31.0725820Z ?   	github.com/hashicorp/terraform/internal/tfplugin5	[no test files]
+2022-06-04T16:08:31.0726240Z ?   	github.com/hashicorp/terraform/internal/tfplugin6	[no test files]
+2022-06-04T16:08:31.0726618Z ok  	github.com/hashicorp/terraform/internal/typeexpr	0.014s
+2022-06-04T16:08:31.0727043Z ?   	github.com/hashicorp/terraform/tools/loggraphdiff	[no test files]
+2022-06-04T16:08:31.0727889Z ?   	github.com/hashicorp/terraform/tools/protobuf-compile	[no test files]
+2022-06-04T16:08:31.0728252Z ?   	github.com/hashicorp/terraform/version	[no test files]
+2022-06-04T16:08:31.0728512Z FAIL
+2022-06-04T16:08:31.2658551Z ##[error]Process completed with exit code 2.
+2022-06-04T16:08:31.2719591Z Post job cleanup.
+2022-06-04T16:08:31.3991618Z [command]/usr/bin/git version
+2022-06-04T16:08:31.4045983Z git version 2.36.1
+2022-06-04T16:08:31.4088785Z Temporarily overriding HOME='/home/runner/work/_temp/1d723b15-5256-4003-bff7-d84ebe1ff8a8' before making global git config changes
+2022-06-04T16:08:31.4089622Z Adding repository directory to the temporary git global config as a safe directory
+2022-06-04T16:08:31.4094350Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/terraform/terraform
+2022-06-04T16:08:31.4136962Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2022-06-04T16:08:31.4171953Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+2022-06-04T16:08:31.4459769Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2022-06-04T16:08:31.4514186Z http.https://github.com/.extraheader
+2022-06-04T16:08:31.4523234Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2022-06-04T16:08:31.4559513Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+2022-06-04T16:08:31.5036777Z Cleaning up orphan processes

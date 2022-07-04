@@ -1,0 +1,206 @@
+2022-05-18T18:04:02.2065776Z Requested labels: windows-latest
+2022-05-18T18:04:02.2065831Z Job defined at: hashicorp/terraform/.github/workflows/build.yml@refs/heads/main
+2022-05-18T18:04:02.2065859Z Waiting for a runner to pick up this job...
+2022-05-18T18:04:03.9706236Z Job is waiting for a hosted runner to come online.
+2022-05-18T18:05:32.3304002Z Job is about to start running on the hosted runner: GitHub Actions 55 (hosted)
+2022-05-18T18:05:37.0414701Z Current runner version: '2.291.1'
+2022-05-18T18:05:37.0439733Z ##[group]Operating System
+2022-05-18T18:05:37.0440253Z Microsoft Windows Server 2022
+2022-05-18T18:05:37.0440514Z 10.0.20348
+2022-05-18T18:05:37.0440778Z Datacenter
+2022-05-18T18:05:37.0441081Z ##[endgroup]
+2022-05-18T18:05:37.0441418Z ##[group]Virtual Environment
+2022-05-18T18:05:37.0441766Z Environment: windows-2022
+2022-05-18T18:05:37.0442070Z Version: 20220515.1
+2022-05-18T18:05:37.0442550Z Included Software: https://github.com/actions/virtual-environments/blob/win22/20220515.1/images/win/Windows2022-Readme.md
+2022-05-18T18:05:37.0443132Z Image Release: https://github.com/actions/virtual-environments/releases/tag/win22%2F20220515.1
+2022-05-18T18:05:37.0443592Z ##[endgroup]
+2022-05-18T18:05:37.0443941Z ##[group]Virtual Environment Provisioner
+2022-05-18T18:05:37.0444238Z 1.0.0.0-main-20220421-1
+2022-05-18T18:05:37.0444539Z ##[endgroup]
+2022-05-18T18:05:37.0445170Z ##[group]GITHUB_TOKEN Permissions
+2022-05-18T18:05:37.0445752Z Contents: read
+2022-05-18T18:05:37.0446092Z Metadata: read
+2022-05-18T18:05:37.0446378Z Statuses: write
+2022-05-18T18:05:37.0446631Z ##[endgroup]
+2022-05-18T18:05:37.0450111Z Secret source: Actions
+2022-05-18T18:05:37.0450588Z Prepare workflow directory
+2022-05-18T18:05:37.1505897Z Prepare all required actions
+2022-05-18T18:05:37.1689347Z Getting action download info
+2022-05-18T18:05:37.3845741Z Download action repository 'actions/download-artifact@v2' (SHA:f023be2c48cc18debc3bacd34cb396e0295e2869)
+2022-05-18T18:05:38.4204134Z ##[group]Run actions/download-artifact@v2
+2022-05-18T18:05:38.4204542Z with:
+2022-05-18T18:05:38.4204792Z   name: terraform-e2etest_windows_amd64.zip
+2022-05-18T18:05:38.4205043Z   path: .
+2022-05-18T18:05:38.4205205Z env:
+2022-05-18T18:05:38.4205395Z   PKG_NAME: terraform
+2022-05-18T18:05:38.4205598Z   os: windows
+2022-05-18T18:05:38.4205767Z   arch: amd64
+2022-05-18T18:05:38.4205999Z   version: 1.2.0-alpha20220413-75-gf7f4a8261
+2022-05-18T18:05:38.4206228Z ##[endgroup]
+2022-05-18T18:05:41.8298229Z Starting download for terraform-e2etest_windows_amd64.zip
+2022-05-18T18:05:42.1821247Z Directory structure has been setup for the artifact
+2022-05-18T18:05:42.1830693Z Total number of files that will be downloaded: 1
+2022-05-18T18:05:43.1831926Z Total file count: 1 ---- Processed file #0 (0.0%)
+2022-05-18T18:05:43.8576419Z Artifact terraform-e2etest_windows_amd64.zip was downloaded to D:\a\terraform\terraform
+2022-05-18T18:05:43.8604008Z Artifact download has finished successfully
+2022-05-18T18:05:43.8923392Z ##[group]Run actions/download-artifact@v2
+2022-05-18T18:05:43.8923723Z with:
+2022-05-18T18:05:43.8924037Z   name: terraform_1.2.0-alpha20220413-75-gf7f4a8261_windows_amd64.zip
+2022-05-18T18:05:43.8924306Z   path: .
+2022-05-18T18:05:43.8924504Z env:
+2022-05-18T18:05:43.8924692Z   PKG_NAME: terraform
+2022-05-18T18:05:43.8924898Z   os: windows
+2022-05-18T18:05:43.8925068Z   arch: amd64
+2022-05-18T18:05:43.8925291Z   version: 1.2.0-alpha20220413-75-gf7f4a8261
+2022-05-18T18:05:43.8925525Z ##[endgroup]
+2022-05-18T18:05:43.9628069Z Starting download for terraform_1.2.0-alpha20220413-75-gf7f4a8261_windows_amd64.zip
+2022-05-18T18:05:44.1110176Z Directory structure has been setup for the artifact
+2022-05-18T18:05:44.1138174Z Total number of files that will be downloaded: 1
+2022-05-18T18:05:45.1119370Z Total file count: 1 ---- Processed file #0 (0.0%)
+2022-05-18T18:05:45.4390889Z Artifact terraform_1.2.0-alpha20220413-75-gf7f4a8261_windows_amd64.zip was downloaded to D:\a\terraform\terraform
+2022-05-18T18:05:45.4416844Z Artifact download has finished successfully
+2022-05-18T18:05:45.4637207Z ##[group]Run Expand-Archive -LiteralPath 'terraform-e2etest_windows_amd64.zip' -DestinationPath '.'
+2022-05-18T18:05:45.4637843Z [36;1mExpand-Archive -LiteralPath 'terraform-e2etest_windows_amd64.zip' -DestinationPath '.'[0m
+2022-05-18T18:05:45.4638338Z [36;1mExpand-Archive -LiteralPath 'terraform_1.2.0-alpha20220413-75-gf7f4a8261_windows_amd64.zip' -DestinationPath '.'[0m
+2022-05-18T18:05:45.5513971Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2022-05-18T18:05:45.5514318Z env:
+2022-05-18T18:05:45.5514528Z   PKG_NAME: terraform
+2022-05-18T18:05:45.5514760Z   os: windows
+2022-05-18T18:05:45.5514975Z   arch: amd64
+2022-05-18T18:05:45.5515229Z   version: 1.2.0-alpha20220413-75-gf7f4a8261
+2022-05-18T18:05:45.5515495Z ##[endgroup]
+2022-05-18T18:05:57.0699932Z ##[group]Run e2etest.exe -test.v
+2022-05-18T18:05:57.0700309Z [36;1me2etest.exe -test.v[0m
+2022-05-18T18:05:57.0728195Z shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
+2022-05-18T18:05:57.0728472Z env:
+2022-05-18T18:05:57.0728652Z   PKG_NAME: terraform
+2022-05-18T18:05:57.0728853Z   os: windows
+2022-05-18T18:05:57.0729042Z   arch: amd64
+2022-05-18T18:05:57.0729259Z   version: 1.2.0-alpha20220413-75-gf7f4a8261
+2022-05-18T18:05:57.0729484Z   TF_ACC: 1
+2022-05-18T18:05:57.0729667Z ##[endgroup]
+2022-05-18T18:05:57.1705951Z === RUN   TestPlanApplyInAutomation
+2022-05-18T18:05:57.1711872Z === PAUSE TestPlanApplyInAutomation
+2022-05-18T18:05:57.1713083Z === RUN   TestAutoApplyInAutomation
+2022-05-18T18:05:57.1713610Z === PAUSE TestAutoApplyInAutomation
+2022-05-18T18:05:57.1714040Z === RUN   TestPlanOnlyInAutomation
+2022-05-18T18:05:57.1714542Z === PAUSE TestPlanOnlyInAutomation
+2022-05-18T18:05:57.1715042Z === RUN   TestInitProviders
+2022-05-18T18:05:57.1715452Z === PAUSE TestInitProviders
+2022-05-18T18:05:57.1715805Z === RUN   TestInitProvidersInternal
+2022-05-18T18:05:57.1716159Z === PAUSE TestInitProvidersInternal
+2022-05-18T18:05:57.1716523Z === RUN   TestInitProvidersVendored
+2022-05-18T18:05:57.1716881Z === PAUSE TestInitProvidersVendored
+2022-05-18T18:05:57.1717235Z === RUN   TestInitProvidersLocalOnly
+2022-05-18T18:05:57.1717647Z === PAUSE TestInitProvidersLocalOnly
+2022-05-18T18:05:57.1718176Z === RUN   TestInitProvidersCustomMethod
+2022-05-18T18:05:57.1718586Z === PAUSE TestInitProvidersCustomMethod
+2022-05-18T18:05:57.1718949Z === RUN   TestInitProviders_pluginCache
+2022-05-18T18:05:57.1719322Z === PAUSE TestInitProviders_pluginCache
+2022-05-18T18:05:57.1719679Z === RUN   TestInit_fromModule
+2022-05-18T18:05:57.1719989Z === PAUSE TestInit_fromModule
+2022-05-18T18:05:57.1720337Z === RUN   TestInitProviderNotFound
+2022-05-18T18:05:57.1720735Z === PAUSE TestInitProviderNotFound
+2022-05-18T18:05:57.1721094Z === RUN   TestInitProviderWarnings
+2022-05-18T18:05:57.1721573Z === PAUSE TestInitProviderWarnings
+2022-05-18T18:05:57.1722051Z === RUN   TestPrimarySeparatePlan
+2022-05-18T18:05:57.1722463Z === PAUSE TestPrimarySeparatePlan
+2022-05-18T18:05:57.1722984Z === RUN   TestPrimaryChdirOption
+2022-05-18T18:05:57.1723499Z === PAUSE TestPrimaryChdirOption
+2022-05-18T18:05:57.1724059Z === RUN   TestProviderDevOverrides
+2022-05-18T18:05:57.1724890Z     provider_dev_test.go:27: can't run without building a new provider executable
+2022-05-18T18:05:57.1725432Z --- SKIP: TestProviderDevOverrides (0.00s)
+2022-05-18T18:05:57.1726079Z === RUN   TestProviderProtocols
+2022-05-18T18:05:57.1726594Z     provider_plugin_test.go:22: can't run without building a new provider executable
+2022-05-18T18:05:57.1727079Z --- SKIP: TestProviderProtocols (0.00s)
+2022-05-18T18:05:57.1727457Z === RUN   TestTerraformProvidersMirror
+2022-05-18T18:05:57.1728033Z     providers_mirror_test.go:26: creating mirror directory in C:\Users\RUNNER~1\AppData\Local\Temp\TestTerraformProvidersMirror525868336\001
+2022-05-18T18:05:59.8849008Z --- PASS: TestTerraformProvidersMirror (2.71s)
+2022-05-18T18:05:59.8849735Z === RUN   TestProviderTampering
+2022-05-18T18:05:59.8851425Z === PAUSE TestProviderTampering
+2022-05-18T18:05:59.8852380Z === RUN   TestProvisionerPlugin
+2022-05-18T18:05:59.8853472Z     provisioner_plugin_test.go:21: can't run without building a new provisioner executable
+2022-05-18T18:05:59.8855089Z --- SKIP: TestProvisionerPlugin (0.00s)
+2022-05-18T18:05:59.8855620Z === RUN   TestProvisioner
+2022-05-18T18:05:59.8855857Z === PAUSE TestProvisioner
+2022-05-18T18:05:59.8856722Z === RUN   TestTerraformProviderRead
+2022-05-18T18:05:59.8856980Z === PAUSE TestTerraformProviderRead
+2022-05-18T18:05:59.8857246Z === RUN   TestUnmanagedSeparatePlan
+2022-05-18T18:05:59.8857508Z === PAUSE TestUnmanagedSeparatePlan
+2022-05-18T18:05:59.8857777Z === RUN   TestUnmanagedSeparatePlan_proto5
+2022-05-18T18:05:59.8858076Z === PAUSE TestUnmanagedSeparatePlan_proto5
+2022-05-18T18:05:59.8859266Z === RUN   TestVersion
+2022-05-18T18:05:59.8859622Z === PAUSE TestVersion
+2022-05-18T18:05:59.8859865Z === RUN   TestVersionWithProvider
+2022-05-18T18:05:59.8860131Z === PAUSE TestVersionWithProvider
+2022-05-18T18:05:59.8860386Z === CONT  TestPlanApplyInAutomation
+2022-05-18T18:05:59.8860881Z === CONT  TestInitProviderWarnings
+2022-05-18T18:06:00.2703038Z --- PASS: TestInitProviderWarnings (0.38s)
+2022-05-18T18:06:00.2704034Z === CONT  TestInitProviderNotFound
+2022-05-18T18:06:00.2713069Z === RUN   TestInitProviderNotFound/registry_provider_not_found
+2022-05-18T18:06:00.5484411Z === RUN   TestInitProviderNotFound/local_provider_not_found
+2022-05-18T18:06:00.6034103Z === RUN   TestInitProviderNotFound/special_characters_enabled
+2022-05-18T18:06:00.9583266Z --- PASS: TestInitProviderNotFound (0.69s)
+2022-05-18T18:06:00.9612089Z     --- PASS: TestInitProviderNotFound/registry_provider_not_found (0.28s)
+2022-05-18T18:06:00.9627283Z     --- PASS: TestInitProviderNotFound/local_provider_not_found (0.05s)
+2022-05-18T18:06:00.9679967Z     --- PASS: TestInitProviderNotFound/special_characters_enabled (0.35s)
+2022-05-18T18:06:00.9681837Z === CONT  TestInit_fromModule
+2022-05-18T18:06:04.3466800Z --- PASS: TestPlanApplyInAutomation (4.46s)
+2022-05-18T18:06:04.3469421Z === CONT  TestInitProviders_pluginCache
+2022-05-18T18:06:05.4426762Z --- PASS: TestInitProviders_pluginCache (1.09s)
+2022-05-18T18:06:05.4434787Z === CONT  TestInitProvidersCustomMethod
+2022-05-18T18:06:05.4443931Z === RUN   TestInitProvidersCustomMethod/cliconfig.tfrc
+2022-05-18T18:06:05.5242852Z === RUN   TestInitProvidersCustomMethod/cliconfig.tfrc.json
+2022-05-18T18:06:05.5989700Z --- PASS: TestInitProvidersCustomMethod (0.16s)
+2022-05-18T18:06:05.5990888Z     --- PASS: TestInitProvidersCustomMethod/cliconfig.tfrc (0.08s)
+2022-05-18T18:06:05.5991715Z     --- PASS: TestInitProvidersCustomMethod/cliconfig.tfrc.json (0.08s)
+2022-05-18T18:06:05.5992212Z === CONT  TestInitProvidersLocalOnly
+2022-05-18T18:06:05.6675559Z --- PASS: TestInitProvidersLocalOnly (0.07s)
+2022-05-18T18:06:05.6676461Z === CONT  TestInitProvidersVendored
+2022-05-18T18:06:05.7469357Z --- PASS: TestInitProvidersVendored (0.08s)
+2022-05-18T18:06:05.7471300Z === CONT  TestInitProvidersInternal
+2022-05-18T18:06:05.8042453Z --- PASS: TestInitProvidersInternal (0.06s)
+2022-05-18T18:06:05.8052862Z === CONT  TestInitProviders
+2022-05-18T18:06:06.6094893Z --- PASS: TestInitProviders (0.81s)
+2022-05-18T18:06:06.6095916Z === CONT  TestPlanOnlyInAutomation
+2022-05-18T18:06:09.5572083Z --- PASS: TestPlanOnlyInAutomation (2.94s)
+2022-05-18T18:06:09.5573064Z === CONT  TestAutoApplyInAutomation
+2022-05-18T18:06:11.9681973Z --- PASS: TestInit_fromModule (11.01s)
+2022-05-18T18:06:11.9683135Z === CONT  TestProvisioner
+2022-05-18T18:06:12.8164694Z --- PASS: TestAutoApplyInAutomation (3.26s)
+2022-05-18T18:06:12.8165537Z === CONT  TestVersionWithProvider
+2022-05-18T18:06:13.7954520Z --- PASS: TestVersionWithProvider (0.98s)
+2022-05-18T18:06:13.7954967Z === CONT  TestVersion
+2022-05-18T18:06:13.8571402Z --- PASS: TestVersion (0.06s)
+2022-05-18T18:06:13.8572252Z === CONT  TestUnmanagedSeparatePlan_proto5
+2022-05-18T18:06:13.9444724Z --- PASS: TestProvisioner (1.98s)
+2022-05-18T18:06:13.9447400Z === CONT  TestUnmanagedSeparatePlan
+2022-05-18T18:06:14.2095051Z --- PASS: TestUnmanagedSeparatePlan_proto5 (0.36s)
+2022-05-18T18:06:14.2096934Z === CONT  TestTerraformProviderRead
+2022-05-18T18:06:14.2632568Z --- PASS: TestUnmanagedSeparatePlan (0.32s)
+2022-05-18T18:06:14.2633336Z === CONT  TestPrimarySeparatePlan
+2022-05-18T18:06:14.3355715Z --- PASS: TestTerraformProviderRead (0.13s)
+2022-05-18T18:06:14.3356841Z === CONT  TestProviderTampering
+2022-05-18T18:06:15.0416689Z === RUN   TestProviderTampering/cache_dir_totally_gone
+2022-05-18T18:06:16.2918734Z === RUN   TestProviderTampering/cache_dir_totally_gone,_explicit_backend
+2022-05-18T18:06:17.5664035Z === RUN   TestProviderTampering/null_plugin_package_modified_before_plan
+2022-05-18T18:06:17.6478635Z === RUN   TestProviderTampering/version_constraint_changed_in_config_before_plan
+2022-05-18T18:06:17.8059816Z === RUN   TestProviderTampering/lock_file_modified_before_plan
+2022-05-18T18:06:17.9025876Z === RUN   TestProviderTampering/lock_file_modified_after_plan
+2022-05-18T18:06:18.3558530Z === RUN   TestProviderTampering/plugin_cache_dir_entirely_removed_after_plan
+2022-05-18T18:06:18.7961994Z === RUN   TestProviderTampering/null_plugin_package_modified_after_plan
+2022-05-18T18:06:19.2307122Z --- PASS: TestProviderTampering (4.89s)
+2022-05-18T18:06:19.2313372Z     --- PASS: TestProviderTampering/cache_dir_totally_gone (1.24s)
+2022-05-18T18:06:19.2334011Z     --- PASS: TestProviderTampering/cache_dir_totally_gone,_explicit_backend (1.28s)
+2022-05-18T18:06:19.2340712Z     --- PASS: TestProviderTampering/null_plugin_package_modified_before_plan (0.08s)
+2022-05-18T18:06:19.2355197Z     --- PASS: TestProviderTampering/version_constraint_changed_in_config_before_plan (0.16s)
+2022-05-18T18:06:19.2407611Z     --- PASS: TestProviderTampering/lock_file_modified_before_plan (0.08s)
+2022-05-18T18:06:19.2410036Z     --- PASS: TestProviderTampering/lock_file_modified_after_plan (0.46s)
+2022-05-18T18:06:19.2411208Z     --- PASS: TestProviderTampering/plugin_cache_dir_entirely_removed_after_plan (0.44s)
+2022-05-18T18:06:19.2412190Z     --- PASS: TestProviderTampering/null_plugin_package_modified_after_plan (0.44s)
+2022-05-18T18:06:19.2412872Z === CONT  TestPrimaryChdirOption
+2022-05-18T18:06:19.5205659Z --- PASS: TestPrimaryChdirOption (0.29s)
+2022-05-18T18:06:19.5617443Z --- PASS: TestPrimarySeparatePlan (5.30s)
+2022-05-18T18:06:19.5617987Z PASS
+2022-05-18T18:06:19.5812046Z Cleaning up orphan processes

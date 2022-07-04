@@ -1,0 +1,1382 @@
+2022-05-19T22:22:01.2914960Z Requested labels: ubuntu-latest
+2022-05-19T22:22:01.2915007Z Job defined at: hashicorp/terraform/.github/workflows/build.yml@refs/heads/build-workflow-dev/general-polish
+2022-05-19T22:22:01.2915033Z Waiting for a runner to pick up this job...
+2022-05-19T22:22:02.8528587Z Job is waiting for a hosted runner to come online.
+2022-05-19T22:22:05.4739893Z Job is about to start running on the hosted runner: GitHub Actions 7 (hosted)
+2022-05-19T22:22:09.0779898Z Current runner version: '2.291.1'
+2022-05-19T22:22:09.0807322Z ##[group]Operating System
+2022-05-19T22:22:09.0807983Z Ubuntu
+2022-05-19T22:22:09.0808433Z 20.04.4
+2022-05-19T22:22:09.0808671Z LTS
+2022-05-19T22:22:09.0809107Z ##[endgroup]
+2022-05-19T22:22:09.0809633Z ##[group]Virtual Environment
+2022-05-19T22:22:09.0810020Z Environment: ubuntu-20.04
+2022-05-19T22:22:09.0810389Z Version: 20220515.1
+2022-05-19T22:22:09.0810977Z Included Software: https://github.com/actions/virtual-environments/blob/ubuntu20/20220515.1/images/linux/Ubuntu2004-Readme.md
+2022-05-19T22:22:09.0811666Z Image Release: https://github.com/actions/virtual-environments/releases/tag/ubuntu20%2F20220515.1
+2022-05-19T22:22:09.0812222Z ##[endgroup]
+2022-05-19T22:22:09.0812740Z ##[group]Virtual Environment Provisioner
+2022-05-19T22:22:09.0813137Z 1.0.0.0-main-20220421-1
+2022-05-19T22:22:09.0813525Z ##[endgroup]
+2022-05-19T22:22:09.0814280Z ##[group]GITHUB_TOKEN Permissions
+2022-05-19T22:22:09.0814950Z Contents: read
+2022-05-19T22:22:09.0815388Z Metadata: read
+2022-05-19T22:22:09.0815720Z Statuses: write
+2022-05-19T22:22:09.0816178Z ##[endgroup]
+2022-05-19T22:22:09.0819842Z Secret source: Actions
+2022-05-19T22:22:09.0820354Z Prepare workflow directory
+2022-05-19T22:22:09.1870230Z Prepare all required actions
+2022-05-19T22:22:09.2070033Z Getting action download info
+2022-05-19T22:22:09.4860569Z Download action repository 'actions/checkout@v3' (SHA:2541b1294d2704b0964813337f33b291d3f8596b)
+2022-05-19T22:22:10.3886602Z ##[group]Run actions/checkout@v3
+2022-05-19T22:22:10.3887018Z with:
+2022-05-19T22:22:10.3887325Z   repository: hashicorp/terraform
+2022-05-19T22:22:10.3887867Z   token: ***
+2022-05-19T22:22:10.3888151Z   ssh-strict: true
+2022-05-19T22:22:10.3888467Z   persist-credentials: true
+2022-05-19T22:22:10.3888760Z   clean: true
+2022-05-19T22:22:10.3889027Z   fetch-depth: 1
+2022-05-19T22:22:10.3889296Z   lfs: false
+2022-05-19T22:22:10.3889568Z   submodules: false
+2022-05-19T22:22:10.3889873Z   set-safe-directory: true
+2022-05-19T22:22:10.3890163Z env:
+2022-05-19T22:22:10.3890437Z   PKG_NAME: terraform
+2022-05-19T22:22:10.3890805Z ##[endgroup]
+2022-05-19T22:22:10.7483703Z Syncing repository: hashicorp/terraform
+2022-05-19T22:22:10.7485739Z ##[group]Getting Git version info
+2022-05-19T22:22:10.7486346Z Working directory is '/home/runner/work/terraform/terraform'
+2022-05-19T22:22:10.7486954Z [command]/usr/bin/git version
+2022-05-19T22:22:10.7682249Z git version 2.36.1
+2022-05-19T22:22:10.7722472Z ##[endgroup]
+2022-05-19T22:22:10.7747983Z Temporarily overriding HOME='/home/runner/work/_temp/08614aed-97b6-43e6-b679-8f87c887bae0' before making global git config changes
+2022-05-19T22:22:10.7748574Z Adding repository directory to the temporary git global config as a safe directory
+2022-05-19T22:22:10.7749238Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/terraform/terraform
+2022-05-19T22:22:10.7788365Z Deleting the contents of '/home/runner/work/terraform/terraform'
+2022-05-19T22:22:10.7793253Z ##[group]Initializing the repository
+2022-05-19T22:22:10.7797468Z [command]/usr/bin/git init /home/runner/work/terraform/terraform
+2022-05-19T22:22:10.7879195Z hint: Using 'master' as the name for the initial branch. This default branch name
+2022-05-19T22:22:10.7880089Z hint: is subject to change. To configure the initial branch name to use in all
+2022-05-19T22:22:10.7921223Z hint: of your new repositories, which will suppress this warning, call:
+2022-05-19T22:22:10.7928619Z hint: 
+2022-05-19T22:22:10.7929175Z hint: 	git config --global init.defaultBranch <name>
+2022-05-19T22:22:10.7929470Z hint: 
+2022-05-19T22:22:10.7929890Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2022-05-19T22:22:10.7930446Z hint: 'development'. The just-created branch can be renamed via this command:
+2022-05-19T22:22:10.7930770Z hint: 
+2022-05-19T22:22:10.7931067Z hint: 	git branch -m <name>
+2022-05-19T22:22:10.7931460Z Initialized empty Git repository in /home/runner/work/terraform/terraform/.git/
+2022-05-19T22:22:10.7932010Z [command]/usr/bin/git remote add origin https://github.com/hashicorp/terraform
+2022-05-19T22:22:10.7965073Z ##[endgroup]
+2022-05-19T22:22:10.7965632Z ##[group]Disabling automatic garbage collection
+2022-05-19T22:22:10.7967533Z [command]/usr/bin/git config --local gc.auto 0
+2022-05-19T22:22:10.8007741Z ##[endgroup]
+2022-05-19T22:22:10.8008243Z ##[group]Setting up auth
+2022-05-19T22:22:10.8016179Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2022-05-19T22:22:10.8052186Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+2022-05-19T22:22:10.8490502Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2022-05-19T22:22:10.8524387Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+2022-05-19T22:22:10.8767518Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2022-05-19T22:22:10.8808920Z ##[endgroup]
+2022-05-19T22:22:10.8810034Z ##[group]Fetching the repository
+2022-05-19T22:22:10.8822398Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin +60a189413d732eccd0158591618422c7cad1aed7:refs/remotes/origin/build-workflow-dev/general-polish
+2022-05-19T22:22:11.3064150Z remote: Enumerating objects: 3918, done.        
+2022-05-19T22:22:11.3064604Z remote: Counting objects:   0% (1/3918)        
+2022-05-19T22:22:11.3064935Z remote: Counting objects:   1% (40/3918)        
+2022-05-19T22:22:11.3065406Z remote: Counting objects:   2% (79/3918)        
+2022-05-19T22:22:11.3065761Z remote: Counting objects:   3% (118/3918)        
+2022-05-19T22:22:11.3066597Z remote: Counting objects:   4% (157/3918)        
+2022-05-19T22:22:11.3066962Z remote: Counting objects:   5% (196/3918)        
+2022-05-19T22:22:11.3067337Z remote: Counting objects:   6% (236/3918)        
+2022-05-19T22:22:11.3067679Z remote: Counting objects:   7% (275/3918)        
+2022-05-19T22:22:11.3068009Z remote: Counting objects:   8% (314/3918)        
+2022-05-19T22:22:11.3068352Z remote: Counting objects:   9% (353/3918)        
+2022-05-19T22:22:11.3068692Z remote: Counting objects:  10% (392/3918)        
+2022-05-19T22:22:11.3069030Z remote: Counting objects:  11% (431/3918)        
+2022-05-19T22:22:11.3069370Z remote: Counting objects:  12% (471/3918)        
+2022-05-19T22:22:11.3069831Z remote: Counting objects:  13% (510/3918)        
+2022-05-19T22:22:11.3070145Z remote: Counting objects:  14% (549/3918)        
+2022-05-19T22:22:11.3070471Z remote: Counting objects:  15% (588/3918)        
+2022-05-19T22:22:11.3070794Z remote: Counting objects:  16% (627/3918)        
+2022-05-19T22:22:11.3071147Z remote: Counting objects:  17% (667/3918)        
+2022-05-19T22:22:11.3071464Z remote: Counting objects:  18% (706/3918)        
+2022-05-19T22:22:11.3071800Z remote: Counting objects:  19% (745/3918)        
+2022-05-19T22:22:11.3072124Z remote: Counting objects:  20% (784/3918)        
+2022-05-19T22:22:11.3072436Z remote: Counting objects:  21% (823/3918)        
+2022-05-19T22:22:11.3073002Z remote: Counting objects:  22% (862/3918)        
+2022-05-19T22:22:11.5203892Z remote: Counting objects:  23% (902/3918)        
+2022-05-19T22:22:11.5204422Z remote: Counting objects:  24% (941/3918)        
+2022-05-19T22:22:11.5205345Z remote: Counting objects:  25% (980/3918)        
+2022-05-19T22:22:11.5206103Z remote: Counting objects:  26% (1019/3918)        
+2022-05-19T22:22:11.5206728Z remote: Counting objects:  27% (1058/3918)        
+2022-05-19T22:22:11.5207404Z remote: Counting objects:  28% (1098/3918)        
+2022-05-19T22:22:11.5208094Z remote: Counting objects:  29% (1137/3918)        
+2022-05-19T22:22:11.5209232Z remote: Counting objects:  30% (1176/3918)        
+2022-05-19T22:22:11.5209702Z remote: Counting objects:  31% (1215/3918)        
+2022-05-19T22:22:11.5211560Z remote: Counting objects:  32% (1254/3918)        
+2022-05-19T22:22:11.5212536Z remote: Counting objects:  33% (1293/3918)        
+2022-05-19T22:22:11.5213106Z remote: Counting objects:  34% (1333/3918)        
+2022-05-19T22:22:11.5213860Z remote: Counting objects:  35% (1372/3918)        
+2022-05-19T22:22:11.5214499Z remote: Counting objects:  36% (1411/3918)        
+2022-05-19T22:22:11.5215200Z remote: Counting objects:  37% (1450/3918)        
+2022-05-19T22:22:11.5216011Z remote: Counting objects:  38% (1489/3918)        
+2022-05-19T22:22:11.5216872Z remote: Counting objects:  39% (1529/3918)        
+2022-05-19T22:22:11.5217529Z remote: Counting objects:  40% (1568/3918)        
+2022-05-19T22:22:11.5218266Z remote: Counting objects:  41% (1607/3918)        
+2022-05-19T22:22:11.5218836Z remote: Counting objects:  42% (1646/3918)        
+2022-05-19T22:22:11.5219441Z remote: Counting objects:  43% (1685/3918)        
+2022-05-19T22:22:11.5220056Z remote: Counting objects:  44% (1724/3918)        
+2022-05-19T22:22:11.5220748Z remote: Counting objects:  45% (1764/3918)        
+2022-05-19T22:22:11.5221162Z remote: Counting objects:  46% (1803/3918)        
+2022-05-19T22:22:11.5221554Z remote: Counting objects:  47% (1842/3918)        
+2022-05-19T22:22:11.5221941Z remote: Counting objects:  48% (1881/3918)        
+2022-05-19T22:22:11.5222755Z remote: Counting objects:  49% (1920/3918)        
+2022-05-19T22:22:11.5223237Z remote: Counting objects:  50% (1959/3918)        
+2022-05-19T22:22:11.5223655Z remote: Counting objects:  51% (1999/3918)        
+2022-05-19T22:22:11.5225092Z remote: Counting objects:  52% (2038/3918)        
+2022-05-19T22:22:11.5225814Z remote: Counting objects:  53% (2077/3918)        
+2022-05-19T22:22:11.5226330Z remote: Counting objects:  54% (2116/3918)        
+2022-05-19T22:22:11.5226728Z remote: Counting objects:  55% (2155/3918)        
+2022-05-19T22:22:11.5227115Z remote: Counting objects:  56% (2195/3918)        
+2022-05-19T22:22:11.5227520Z remote: Counting objects:  57% (2234/3918)        
+2022-05-19T22:22:11.5227894Z remote: Counting objects:  58% (2273/3918)        
+2022-05-19T22:22:11.5228272Z remote: Counting objects:  59% (2312/3918)        
+2022-05-19T22:22:11.5228658Z remote: Counting objects:  60% (2351/3918)        
+2022-05-19T22:22:11.5229031Z remote: Counting objects:  61% (2390/3918)        
+2022-05-19T22:22:11.5229423Z remote: Counting objects:  62% (2430/3918)        
+2022-05-19T22:22:11.5229809Z remote: Counting objects:  63% (2469/3918)        
+2022-05-19T22:22:11.5230336Z remote: Counting objects:  64% (2508/3918)        
+2022-05-19T22:22:11.5230753Z remote: Counting objects:  65% (2547/3918)        
+2022-05-19T22:22:11.5231126Z remote: Counting objects:  66% (2586/3918)        
+2022-05-19T22:22:11.5231511Z remote: Counting objects:  67% (2626/3918)        
+2022-05-19T22:22:11.5231895Z remote: Counting objects:  68% (2665/3918)        
+2022-05-19T22:22:11.5232391Z remote: Counting objects:  69% (2704/3918)        
+2022-05-19T22:22:11.5233299Z remote: Counting objects:  70% (2743/3918)        
+2022-05-19T22:22:11.5233916Z remote: Counting objects:  71% (2782/3918)        
+2022-05-19T22:22:11.5234689Z remote: Counting objects:  72% (2821/3918)        
+2022-05-19T22:22:11.5238145Z remote: Counting objects:  73% (2861/3918)        
+2022-05-19T22:22:11.5238633Z remote: Counting objects:  74% (2900/3918)        
+2022-05-19T22:22:11.5239395Z remote: Counting objects:  75% (2939/3918)        
+2022-05-19T22:22:11.5240024Z remote: Counting objects:  76% (2978/3918)        
+2022-05-19T22:22:11.5240534Z remote: Counting objects:  77% (3017/3918)        
+2022-05-19T22:22:11.5241161Z remote: Counting objects:  78% (3057/3918)        
+2022-05-19T22:22:11.5241799Z remote: Counting objects:  79% (3096/3918)        
+2022-05-19T22:22:11.5242354Z remote: Counting objects:  80% (3135/3918)        
+2022-05-19T22:22:11.5243022Z remote: Counting objects:  81% (3174/3918)        
+2022-05-19T22:22:11.5243549Z remote: Counting objects:  82% (3213/3918)        
+2022-05-19T22:22:11.5244215Z remote: Counting objects:  83% (3252/3918)        
+2022-05-19T22:22:11.5244843Z remote: Counting objects:  84% (3292/3918)        
+2022-05-19T22:22:11.5245390Z remote: Counting objects:  85% (3331/3918)        
+2022-05-19T22:22:11.5246222Z remote: Counting objects:  86% (3370/3918)        
+2022-05-19T22:22:11.5246826Z remote: Counting objects:  87% (3409/3918)        
+2022-05-19T22:22:11.5254669Z remote: Counting objects:  88% (3448/3918)        
+2022-05-19T22:22:11.5256217Z remote: Counting objects:  89% (3488/3918)        
+2022-05-19T22:22:11.5257139Z remote: Counting objects:  90% (3527/3918)        
+2022-05-19T22:22:11.5257525Z remote: Counting objects:  91% (3566/3918)        
+2022-05-19T22:22:11.5258065Z remote: Counting objects:  92% (3605/3918)        
+2022-05-19T22:22:11.5258759Z remote: Counting objects:  93% (3644/3918)        
+2022-05-19T22:22:11.5259760Z remote: Counting objects:  94% (3683/3918)        
+2022-05-19T22:22:11.5260205Z remote: Counting objects:  95% (3723/3918)        
+2022-05-19T22:22:11.5260551Z remote: Counting objects:  96% (3762/3918)        
+2022-05-19T22:22:11.5261131Z remote: Counting objects:  97% (3801/3918)        
+2022-05-19T22:22:11.5262357Z remote: Counting objects:  98% (3840/3918)        
+2022-05-19T22:22:11.5262832Z remote: Counting objects:  99% (3879/3918)        
+2022-05-19T22:22:11.5263757Z remote: Counting objects: 100% (3918/3918)        
+2022-05-19T22:22:11.5264813Z remote: Counting objects: 100% (3918/3918), done.        
+2022-05-19T22:22:11.5265482Z remote: Compressing objects:   0% (1/2963)        
+2022-05-19T22:22:11.5265923Z remote: Compressing objects:   1% (30/2963)        
+2022-05-19T22:22:11.5266945Z remote: Compressing objects:   2% (60/2963)        
+2022-05-19T22:22:11.5267383Z remote: Compressing objects:   3% (89/2963)        
+2022-05-19T22:22:11.5267718Z remote: Compressing objects:   4% (119/2963)        
+2022-05-19T22:22:11.5268234Z remote: Compressing objects:   5% (149/2963)        
+2022-05-19T22:22:11.5268816Z remote: Compressing objects:   6% (178/2963)        
+2022-05-19T22:22:11.5269845Z remote: Compressing objects:   7% (208/2963)        
+2022-05-19T22:22:11.5270643Z remote: Compressing objects:   8% (238/2963)        
+2022-05-19T22:22:11.5271321Z remote: Compressing objects:   9% (267/2963)        
+2022-05-19T22:22:11.5271895Z remote: Compressing objects:  10% (297/2963)        
+2022-05-19T22:22:11.5272812Z remote: Compressing objects:  11% (326/2963)        
+2022-05-19T22:22:11.5273478Z remote: Compressing objects:  12% (356/2963)        
+2022-05-19T22:22:11.5274363Z remote: Compressing objects:  13% (386/2963)        
+2022-05-19T22:22:11.5275012Z remote: Compressing objects:  14% (415/2963)        
+2022-05-19T22:22:11.5275671Z remote: Compressing objects:  15% (445/2963)        
+2022-05-19T22:22:11.5276259Z remote: Compressing objects:  16% (475/2963)        
+2022-05-19T22:22:11.5276798Z remote: Compressing objects:  17% (504/2963)        
+2022-05-19T22:22:11.5277711Z remote: Compressing objects:  18% (534/2963)        
+2022-05-19T22:22:11.5278445Z remote: Compressing objects:  19% (563/2963)        
+2022-05-19T22:22:11.5279219Z remote: Compressing objects:  20% (593/2963)        
+2022-05-19T22:22:11.5280019Z remote: Compressing objects:  21% (623/2963)        
+2022-05-19T22:22:11.5280698Z remote: Compressing objects:  22% (652/2963)        
+2022-05-19T22:22:11.5281478Z remote: Compressing objects:  23% (682/2963)        
+2022-05-19T22:22:11.5282066Z remote: Compressing objects:  24% (712/2963)        
+2022-05-19T22:22:11.5282850Z remote: Compressing objects:  25% (741/2963)        
+2022-05-19T22:22:11.5283748Z remote: Compressing objects:  26% (771/2963)        
+2022-05-19T22:22:11.5284476Z remote: Compressing objects:  27% (801/2963)        
+2022-05-19T22:22:11.5284817Z remote: Compressing objects:  28% (830/2963)        
+2022-05-19T22:22:11.5401045Z remote: Compressing objects:  29% (860/2963)        
+2022-05-19T22:22:11.5458146Z remote: Compressing objects:  30% (889/2963)        
+2022-05-19T22:22:11.5580800Z remote: Compressing objects:  31% (919/2963)        
+2022-05-19T22:22:11.5642914Z remote: Compressing objects:  32% (949/2963)        
+2022-05-19T22:22:11.5714805Z remote: Compressing objects:  33% (978/2963)        
+2022-05-19T22:22:11.5844565Z remote: Compressing objects:  34% (1008/2963)        
+2022-05-19T22:22:11.5860290Z remote: Compressing objects:  35% (1038/2963)        
+2022-05-19T22:22:11.5981625Z remote: Compressing objects:  36% (1067/2963)        
+2022-05-19T22:22:11.6036590Z remote: Compressing objects:  37% (1097/2963)        
+2022-05-19T22:22:11.6113404Z remote: Compressing objects:  38% (1126/2963)        
+2022-05-19T22:22:11.7628663Z remote: Compressing objects:  39% (1156/2963)        
+2022-05-19T22:22:11.7629469Z remote: Compressing objects:  40% (1186/2963)        
+2022-05-19T22:22:11.7630650Z remote: Compressing objects:  41% (1215/2963)        
+2022-05-19T22:22:11.7631142Z remote: Compressing objects:  42% (1245/2963)        
+2022-05-19T22:22:11.7631624Z remote: Compressing objects:  43% (1275/2963)        
+2022-05-19T22:22:11.7632046Z remote: Compressing objects:  44% (1304/2963)        
+2022-05-19T22:22:11.7632432Z remote: Compressing objects:  45% (1334/2963)        
+2022-05-19T22:22:11.7633039Z remote: Compressing objects:  46% (1363/2963)        
+2022-05-19T22:22:11.7633430Z remote: Compressing objects:  47% (1393/2963)        
+2022-05-19T22:22:11.7634032Z remote: Compressing objects:  48% (1423/2963)        
+2022-05-19T22:22:11.7634486Z remote: Compressing objects:  49% (1452/2963)        
+2022-05-19T22:22:11.7634863Z remote: Compressing objects:  50% (1482/2963)        
+2022-05-19T22:22:11.7635251Z remote: Compressing objects:  51% (1512/2963)        
+2022-05-19T22:22:11.7635628Z remote: Compressing objects:  52% (1541/2963)        
+2022-05-19T22:22:11.7636025Z remote: Compressing objects:  53% (1571/2963)        
+2022-05-19T22:22:11.7636513Z remote: Compressing objects:  54% (1601/2963)        
+2022-05-19T22:22:11.7637031Z remote: Compressing objects:  55% (1630/2963)        
+2022-05-19T22:22:11.7637453Z remote: Compressing objects:  56% (1660/2963)        
+2022-05-19T22:22:11.7637974Z remote: Compressing objects:  57% (1689/2963)        
+2022-05-19T22:22:11.7638390Z remote: Compressing objects:  58% (1719/2963)        
+2022-05-19T22:22:11.7638812Z remote: Compressing objects:  59% (1749/2963)        
+2022-05-19T22:22:11.7639231Z remote: Compressing objects:  60% (1778/2963)        
+2022-05-19T22:22:11.7639655Z remote: Compressing objects:  61% (1808/2963)        
+2022-05-19T22:22:11.7640072Z remote: Compressing objects:  62% (1838/2963)        
+2022-05-19T22:22:11.7640714Z remote: Compressing objects:  63% (1867/2963)        
+2022-05-19T22:22:11.7641107Z remote: Compressing objects:  64% (1897/2963)        
+2022-05-19T22:22:11.7641489Z remote: Compressing objects:  65% (1926/2963)        
+2022-05-19T22:22:11.7642007Z remote: Compressing objects:  66% (1956/2963)        
+2022-05-19T22:22:11.7642431Z remote: Compressing objects:  67% (1986/2963)        
+2022-05-19T22:22:11.7642970Z remote: Compressing objects:  68% (2015/2963)        
+2022-05-19T22:22:11.7643364Z remote: Compressing objects:  69% (2045/2963)        
+2022-05-19T22:22:11.7643778Z remote: Compressing objects:  70% (2075/2963)        
+2022-05-19T22:22:11.7644301Z remote: Compressing objects:  71% (2104/2963)        
+2022-05-19T22:22:11.7644721Z remote: Compressing objects:  72% (2134/2963)        
+2022-05-19T22:22:11.7645251Z remote: Compressing objects:  73% (2163/2963)        
+2022-05-19T22:22:11.7645671Z remote: Compressing objects:  74% (2193/2963)        
+2022-05-19T22:22:11.7646080Z remote: Compressing objects:  75% (2223/2963)        
+2022-05-19T22:22:11.7646492Z remote: Compressing objects:  76% (2252/2963)        
+2022-05-19T22:22:11.7646888Z remote: Compressing objects:  77% (2282/2963)        
+2022-05-19T22:22:11.7647299Z remote: Compressing objects:  78% (2312/2963)        
+2022-05-19T22:22:11.7647707Z remote: Compressing objects:  79% (2341/2963)        
+2022-05-19T22:22:11.7648115Z remote: Compressing objects:  80% (2371/2963)        
+2022-05-19T22:22:11.7648915Z remote: Compressing objects:  81% (2401/2963)        
+2022-05-19T22:22:11.7649335Z remote: Compressing objects:  82% (2430/2963)        
+2022-05-19T22:22:11.7649746Z remote: Compressing objects:  83% (2460/2963)        
+2022-05-19T22:22:11.7650154Z remote: Compressing objects:  84% (2489/2963)        
+2022-05-19T22:22:11.7650554Z remote: Compressing objects:  85% (2519/2963)        
+2022-05-19T22:22:11.7650967Z remote: Compressing objects:  86% (2549/2963)        
+2022-05-19T22:22:11.7651491Z remote: Compressing objects:  87% (2578/2963)        
+2022-05-19T22:22:11.7651890Z remote: Compressing objects:  88% (2608/2963)        
+2022-05-19T22:22:11.7652273Z remote: Compressing objects:  89% (2638/2963)        
+2022-05-19T22:22:11.7652702Z remote: Compressing objects:  90% (2667/2963)        
+2022-05-19T22:22:11.7653098Z remote: Compressing objects:  91% (2697/2963)        
+2022-05-19T22:22:11.7653493Z remote: Compressing objects:  92% (2726/2963)        
+2022-05-19T22:22:11.7653885Z remote: Compressing objects:  93% (2756/2963)        
+2022-05-19T22:22:11.7654282Z remote: Compressing objects:  94% (2786/2963)        
+2022-05-19T22:22:11.7654676Z remote: Compressing objects:  95% (2815/2963)        
+2022-05-19T22:22:11.7655069Z remote: Compressing objects:  96% (2845/2963)        
+2022-05-19T22:22:11.7655450Z remote: Compressing objects:  97% (2875/2963)        
+2022-05-19T22:22:11.7656058Z remote: Compressing objects:  98% (2904/2963)        
+2022-05-19T22:22:11.7656643Z remote: Compressing objects:  99% (2934/2963)        
+2022-05-19T22:22:11.7657073Z remote: Compressing objects: 100% (2963/2963)        
+2022-05-19T22:22:11.7657503Z remote: Compressing objects: 100% (2963/2963), done.        
+2022-05-19T22:22:11.8004764Z Receiving objects:   0% (1/3918)
+2022-05-19T22:22:11.8673437Z Receiving objects:   1% (40/3918)
+2022-05-19T22:22:11.8674159Z Receiving objects:   2% (79/3918)
+2022-05-19T22:22:11.8693082Z Receiving objects:   3% (118/3918)
+2022-05-19T22:22:11.8708874Z Receiving objects:   4% (157/3918)
+2022-05-19T22:22:11.8771473Z Receiving objects:   5% (196/3918)
+2022-05-19T22:22:11.8825838Z Receiving objects:   6% (236/3918)
+2022-05-19T22:22:11.8841665Z Receiving objects:   7% (275/3918)
+2022-05-19T22:22:11.8859551Z Receiving objects:   8% (314/3918)
+2022-05-19T22:22:11.8884612Z Receiving objects:   9% (353/3918)
+2022-05-19T22:22:11.8904623Z Receiving objects:  10% (392/3918)
+2022-05-19T22:22:11.8922418Z Receiving objects:  11% (431/3918)
+2022-05-19T22:22:11.8924794Z Receiving objects:  12% (471/3918)
+2022-05-19T22:22:11.8956981Z Receiving objects:  13% (510/3918)
+2022-05-19T22:22:11.9007078Z Receiving objects:  14% (549/3918)
+2022-05-19T22:22:11.9072130Z Receiving objects:  15% (588/3918)
+2022-05-19T22:22:11.9092060Z Receiving objects:  16% (627/3918)
+2022-05-19T22:22:11.9095897Z Receiving objects:  17% (667/3918)
+2022-05-19T22:22:11.9096555Z Receiving objects:  18% (706/3918)
+2022-05-19T22:22:11.9098994Z Receiving objects:  19% (745/3918)
+2022-05-19T22:22:11.9099659Z Receiving objects:  20% (784/3918)
+2022-05-19T22:22:11.9103017Z Receiving objects:  21% (823/3918)
+2022-05-19T22:22:11.9107752Z Receiving objects:  22% (862/3918)
+2022-05-19T22:22:11.9111670Z Receiving objects:  23% (902/3918)
+2022-05-19T22:22:11.9114716Z Receiving objects:  24% (941/3918)
+2022-05-19T22:22:11.9119205Z Receiving objects:  25% (980/3918)
+2022-05-19T22:22:11.9122995Z Receiving objects:  26% (1019/3918)
+2022-05-19T22:22:11.9127186Z Receiving objects:  27% (1058/3918)
+2022-05-19T22:22:11.9136059Z Receiving objects:  28% (1098/3918)
+2022-05-19T22:22:11.9160816Z Receiving objects:  29% (1137/3918)
+2022-05-19T22:22:11.9183700Z Receiving objects:  30% (1176/3918)
+2022-05-19T22:22:11.9217492Z Receiving objects:  31% (1215/3918)
+2022-05-19T22:22:11.9224089Z Receiving objects:  32% (1254/3918)
+2022-05-19T22:22:11.9250678Z Receiving objects:  33% (1293/3918)
+2022-05-19T22:22:11.9288132Z Receiving objects:  34% (1333/3918)
+2022-05-19T22:22:11.9291846Z Receiving objects:  35% (1372/3918)
+2022-05-19T22:22:11.9295733Z Receiving objects:  36% (1411/3918)
+2022-05-19T22:22:11.9299511Z Receiving objects:  37% (1450/3918)
+2022-05-19T22:22:11.9302011Z Receiving objects:  38% (1489/3918)
+2022-05-19T22:22:11.9306387Z Receiving objects:  39% (1529/3918)
+2022-05-19T22:22:11.9309046Z Receiving objects:  40% (1568/3918)
+2022-05-19T22:22:11.9321381Z Receiving objects:  41% (1607/3918)
+2022-05-19T22:22:11.9337523Z Receiving objects:  42% (1646/3918)
+2022-05-19T22:22:11.9377745Z Receiving objects:  43% (1685/3918)
+2022-05-19T22:22:11.9383813Z Receiving objects:  44% (1724/3918)
+2022-05-19T22:22:11.9405331Z Receiving objects:  45% (1764/3918)
+2022-05-19T22:22:11.9427043Z Receiving objects:  46% (1803/3918)
+2022-05-19T22:22:11.9462458Z Receiving objects:  47% (1842/3918)
+2022-05-19T22:22:11.9471474Z Receiving objects:  48% (1881/3918)
+2022-05-19T22:22:11.9535541Z Receiving objects:  49% (1920/3918)
+2022-05-19T22:22:11.9584052Z Receiving objects:  50% (1959/3918)
+2022-05-19T22:22:11.9607908Z Receiving objects:  51% (1999/3918)
+2022-05-19T22:22:11.9644476Z Receiving objects:  52% (2038/3918)
+2022-05-19T22:22:11.9663924Z Receiving objects:  53% (2077/3918)
+2022-05-19T22:22:11.9686280Z Receiving objects:  54% (2116/3918)
+2022-05-19T22:22:11.9704442Z Receiving objects:  55% (2155/3918)
+2022-05-19T22:22:11.9721428Z Receiving objects:  56% (2195/3918)
+2022-05-19T22:22:11.9738556Z Receiving objects:  57% (2234/3918)
+2022-05-19T22:22:11.9754737Z Receiving objects:  58% (2273/3918)
+2022-05-19T22:22:11.9974058Z Receiving objects:  59% (2312/3918)
+2022-05-19T22:22:11.9997090Z Receiving objects:  60% (2351/3918)
+2022-05-19T22:22:12.0098203Z Receiving objects:  61% (2390/3918)
+2022-05-19T22:22:12.0104793Z Receiving objects:  62% (2430/3918)
+2022-05-19T22:22:12.0107268Z Receiving objects:  63% (2469/3918)
+2022-05-19T22:22:12.0109512Z Receiving objects:  64% (2508/3918)
+2022-05-19T22:22:12.0111282Z Receiving objects:  65% (2547/3918)
+2022-05-19T22:22:12.0113509Z Receiving objects:  66% (2586/3918)
+2022-05-19T22:22:12.0116598Z Receiving objects:  67% (2626/3918)
+2022-05-19T22:22:12.0118821Z Receiving objects:  68% (2665/3918)
+2022-05-19T22:22:12.0120825Z Receiving objects:  69% (2704/3918)
+2022-05-19T22:22:12.0122627Z Receiving objects:  70% (2743/3918)
+2022-05-19T22:22:12.0125367Z Receiving objects:  71% (2782/3918)
+2022-05-19T22:22:12.0127252Z Receiving objects:  72% (2821/3918)
+2022-05-19T22:22:12.0129400Z Receiving objects:  73% (2861/3918)
+2022-05-19T22:22:12.0140056Z Receiving objects:  74% (2900/3918)
+2022-05-19T22:22:12.0140777Z Receiving objects:  75% (2939/3918)
+2022-05-19T22:22:12.0141643Z Receiving objects:  76% (2978/3918)
+2022-05-19T22:22:12.0142290Z Receiving objects:  77% (3017/3918)
+2022-05-19T22:22:12.0143498Z Receiving objects:  78% (3057/3918)
+2022-05-19T22:22:12.0144084Z Receiving objects:  79% (3096/3918)
+2022-05-19T22:22:12.0145251Z Receiving objects:  80% (3135/3918)
+2022-05-19T22:22:12.0147086Z Receiving objects:  81% (3174/3918)
+2022-05-19T22:22:12.0149312Z Receiving objects:  82% (3213/3918)
+2022-05-19T22:22:12.0189255Z Receiving objects:  83% (3252/3918)
+2022-05-19T22:22:12.0189647Z Receiving objects:  84% (3292/3918)
+2022-05-19T22:22:12.0189960Z Receiving objects:  85% (3331/3918)
+2022-05-19T22:22:12.0206190Z Receiving objects:  86% (3370/3918)
+2022-05-19T22:22:12.0223824Z Receiving objects:  87% (3409/3918)
+2022-05-19T22:22:12.0321500Z Receiving objects:  88% (3448/3918)
+2022-05-19T22:22:12.0333516Z Receiving objects:  89% (3488/3918)
+2022-05-19T22:22:12.0350911Z Receiving objects:  90% (3527/3918)
+2022-05-19T22:22:12.0362801Z Receiving objects:  91% (3566/3918)
+2022-05-19T22:22:12.0406651Z Receiving objects:  92% (3605/3918)
+2022-05-19T22:22:12.0437535Z Receiving objects:  93% (3644/3918)
+2022-05-19T22:22:12.0447158Z Receiving objects:  94% (3683/3918)
+2022-05-19T22:22:12.0455933Z Receiving objects:  95% (3723/3918)
+2022-05-19T22:22:12.0467242Z Receiving objects:  96% (3762/3918)
+2022-05-19T22:22:12.0494577Z Receiving objects:  97% (3801/3918)
+2022-05-19T22:22:12.0542259Z Receiving objects:  98% (3840/3918)
+2022-05-19T22:22:12.1243747Z Receiving objects:  99% (3879/3918)
+2022-05-19T22:22:12.1245364Z remote: Total 3918 (delta 303), reused 2612 (delta 220), pack-reused 0        
+2022-05-19T22:22:12.1248132Z Receiving objects: 100% (3918/3918)
+2022-05-19T22:22:12.1249950Z Receiving objects: 100% (3918/3918), 5.58 MiB | 15.65 MiB/s, done.
+2022-05-19T22:22:12.1254535Z Resolving deltas:   0% (0/303)
+2022-05-19T22:22:12.1256335Z Resolving deltas:   1% (4/303)
+2022-05-19T22:22:12.1258117Z Resolving deltas:   2% (7/303)
+2022-05-19T22:22:12.1258673Z Resolving deltas:   3% (10/303)
+2022-05-19T22:22:12.1261071Z Resolving deltas:   4% (13/303)
+2022-05-19T22:22:12.1263112Z Resolving deltas:   5% (16/303)
+2022-05-19T22:22:12.1263966Z Resolving deltas:   6% (19/303)
+2022-05-19T22:22:12.1269892Z Resolving deltas:   7% (22/303)
+2022-05-19T22:22:12.1278092Z Resolving deltas:   8% (25/303)
+2022-05-19T22:22:12.1284385Z Resolving deltas:   9% (28/303)
+2022-05-19T22:22:12.1290734Z Resolving deltas:  10% (31/303)
+2022-05-19T22:22:12.1291492Z Resolving deltas:  11% (34/303)
+2022-05-19T22:22:12.1292285Z Resolving deltas:  12% (37/303)
+2022-05-19T22:22:12.1303058Z Resolving deltas:  13% (40/303)
+2022-05-19T22:22:12.1307094Z Resolving deltas:  14% (43/303)
+2022-05-19T22:22:12.1309028Z Resolving deltas:  15% (46/303)
+2022-05-19T22:22:12.1310092Z Resolving deltas:  16% (49/303)
+2022-05-19T22:22:12.1310687Z Resolving deltas:  17% (52/303)
+2022-05-19T22:22:12.1313484Z Resolving deltas:  18% (55/303)
+2022-05-19T22:22:12.1314458Z Resolving deltas:  19% (58/303)
+2022-05-19T22:22:12.1317277Z Resolving deltas:  20% (61/303)
+2022-05-19T22:22:12.1320573Z Resolving deltas:  21% (64/303)
+2022-05-19T22:22:12.1321286Z Resolving deltas:  22% (67/303)
+2022-05-19T22:22:12.1331047Z Resolving deltas:  23% (70/303)
+2022-05-19T22:22:12.1332645Z Resolving deltas:  24% (73/303)
+2022-05-19T22:22:12.1335685Z Resolving deltas:  25% (76/303)
+2022-05-19T22:22:12.1338843Z Resolving deltas:  26% (79/303)
+2022-05-19T22:22:12.1341266Z Resolving deltas:  27% (82/303)
+2022-05-19T22:22:12.1342708Z Resolving deltas:  28% (85/303)
+2022-05-19T22:22:12.1345954Z Resolving deltas:  29% (88/303)
+2022-05-19T22:22:12.1346816Z Resolving deltas:  30% (91/303)
+2022-05-19T22:22:12.1349476Z Resolving deltas:  31% (94/303)
+2022-05-19T22:22:12.1350357Z Resolving deltas:  32% (97/303)
+2022-05-19T22:22:12.1353550Z Resolving deltas:  33% (100/303)
+2022-05-19T22:22:12.1354444Z Resolving deltas:  34% (104/303)
+2022-05-19T22:22:12.1356355Z Resolving deltas:  35% (107/303)
+2022-05-19T22:22:12.1357009Z Resolving deltas:  36% (110/303)
+2022-05-19T22:22:12.1358883Z Resolving deltas:  37% (113/303)
+2022-05-19T22:22:12.1359571Z Resolving deltas:  38% (116/303)
+2022-05-19T22:22:12.1361283Z Resolving deltas:  39% (119/303)
+2022-05-19T22:22:12.1361892Z Resolving deltas:  40% (122/303)
+2022-05-19T22:22:12.1362660Z Resolving deltas:  41% (125/303)
+2022-05-19T22:22:12.1363252Z Resolving deltas:  42% (128/303)
+2022-05-19T22:22:12.1364056Z Resolving deltas:  43% (131/303)
+2022-05-19T22:22:12.1364611Z Resolving deltas:  44% (134/303)
+2022-05-19T22:22:12.1365318Z Resolving deltas:  45% (137/303)
+2022-05-19T22:22:12.1365878Z Resolving deltas:  46% (140/303)
+2022-05-19T22:22:12.1367879Z Resolving deltas:  47% (143/303)
+2022-05-19T22:22:12.1368569Z Resolving deltas:  48% (146/303)
+2022-05-19T22:22:12.1369419Z Resolving deltas:  49% (149/303)
+2022-05-19T22:22:12.1371251Z Resolving deltas:  50% (152/303)
+2022-05-19T22:22:12.1375335Z Resolving deltas:  51% (155/303)
+2022-05-19T22:22:12.1376863Z Resolving deltas:  52% (158/303)
+2022-05-19T22:22:12.1377881Z Resolving deltas:  53% (161/303)
+2022-05-19T22:22:12.1378504Z Resolving deltas:  54% (164/303)
+2022-05-19T22:22:12.1380337Z Resolving deltas:  55% (167/303)
+2022-05-19T22:22:12.1380956Z Resolving deltas:  56% (170/303)
+2022-05-19T22:22:12.1382993Z Resolving deltas:  57% (173/303)
+2022-05-19T22:22:12.1383629Z Resolving deltas:  58% (176/303)
+2022-05-19T22:22:12.1384439Z Resolving deltas:  59% (179/303)
+2022-05-19T22:22:12.1385072Z Resolving deltas:  60% (182/303)
+2022-05-19T22:22:12.1386331Z Resolving deltas:  61% (185/303)
+2022-05-19T22:22:12.1387055Z Resolving deltas:  62% (188/303)
+2022-05-19T22:22:12.1387942Z Resolving deltas:  63% (191/303)
+2022-05-19T22:22:12.1388572Z Resolving deltas:  64% (194/303)
+2022-05-19T22:22:12.1391001Z Resolving deltas:  65% (197/303)
+2022-05-19T22:22:12.1391967Z Resolving deltas:  66% (200/303)
+2022-05-19T22:22:12.1393380Z Resolving deltas:  67% (204/303)
+2022-05-19T22:22:12.1393823Z Resolving deltas:  68% (207/303)
+2022-05-19T22:22:12.1394211Z Resolving deltas:  69% (210/303)
+2022-05-19T22:22:12.1394475Z Resolving deltas:  70% (213/303)
+2022-05-19T22:22:12.1394792Z Resolving deltas:  71% (216/303)
+2022-05-19T22:22:12.1395092Z Resolving deltas:  72% (219/303)
+2022-05-19T22:22:12.1399423Z Resolving deltas:  73% (222/303)
+2022-05-19T22:22:12.1399878Z Resolving deltas:  74% (225/303)
+2022-05-19T22:22:12.1400206Z Resolving deltas:  75% (228/303)
+2022-05-19T22:22:12.1400460Z Resolving deltas:  76% (231/303)
+2022-05-19T22:22:12.1431922Z Resolving deltas:  77% (234/303)
+2022-05-19T22:22:12.1432399Z Resolving deltas:  78% (237/303)
+2022-05-19T22:22:12.1434922Z Resolving deltas:  79% (240/303)
+2022-05-19T22:22:12.1435202Z Resolving deltas:  80% (243/303)
+2022-05-19T22:22:12.1435523Z Resolving deltas:  81% (246/303)
+2022-05-19T22:22:12.1435823Z Resolving deltas:  82% (249/303)
+2022-05-19T22:22:12.1436279Z Resolving deltas:  83% (252/303)
+2022-05-19T22:22:12.1436604Z Resolving deltas:  84% (255/303)
+2022-05-19T22:22:12.1437101Z Resolving deltas:  85% (258/303)
+2022-05-19T22:22:12.1437409Z Resolving deltas:  86% (261/303)
+2022-05-19T22:22:12.1437727Z Resolving deltas:  87% (264/303)
+2022-05-19T22:22:12.1438098Z Resolving deltas:  88% (267/303)
+2022-05-19T22:22:12.1438372Z Resolving deltas:  89% (270/303)
+2022-05-19T22:22:12.1438704Z Resolving deltas:  90% (273/303)
+2022-05-19T22:22:12.1439021Z Resolving deltas:  91% (276/303)
+2022-05-19T22:22:12.1440927Z Resolving deltas:  92% (279/303)
+2022-05-19T22:22:12.1441364Z Resolving deltas:  93% (282/303)
+2022-05-19T22:22:12.1441668Z Resolving deltas:  94% (285/303)
+2022-05-19T22:22:12.1441948Z Resolving deltas:  95% (288/303)
+2022-05-19T22:22:12.1442197Z Resolving deltas:  96% (291/303)
+2022-05-19T22:22:12.1442513Z Resolving deltas:  97% (294/303)
+2022-05-19T22:22:12.1442808Z Resolving deltas:  98% (297/303)
+2022-05-19T22:22:12.1459770Z Resolving deltas:  99% (300/303)
+2022-05-19T22:22:12.1460103Z Resolving deltas: 100% (303/303)
+2022-05-19T22:22:12.1460403Z Resolving deltas: 100% (303/303), done.
+2022-05-19T22:22:12.1770273Z From https://github.com/hashicorp/terraform
+2022-05-19T22:22:12.1771532Z  * [new ref]         60a189413d732eccd0158591618422c7cad1aed7 -> origin/build-workflow-dev/general-polish
+2022-05-19T22:22:12.1797853Z ##[endgroup]
+2022-05-19T22:22:12.1798645Z ##[group]Determining the checkout info
+2022-05-19T22:22:12.1803852Z ##[endgroup]
+2022-05-19T22:22:12.1804564Z ##[group]Checking out the ref
+2022-05-19T22:22:12.1811577Z [command]/usr/bin/git checkout --progress --force -B build-workflow-dev/general-polish refs/remotes/origin/build-workflow-dev/general-polish
+2022-05-19T22:22:12.4057329Z Switched to a new branch 'build-workflow-dev/general-polish'
+2022-05-19T22:22:12.4059214Z branch 'build-workflow-dev/general-polish' set up to track 'origin/build-workflow-dev/general-polish'.
+2022-05-19T22:22:12.4063963Z ##[endgroup]
+2022-05-19T22:22:12.4128276Z [command]/usr/bin/git log -1 --format='%H'
+2022-05-19T22:22:12.4165583Z '60a189413d732eccd0158591618422c7cad1aed7'
+2022-05-19T22:22:12.4643518Z ##[group]Run # The actions/checkout action tries hard to fetch as little as
+2022-05-19T22:22:12.4644415Z [36;1m# The actions/checkout action tries hard to fetch as little as[0m
+2022-05-19T22:22:12.4644816Z [36;1m# possible, to the extent that even with "depth: 0" it fails to[0m
+2022-05-19T22:22:12.4645247Z [36;1m# produce enough tag metadata for us to "describe" successfully.[0m
+2022-05-19T22:22:12.4645647Z [36;1m# We'll therefore re-fetch the tags here to make sure we will[0m
+2022-05-19T22:22:12.4645997Z [36;1m# select the most accurate version number.[0m
+2022-05-19T22:22:12.4646544Z [36;1mgit fetch origin --force --tags[0m
+2022-05-19T22:22:12.4646808Z [36;1mgit tag[0m
+2022-05-19T22:22:12.4647947Z [36;1mecho "::set-output name=raw-version::$(git describe --first-parent)"[0m
+2022-05-19T22:22:12.4727615Z shell: /usr/bin/bash -e {0}
+2022-05-19T22:22:12.4727994Z env:
+2022-05-19T22:22:12.4728435Z   PKG_NAME: terraform
+2022-05-19T22:22:12.4728668Z ##[endgroup]
+2022-05-19T22:22:36.6104090Z From https://github.com/hashicorp/terraform
+2022-05-19T22:22:36.6105248Z  * [new branch]          0.15.3                  -> origin/0.15.3
+2022-05-19T22:22:36.6106034Z  * [new branch]          26258                   -> origin/26258
+2022-05-19T22:22:36.6107001Z  * [new branch]          Incident16886           -> origin/Incident16886
+2022-05-19T22:22:36.6165776Z  * [new branch]          add-learn-callout-moved-blocks -> origin/add-learn-callout-moved-blocks
+2022-05-19T22:22:36.6166568Z  * [new branch]          add-new-intro-docs      -> origin/add-new-intro-docs
+2022-05-19T22:22:36.6169941Z  * [new branch]          add-note-about-spaces   -> origin/add-note-about-spaces
+2022-05-19T22:22:36.6172804Z  * [new branch]          add-page-metadata       -> origin/add-page-metadata
+2022-05-19T22:22:36.6175224Z  * [new branch]          add-tutorial-custom-conditions -> origin/add-tutorial-custom-conditions
+2022-05-19T22:22:36.6177636Z  * [new branch]          alisdair/alpine-latest  -> origin/alisdair/alpine-latest
+2022-05-19T22:22:36.6180471Z  * [new branch]          alisdair/are-consul-tests-running -> origin/alisdair/are-consul-tests-running
+2022-05-19T22:22:36.6183366Z  * [new branch]          alisdair/backend-config-override-fix-remote-test -> origin/alisdair/backend-config-override-fix-remote-test
+2022-05-19T22:22:36.6187752Z  * [new branch]          alisdair/concise-diff-experiment -> origin/alisdair/concise-diff-experiment
+2022-05-19T22:22:36.6190688Z  * [new branch]          alisdair/disable-preconditions-postconditions -> origin/alisdair/disable-preconditions-postconditions
+2022-05-19T22:22:36.6193684Z  * [new branch]          alisdair/duplicate-no-color -> origin/alisdair/duplicate-no-color
+2022-05-19T22:22:36.6194290Z  * [new branch]          alisdair/fix-configload-snapshot-panic -> origin/alisdair/fix-configload-snapshot-panic
+2022-05-19T22:22:36.6194993Z  * [new branch]          alisdair/fix-remote-backend-migrate-version-check -> origin/alisdair/fix-remote-backend-migrate-version-check
+2022-05-19T22:22:36.6195780Z  * [new branch]          alisdair/getproviders-retries-bad-branch-do-not-use -> origin/alisdair/getproviders-retries-bad-branch-do-not-use
+2022-05-19T22:22:36.6196465Z  * [new branch]          alisdair/metadata-functions-command -> origin/alisdair/metadata-functions-command
+2022-05-19T22:22:36.6197008Z  * [new branch]          alisdair/mildwonkey/type-func -> origin/alisdair/mildwonkey/type-func
+2022-05-19T22:22:36.6197597Z  * [new branch]          alisdair/module-variable-optional-default -> origin/alisdair/module-variable-optional-default
+2022-05-19T22:22:36.6198227Z  * [new branch]          alisdair/plan-summary-after-changes -> origin/alisdair/plan-summary-after-changes
+2022-05-19T22:22:36.6198933Z  * [new branch]          alisdair/prototype-moved-actions -> origin/alisdair/prototype-moved-actions
+2022-05-19T22:22:36.6199593Z  * [new branch]          alisdair/providers-list -> origin/alisdair/providers-list
+2022-05-19T22:22:36.6200455Z  * [new branch]          alisdair/remote-input-variable-unset -> origin/alisdair/remote-input-variable-unset
+2022-05-19T22:22:36.6201249Z  * [new branch]          alisdair/resource-instance-object-dependencies -> origin/alisdair/resource-instance-object-dependencies
+2022-05-19T22:22:36.6207290Z  * [new branch]          alisdair/still-applying-consolidation -> origin/alisdair/still-applying-consolidation
+2022-05-19T22:22:36.6212116Z  * [new branch]          alisdair/var-flag-spaces-error -> origin/alisdair/var-flag-spaces-error
+2022-05-19T22:22:36.6215177Z  * [new branch]          alisdair/version-should-include-prerelease -> origin/alisdair/version-should-include-prerelease
+2022-05-19T22:22:36.6220529Z  * [new branch]          allthingsclowd-patch-1  -> origin/allthingsclowd-patch-1
+2022-05-19T22:22:36.6225216Z  * [new branch]          azurerm-backend-proxy   -> origin/azurerm-backend-proxy
+2022-05-19T22:22:36.6227970Z  * [new branch]          b-1.1-module-source-git -> origin/b-1.1-module-source-git
+2022-05-19T22:22:36.6236154Z  * [new branch]          b-dev-overrides-plan-warning -> origin/b-dev-overrides-plan-warning
+2022-05-19T22:22:36.6241560Z  * [new branch]          b-diags-sensitive-value -> origin/b-diags-sensitive-value
+2022-05-19T22:22:36.6244563Z  * [new branch]          b-miekg-dns-upgrade     -> origin/b-miekg-dns-upgrade
+2022-05-19T22:22:36.6245189Z  * [new branch]          b-module-instance-resource-deps -> origin/b-module-instance-resource-deps
+2022-05-19T22:22:36.6245851Z  * [new branch]          b-move-implied-cross-package -> origin/b-move-implied-cross-package
+2022-05-19T22:22:36.6246550Z  * [new branch]          b-nested-set-unknown    -> origin/b-nested-set-unknown
+2022-05-19T22:22:36.6247082Z  * [new branch]          b-sdk-import-verify-test -> origin/b-sdk-import-verify-test
+2022-05-19T22:22:36.6249943Z  * [new branch]          b-sdk-nested-id         -> origin/b-sdk-nested-id
+2022-05-19T22:22:36.6250559Z  * [new branch]          b-tf-builtin-provider-parser-fix -> origin/b-tf-builtin-provider-parser-fix
+2022-05-19T22:22:36.6251441Z  * [new branch]          backport/add-learn-callout-moved-blocks/multiply-awaited-cub -> origin/backport/add-learn-callout-moved-blocks/multiply-awaited-cub
+2022-05-19T22:22:36.6252316Z  * [new branch]          backport/add-new-intro-docs/strangely-lucky-bluegill -> origin/backport/add-new-intro-docs/strangely-lucky-bluegill
+2022-05-19T22:22:36.6254060Z  * [new branch]          backport/add-powershell-warning/certainly-amazing-lemur -> origin/backport/add-powershell-warning/certainly-amazing-lemur
+2022-05-19T22:22:36.6254866Z  * [new branch]          backport/alisdair/cty-1.8.3/seriously-tidy-foal -> origin/backport/alisdair/cty-1.8.3/seriously-tidy-foal
+2022-05-19T22:22:36.6255623Z  * [new branch]          backport/alisdair/fix-30641/firmly-musical-lemming -> origin/backport/alisdair/fix-30641/firmly-musical-lemming
+2022-05-19T22:22:36.6256724Z  * [new branch]          backport/alisdair/fix-show-plan-against-non-default-state/blatantly-balanced-porpoise -> origin/backport/alisdair/fix-show-plan-against-non-default-state/blatantly-balanced-porpoise
+2022-05-19T22:22:36.6257900Z  * [new branch]          backport/alisdair/fix-stuck-lock-when-applying-state-plan/enormously-refined-sheepdog -> origin/backport/alisdair/fix-stuck-lock-when-applying-state-plan/enormously-refined-sheepdog
+2022-05-19T22:22:36.6260105Z  * [new branch]          backport/alisdair/json-ui-resource-drift/broadly-careful-rooster -> origin/backport/alisdair/json-ui-resource-drift/broadly-careful-rooster
+2022-05-19T22:22:36.6261239Z  * [new branch]          backport/alisdair/redact-sensitive-values-from-function-errors/definitely-assured-mantis -> origin/backport/alisdair/redact-sensitive-values-from-function-errors/definitely-assured-mantis
+2022-05-19T22:22:36.6262664Z  * [new branch]          backport/alisdair/sensitive-attribute-forces-replacement/mildly-optimal-platypus -> origin/backport/alisdair/sensitive-attribute-forces-replacement/mildly-optimal-platypus
+2022-05-19T22:22:36.6263844Z  * [new branch]          backport/barrettclark/update-go-slug/severely-destined-crow -> origin/backport/barrettclark/update-go-slug/severely-destined-crow
+2022-05-19T22:22:36.6264736Z  * [new branch]          backport/consul-size-limit/amazingly-innocent-python -> origin/backport/consul-size-limit/amazingly-innocent-python
+2022-05-19T22:22:36.6266717Z  * [new branch]          backport/description-metadata-language-docs/frankly-desired-penguin -> origin/backport/description-metadata-language-docs/frankly-desired-penguin
+2022-05-19T22:22:36.6268178Z  * [new branch]          backport/doc-provisioner-scp/definitely-capital-bug -> origin/backport/doc-provisioner-scp/definitely-capital-bug
+2022-05-19T22:22:36.6269222Z  * [new branch]          backport/doc-refactoring-nav-link/honestly-sweet-sawfly -> origin/backport/doc-refactoring-nav-link/honestly-sweet-sawfly
+2022-05-19T22:22:36.6270040Z  * [new branch]          backport/f-cty-funcs-marks/poorly-mutual-walleye -> origin/backport/f-cty-funcs-marks/poorly-mutual-walleye
+2022-05-19T22:22:36.6270953Z  * [new branch]          backport/f-non-existing-module-instance-crash/neatly-perfect-kiwi -> origin/backport/f-non-existing-module-instance-crash/neatly-perfect-kiwi
+2022-05-19T22:22:36.6274076Z  * [new branch]          backport/f-plan-action-reason/incredibly-concrete-jackal -> origin/backport/f-plan-action-reason/incredibly-concrete-jackal
+2022-05-19T22:22:36.6277017Z  * [new branch]          backport/f-plan-refresh-only-and-replace/really-absolute-silkworm -> origin/backport/f-plan-refresh-only-and-replace/really-absolute-silkworm
+2022-05-19T22:22:36.6280144Z  * [new branch]          backport/file-provisioner-powershell-warning/noticeably-adequate-mullet -> origin/backport/file-provisioner-powershell-warning/noticeably-adequate-mullet
+2022-05-19T22:22:36.6281103Z  * [new branch]          backport/fix-broken-link/certainly-measured-chipmunk -> origin/backport/fix-broken-link/certainly-measured-chipmunk
+2022-05-19T22:22:36.6282193Z  * [new branch]          backport/fix-broken-links-1-10/firmly-equal-rabbit -> origin/backport/fix-broken-links-1-10/firmly-equal-rabbit
+2022-05-19T22:22:36.6284426Z  * [new branch]          backport/fix-intro-page-images/constantly-capable-shiner -> origin/backport/fix-intro-page-images/constantly-capable-shiner
+2022-05-19T22:22:36.6286651Z  * [new branch]          backport/fix-last-intro-nits/infinitely-workable-redfish -> origin/backport/fix-last-intro-nits/infinitely-workable-redfish
+2022-05-19T22:22:36.6288967Z  * [new branch]          backport/fix-links-release/seemingly-living-dinosaur -> origin/backport/fix-links-release/seemingly-living-dinosaur
+2022-05-19T22:22:36.6291332Z  * [new branch]          backport/fix-remote-backend-references/primarily-tops-mite -> origin/backport/fix-remote-backend-references/primarily-tops-mite
+2022-05-19T22:22:36.6293684Z  * [new branch]          backport/fix-workspace-name-docs/ideally-uncommon-pheasant -> origin/backport/fix-workspace-name-docs/ideally-uncommon-pheasant
+2022-05-19T22:22:36.6295897Z  * [new branch]          backport/jbardin/cancel-auto-approve/extremely-brave-bear -> origin/backport/jbardin/cancel-auto-approve/extremely-brave-bear
+2022-05-19T22:22:36.6298158Z  * [new branch]          backport/jbardin/coerce-value-nested-types/certainly-rested-chigger -> origin/backport/jbardin/coerce-value-nested-types/certainly-rested-chigger
+2022-05-19T22:22:36.6300877Z  * [new branch]          backport/jbardin/format-empty-nested-attrs/rightly-uncommon-bluegill -> origin/backport/jbardin/format-empty-nested-attrs/rightly-uncommon-bluegill
+2022-05-19T22:22:36.6304974Z  * [new branch]          backport/jbardin/format-id-name-marks/perfectly-boss-bass -> origin/backport/jbardin/format-id-name-marks/perfectly-boss-bass
+2022-05-19T22:22:36.6310207Z  * [new branch]          backport/jbardin/ignore-changes-marks/formerly-new-insect -> origin/backport/jbardin/ignore-changes-marks/formerly-new-insect
+2022-05-19T22:22:36.6315550Z  * [new branch]          backport/jbardin/k8s-mod-update/likely-probable-falcon -> origin/backport/jbardin/k8s-mod-update/likely-probable-falcon
+2022-05-19T22:22:36.6316339Z  * [new branch]          backport/jbardin/optional-attrs/obviously-growing-duck -> origin/backport/jbardin/optional-attrs/obviously-growing-duck
+2022-05-19T22:22:36.6317067Z  * [new branch]          backport/k8s-backend-credentials/radically-decent-mite -> origin/backport/k8s-backend-credentials/radically-decent-mite
+2022-05-19T22:22:36.6318979Z  * [new branch]          backport/laura-add-mrui-to-sidebar/highly-resolved-blowfish -> origin/backport/laura-add-mrui-to-sidebar/highly-resolved-blowfish
+2022-05-19T22:22:36.6321488Z  * [new branch]          backport/main/absolutely-sterling-whippet -> origin/backport/main/absolutely-sterling-whippet
+2022-05-19T22:22:36.6325212Z  * [new branch]          backport/rar-docs-update-add-anchor/cheaply-sincere-escargot -> origin/backport/rar-docs-update-add-anchor/cheaply-sincere-escargot
+2022-05-19T22:22:36.6327607Z  * [new branch]          backport/replace-flag-clarifications/definitely-saved-elf -> origin/backport/replace-flag-clarifications/definitely-saved-elf
+2022-05-19T22:22:36.6328423Z  * [new branch]          backport/replace-flag-updates/nominally-assured-weevil -> origin/backport/replace-flag-updates/nominally-assured-weevil
+2022-05-19T22:22:36.6331060Z  * [new branch]          backport/tf-integration-program-guide/briefly-certain-quail -> origin/backport/tf-integration-program-guide/briefly-certain-quail
+2022-05-19T22:22:36.6333483Z  * [new branch]          backport/tweak-multi-to-multi-migration-tfc/suddenly-real-duckling -> origin/backport/tweak-multi-to-multi-migration-tfc/suddenly-real-duckling
+2022-05-19T22:22:36.6337143Z  * [new branch]          backport/update-console-docs/closely-genuine-javelin -> origin/backport/update-console-docs/closely-genuine-javelin
+2022-05-19T22:22:36.6342523Z  * [new branch]          backport/update-for-each-example/early-crucial-piranha -> origin/backport/update-for-each-example/early-crucial-piranha
+2022-05-19T22:22:36.6344924Z  * [new branch]          barrettclark/fix-state-outputs-read-permissions -> origin/barrettclark/fix-state-outputs-read-permissions
+2022-05-19T22:22:36.6348353Z  * [new branch]          before-sdk-extraction   -> origin/before-sdk-extraction
+2022-05-19T22:22:36.6349008Z  * [new branch]          brandonc/cloud_upgrade_013 -> origin/brandonc/cloud_upgrade_013
+2022-05-19T22:22:36.6349522Z  * [new branch]          brandonc/output_cloud_reads -> origin/brandonc/output_cloud_reads
+2022-05-19T22:22:36.6350051Z  * [new branch]          brandonc/run_variables_types -> origin/brandonc/run_variables_types
+2022-05-19T22:22:36.6351742Z  * [new branch]          brandonc/scheme_override_cloud -> origin/brandonc/scheme_override_cloud
+2022-05-19T22:22:36.6352293Z  * [new branch]          brandonc/variable_parsing_refactor -> origin/brandonc/variable_parsing_refactor
+2022-05-19T22:22:36.6354342Z  * [new branch]          build-circleci          -> origin/build-circleci
+2022-05-19T22:22:36.6356208Z  * [new branch]          build-pr-checks         -> origin/build-pr-checks
+2022-05-19T22:22:36.6359877Z  * [new branch]          build-workflow-dev/cgo-enabled -> origin/build-workflow-dev/cgo-enabled
+2022-05-19T22:22:36.6363213Z  * [new branch]          cd/deprecate-in-docs    -> origin/cd/deprecate-in-docs
+2022-05-19T22:22:36.6363703Z  * [new branch]          cgriggs01-stable-pdp    -> origin/cgriggs01-stable-pdp
+2022-05-19T22:22:36.6364173Z  * [new branch]          cgriggs01-tpdp-default  -> origin/cgriggs01-tpdp-default
+2022-05-19T22:22:36.6364619Z  * [new branch]          cloud-e2e-fix           -> origin/cloud-e2e-fix
+2022-05-19T22:22:36.6365146Z  * [new branch]          cloud-integration-changelog-entry -> origin/cloud-integration-changelog-entry
+2022-05-19T22:22:36.6366980Z  * [new branch]          cmd-fmt-parens-error    -> origin/cmd-fmt-parens-error
+2022-05-19T22:22:36.6416457Z  * [new branch]          dependabot/go_modules/github.com/bmatcuk/doublestar-1.3.4 -> origin/dependabot/go_modules/github.com/bmatcuk/doublestar-1.3.4
+2022-05-19T22:22:36.6417383Z  * [new branch]          dependabot/go_modules/github.com/hashicorp/go-getter-1.5.11 -> origin/dependabot/go_modules/github.com/hashicorp/go-getter-1.5.11
+2022-05-19T22:22:36.6418139Z  * [new branch]          dependabot/go_modules/github.com/mattn/go-shellwords-1.0.12 -> origin/dependabot/go_modules/github.com/mattn/go-shellwords-1.0.12
+2022-05-19T22:22:36.6418698Z  * [new branch]          doc-config-refactoring  -> origin/doc-config-refactoring
+2022-05-19T22:22:36.6419184Z  * [new branch]          doc-provisioner-scp     -> origin/doc-provisioner-scp
+2022-05-19T22:22:36.6419680Z  * [new branch]          doc-refactoring-nav-link -> origin/doc-refactoring-nav-link
+2022-05-19T22:22:36.6420322Z  * [new branch]          doc-s3-backend-dynamodb-locks -> origin/doc-s3-backend-dynamodb-locks
+2022-05-19T22:22:36.6420841Z  * [new branch]          docs/top-pages-gloss    -> origin/docs/top-pages-gloss
+2022-05-19T22:22:36.6421312Z  * [new branch]          ds.submodule-nav-main   -> origin/ds.submodule-nav-main
+2022-05-19T22:22:36.6421786Z  * [new branch]          f-cliconfig-hcl2api     -> origin/f-cliconfig-hcl2api
+2022-05-19T22:22:36.6422224Z  * [new branch]          f-cmd-output-raw        -> origin/f-cmd-output-raw
+2022-05-19T22:22:36.6422698Z  * [new branch]          f-cmd-show-config       -> origin/f-cmd-show-config
+2022-05-19T22:22:36.6423135Z  * [new branch]          f-cmdline-funcs         -> origin/f-cmdline-funcs
+2022-05-19T22:22:36.6423550Z  * [new branch]          f-core-rpc              -> origin/f-core-rpc
+2022-05-19T22:22:36.6423960Z  * [new branch]          f-cty-funcs-marks       -> origin/f-cty-funcs-marks
+2022-05-19T22:22:36.6424375Z  * [new branch]          f-debugger              -> origin/f-debugger
+2022-05-19T22:22:36.6424783Z  * [new branch]          f-decode-moved          -> origin/f-decode-moved
+2022-05-19T22:22:36.6425209Z  * [new branch]          f-depfile-pkg           -> origin/f-depfile-pkg
+2022-05-19T22:22:36.6425671Z  * [new branch]          f-derived-values-tracking -> origin/f-derived-values-tracking
+2022-05-19T22:22:36.6426175Z  * [new branch]          f-diagnostics-cli-reorg -> origin/f-diagnostics-cli-reorg
+2022-05-19T22:22:36.6426677Z  * [new branch]          f-e2etest-deps-forbidden -> origin/f-e2etest-deps-forbidden
+2022-05-19T22:22:36.6427150Z  * [new branch]          f-experiments-alpha     -> origin/f-experiments-alpha
+2022-05-19T22:22:36.6427591Z  * [new branch]          f-exprstress            -> origin/f-exprstress
+2022-05-19T22:22:36.6428043Z  * [new branch]          f-fewer-apply-updates   -> origin/f-fewer-apply-updates
+2022-05-19T22:22:36.6428512Z  * [new branch]          f-fileexists-errmsg     -> origin/f-fileexists-errmsg
+2022-05-19T22:22:36.6428956Z  * [new branch]          f-func-cidrsubnets      -> origin/f-func-cidrsubnets
+2022-05-19T22:22:36.6429400Z  * [new branch]          f-func-expandnull       -> origin/f-func-expandnull
+2022-05-19T22:22:36.6429871Z  * [new branch]          f-gen-integration-tests -> origin/f-gen-integration-tests
+2022-05-19T22:22:36.6430329Z  * [new branch]          f-hcl2-context-old      -> origin/f-hcl2-context-old
+2022-05-19T22:22:36.6430770Z  * [new branch]          f-hcl2-planstate        -> origin/f-hcl2-planstate
+2022-05-19T22:22:36.6431265Z  * [new branch]          f-implied-move-module-call -> origin/f-implied-move-module-call
+2022-05-19T22:22:36.6431836Z  * [new branch]          f-init-provider-source-feedback -> origin/f-init-provider-source-feedback
+2022-05-19T22:22:36.6432316Z  * [new branch]          f-langserver            -> origin/f-langserver
+2022-05-19T22:22:36.6432861Z  * [new branch]          f-moved-again           -> origin/f-moved-again
+2022-05-19T22:22:36.6433323Z  * [new branch]          f-new-build-pipeline    -> origin/f-new-build-pipeline
+2022-05-19T22:22:36.6433767Z  * [new branch]          f-new-plan-modes        -> origin/f-new-plan-modes
+2022-05-19T22:22:36.6434192Z  * [new branch]          f-ng-workflow           -> origin/f-ng-workflow
+2022-05-19T22:22:36.6434650Z  * [new branch]          f-nix-legacy-providers  -> origin/f-nix-legacy-providers
+2022-05-19T22:22:36.6435224Z  * [new branch]          f-objchange-nulls       -> origin/f-objchange-nulls
+2022-05-19T22:22:36.6435684Z  * [new branch]          f-outputs-in-plan       -> origin/f-outputs-in-plan
+2022-05-19T22:22:36.6436125Z  * [new branch]          f-outputs-plan          -> origin/f-outputs-plan
+2022-05-19T22:22:36.6436597Z  * [new branch]          f-partial-plan-on-error -> origin/f-partial-plan-on-error
+2022-05-19T22:22:36.6437111Z  * [new branch]          f-partial-plan-on-error-ui -> origin/f-partial-plan-on-error-ui
+2022-05-19T22:22:36.6437706Z  * [new branch]          f-plan-immediate-ops    -> origin/f-plan-immediate-ops
+2022-05-19T22:22:36.6438146Z  * [new branch]          f-plan-reads            -> origin/f-plan-reads
+2022-05-19T22:22:36.6438663Z  * [new branch]          f-plan-refresh-only-and-replace -> origin/f-plan-refresh-only-and-replace
+2022-05-19T22:22:36.6439144Z  * [new branch]          f-playground            -> origin/f-playground
+2022-05-19T22:22:36.6439570Z  * [new branch]          f-plugin-finder         -> origin/f-plugin-finder
+2022-05-19T22:22:36.6440073Z  * [new branch]          f-possible-apply-refactoring -> origin/f-possible-apply-refactoring
+2022-05-19T22:22:36.6440798Z  * [new branch]          f-preconditions-postconditions -> origin/f-preconditions-postconditions
+2022-05-19T22:22:36.6441371Z  * [new branch]          f-prototype-drift       -> origin/f-prototype-drift
+2022-05-19T22:22:36.6441975Z  * [new branch]          f-prototype-workspaces-are-states -> origin/f-prototype-workspaces-are-states
+2022-05-19T22:22:36.6442591Z  * [new branch]          f-provider-http-mirrors -> origin/f-provider-http-mirrors
+2022-05-19T22:22:36.6443504Z  * [new branch]          f-provider-schema-init  -> origin/f-provider-schema-init
+2022-05-19T22:22:36.6444300Z  * [new branch]          f-provider-source-local-discovery -> origin/f-provider-source-local-discovery
+2022-05-19T22:22:36.6444960Z  * [new branch]          f-provider-state-storage -> origin/f-provider-state-storage
+2022-05-19T22:22:36.6445602Z  * [new branch]          f-providerinst-command-tests -> origin/f-providerinst-command-tests
+2022-05-19T22:22:36.6446199Z  * [new branch]          f-providers-mirror      -> origin/f-providers-mirror
+2022-05-19T22:22:36.6446773Z  * [new branch]          f-providers-mirror-2    -> origin/f-providers-mirror-2
+2022-05-19T22:22:36.6447376Z  * [new branch]          f-providers-new-installer -> origin/f-providers-new-installer
+2022-05-19T22:22:36.6447869Z  * [new branch]          f-refresh-plan          -> origin/f-refresh-plan
+2022-05-19T22:22:36.6448484Z  * [new branch]          f-resource-for_each-and-experiments -> origin/f-resource-for_each-and-experiments
+2022-05-19T22:22:36.6449108Z  * [new branch]          f-rpcplugin-interface   -> origin/f-rpcplugin-interface
+2022-05-19T22:22:36.6449683Z  * [new branch]          f-skip-attrs-as-blocks  -> origin/f-skip-attrs-as-blocks
+2022-05-19T22:22:36.6450264Z  * [new branch]          f-state-upgrade-always  -> origin/f-state-upgrade-always
+2022-05-19T22:22:36.6451082Z  * [new branch]          f-submodule-outputs-inferred-sensitive -> origin/f-submodule-outputs-inferred-sensitive
+2022-05-19T22:22:36.6451906Z  * [new branch]          f-svcauth-environment   -> origin/f-svcauth-environment
+2022-05-19T22:22:36.6452499Z  * [new branch]          f-svchost-disco         -> origin/f-svchost-disco
+2022-05-19T22:22:36.6453171Z  * [new branch]          f-temp-without-provider-blocks -> origin/f-temp-without-provider-blocks
+2022-05-19T22:22:36.6453831Z  * [new branch]          f-template-values       -> origin/f-template-values
+2022-05-19T22:22:36.6455512Z  * [new branch]          f-terraform-version-lock -> origin/f-terraform-version-lock
+2022-05-19T22:22:36.6457120Z  * [new branch]          f-testing-eval-prototype -> origin/f-testing-eval-prototype
+2022-05-19T22:22:36.6458810Z  * [new branch]          f-testing-with-conditions -> origin/f-testing-with-conditions
+2022-05-19T22:22:36.6460765Z  * [new branch]          f-tfaddr-lib            -> origin/f-tfaddr-lib
+2022-05-19T22:22:36.6462994Z  * [new branch]          f-tfaddr-minimal-api    -> origin/f-tfaddr-minimal-api
+2022-05-19T22:22:36.6464710Z  * [new branch]          f-unused-attr           -> origin/f-unused-attr
+2022-05-19T22:22:36.6466380Z  * [new branch]          f-v0.12-cmdvars         -> origin/f-v0.12-cmdvars
+2022-05-19T22:22:36.6467945Z  * [new branch]          f-validate-lint         -> origin/f-validate-lint
+2022-05-19T22:22:36.6470486Z  * [new branch]          f-workspaces2-prototype -> origin/f-workspaces2-prototype
+2022-05-19T22:22:36.6473199Z  * [new branch]          f/removing-adal-auth    -> origin/f/removing-adal-auth
+2022-05-19T22:22:36.6475120Z  * [new branch]          fix-broken-link         -> origin/fix-broken-link
+2022-05-19T22:22:36.6477125Z  * [new branch]          fix-broken-links-1-10   -> origin/fix-broken-links-1-10
+2022-05-19T22:22:36.6479622Z  * [new branch]          fix-intro-page-images   -> origin/fix-intro-page-images
+2022-05-19T22:22:36.6482011Z  * [new branch]          fix-last-intro-nits     -> origin/fix-last-intro-nits
+2022-05-19T22:22:36.6485181Z  * [new branch]          fix-links-release       -> origin/fix-links-release
+2022-05-19T22:22:36.6487270Z  * [new branch]          fix-postconditions-example -> origin/fix-postconditions-example
+2022-05-19T22:22:36.6489298Z  * [new branch]          fix-preconditions       -> origin/fix-preconditions
+2022-05-19T22:22:36.6490727Z  * [new branch]          fix-provisioners-content -> origin/fix-provisioners-content
+2022-05-19T22:22:36.6493479Z  * [new branch]          fix-value-assertion-errors -> origin/fix-value-assertion-errors
+2022-05-19T22:22:36.6495744Z  * [new branch]          gitrgoliveira-patch-1   -> origin/gitrgoliveira-patch-1
+2022-05-19T22:22:36.6498146Z  * [new branch]          go-get1.5.2             -> origin/go-get1.5.2
+2022-05-19T22:22:36.6507777Z  * [new branch]          go1.11rc1-vendor-experiment -> origin/go1.11rc1-vendor-experiment
+2022-05-19T22:22:36.6513202Z  * [new branch]          guide-v0.13-beta        -> origin/guide-v0.13-beta
+2022-05-19T22:22:36.6513735Z  * [new branch]          jan21_language_urls     -> origin/jan21_language_urls
+2022-05-19T22:22:36.6519624Z  * [new branch]          jan21_test_broken_link_check -> origin/jan21_test_broken_link_check
+2022-05-19T22:22:36.6522761Z  * [new branch]          jan21_url_rfc           -> origin/jan21_url_rfc
+2022-05-19T22:22:36.6525897Z  * [new branch]          jbardin/backport-29017  -> origin/jbardin/backport-29017
+2022-05-19T22:22:36.6526399Z  * [new branch]          jbardin/backport-29167  -> origin/jbardin/backport-29167
+2022-05-19T22:22:36.6528221Z  * [new branch]          jbardin/backport-29559  -> origin/jbardin/backport-29559
+2022-05-19T22:22:36.6530200Z  * [new branch]          jbardin/call-plan-destroy -> origin/jbardin/call-plan-destroy
+2022-05-19T22:22:36.6530697Z  * [new branch]          jbardin/go-getter-update -> origin/jbardin/go-getter-update
+2022-05-19T22:22:36.6531425Z  * [new branch]          jbardin/lookup-objects  -> origin/jbardin/lookup-objects
+2022-05-19T22:22:36.6531923Z  * [new branch]          jbardin/null-variable   -> origin/jbardin/null-variable
+2022-05-19T22:22:36.6533566Z  * [new branch]          jbardin/variable-eval   -> origin/jbardin/variable-eval
+2022-05-19T22:22:36.6537164Z  * [new branch]          json-schema-export-crash -> origin/json-schema-export-crash
+2022-05-19T22:22:36.6542390Z  * [new branch]          july2020_pre0.13_stable-website_backup -> origin/july2020_pre0.13_stable-website_backup
+2022-05-19T22:22:36.6544648Z  * [new branch]          k8s-backend-credentials -> origin/k8s-backend-credentials
+2022-05-19T22:22:36.6546064Z  * [new branch]          k8sback                 -> origin/k8sback
+2022-05-19T22:22:36.6546465Z  * [new branch]          kevin/preview           -> origin/kevin/preview
+2022-05-19T22:22:36.6549324Z  * [new branch]          kevin/vercel-config     -> origin/kevin/vercel-config
+2022-05-19T22:22:36.6552709Z  * [new branch]          kmoe/http-backend-debug-log -> origin/kmoe/http-backend-debug-log
+2022-05-19T22:22:36.6554667Z  * [new branch]          kmoe/misc-help-text     -> origin/kmoe/misc-help-text
+2022-05-19T22:22:36.6555385Z  * [new branch]          kmoe/unused-resource-attributes -> origin/kmoe/unused-resource-attributes
+2022-05-19T22:22:36.6555985Z  * [new branch]          lafentres/autolabel-dependabot-prs -> origin/lafentres/autolabel-dependabot-prs
+2022-05-19T22:22:36.6556839Z  * [new branch]          lafentres/refactor-show-command -> origin/lafentres/refactor-show-command
+2022-05-19T22:22:36.6557387Z  * [new branch]          laura-fix-jsonencode-note -> origin/laura-fix-jsonencode-note
+2022-05-19T22:22:36.6558030Z  * [new branch]          laura-update-docs-readme -> origin/laura-update-docs-readme
+2022-05-19T22:22:36.6558602Z  * [new branch]          laura-update-pre-post-conditions -> origin/laura-update-pre-post-conditions
+2022-05-19T22:22:36.6559197Z  * [new branch]          link_multicloud_tutorial_from_use_cases -> origin/link_multicloud_tutorial_from_use_cases
+2022-05-19T22:22:36.6559698Z  * [new branch]          link_to_refresh_tutorial -> origin/link_to_refresh_tutorial
+2022-05-19T22:22:36.6560144Z  * [new branch]          link_workflow_tutorials -> origin/link_workflow_tutorials
+2022-05-19T22:22:36.6560542Z  * [new branch]          main                    -> origin/main
+2022-05-19T22:22:36.6561065Z  * [new branch]          megan_invalid_creds     -> origin/megan_invalid_creds
+2022-05-19T22:22:36.6561646Z  * [new branch]          megan_update_msg        -> origin/megan_update_msg
+2022-05-19T22:22:36.6562604Z  * [new branch]          migrate-go-tfe-1_0      -> origin/migrate-go-tfe-1_0
+2022-05-19T22:22:36.6563258Z  * [new branch]          mnomitch/varialbe-errors-on-remote-backend -> origin/mnomitch/varialbe-errors-on-remote-backend
+2022-05-19T22:22:36.6564492Z  * [new branch]          nf/nov21-migrate-away-from-cloud -> origin/nf/nov21-migrate-away-from-cloud
+2022-05-19T22:22:36.6565022Z  * [new branch]          non-interactive-workflows -> origin/non-interactive-workflows
+2022-05-19T22:22:36.6565851Z  * [new branch]          nq.content-update       -> origin/nq.content-update
+2022-05-19T22:22:36.6566324Z  * [new branch]          nq.docs-content-update  -> origin/nq.docs-content-update
+2022-05-19T22:22:36.6567904Z  * [new branch]          omarismail/run-vars     -> origin/omarismail/run-vars
+2022-05-19T22:22:36.6570289Z  * [new branch]          p-go-azure-helpers-0.10.0 -> origin/p-go-azure-helpers-0.10.0
+2022-05-19T22:22:36.6573795Z  * [new branch]          paddy_backport_proto6_download -> origin/paddy_backport_proto6_download
+2022-05-19T22:22:36.6575509Z  * [new branch]          paddy_module_attribution_tmp -> origin/paddy_module_attribution_tmp
+2022-05-19T22:22:36.6579781Z  * [new branch]          paddy_paul_proto52      -> origin/paddy_paul_proto52
+2022-05-19T22:22:36.6581391Z  * [new branch]          paddy_protocol_six_registry -> origin/paddy_protocol_six_registry
+2022-05-19T22:22:36.6583011Z  * [new branch]          paddy_tf_log_json       -> origin/paddy_tf_log_json
+2022-05-19T22:22:36.6585566Z  * [new branch]          pault/0.14-tfce-continue-on-error -> origin/pault/0.14-tfce-continue-on-error
+2022-05-19T22:22:36.6587036Z  * [new branch]          pluginsdk-v0.12-early1  -> origin/pluginsdk-v0.12-early1
+2022-05-19T22:22:36.6588803Z  * [new branch]          pluginsdk-v0.12-early2  -> origin/pluginsdk-v0.12-early2
+2022-05-19T22:22:36.6590431Z  * [new branch]          pluginsdk-v0.12-early3  -> origin/pluginsdk-v0.12-early3
+2022-05-19T22:22:36.6592239Z  * [new branch]          pluginsdk-v0.12-early4  -> origin/pluginsdk-v0.12-early4
+2022-05-19T22:22:36.6594925Z  * [new branch]          pluginsdk-v0.12-early5  -> origin/pluginsdk-v0.12-early5
+2022-05-19T22:22:36.6596416Z  * [new branch]          pluginsdk-v0.12-early6  -> origin/pluginsdk-v0.12-early6
+2022-05-19T22:22:36.6597982Z  * [new branch]          pluginsdk-v0.12-early7  -> origin/pluginsdk-v0.12-early7
+2022-05-19T22:22:36.6599448Z  * [new branch]          pluginsdk-v0.12-early8  -> origin/pluginsdk-v0.12-early8
+2022-05-19T22:22:36.6601394Z  * [new branch]          preapply-runtasks-cli-output -> origin/preapply-runtasks-cli-output
+2022-05-19T22:22:36.6602839Z  * [new branch]          preapply-runtasks-clioutput -> origin/preapply-runtasks-clioutput
+2022-05-19T22:22:36.6604501Z  * [new branch]          proto-test-harness      -> origin/proto-test-harness
+2022-05-19T22:22:36.6606201Z  * [new branch]          prototype-implicit-graph -> origin/prototype-implicit-graph
+2022-05-19T22:22:36.6607620Z  * [new branch]          ps-protocol2            -> origin/ps-protocol2
+2022-05-19T22:22:36.6609752Z  * [new branch]          pselle/env_delete       -> origin/pselle/env_delete
+2022-05-19T22:22:36.6611471Z  * [new branch]          rar-docs-update-add-anchor -> origin/rar-docs-update-add-anchor
+2022-05-19T22:22:36.6612974Z  * [new branch]          regenerate-protobufs    -> origin/regenerate-protobufs
+2022-05-19T22:22:36.6614730Z  * [new branch]          registry-provider-tiers -> origin/registry-provider-tiers
+2022-05-19T22:22:36.6616207Z  * [new branch]          release-notes-env-credentials -> origin/release-notes-env-credentials
+2022-05-19T22:22:36.6617669Z  * [new branch]          remote-backend-refresh-alias -> origin/remote-backend-refresh-alias
+2022-05-19T22:22:36.6619183Z  * [new branch]          replace-flag-updates    -> origin/replace-flag-updates
+2022-05-19T22:22:36.6620630Z  * [new branch]          res-add-learn-link-debug -> origin/res-add-learn-link-debug
+2022-05-19T22:22:36.6622440Z  * [new branch]          res-add-learn-link-debug-1 -> origin/res-add-learn-link-debug-1
+2022-05-19T22:22:36.6624027Z  * [new branch]          res-lifecycle-tutorial  -> origin/res-lifecycle-tutorial
+2022-05-19T22:22:36.6625692Z  * [new branch]          revamp-cli-config       -> origin/revamp-cli-config
+2022-05-19T22:22:36.6627197Z  * [new branch]          revert-29088-minify_jsonencode -> origin/revert-29088-minify_jsonencode
+2022-05-19T22:22:36.6628593Z  * [new branch]          review-1.0-docs         -> origin/review-1.0-docs
+2022-05-19T22:22:36.6630172Z  * [new branch]          rln-add-versions-tutorials-links -> origin/rln-add-versions-tutorials-links
+2022-05-19T22:22:36.6631898Z  * [new branch]          rln-modules-track-reference -> origin/rln-modules-track-reference
+2022-05-19T22:22:36.6633724Z  * [new branch]          rt-backport-changelog   -> origin/rt-backport-changelog
+2022-05-19T22:22:36.6635456Z  * [new branch]          rt-changelog-entry-1.1  -> origin/rt-changelog-entry-1.1
+2022-05-19T22:22:36.6636942Z  * [new branch]          run-tasks-backport      -> origin/run-tasks-backport
+2022-05-19T22:22:36.6638502Z  * [new branch]          sdk-removed             -> origin/sdk-removed
+2022-05-19T22:22:36.6640124Z  * [new branch]          sdk-v0.11-with-go-modules -> origin/sdk-v0.11-with-go-modules
+2022-05-19T22:22:36.6642672Z  * [new branch]          sebasslash/add-cloud-e2e-test-workflow -> origin/sebasslash/add-cloud-e2e-test-workflow
+2022-05-19T22:22:36.6644039Z  * [new branch]          sebasslash/add-tf-hostname-env-var -> origin/sebasslash/add-tf-hostname-env-var
+2022-05-19T22:22:36.6645613Z  * [new branch]          sebasslash/add-tf-org-env-var -> origin/sebasslash/add-tf-org-env-var
+2022-05-19T22:22:36.6647026Z  * [new branch]          sebasslash/config-token-precedence -> origin/sebasslash/config-token-precedence
+2022-05-19T22:22:36.6648349Z  * [new branch]          sebasslash/env-cloud-e2e-tests -> origin/sebasslash/env-cloud-e2e-tests
+2022-05-19T22:22:36.6649762Z  * [new branch]          sebasslash/err-approval-input-false -> origin/sebasslash/err-approval-input-false
+2022-05-19T22:22:36.6651343Z  * [new branch]          sebasslash/rename-env-vars -> origin/sebasslash/rename-env-vars
+2022-05-19T22:22:36.6652943Z  * [new branch]          sebasslash/resolve-flaky-env-var-test -> origin/sebasslash/resolve-flaky-env-var-test
+2022-05-19T22:22:36.6654688Z  * [new branch]          sebasslash/tf-workspace-cloud-config -> origin/sebasslash/tf-workspace-cloud-config
+2022-05-19T22:22:36.6656216Z  * [new branch]          solutiongeek-patch-1    -> origin/solutiongeek-patch-1
+2022-05-19T22:22:36.6657586Z  * [new branch]          stable-website          -> origin/stable-website
+2022-05-19T22:22:36.6659010Z  * [new branch]          tags-reconfigure-msg    -> origin/tags-reconfigure-msg
+2022-05-19T22:22:36.6661437Z  * [new branch]          taiidani/cloudScheme    -> origin/taiidani/cloudScheme
+2022-05-19T22:22:36.6663541Z  * [new branch]          tchupp/override-local-vars -> origin/tchupp/override-local-vars
+2022-05-19T22:22:36.6665275Z  * [new branch]          test-branch-protection-workflow -> origin/test-branch-protection-workflow
+2022-05-19T22:22:36.6666705Z  * [new branch]          tf-swift-backend-swauth -> origin/tf-swift-backend-swauth
+2022-05-19T22:22:36.6668114Z  * [new branch]          tfc-integration-docs    -> origin/tfc-integration-docs
+2022-05-19T22:22:36.6669625Z  * [new branch]          thiskevinwang-patch-1   -> origin/thiskevinwang-patch-1
+2022-05-19T22:22:36.6673058Z  * [new branch]          uk1288/backport-cloud-integration-panic-fix -> origin/uk1288/backport-cloud-integration-panic-fix
+2022-05-19T22:22:36.6675214Z  * [new branch]          uk1288/fix-for-cloud-integration-panic -> origin/uk1288/fix-for-cloud-integration-panic
+2022-05-19T22:22:36.6676518Z  * [new branch]          uk1288/update-changelog-md -> origin/uk1288/update-changelog-md
+2022-05-19T22:22:36.6678075Z  * [new branch]          uk1288/update-changelog-md-v1-1 -> origin/uk1288/update-changelog-md-v1-1
+2022-05-19T22:22:36.6680321Z  * [new branch]          update-TF-WORKSPACE-variable -> origin/update-TF-WORKSPACE-variable
+2022-05-19T22:22:36.6681696Z  * [new branch]          update-cidrnetmask-docs -> origin/update-cidrnetmask-docs
+2022-05-19T22:22:36.6683208Z  * [new branch]          update-depends-on-docs  -> origin/update-depends-on-docs
+2022-05-19T22:22:36.6684679Z  * [new branch]          update-for-each-example -> origin/update-for-each-example
+2022-05-19T22:22:36.6686251Z  * [new branch]          update-packaging-action-name -> origin/update-packaging-action-name
+2022-05-19T22:22:36.6687683Z  * [new branch]          update-run-task-result  -> origin/update-run-task-result
+2022-05-19T22:22:36.6689434Z  * [new branch]          update-runtasks         -> origin/update-runtasks
+2022-05-19T22:22:36.6691561Z  * [new branch]          update-tfe-login-flow   -> origin/update-tfe-login-flow
+2022-05-19T22:22:36.6692460Z  * [new branch]          update_gen_meta         -> origin/update_gen_meta
+2022-05-19T22:22:36.6694709Z  * [new branch]          uturunku1-patch-1       -> origin/uturunku1-patch-1
+2022-05-19T22:22:36.6695622Z  * [new branch]          uturunku1-patch-2       -> origin/uturunku1-patch-2
+2022-05-19T22:22:36.6697747Z  * [new branch]          v0.11                   -> origin/v0.11
+2022-05-19T22:22:36.6698721Z  * [new branch]          v0.12                   -> origin/v0.12
+2022-05-19T22:22:36.6700960Z  * [new branch]          v0.12-alpha             -> origin/v0.12-alpha
+2022-05-19T22:22:36.6701984Z  * [new branch]          v0.13                   -> origin/v0.13
+2022-05-19T22:22:36.6704383Z  * [new branch]          v0.14                   -> origin/v0.14
+2022-05-19T22:22:36.6705343Z  * [new branch]          v0.15                   -> origin/v0.15
+2022-05-19T22:22:36.6707621Z  * [new branch]          v011                    -> origin/v011
+2022-05-19T22:22:36.6754250Z  * [new branch]          v1.0                    -> origin/v1.0
+2022-05-19T22:22:36.6755371Z  * [new branch]          v1.1                    -> origin/v1.1
+2022-05-19T22:22:36.6755760Z  * [new branch]          v1.2                    -> origin/v1.2
+2022-05-19T22:22:36.6756266Z  * [new branch]          vendor-bump-hil         -> origin/vendor-bump-hil
+2022-05-19T22:22:36.6756648Z  * [new tag]             0.7.7                   -> 0.7.7
+2022-05-19T22:22:36.6756974Z  * [new tag]             list                    -> list
+2022-05-19T22:22:36.6757300Z  * [new tag]             v0.1.0                  -> v0.1.0
+2022-05-19T22:22:36.6757753Z  * [new tag]             v0.1.1                  -> v0.1.1
+2022-05-19T22:22:36.6758273Z  * [new tag]             v0.10.0                 -> v0.10.0
+2022-05-19T22:22:36.6758677Z  * [new tag]             v0.10.0-beta1           -> v0.10.0-beta1
+2022-05-19T22:22:36.6759060Z  * [new tag]             v0.10.0-beta2           -> v0.10.0-beta2
+2022-05-19T22:22:36.6759437Z  * [new tag]             v0.10.0-rc1             -> v0.10.0-rc1
+2022-05-19T22:22:36.6759799Z  * [new tag]             v0.10.1                 -> v0.10.1
+2022-05-19T22:22:36.6760138Z  * [new tag]             v0.10.2                 -> v0.10.2
+2022-05-19T22:22:36.6760489Z  * [new tag]             v0.10.3                 -> v0.10.3
+2022-05-19T22:22:36.6760956Z  * [new tag]             v0.10.4                 -> v0.10.4
+2022-05-19T22:22:36.6761287Z  * [new tag]             v0.10.5                 -> v0.10.5
+2022-05-19T22:22:36.6761634Z  * [new tag]             v0.10.6                 -> v0.10.6
+2022-05-19T22:22:36.6761980Z  * [new tag]             v0.10.7                 -> v0.10.7
+2022-05-19T22:22:36.6762314Z  * [new tag]             v0.10.8                 -> v0.10.8
+2022-05-19T22:22:36.6762663Z  * [new tag]             v0.11.0                 -> v0.11.0
+2022-05-19T22:22:36.6763146Z  * [new tag]             v0.11.0-beta1           -> v0.11.0-beta1
+2022-05-19T22:22:36.6763538Z  * [new tag]             v0.11.0-rc1             -> v0.11.0-rc1
+2022-05-19T22:22:36.6763895Z  * [new tag]             v0.11.1                 -> v0.11.1
+2022-05-19T22:22:36.6764262Z  * [new tag]             v0.11.10                -> v0.11.10
+2022-05-19T22:22:36.6764629Z  * [new tag]             v0.11.11                -> v0.11.11
+2022-05-19T22:22:36.6765098Z  * [new tag]             v0.11.12                -> v0.11.12
+2022-05-19T22:22:36.6765475Z  * [new tag]             v0.11.12-beta1          -> v0.11.12-beta1
+2022-05-19T22:22:36.6765945Z  * [new tag]             v0.11.13                -> v0.11.13
+2022-05-19T22:22:36.6766263Z  * [new tag]             v0.11.14                -> v0.11.14
+2022-05-19T22:22:36.6766592Z  * [new tag]             v0.11.15                -> v0.11.15
+2022-05-19T22:22:36.6766919Z  * [new tag]             v0.11.2                 -> v0.11.2
+2022-05-19T22:22:36.6767244Z  * [new tag]             v0.11.3                 -> v0.11.3
+2022-05-19T22:22:36.6767556Z  * [new tag]             v0.11.4                 -> v0.11.4
+2022-05-19T22:22:36.6767883Z  * [new tag]             v0.11.5                 -> v0.11.5
+2022-05-19T22:22:36.6768205Z  * [new tag]             v0.11.6                 -> v0.11.6
+2022-05-19T22:22:36.6768516Z  * [new tag]             v0.11.7                 -> v0.11.7
+2022-05-19T22:22:36.6768844Z  * [new tag]             v0.11.8                 -> v0.11.8
+2022-05-19T22:22:36.6769166Z  * [new tag]             v0.11.9                 -> v0.11.9
+2022-05-19T22:22:36.6769497Z  * [new tag]             v0.11.9-beta1           -> v0.11.9-beta1
+2022-05-19T22:22:36.6769837Z  * [new tag]             v0.12.0                 -> v0.12.0
+2022-05-19T22:22:36.6770187Z  * [new tag]             v0.12.0-alpha1          -> v0.12.0-alpha1
+2022-05-19T22:22:36.6770605Z  * [new tag]             v0.12.0-alpha2          -> v0.12.0-alpha2
+2022-05-19T22:22:36.6771083Z  * [new tag]             v0.12.0-alpha3          -> v0.12.0-alpha3
+2022-05-19T22:22:36.6772565Z  * [new tag]             v0.12.0-alpha4          -> v0.12.0-alpha4
+2022-05-19T22:22:36.6772996Z  * [new tag]             v0.12.0-beta1           -> v0.12.0-beta1
+2022-05-19T22:22:36.6773391Z  * [new tag]             v0.12.0-beta2           -> v0.12.0-beta2
+2022-05-19T22:22:36.6773831Z  * [new tag]             v0.12.0-dev20190520H16  -> v0.12.0-dev20190520H16
+2022-05-19T22:22:36.6774262Z  * [new tag]             v0.12.0-rc1             -> v0.12.0-rc1
+2022-05-19T22:22:36.6774636Z  * [new tag]             v0.12.1                 -> v0.12.1
+2022-05-19T22:22:36.6775019Z  * [new tag]             v0.12.10                -> v0.12.10
+2022-05-19T22:22:36.6775422Z  * [new tag]             v0.12.11                -> v0.12.11
+2022-05-19T22:22:36.6775961Z  * [new tag]             v0.12.12                -> v0.12.12
+2022-05-19T22:22:36.6776468Z  * [new tag]             v0.12.13                -> v0.12.13
+2022-05-19T22:22:36.6776868Z  * [new tag]             v0.12.14                -> v0.12.14
+2022-05-19T22:22:36.6777555Z  * [new tag]             v0.12.15                -> v0.12.15
+2022-05-19T22:22:36.6777938Z  * [new tag]             v0.12.16                -> v0.12.16
+2022-05-19T22:22:36.6778578Z  * [new tag]             v0.12.17                -> v0.12.17
+2022-05-19T22:22:36.6779061Z  * [new tag]             v0.12.18                -> v0.12.18
+2022-05-19T22:22:36.6779477Z  * [new tag]             v0.12.19                -> v0.12.19
+2022-05-19T22:22:36.6780161Z  * [new tag]             v0.12.2                 -> v0.12.2
+2022-05-19T22:22:36.6780662Z  * [new tag]             v0.12.20                -> v0.12.20
+2022-05-19T22:22:36.6781153Z  * [new tag]             v0.12.21                -> v0.12.21
+2022-05-19T22:22:36.6781757Z  * [new tag]             v0.12.22                -> v0.12.22
+2022-05-19T22:22:36.6782330Z  * [new tag]             v0.12.23                -> v0.12.23
+2022-05-19T22:22:36.6782801Z  * [new tag]             v0.12.24                -> v0.12.24
+2022-05-19T22:22:36.6783395Z  * [new tag]             v0.12.25                -> v0.12.25
+2022-05-19T22:22:36.6783880Z  * [new tag]             v0.12.26                -> v0.12.26
+2022-05-19T22:22:36.6784355Z  * [new tag]             v0.12.27                -> v0.12.27
+2022-05-19T22:22:36.6784835Z  * [new tag]             v0.12.28                -> v0.12.28
+2022-05-19T22:22:36.6785420Z  * [new tag]             v0.12.29                -> v0.12.29
+2022-05-19T22:22:36.6785899Z  * [new tag]             v0.12.3                 -> v0.12.3
+2022-05-19T22:22:36.6786561Z  * [new tag]             v0.12.30                -> v0.12.30
+2022-05-19T22:22:36.6786992Z  * [new tag]             v0.12.31                -> v0.12.31
+2022-05-19T22:22:36.6787506Z  * [new tag]             v0.12.4                 -> v0.12.4
+2022-05-19T22:22:36.6787939Z  * [new tag]             v0.12.5                 -> v0.12.5
+2022-05-19T22:22:36.6788360Z  * [new tag]             v0.12.6                 -> v0.12.6
+2022-05-19T22:22:36.6789522Z  * [new tag]             v0.12.7                 -> v0.12.7
+2022-05-19T22:22:36.6790519Z  * [new tag]             v0.12.8                 -> v0.12.8
+2022-05-19T22:22:36.6791714Z  * [new tag]             v0.12.9                 -> v0.12.9
+2022-05-19T22:22:36.6794194Z  * [new tag]             v0.13.0                 -> v0.13.0
+2022-05-19T22:22:36.6794620Z  * [new tag]             v0.13.0-beta1           -> v0.13.0-beta1
+2022-05-19T22:22:36.6795954Z  * [new tag]             v0.13.0-beta2           -> v0.13.0-beta2
+2022-05-19T22:22:36.6796932Z  * [new tag]             v0.13.0-beta3           -> v0.13.0-beta3
+2022-05-19T22:22:36.6798175Z  * [new tag]             v0.13.0-rc1             -> v0.13.0-rc1
+2022-05-19T22:22:36.6799373Z  * [new tag]             v0.13.1                 -> v0.13.1
+2022-05-19T22:22:36.6800600Z  * [new tag]             v0.13.2                 -> v0.13.2
+2022-05-19T22:22:36.6802412Z  * [new tag]             v0.13.3                 -> v0.13.3
+2022-05-19T22:22:36.6802834Z  * [new tag]             v0.13.4                 -> v0.13.4
+2022-05-19T22:22:36.6804252Z  * [new tag]             v0.13.5                 -> v0.13.5
+2022-05-19T22:22:36.6805693Z  * [new tag]             v0.13.6                 -> v0.13.6
+2022-05-19T22:22:36.6807454Z  * [new tag]             v0.13.7                 -> v0.13.7
+2022-05-19T22:22:36.6807850Z  * [new tag]             v0.14.0                 -> v0.14.0
+2022-05-19T22:22:36.6809128Z  * [new tag]             v0.14.0-alpha20200910   -> v0.14.0-alpha20200910
+2022-05-19T22:22:36.6810409Z  * [new tag]             v0.14.0-alpha20200923   -> v0.14.0-alpha20200923
+2022-05-19T22:22:36.6811640Z  * [new tag]             v0.14.0-alpha20201007   -> v0.14.0-alpha20201007
+2022-05-19T22:22:36.6813539Z  * [new tag]             v0.14.0-beta1           -> v0.14.0-beta1
+2022-05-19T22:22:36.6814078Z  * [new tag]             v0.14.0-beta2           -> v0.14.0-beta2
+2022-05-19T22:22:36.6815520Z  * [new tag]             v0.14.0-rc1             -> v0.14.0-rc1
+2022-05-19T22:22:36.6816590Z  * [new tag]             v0.14.1                 -> v0.14.1
+2022-05-19T22:22:36.6817817Z  * [new tag]             v0.14.10                -> v0.14.10
+2022-05-19T22:22:36.6819024Z  * [new tag]             v0.14.11                -> v0.14.11
+2022-05-19T22:22:36.6820227Z  * [new tag]             v0.14.2                 -> v0.14.2
+2022-05-19T22:22:36.6821482Z  * [new tag]             v0.14.3                 -> v0.14.3
+2022-05-19T22:22:36.6822845Z  * [new tag]             v0.14.4                 -> v0.14.4
+2022-05-19T22:22:36.6824260Z  * [new tag]             v0.14.5                 -> v0.14.5
+2022-05-19T22:22:36.6825694Z  * [new tag]             v0.14.6                 -> v0.14.6
+2022-05-19T22:22:36.6827111Z  * [new tag]             v0.14.7                 -> v0.14.7
+2022-05-19T22:22:36.6828384Z  * [new tag]             v0.14.8                 -> v0.14.8
+2022-05-19T22:22:36.6829710Z  * [new tag]             v0.14.9                 -> v0.14.9
+2022-05-19T22:22:36.6830932Z  * [new tag]             v0.15.0                 -> v0.15.0
+2022-05-19T22:22:36.6832824Z  * [new tag]             v0.15.0-alpha20210107   -> v0.15.0-alpha20210107
+2022-05-19T22:22:36.6834331Z  * [new tag]             v0.15.0-alpha20210127   -> v0.15.0-alpha20210127
+2022-05-19T22:22:36.6835697Z  * [new tag]             v0.15.0-alpha20210210   -> v0.15.0-alpha20210210
+2022-05-19T22:22:36.6837022Z  * [new tag]             v0.15.0-beta1           -> v0.15.0-beta1
+2022-05-19T22:22:36.6838249Z  * [new tag]             v0.15.0-beta2           -> v0.15.0-beta2
+2022-05-19T22:22:36.6839468Z  * [new tag]             v0.15.0-rc1             -> v0.15.0-rc1
+2022-05-19T22:22:36.6840675Z  * [new tag]             v0.15.0-rc2             -> v0.15.0-rc2
+2022-05-19T22:22:36.6841897Z  * [new tag]             v0.15.1                 -> v0.15.1
+2022-05-19T22:22:36.6843251Z  * [new tag]             v0.15.2                 -> v0.15.2
+2022-05-19T22:22:36.6844651Z  * [new tag]             v0.15.3                 -> v0.15.3
+2022-05-19T22:22:36.6846053Z  * [new tag]             v0.15.4                 -> v0.15.4
+2022-05-19T22:22:36.6847359Z  * [new tag]             v0.15.5                 -> v0.15.5
+2022-05-19T22:22:36.6849254Z  * [new tag]             v0.2.0                  -> v0.2.0
+2022-05-19T22:22:36.6849688Z  * [new tag]             v0.2.1                  -> v0.2.1
+2022-05-19T22:22:36.6850900Z  * [new tag]             v0.2.2                  -> v0.2.2
+2022-05-19T22:22:36.6852137Z  * [new tag]             v0.3.0                  -> v0.3.0
+2022-05-19T22:22:36.6853507Z  * [new tag]             v0.3.1                  -> v0.3.1
+2022-05-19T22:22:36.6855321Z  * [new tag]             v0.3.5                  -> v0.3.5
+2022-05-19T22:22:36.6855749Z  * [new tag]             v0.3.6                  -> v0.3.6
+2022-05-19T22:22:36.6857084Z  * [new tag]             v0.3.7                  -> v0.3.7
+2022-05-19T22:22:36.6858316Z  * [new tag]             v0.4.0                  -> v0.4.0
+2022-05-19T22:22:36.6859682Z  * [new tag]             v0.4.1                  -> v0.4.1
+2022-05-19T22:22:36.6861448Z  * [new tag]             v0.4.2                  -> v0.4.2
+2022-05-19T22:22:36.6861855Z  * [new tag]             v0.5.0                  -> v0.5.0
+2022-05-19T22:22:36.6863193Z  * [new tag]             v0.5.1                  -> v0.5.1
+2022-05-19T22:22:36.6864493Z  * [new tag]             v0.5.3                  -> v0.5.3
+2022-05-19T22:22:36.6866345Z  * [new tag]             v0.6.0                  -> v0.6.0
+2022-05-19T22:22:36.6866749Z  * [new tag]             v0.6.1                  -> v0.6.1
+2022-05-19T22:22:36.6867986Z  * [new tag]             v0.6.10                 -> v0.6.10
+2022-05-19T22:22:36.6869210Z  * [new tag]             v0.6.11                 -> v0.6.11
+2022-05-19T22:22:36.6870873Z  * [new tag]             v0.6.12                 -> v0.6.12
+2022-05-19T22:22:36.6871297Z  * [new tag]             v0.6.13                 -> v0.6.13
+2022-05-19T22:22:36.6873864Z  * [new tag]             v0.6.14                 -> v0.6.14
+2022-05-19T22:22:36.6875294Z  * [new tag]             v0.6.15                 -> v0.6.15
+2022-05-19T22:22:36.6876825Z  * [new tag]             v0.6.16                 -> v0.6.16
+2022-05-19T22:22:36.6878589Z  * [new tag]             v0.6.2                  -> v0.6.2
+2022-05-19T22:22:36.6878951Z  * [new tag]             v0.6.3                  -> v0.6.3
+2022-05-19T22:22:36.6880211Z  * [new tag]             v0.6.4                  -> v0.6.4
+2022-05-19T22:22:36.6888955Z  * [new tag]             v0.6.5                  -> v0.6.5
+2022-05-19T22:22:36.6889667Z  * [new tag]             v0.6.6                  -> v0.6.6
+2022-05-19T22:22:36.6890118Z  * [new tag]             v0.6.7                  -> v0.6.7
+2022-05-19T22:22:36.6890675Z  * [new tag]             v0.6.8                  -> v0.6.8
+2022-05-19T22:22:36.6891125Z  * [new tag]             v0.6.9                  -> v0.6.9
+2022-05-19T22:22:36.6891685Z  * [new tag]             v0.7.0                  -> v0.7.0
+2022-05-19T22:22:36.6892187Z  * [new tag]             v0.7.0-rc1              -> v0.7.0-rc1
+2022-05-19T22:22:36.6892678Z  * [new tag]             v0.7.0-rc2              -> v0.7.0-rc2
+2022-05-19T22:22:36.6893285Z  * [new tag]             v0.7.0-rc3              -> v0.7.0-rc3
+2022-05-19T22:22:36.6893801Z  * [new tag]             v0.7.0-rc4              -> v0.7.0-rc4
+2022-05-19T22:22:36.6895562Z  * [new tag]             v0.7.1                  -> v0.7.1
+2022-05-19T22:22:36.6897612Z  * [new tag]             v0.7.10                 -> v0.7.10
+2022-05-19T22:22:36.6898474Z  * [new tag]             v0.7.11                 -> v0.7.11
+2022-05-19T22:22:36.6901639Z  * [new tag]             v0.7.12                 -> v0.7.12
+2022-05-19T22:22:36.6902397Z  * [new tag]             v0.7.13                 -> v0.7.13
+2022-05-19T22:22:36.6904156Z  * [new tag]             v0.7.2                  -> v0.7.2
+2022-05-19T22:22:36.6906189Z  * [new tag]             v0.7.3                  -> v0.7.3
+2022-05-19T22:22:36.6906635Z  * [new tag]             v0.7.4                  -> v0.7.4
+2022-05-19T22:22:36.6908271Z  * [new tag]             v0.7.5                  -> v0.7.5
+2022-05-19T22:22:36.6909903Z  * [new tag]             v0.7.6                  -> v0.7.6
+2022-05-19T22:22:36.6910307Z  * [new tag]             v0.7.7                  -> v0.7.7
+2022-05-19T22:22:36.6913113Z  * [new tag]             v0.7.8                  -> v0.7.8
+2022-05-19T22:22:36.6913517Z  * [new tag]             v0.7.9                  -> v0.7.9
+2022-05-19T22:22:36.6914969Z  * [new tag]             v0.8.0                  -> v0.8.0
+2022-05-19T22:22:36.6916329Z  * [new tag]             v0.8.0-beta1            -> v0.8.0-beta1
+2022-05-19T22:22:36.6917752Z  * [new tag]             v0.8.0-beta2            -> v0.8.0-beta2
+2022-05-19T22:22:36.6919022Z  * [new tag]             v0.8.0-rc1              -> v0.8.0-rc1
+2022-05-19T22:22:36.6920784Z  * [new tag]             v0.8.0-rc2              -> v0.8.0-rc2
+2022-05-19T22:22:36.6921260Z  * [new tag]             v0.8.0-rc3              -> v0.8.0-rc3
+2022-05-19T22:22:36.6922536Z  * [new tag]             v0.8.1                  -> v0.8.1
+2022-05-19T22:22:36.6923785Z  * [new tag]             v0.8.2                  -> v0.8.2
+2022-05-19T22:22:36.6925827Z  * [new tag]             v0.8.3                  -> v0.8.3
+2022-05-19T22:22:36.6928269Z  * [new tag]             v0.8.4                  -> v0.8.4
+2022-05-19T22:22:36.6928699Z  * [new tag]             v0.8.5                  -> v0.8.5
+2022-05-19T22:22:36.6929993Z  * [new tag]             v0.8.6                  -> v0.8.6
+2022-05-19T22:22:36.6931720Z  * [new tag]             v0.8.7                  -> v0.8.7
+2022-05-19T22:22:36.6932115Z  * [new tag]             v0.8.8                  -> v0.8.8
+2022-05-19T22:22:36.6933418Z  * [new tag]             v0.9.0                  -> v0.9.0
+2022-05-19T22:22:36.6935181Z  * [new tag]             v0.9.0-beta1            -> v0.9.0-beta1
+2022-05-19T22:22:36.6935575Z  * [new tag]             v0.9.0-beta2            -> v0.9.0-beta2
+2022-05-19T22:22:36.6936992Z  * [new tag]             v0.9.1                  -> v0.9.1
+2022-05-19T22:22:36.6937976Z  * [new tag]             v0.9.10                 -> v0.9.10
+2022-05-19T22:22:36.6939140Z  * [new tag]             v0.9.11                 -> v0.9.11
+2022-05-19T22:22:36.6940744Z  * [new tag]             v0.9.2                  -> v0.9.2
+2022-05-19T22:22:36.6942176Z  * [new tag]             v0.9.3                  -> v0.9.3
+2022-05-19T22:22:36.6944235Z  * [new tag]             v0.9.4                  -> v0.9.4
+2022-05-19T22:22:36.6944836Z  * [new tag]             v0.9.5                  -> v0.9.5
+2022-05-19T22:22:36.6945935Z  * [new tag]             v0.9.6                  -> v0.9.6
+2022-05-19T22:22:36.6947219Z  * [new tag]             v0.9.7                  -> v0.9.7
+2022-05-19T22:22:36.6948470Z  * [new tag]             v0.9.8                  -> v0.9.8
+2022-05-19T22:22:36.6949728Z  * [new tag]             v0.9.9                  -> v0.9.9
+2022-05-19T22:22:36.6951452Z  * [new tag]             v1.0.0                  -> v1.0.0
+2022-05-19T22:22:36.6951821Z  * [new tag]             v1.0.1                  -> v1.0.1
+2022-05-19T22:22:36.6954746Z  * [new tag]             v1.0.10                 -> v1.0.10
+2022-05-19T22:22:36.6955198Z  * [new tag]             v1.0.11                 -> v1.0.11
+2022-05-19T22:22:36.6956980Z  * [new tag]             v1.0.2                  -> v1.0.2
+2022-05-19T22:22:36.6957392Z  * [new tag]             v1.0.3                  -> v1.0.3
+2022-05-19T22:22:36.6958674Z  * [new tag]             v1.0.4                  -> v1.0.4
+2022-05-19T22:22:36.6960439Z  * [new tag]             v1.0.5                  -> v1.0.5
+2022-05-19T22:22:36.6960935Z  * [new tag]             v1.0.6                  -> v1.0.6
+2022-05-19T22:22:36.6962700Z  * [new tag]             v1.0.7                  -> v1.0.7
+2022-05-19T22:22:36.6963238Z  * [new tag]             v1.0.8                  -> v1.0.8
+2022-05-19T22:22:36.6964705Z  * [new tag]             v1.0.9                  -> v1.0.9
+2022-05-19T22:22:36.6966642Z  * [new tag]             v1.1.0                  -> v1.1.0
+2022-05-19T22:22:36.6967195Z  * [new tag]             v1.1.0-alpha20210616    -> v1.1.0-alpha20210616
+2022-05-19T22:22:36.6968677Z  * [new tag]             v1.1.0-alpha20210630    -> v1.1.0-alpha20210630
+2022-05-19T22:22:36.6970213Z  * [new tag]             v1.1.0-alpha20210714    -> v1.1.0-alpha20210714
+2022-05-19T22:22:36.6971823Z  * [new tag]             v1.1.0-alpha20210728    -> v1.1.0-alpha20210728
+2022-05-19T22:22:36.6975226Z  * [new tag]             v1.1.0-alpha20210811    -> v1.1.0-alpha20210811
+2022-05-19T22:22:36.6975949Z  * [new tag]             v1.1.0-alpha20210908    -> v1.1.0-alpha20210908
+2022-05-19T22:22:36.6977479Z  * [new tag]             v1.1.0-alpha20210922    -> v1.1.0-alpha20210922
+2022-05-19T22:22:36.6979007Z  * [new tag]             v1.1.0-alpha20211006    -> v1.1.0-alpha20211006
+2022-05-19T22:22:36.6980865Z  * [new tag]             v1.1.0-alpha20211020    -> v1.1.0-alpha20211020
+2022-05-19T22:22:36.6982031Z  * [new tag]             v1.1.0-alpha20211029    -> v1.1.0-alpha20211029
+2022-05-19T22:22:36.6983324Z  * [new tag]             v1.1.0-beta1            -> v1.1.0-beta1
+2022-05-19T22:22:36.6984650Z  * [new tag]             v1.1.0-beta2            -> v1.1.0-beta2
+2022-05-19T22:22:36.6987418Z  * [new tag]             v1.1.0-rc1              -> v1.1.0-rc1
+2022-05-19T22:22:36.6987837Z  * [new tag]             v1.1.1                  -> v1.1.1
+2022-05-19T22:22:36.6989419Z  * [new tag]             v1.1.2                  -> v1.1.2
+2022-05-19T22:22:36.6991163Z  * [new tag]             v1.1.3                  -> v1.1.3
+2022-05-19T22:22:36.6991579Z  * [new tag]             v1.1.4                  -> v1.1.4
+2022-05-19T22:22:36.6993038Z  * [new tag]             v1.1.5                  -> v1.1.5
+2022-05-19T22:22:36.6994897Z  * [new tag]             v1.1.6                  -> v1.1.6
+2022-05-19T22:22:36.6995564Z  * [new tag]             v1.1.7                  -> v1.1.7
+2022-05-19T22:22:36.6997345Z  * [new tag]             v1.1.8                  -> v1.1.8
+2022-05-19T22:22:36.6997930Z  * [new tag]             v1.1.9                  -> v1.1.9
+2022-05-19T22:22:36.6999154Z  * [new tag]             v1.2.0                  -> v1.2.0
+2022-05-19T22:22:36.7000500Z  * [new tag]             v1.2.0-alpha-20220328   -> v1.2.0-alpha-20220328
+2022-05-19T22:22:36.7001806Z  * [new tag]             v1.2.0-alpha20220413    -> v1.2.0-alpha20220413
+2022-05-19T22:22:36.7003081Z  * [new tag]             v1.2.0-beta1            -> v1.2.0-beta1
+2022-05-19T22:22:36.7004876Z  * [new tag]             v1.2.0-rc1              -> v1.2.0-rc1
+2022-05-19T22:22:36.7005699Z  * [new tag]             v1.2.0-rc2              -> v1.2.0-rc2
+2022-05-19T22:22:36.7007029Z  * [new tag]             v1.3.0-dev              -> v1.3.0-dev
+2022-05-19T22:22:36.7077629Z 0.7.7
+2022-05-19T22:22:36.7078182Z list
+2022-05-19T22:22:36.7078437Z v0.1.0
+2022-05-19T22:22:36.7078678Z v0.1.1
+2022-05-19T22:22:36.7078935Z v0.10.0
+2022-05-19T22:22:36.7079304Z v0.10.0-beta1
+2022-05-19T22:22:36.7079628Z v0.10.0-beta2
+2022-05-19T22:22:36.7079934Z v0.10.0-rc1
+2022-05-19T22:22:36.7080202Z v0.10.1
+2022-05-19T22:22:36.7080450Z v0.10.2
+2022-05-19T22:22:36.7080687Z v0.10.3
+2022-05-19T22:22:36.7080933Z v0.10.4
+2022-05-19T22:22:36.7081178Z v0.10.5
+2022-05-19T22:22:36.7081408Z v0.10.6
+2022-05-19T22:22:36.7081651Z v0.10.7
+2022-05-19T22:22:36.7081893Z v0.10.8
+2022-05-19T22:22:36.7082138Z v0.11.0
+2022-05-19T22:22:36.7082425Z v0.11.0-beta1
+2022-05-19T22:22:36.7082736Z v0.11.0-rc1
+2022-05-19T22:22:36.7083004Z v0.11.1
+2022-05-19T22:22:36.7083239Z v0.11.10
+2022-05-19T22:22:36.7083488Z v0.11.11
+2022-05-19T22:22:36.7083745Z v0.11.12
+2022-05-19T22:22:36.7084035Z v0.11.12-beta1
+2022-05-19T22:22:36.7084303Z v0.11.13
+2022-05-19T22:22:36.7084552Z v0.11.14
+2022-05-19T22:22:36.7084800Z v0.11.15
+2022-05-19T22:22:36.7085150Z v0.11.2
+2022-05-19T22:22:36.7085529Z v0.11.3
+2022-05-19T22:22:36.7085799Z v0.11.4
+2022-05-19T22:22:36.7086055Z v0.11.5
+2022-05-19T22:22:36.7086324Z v0.11.6
+2022-05-19T22:22:36.7086588Z v0.11.7
+2022-05-19T22:22:36.7086838Z v0.11.8
+2022-05-19T22:22:36.7087128Z v0.11.9
+2022-05-19T22:22:36.7087463Z v0.11.9-beta1
+2022-05-19T22:22:36.7087754Z v0.12.0
+2022-05-19T22:22:36.7088072Z v0.12.0-alpha1
+2022-05-19T22:22:36.7088625Z v0.12.0-alpha2
+2022-05-19T22:22:36.7088941Z v0.12.0-alpha3
+2022-05-19T22:22:36.7089244Z v0.12.0-alpha4
+2022-05-19T22:22:36.7089554Z v0.12.0-beta1
+2022-05-19T22:22:36.7089862Z v0.12.0-beta2
+2022-05-19T22:22:36.7090176Z v0.12.0-dev20190520H16
+2022-05-19T22:22:36.7090499Z v0.12.0-rc1
+2022-05-19T22:22:36.7090760Z v0.12.1
+2022-05-19T22:22:36.7091006Z v0.12.10
+2022-05-19T22:22:36.7091245Z v0.12.11
+2022-05-19T22:22:36.7091499Z v0.12.12
+2022-05-19T22:22:36.7091747Z v0.12.13
+2022-05-19T22:22:36.7091988Z v0.12.14
+2022-05-19T22:22:36.7092232Z v0.12.15
+2022-05-19T22:22:36.7092481Z v0.12.16
+2022-05-19T22:22:36.7092716Z v0.12.17
+2022-05-19T22:22:36.7092958Z v0.12.18
+2022-05-19T22:22:36.7093205Z v0.12.19
+2022-05-19T22:22:36.7093455Z v0.12.2
+2022-05-19T22:22:36.7093686Z v0.12.20
+2022-05-19T22:22:36.7094185Z v0.12.21
+2022-05-19T22:22:36.7094445Z v0.12.22
+2022-05-19T22:22:36.7094691Z v0.12.23
+2022-05-19T22:22:36.7095048Z v0.12.24
+2022-05-19T22:22:36.7095423Z v0.12.25
+2022-05-19T22:22:36.7095682Z v0.12.26
+2022-05-19T22:22:36.7095949Z v0.12.27
+2022-05-19T22:22:36.7096219Z v0.12.28
+2022-05-19T22:22:36.7096477Z v0.12.29
+2022-05-19T22:22:36.7096748Z v0.12.3
+2022-05-19T22:22:36.7097021Z v0.12.30
+2022-05-19T22:22:36.7097293Z v0.12.31
+2022-05-19T22:22:36.7097553Z v0.12.4
+2022-05-19T22:22:36.7097821Z v0.12.5
+2022-05-19T22:22:36.7098088Z v0.12.6
+2022-05-19T22:22:36.7098552Z v0.12.7
+2022-05-19T22:22:36.7098791Z v0.12.8
+2022-05-19T22:22:36.7099042Z v0.12.9
+2022-05-19T22:22:36.7099274Z v0.13.0
+2022-05-19T22:22:36.7099597Z v0.13.0-beta1
+2022-05-19T22:22:36.7100041Z v0.13.0-beta2
+2022-05-19T22:22:36.7100369Z v0.13.0-beta3
+2022-05-19T22:22:36.7100681Z v0.13.0-rc1
+2022-05-19T22:22:36.7100956Z v0.13.1
+2022-05-19T22:22:36.7101214Z v0.13.2
+2022-05-19T22:22:36.7101460Z v0.13.3
+2022-05-19T22:22:36.7101717Z v0.13.4
+2022-05-19T22:22:36.7101976Z v0.13.5
+2022-05-19T22:22:36.7102397Z v0.13.6
+2022-05-19T22:22:36.7102705Z v0.13.7
+2022-05-19T22:22:36.7102962Z v0.14.0
+2022-05-19T22:22:36.7103321Z v0.14.0-alpha20200910
+2022-05-19T22:22:36.7103677Z v0.14.0-alpha20200923
+2022-05-19T22:22:36.7104038Z v0.14.0-alpha20201007
+2022-05-19T22:22:36.7104382Z v0.14.0-beta1
+2022-05-19T22:22:36.7104696Z v0.14.0-beta2
+2022-05-19T22:22:36.7105222Z v0.14.0-rc1
+2022-05-19T22:22:36.7105619Z v0.14.1
+2022-05-19T22:22:36.7105877Z v0.14.10
+2022-05-19T22:22:36.7106150Z v0.14.11
+2022-05-19T22:22:36.7106421Z v0.14.2
+2022-05-19T22:22:36.7106690Z v0.14.3
+2022-05-19T22:22:36.7107103Z v0.14.4
+2022-05-19T22:22:36.7107371Z v0.14.5
+2022-05-19T22:22:36.7107632Z v0.14.6
+2022-05-19T22:22:36.7107907Z v0.14.7
+2022-05-19T22:22:36.7108730Z v0.14.8
+2022-05-19T22:22:36.7109370Z v0.14.9
+2022-05-19T22:22:36.7110230Z v0.15.0
+2022-05-19T22:22:36.7110513Z v0.15.0-alpha20210107
+2022-05-19T22:22:36.7110761Z v0.15.0-alpha20210127
+2022-05-19T22:22:36.7111019Z v0.15.0-alpha20210210
+2022-05-19T22:22:36.7111259Z v0.15.0-beta1
+2022-05-19T22:22:36.7111479Z v0.15.0-beta2
+2022-05-19T22:22:36.7111707Z v0.15.0-rc1
+2022-05-19T22:22:36.7112044Z v0.15.0-rc2
+2022-05-19T22:22:36.7112229Z v0.15.1
+2022-05-19T22:22:36.7112414Z v0.15.2
+2022-05-19T22:22:36.7113116Z v0.15.3
+2022-05-19T22:22:36.7113313Z v0.15.4
+2022-05-19T22:22:36.7113498Z v0.15.5
+2022-05-19T22:22:36.7113680Z v0.2.0
+2022-05-19T22:22:36.7113852Z v0.2.1
+2022-05-19T22:22:36.7114036Z v0.2.2
+2022-05-19T22:22:36.7114220Z v0.3.0
+2022-05-19T22:22:36.7114386Z v0.3.1
+2022-05-19T22:22:36.7114567Z v0.3.5
+2022-05-19T22:22:36.7114747Z v0.3.6
+2022-05-19T22:22:36.7115018Z v0.3.7
+2022-05-19T22:22:36.7115305Z v0.4.0
+2022-05-19T22:22:36.7115602Z v0.4.1
+2022-05-19T22:22:36.7115772Z v0.4.2
+2022-05-19T22:22:36.7115965Z v0.5.0
+2022-05-19T22:22:36.7116152Z v0.5.1
+2022-05-19T22:22:36.7116327Z v0.5.3
+2022-05-19T22:22:36.7116511Z v0.6.0
+2022-05-19T22:22:36.7116683Z v0.6.1
+2022-05-19T22:22:36.7116870Z v0.6.10
+2022-05-19T22:22:36.7117062Z v0.6.11
+2022-05-19T22:22:36.7117237Z v0.6.12
+2022-05-19T22:22:36.7117425Z v0.6.13
+2022-05-19T22:22:36.7117618Z v0.6.14
+2022-05-19T22:22:36.7117795Z v0.6.15
+2022-05-19T22:22:36.7117984Z v0.6.16
+2022-05-19T22:22:36.7118172Z v0.6.2
+2022-05-19T22:22:36.7118470Z v0.6.3
+2022-05-19T22:22:36.7118749Z v0.6.4
+2022-05-19T22:22:36.7118919Z v0.6.5
+2022-05-19T22:22:36.7119079Z v0.6.6
+2022-05-19T22:22:36.7119252Z v0.6.7
+2022-05-19T22:22:36.7119421Z v0.6.8
+2022-05-19T22:22:36.7119583Z v0.6.9
+2022-05-19T22:22:36.7119757Z v0.7.0
+2022-05-19T22:22:36.7119999Z v0.7.0-rc1
+2022-05-19T22:22:36.7120213Z v0.7.0-rc2
+2022-05-19T22:22:36.7120433Z v0.7.0-rc3
+2022-05-19T22:22:36.7120657Z v0.7.0-rc4
+2022-05-19T22:22:36.7120823Z v0.7.1
+2022-05-19T22:22:36.7120997Z v0.7.10
+2022-05-19T22:22:36.7121287Z v0.7.11
+2022-05-19T22:22:36.7121468Z v0.7.12
+2022-05-19T22:22:36.7121658Z v0.7.13
+2022-05-19T22:22:36.7121847Z v0.7.2
+2022-05-19T22:22:36.7122140Z v0.7.3
+2022-05-19T22:22:36.7122335Z v0.7.4
+2022-05-19T22:22:36.7122531Z v0.7.5
+2022-05-19T22:22:36.7122712Z v0.7.6
+2022-05-19T22:22:36.7122906Z v0.7.7
+2022-05-19T22:22:36.7123098Z v0.7.8
+2022-05-19T22:22:36.7123284Z v0.7.9
+2022-05-19T22:22:36.7123481Z v0.8.0
+2022-05-19T22:22:36.7123731Z v0.8.0-beta1
+2022-05-19T22:22:36.7123979Z v0.8.0-beta2
+2022-05-19T22:22:36.7124236Z v0.8.0-rc1
+2022-05-19T22:22:36.7124488Z v0.8.0-rc2
+2022-05-19T22:22:36.7124722Z v0.8.0-rc3
+2022-05-19T22:22:36.7125046Z v0.8.1
+2022-05-19T22:22:36.7125468Z v0.8.2
+2022-05-19T22:22:36.7125757Z v0.8.3
+2022-05-19T22:22:36.7125947Z v0.8.4
+2022-05-19T22:22:36.7126137Z v0.8.5
+2022-05-19T22:22:36.7126312Z v0.8.6
+2022-05-19T22:22:36.7126498Z v0.8.7
+2022-05-19T22:22:36.7126685Z v0.8.8
+2022-05-19T22:22:36.7126861Z v0.9.0
+2022-05-19T22:22:36.7127097Z v0.9.0-beta1
+2022-05-19T22:22:36.7127348Z v0.9.0-beta2
+2022-05-19T22:22:36.7127535Z v0.9.1
+2022-05-19T22:22:36.7127726Z v0.9.10
+2022-05-19T22:22:36.7127918Z v0.9.11
+2022-05-19T22:22:36.7128091Z v0.9.2
+2022-05-19T22:22:36.7128278Z v0.9.3
+2022-05-19T22:22:36.7128452Z v0.9.4
+2022-05-19T22:22:36.7128854Z v0.9.5
+2022-05-19T22:22:36.7129027Z v0.9.6
+2022-05-19T22:22:36.7129185Z v0.9.7
+2022-05-19T22:22:36.7129515Z v0.9.8
+2022-05-19T22:22:36.7129706Z v0.9.9
+2022-05-19T22:22:36.7129863Z v1.0.0
+2022-05-19T22:22:36.7130036Z v1.0.1
+2022-05-19T22:22:36.7130208Z v1.0.10
+2022-05-19T22:22:36.7130370Z v1.0.11
+2022-05-19T22:22:36.7130540Z v1.0.2
+2022-05-19T22:22:36.7130832Z v1.0.3
+2022-05-19T22:22:36.7131001Z v1.0.4
+2022-05-19T22:22:36.7131180Z v1.0.5
+2022-05-19T22:22:36.7131360Z v1.0.6
+2022-05-19T22:22:36.7131529Z v1.0.7
+2022-05-19T22:22:36.7131824Z v1.0.8
+2022-05-19T22:22:36.7132135Z v1.0.9
+2022-05-19T22:22:36.7132315Z v1.1.0
+2022-05-19T22:22:36.7132601Z v1.1.0-alpha20210616
+2022-05-19T22:22:36.7133044Z v1.1.0-alpha20210630
+2022-05-19T22:22:36.7133329Z v1.1.0-alpha20210714
+2022-05-19T22:22:36.7133617Z v1.1.0-alpha20210728
+2022-05-19T22:22:36.7133906Z v1.1.0-alpha20210811
+2022-05-19T22:22:36.7134179Z v1.1.0-alpha20210908
+2022-05-19T22:22:36.7134467Z v1.1.0-alpha20210922
+2022-05-19T22:22:36.7134754Z v1.1.0-alpha20211006
+2022-05-19T22:22:36.7135026Z v1.1.0-alpha20211020
+2022-05-19T22:22:36.7135310Z v1.1.0-alpha20211029
+2022-05-19T22:22:36.7135583Z v1.1.0-beta1
+2022-05-19T22:22:36.7135830Z v1.1.0-beta2
+2022-05-19T22:22:36.7136081Z v1.1.0-rc1
+2022-05-19T22:22:36.7136284Z v1.1.1
+2022-05-19T22:22:36.7136465Z v1.1.2
+2022-05-19T22:22:36.7136661Z v1.1.3
+2022-05-19T22:22:36.7136858Z v1.1.4
+2022-05-19T22:22:36.7137040Z v1.1.5
+2022-05-19T22:22:36.7137233Z v1.1.6
+2022-05-19T22:22:36.7137424Z v1.1.7
+2022-05-19T22:22:36.7137604Z v1.1.8
+2022-05-19T22:22:36.7137795Z v1.1.9
+2022-05-19T22:22:36.7137987Z v1.2.0
+2022-05-19T22:22:36.7138510Z v1.2.0-alpha-20220328
+2022-05-19T22:22:36.7138768Z v1.2.0-alpha20220413
+2022-05-19T22:22:36.7139011Z v1.2.0-beta1
+2022-05-19T22:22:36.7139224Z v1.2.0-rc1
+2022-05-19T22:22:36.7139444Z v1.2.0-rc2
+2022-05-19T22:22:36.7139660Z v1.3.0-dev
+2022-05-19T22:22:36.7230713Z fatal: No tags can describe '60a189413d732eccd0158591618422c7cad1aed7'.
+2022-05-19T22:22:36.7231105Z Try --always, or create some tags.
+2022-05-19T22:22:36.7292837Z ##[group]Run # Trim the "v" prefix, if any.
+2022-05-19T22:22:36.7293196Z [36;1m# Trim the "v" prefix, if any.[0m
+2022-05-19T22:22:36.7293445Z [36;1mVERSION="${RAW_VERSION#v}"[0m
+2022-05-19T22:22:36.7293652Z [36;1m[0m
+2022-05-19T22:22:36.7293891Z [36;1m# Split off the build metadata part, if any[0m
+2022-05-19T22:22:36.7294227Z [36;1m# (we won't actually include it in our final version, and handle it only for[0m
+2022-05-19T22:22:36.7294543Z [36;1m# compleness against semver syntax.)[0m
+2022-05-19T22:22:36.7294840Z [36;1mIFS='+' read -ra BUILD_METADATA_PARTS <<< "$VERSION"[0m
+2022-05-19T22:22:36.7295256Z [36;1mVERSION="${BUILD_METADATA_PARTS[0]}"[0m
+2022-05-19T22:22:36.7295546Z [36;1mBUILD_META="${BUILD_METADATA_PARTS[1]}"[0m
+2022-05-19T22:22:36.7295792Z [36;1m[0m
+2022-05-19T22:22:36.7296050Z [36;1m# Separate out the prerelease part, if any[0m
+2022-05-19T22:22:36.7296382Z [36;1m# (version.go expects it to be in a separate variable)[0m
+2022-05-19T22:22:36.7296744Z [36;1mIFS='-' read -ra PRERELEASE_PARTS <<< "$VERSION"[0m
+2022-05-19T22:22:36.7297066Z [36;1mBASE_VERSION="${PRERELEASE_PARTS[0]}"[0m
+2022-05-19T22:22:36.7297356Z [36;1mPRERELEASE="${PRERELEASE_PARTS[1]}"[0m
+2022-05-19T22:22:36.7297605Z [36;1m[0m
+2022-05-19T22:22:36.7297934Z [36;1mEXPERIMENTS_ENABLED=0[0m
+2022-05-19T22:22:36.7298182Z [36;1mif [[ "$PRERELEASE" == alpha* ]]; then[0m
+2022-05-19T22:22:36.7298442Z [36;1m  EXPERIMENTS_ENABLED=1[0m
+2022-05-19T22:22:36.7298658Z [36;1mfi[0m
+2022-05-19T22:22:36.7298867Z [36;1mif [[ "$PRERELEASE" == dev* ]]; then[0m
+2022-05-19T22:22:36.7299119Z [36;1m  EXPERIMENTS_ENABLED=1[0m
+2022-05-19T22:22:36.7299328Z [36;1mfi[0m
+2022-05-19T22:22:36.7299503Z [36;1m[0m
+2022-05-19T22:22:36.7299706Z [36;1mLDFLAGS="-w -s"[0m
+2022-05-19T22:22:36.7299955Z [36;1mif [[ "$EXPERIMENTS_ENABLED" == 1 ]]; then[0m
+2022-05-19T22:22:36.7300267Z [36;1m  echo "Note: experimental features enabled in this build"[0m
+2022-05-19T22:22:36.7300601Z [36;1m  LDFLAGS="${LDFLAGS} -X 'main.experimentsAllowed=yes'"[0m
+2022-05-19T22:22:36.7300866Z [36;1mfi[0m
+2022-05-19T22:22:36.7301181Z [36;1mLDFLAGS="${LDFLAGS} -X 'github.com/hashicorp/terraform/version.Version=${BASE_VERSION}'"[0m
+2022-05-19T22:22:36.7301608Z [36;1mLDFLAGS="${LDFLAGS} -X 'github.com/hashicorp/terraform/version.Prerelease=${PRERELEASE}'"[0m
+2022-05-19T22:22:36.7301921Z [36;1m[0m
+2022-05-19T22:22:36.7302159Z [36;1mecho "Building Terraform CLI ${VERSION}"[0m
+2022-05-19T22:22:36.7302442Z [36;1mif [[ "$EXPERIMENTS_ENABLED" == 1 ]]; then[0m
+2022-05-19T22:22:36.7302737Z [36;1m  echo "This build allows use of experimental features"[0m
+2022-05-19T22:22:36.7302994Z [36;1mfi[0m
+2022-05-19T22:22:36.7303405Z [36;1mecho "::set-output name=product-version::${VERSION}"[0m
+2022-05-19T22:22:36.7303744Z [36;1mecho "::set-output name=product-version-base::${BASE_VERSION}"[0m
+2022-05-19T22:22:36.7304113Z [36;1mecho "::set-output name=product-version-pre::${PRERELEASE}"[0m
+2022-05-19T22:22:36.7304477Z [36;1mecho "::set-output name=experiments::${EXPERIMENTS_ENABLED}"[0m
+2022-05-19T22:22:36.7305038Z [36;1mecho "::set-output name=go-ldflags::${LDFLAGS}"[0m
+2022-05-19T22:22:36.7357408Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2022-05-19T22:22:36.7357671Z env:
+2022-05-19T22:22:36.7357982Z   PKG_NAME: terraform
+2022-05-19T22:22:36.7358197Z   RAW_VERSION: 
+2022-05-19T22:22:36.7358386Z ##[endgroup]
+2022-05-19T22:22:36.7430260Z Building Terraform CLI 
+2022-05-19T22:22:36.7517421Z ##[group]Run [ -n "" ]
+2022-05-19T22:22:36.7517758Z [36;1m[ -n "" ][0m
+2022-05-19T22:22:36.7518070Z [36;1mecho "::notice title=Terraform CLI Version::"[0m
+2022-05-19T22:22:36.7561908Z shell: /usr/bin/bash -e {0}
+2022-05-19T22:22:36.7562191Z env:
+2022-05-19T22:22:36.7562562Z   PKG_NAME: terraform
+2022-05-19T22:22:36.7562841Z ##[endgroup]
+2022-05-19T22:22:36.7675015Z ##[error]Process completed with exit code 1.
+2022-05-19T22:22:36.7735143Z Post job cleanup.
+2022-05-19T22:22:36.9102533Z [command]/usr/bin/git version
+2022-05-19T22:22:36.9193331Z git version 2.36.1
+2022-05-19T22:22:36.9270646Z Temporarily overriding HOME='/home/runner/work/_temp/3a476d41-b44f-42f1-a830-831cd2035d90' before making global git config changes
+2022-05-19T22:22:36.9272886Z Adding repository directory to the temporary git global config as a safe directory
+2022-05-19T22:22:36.9278482Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/terraform/terraform
+2022-05-19T22:22:36.9334031Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2022-05-19T22:22:36.9379497Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :
+2022-05-19T22:22:36.9656624Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2022-05-19T22:22:36.9680394Z http.https://github.com/.extraheader
+2022-05-19T22:22:36.9698115Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2022-05-19T22:22:36.9739620Z [command]/usr/bin/git submodule foreach --recursive git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :
+2022-05-19T22:22:37.0236364Z Evaluate and set job outputs
+2022-05-19T22:22:37.0249921Z Set output 'experiments'
+2022-05-19T22:22:37.0251178Z Set output 'go-ldflags'
+2022-05-19T22:22:37.0252260Z Cleaning up orphan processes
