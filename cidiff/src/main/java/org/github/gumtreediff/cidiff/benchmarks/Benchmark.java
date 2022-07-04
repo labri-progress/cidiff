@@ -7,7 +7,7 @@ import java.util.*;
 
 import org.github.gumtreediff.cidiff.*;
 
-public final class PrecisionBenchmarkLine {
+public final class Benchmark {
     private static final String HEADER = "LEFT;"
             + "RIGHT;"
             + "ALGORITHM;"
@@ -17,9 +17,9 @@ public final class PrecisionBenchmarkLine {
             + "TIME"
             + "\n";
     private static String pathToData = "data/breakages/";
-    private static String pathToOutput = "benchmark/precision_recall.csv";
+    private static String pathToOutput = "benchmark/results.csv";
 
-    private PrecisionBenchmarkLine() {
+    private Benchmark() {
     }
 
     public static void main(String[] args) throws IOException {

@@ -38,9 +38,8 @@ tasks.named('test') {
 
 task runBenchmark(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'org.github.gumtreediff.cidiff.benchmarks.PrecisionBenchmarkLine'
-    args "${rootProject.projectDir}/data/breakages/", "${rootProject.projectDir}/benchmark/precision_recall.csv"
+    mainClass = 'org.github.gumtreediff.cidiff.benchmarks.Benchmark'
+    args "${rootProject.projectDir}/data/breakages/", "${rootProject.projectDir}/benchmark/results.csv"
 }
-
 
 build.finalizedBy installDist

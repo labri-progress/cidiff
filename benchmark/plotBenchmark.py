@@ -9,7 +9,7 @@ sns.set_theme(style="whitegrid", palette="colorblind")
 algorithms = ["ABF", "BF", "LCS", "SE", "H"]
 
 #load dataframe
-path_to_csv = "benchmark/precision_recall.csv"
+path_to_csv = "benchmark/results.csv"
 df = pd.read_csv(path_to_csv, sep = ';', index_col=False)
 df = df.melt(id_vars =['LEFT','RIGHT','ALGORITHM'], 
             value_vars =["PRECISION","RECALL","FSCORE","TIME"],
