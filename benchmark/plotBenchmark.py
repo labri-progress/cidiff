@@ -15,11 +15,12 @@ df = df.melt(id_vars =['LEFT','RIGHT','ALGORITHM'],
             value_vars =["PRECISION","RECALL","FSCORE","TIME"],
             var_name ='metric')
 
-#plot precision/recall/F-score
+#plot precision / recall
 df_pr = df[df['metric'].isin(['PRECISION','RECALL'])]
 ax = sns.violinplot(data=df_pr, x='ALGORITHM', y='value', hue="metric", palette="pastel", cut=0)
 sns.stripplot(data=df_pr, x='ALGORITHM', y='value', hue="metric", dodge=True)
 ax.set_xticklabels(algorithms)
+ax.set_ylim(0, 1)
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles=handles[0:2], labels=["Precision", "Recall"])
 plt.xlabel("Algorithm")
@@ -33,6 +34,7 @@ df_fscore = df[df['metric'].isin(['FSCORE'])]
 ax = sns.violinplot(data=df_fscore, x='ALGORITHM', y='value', palette="pastel", cut=0)
 sns.stripplot(data=df_fscore, x='ALGORITHM', y='value')
 ax.set_xticklabels(algorithms)
+ax.set_ylim(0, 1)
 plt.xlabel("Algorithm")
 plt.ylabel("F-score")
 plt.title("F-scores")
