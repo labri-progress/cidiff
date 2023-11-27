@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CiDiff</title>
+    <style>
+        @font-face {
+            font-family: "JetBrains Mono";
+            src: url("JetBrainsMono-Regular.ttf");
+        }
+
+        html {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 14px;
+            scroll-behavior: smooth;
+        }
+
+        .flex {
+            display: flex;
+            height: 100vh;
+        }
+
+        table {
+            /*width: 500px;*/
+            overflow-x: scroll;
+            border: 1px solid black;
+            margin: 0.2em;
+        }
+
+        table, td {
+            display: block;
+        }
+
+        td {
+            width: max-content;
+            white-space: pre;
+        }
+
+        .added {
+            background-color: #147F1486;
+        }
+
+        .deleted {
+            background-color: #FF000081;
+        }
+
+        .modified {
+            background-color: #FFAD00B8;
+        }
+
+        .selected {
+            font-style: italic;
+            color: #0000FFFF;
+        }
+    </style>
+</head>
+<body>
+<div class="flex">
+    <table id="tbl1">
+        {{#leftLines}}
+            <tr id="l-{{index}}" onclick="centerize({{index}}, {{link}})">
+                <td>{{index}} {{{content}}}</td>
+            </tr>
+        {{/leftLines}}
+    </table>
+    <table id="tbl2">
+        {{#rightLines}}
+            <tr id="r-{{index}}" onclick="centerize({{link}}, {{index}})">
+                <td>{{index}} {{{content}}}</td>
+            </tr>
+        {{/rightLines}}
+    </table>
+</div>
+
+<script>
+    let table1 = document.getElementById("tbl1");
+    let table2 = document.getElementById("tbl2");
+
+    function syncTable1() {
+        table2.scrollLeft = table1.scrollLeft;
+        if (syncScroll) {
+            table2.scrollTop = table1.scrollTop;
+        }
+    }
+
+    function syncTable2() {
+        table1.scrollLeft = table2.scrollLeft;
+        if (syncScroll) {
+            table1.scrollTop = table2.scrollTop;
+        }
+    }
+
+    table1.addEventListener("scroll", e => syncTable1());
+    table2.addEventListener("scroll", e => syncTable2());
+    let leftLine;
+    let rightLine;
+    let syncScroll = false;
+
+    function centerize(left, right) {
+        leftLine?.classList.remove("selected")
+        rightLine?.classList.remove("selected")
+        let newLeftLine = document.getElementById('l-' + left);
+        let newRightLine = document.getElementById('r-' + right);
+        syncScroll = false;
+        leftLine = newLeftLine;
+        rightLine = newRightLine;
+        if (leftLine && rightLine) {
+            leftLine.scrollIntoView({behavior: 'smooth', block: 'center'});
+            rightLine.scrollIntoView({behavior: 'smooth', block: 'center'});
+            leftLine.classList.add("selected");
+            rightLine.classList.add("selected");
+            // syncScroll = true;
+        }
+    }
+
+    function centerizeFromLeft(left, right) {
+        leftLine?.classList.remove("selected")
+        rightLine?.classList.remove("selected")
+        let newLeftLine = document.getElementById('l-' + left);
+        let newRightLine = document.getElementById('r-' + right);
+        if (leftLine === newLeftLine) {
+            leftLine = null;
+            rightLine = null;
+            syncScroll = false;
+            return;
+        }
+        leftLine = newLeftLine;
+        rightLine = newRightLine;
+        if (rightLine) {
+            leftLine.scrollIntoView({behavior: 'smooth', block: 'center'});
+            rightLine.scrollTo({top: leftLine.scrollTop});
+            leftLine.classList.add("selected");
+            rightLine.classList.add("selected");
+            syncScroll = true;
+        }
+    }
+
+    document.addEventListener("keyup", ev => {
+        console.log(ev.key)
+        if (ev.key === "s") {
+            syncScroll = !syncScroll;
+        }
+    })
+</script>
+</body>
+</html>

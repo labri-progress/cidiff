@@ -1,0 +1,48 @@
+plugins {
+	id 'java'
+	id 'application'
+}
+
+group = 'org.cidiff.cidiff'
+version = '1.0-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'com.github.spullara.mustache.java:compiler:0.9.10'
+
+	testImplementation platform('org.junit:junit-bom:5.9.1')
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+application {
+	mainClass = 'org.cidiff.cidiff.CiDiff'
+}
+
+run {
+	standardInput = System.in
+	standardOutput = System.out
+}
+
+tasks.register("cidiff_57") {
+	group 'runs'
+	dependsOn run {
+		args = ["../../cidiff/data/breakages/cidiff_57/pass.log",
+		        "../../cidiff/data/breakages/cidiff_57/fail.log",
+		        "-o", "client", "CONSOLE", "-o", "differ", "SEED"]
+	}
+}
+
+jar {
+	manifest {
+		attributes(
+				"Main-Class": "org.cidiff.cidiff.CiDiff"
+		)
+	}
+}
