@@ -56,6 +56,7 @@ public class LogsPanel extends JPanel {
 	final Pair<List<Action>> actions;
 
 	int lastGreen = -1;
+	private static boolean shouldParallelScroll = true;
 
 	public LogsPanel(Pair<List<Line>> lines, Pair<List<Action>> actions) {
 		super(new GridLayout(1, Options.getInstance().getSwingColumns().isEmpty() ? 2 : 1));
@@ -229,6 +230,9 @@ public class LogsPanel extends JPanel {
 
 		@Override
 		public void adjustmentValueChanged(AdjustmentEvent e) {
+			if (!shouldParallelScroll) {
+				return;
+			}
 			JScrollBar scrollBar = (JScrollBar) e.getSource();
 			JScrollBar target = null;
 
@@ -323,6 +327,7 @@ public class LogsPanel extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			Action action = actions.left().get(leftLines.getSelectedIndex());
+			shouldParallelScroll = action.type() != Action.Type.MOVED_UPDATED && action.type() != Action.Type.MOVED_UNCHANGED;
 			rightLines.setSelectedValue(action.right(), true);
 		}
 
@@ -347,6 +352,7 @@ public class LogsPanel extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			Action action = actions.right().get(rightLines.getSelectedIndex());
+			shouldParallelScroll = action.type() != Action.Type.MOVED_UPDATED && action.type() != Action.Type.MOVED_UNCHANGED;
 			leftLines.setSelectedValue(action.left(), true);
 		}
 
