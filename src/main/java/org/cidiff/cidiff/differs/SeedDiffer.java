@@ -262,16 +262,12 @@ public class SeedDiffer implements LogDiffer {
 		for (Seed seed : selected) {
 			for (int i = 0; i < seed.size; i++) {
 				Line left = leftLines.get(seed.left + i);
-//                left.seed = seed;
 				Line right = rightLines.get(seed.right + i);
-//                right.seed = seed;
 				Action action;
 				if (left.hasSameValue(right)) {
-					action = Action.unchanged(left, right);
-					action.sim = 1;
+					action = Action.unchanged(left, right, 1);
 				} else {
-					action = Action.updated(left, right);
-					action.sim = Utils.rewriteSim(left, right);
+					action = Action.updated(left, right, Utils.rewriteSim(left, right));
 				}
 				leftActions.set(seed.left + i, action);
 				rightActions.set(seed.right + i, action);
@@ -291,32 +287,32 @@ public class SeedDiffer implements LogDiffer {
 		List<Integer> l = new ArrayList<>();
 		List<Integer> r = new ArrayList<>();
 		for (Action action : leftActions) {
-			if (action.type == Action.Type.UNCHANGED || action.type == Action.Type.UPDATED) {
-				l.add(action.leftLogLine.index());
-				r.add(action.rightLogLine.index());
+			if (action.type() == Action.Type.UNCHANGED || action.type() == Action.Type.UPDATED) {
+				l.add(action.left().index());
+				r.add(action.right().index());
 			}
 		}
 		Collections.sort(l);
 		Collections.sort(r);
 		// lcs values are index of l and r
 		// l and r values are Line#index values (1-indexed) of leftLines and rightLines
-		List<int[]> lcs = lcs(l, r, (i, j) -> leftActions.get(i - 1).rightLogLine.index() == j);
+		List<int[]> lcs = lcs(l, r, (i, j) -> leftActions.get(i - 1).right().index() == j);
 		for (int i = 0; i < leftActions.size(); i++) {
 			Action action = leftActions.get(i);
 //            Action action = entry.getValue();
-			if (action.type == Action.Type.ADDED || action.type == Action.Type.DELETED) {
+			if (action.type() == Action.Type.ADDED || action.type() == Action.Type.DELETED) {
 				continue;
 			}
-			if (lcs.stream().noneMatch(ints -> action.leftLogLine.index() == l.get(ints[0]))) {
+			if (lcs.stream().noneMatch(ints -> action.left().index() == l.get(ints[0]))) {
 				leftActions.set(i, Action.moved(action));
 			}
 		}
 		for (int j = 0; j < rightActions.size(); j++) {
 			Action action = rightActions.get(j);
-			if (action.type == Action.Type.ADDED || action.type == Action.Type.DELETED) {
+			if (action.type() == Action.Type.ADDED || action.type() == Action.Type.DELETED) {
 				continue;
 			}
-			if (lcs.stream().noneMatch(ints -> action.rightLogLine.index() == r.get(ints[1]))) {
+			if (lcs.stream().noneMatch(ints -> action.right().index() == r.get(ints[1]))) {
 				rightActions.set(j, Action.moved(action));
 			}
 		}

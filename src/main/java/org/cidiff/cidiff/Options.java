@@ -27,7 +27,6 @@ public final class Options {
     private boolean consoleDisplayAdded = true;
     private boolean consoleDisplayDeleted = true;
     private boolean swingDisplaySkippedNotice = true;
-    private boolean swingDisplayDebug = false;
     private String swingColumns = "";
 
     private Options() {
@@ -75,8 +74,6 @@ public final class Options {
         if (options.containsKey(Names.SWING_DISPLAY_SKIPPED_NOTICE))
             instance.swingDisplaySkippedNotice = Boolean
                     .parseBoolean(options.getProperty(Names.SWING_DISPLAY_SKIPPED_NOTICE));
-        if (options.containsKey(Names.SWING_DISPLAY_DEBUG))
-            instance.swingDisplayDebug = Boolean.parseBoolean(options.getProperty(Names.SWING_DISPLAY_DEBUG));
         if (options.containsKey(Names.SWING_COLUMNS))
             instance.swingColumns = options.getProperty(Names.SWING_COLUMNS);
     }
@@ -155,10 +152,6 @@ public final class Options {
         return swingDisplaySkippedNotice;
     }
 
-    public boolean getSwingDisplayDebug() {
-        return swingDisplayDebug;
-    }
-
     public String getSwingColumns() {
         return swingColumns;
     }
@@ -191,7 +184,6 @@ public final class Options {
                   client.console.deleted       If the deleted lines should be shown (default: true)
                   client.console.unchanged     If the unchanged lines should be shown (default: false)
                   client.swing.skipped_notice  If a notice line should be added when some are removed with a filter (default: true)
-                  client.swing.debug           If debug colors should be used (default: false)
                   client.swing.columns         If "left" or "right", will display only the corresponding columns. (default: "")
                 """;
     }
@@ -222,7 +214,6 @@ public final class Options {
         public static final String CONSOLE_DELETED = "client.console.deleted";
 
         public static final String SWING_DISPLAY_SKIPPED_NOTICE = "client.swing.skipped_notice";
-        public static final String SWING_DISPLAY_DEBUG = "client.swing.debug";
         public static final String SWING_COLUMNS = "client.swing.columns";
 
     }

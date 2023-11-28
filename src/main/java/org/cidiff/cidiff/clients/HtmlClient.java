@@ -30,9 +30,9 @@ public class HtmlClient extends AbstractDiffClient {
 	}
 
 	public static String[] convertToHtml(Action action) {
-		Line right = action.rightLogLine;
-		Line left = action.leftLogLine;
-		return switch (action.type) {
+		Line right = action.right();
+		Line left = action.left();
+		return switch (action.type()) {
 			case ADDED -> new String[]{"", "<span class=\"added\">%s</span>".formatted(right.value())};
 			case DELETED -> new String[]{"<span class=\"deleted\">%s</span>".formatted(left.value()), ""};
 			case UNCHANGED, MOVED_UNCHANGED ->
@@ -65,18 +65,18 @@ public class HtmlClient extends AbstractDiffClient {
 				.mapToObj(i -> {
 					Action action = this.actions.left().get(i);
 					List<TemplateFragment> fragments = new ArrayList<>();
-					final String[] tokens = action.leftLogLine.value().split(" ");
-					if (action.rightLogLine == null) {
+					final String[] tokens = action.left().value().split(" ");
+					if (action.right() == null) {
 						for (String token : tokens) {
 							fragments.add(new TemplateFragment(token, false));
 						}
 					} else {
-						final String[] otherTokens = action.rightLogLine.value().split(" ");
+						final String[] otherTokens = action.right().value().split(" ");
 						for (int j = 0; j < tokens.length; j++) {
 							fragments.add(new TemplateFragment(tokens[j], !tokens[j].equals(otherTokens[j])));
 						}
 					}
-					return new TemplateLine(fragments, i + 1, color(action.type), action.rightLogLine == null ? -1 : action.rightLogLine.index());
+					return new TemplateLine(fragments, i + 1, color(action.type()), action.right() == null ? -1 : action.right().index());
 				})
 				.toList();
 		List<TemplateLine> right = IntStream.range(0, this.lines.right().size())
@@ -84,18 +84,18 @@ public class HtmlClient extends AbstractDiffClient {
 					Action action = this.actions.right().get(i);
 					String[] htmls = convertToHtml(action);
 					List<TemplateFragment> fragments = new ArrayList<>();
-					final String[] tokens = action.rightLogLine.value().split(" ");
-					if (action.leftLogLine == null) {
+					final String[] tokens = action.right().value().split(" ");
+					if (action.left() == null) {
 						for (String token : tokens) {
 							fragments.add(new TemplateFragment(token, false));
 						}
 					} else {
-						final String[] otherTokens = action.leftLogLine.value().split(" ");
+						final String[] otherTokens = action.left().value().split(" ");
 						for (int j = 0; j < tokens.length; j++) {
 							fragments.add(new TemplateFragment(tokens[j], !tokens[j].equals(otherTokens[j])));
 						}
 					}
-					return new TemplateLine(fragments, i + 1, color(action.type), action.leftLogLine == null ? -1 : action.leftLogLine.index());
+					return new TemplateLine(fragments, i + 1, color(action.type()), action.left() == null ? -1 : action.left().index());
 				})
 				.toList();
 
@@ -116,14 +116,14 @@ public class HtmlClient extends AbstractDiffClient {
 				.mapToObj(i -> {
 					Action action = this.actions.left().get(i);
 					String content = convertToHtml(action)[0];
-					return new TemplateLine2(content, action.leftLogLine, action.rightLogLine);
+					return new TemplateLine2(content, action.left(), action.right());
 				})
 				.toList();
 		List<TemplateLine2> right = IntStream.range(0, this.lines.right().size())
 				.mapToObj(i -> {
 					Action action = this.actions.right().get(i);
 					String content = convertToHtml(action)[1];
-					return new TemplateLine2(content, action.rightLogLine, action.leftLogLine);
+					return new TemplateLine2(content, action.right(), action.left());
 				})
 				.toList();
 		DefaultMustacheFactory factory = new DefaultMustacheFactory();

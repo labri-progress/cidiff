@@ -19,12 +19,12 @@ public final class JsonClient extends AbstractDiffClient {
 		// deduplicate the list of actions
 		ArrayList<Action> actionList = new ArrayList<>(actions.left());
 		actionList.addAll(actions.right().stream()
-				.filter(a -> !a.type.equals(Action.Type.UNCHANGED) && !a.type.equals(Action.Type.UPDATED)).toList());
+				.filter(a -> !a.type().equals(Action.Type.UNCHANGED) && !a.type().equals(Action.Type.UPDATED)).toList());
 
 		// sort the actions by position
 		actionList.sort((a, b) -> {
-			int aIndex = a.leftLogLine != null ? a.leftLogLine.index() : a.rightLogLine != null ? a.rightLogLine.index() : 0;
-			int bIndex = b.leftLogLine != null ? b.leftLogLine.index() : b.rightLogLine != null ? b.rightLogLine.index() : 0;
+			int aIndex = a.left() != null ? a.left().index() : a.right() != null ? a.right().index() : 0;
+			int bIndex = b.left() != null ? b.left().index() : b.right() != null ? b.right().index() : 0;
 			return aIndex - bIndex;
 		});
 
@@ -32,14 +32,14 @@ public final class JsonClient extends AbstractDiffClient {
 		for (Action a : actionList) {
 			if (sb.length() > 3)
 				sb.append(",");
-			sb.append("\n\t").append("{").append("\"type\":\"").append(a.type).append("\",");
+			sb.append("\n\t").append("{").append("\"type\":\"").append(a.type()).append("\",");
 
-			if (a.leftLogLine != null) {
-				sb.append("\"left\":").append(a.leftLogLine.index()).append(",");
+			if (a.left() != null) {
+				sb.append("\"left\":").append(a.left().index()).append(",");
 			}
 
-			if (a.rightLogLine != null) {
-				sb.append("\"right\":").append(a.rightLogLine.index());
+			if (a.right() != null) {
+				sb.append("\"right\":").append(a.right().index());
 			}
 
 			sb.append("}");

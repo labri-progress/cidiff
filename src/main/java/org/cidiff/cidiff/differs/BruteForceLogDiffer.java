@@ -48,7 +48,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 					break;
 				}
 				if (leftLine.hasSameValue(rightLine)) {
-					Action action = Action.unchanged(leftLine, rightLine);
+					Action action = Action.unchanged(leftLine, rightLine, 1);
 					leftActions.set(i, action);
 					rightActions.set(j, action);
 					break;
@@ -71,7 +71,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 
 				double sim = Utils.rewriteSim(leftLine, rightLine);
 				if (sim >= rewriteMin) {
-					Action action = Action.updated(leftLine, rightLine);
+					Action action = Action.updated(leftLine, rightLine, sim);
 					leftActions.set(i, action);
 					rightActions.set(j, action);
 					break;

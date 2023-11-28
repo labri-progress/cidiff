@@ -15,6 +15,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -28,7 +29,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class LogsPanel extends JPanel {
@@ -68,7 +68,7 @@ public class LogsPanel extends JPanel {
 		leftLines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		leftLines.addMouseListener(new LeftLinesSelectionListener());
 		final JScrollPane panLeftLines = new JScrollPane(leftLines);
-		leftBar.setUI(makeScrollBarUi(leftLines, actions.left()));
+		leftBar.setUI(makeScrollBarUi(leftLines, actions.left(), true));
 		leftBar.setUnitIncrement(10);
 		panLeftLines.setVerticalScrollBar(leftBar);
 		if (Options.getInstance().getSwingColumns().isEmpty() || Options.getInstance().getSwingColumns().equalsIgnoreCase("left")) {
@@ -83,7 +83,7 @@ public class LogsPanel extends JPanel {
 		rightLines.addKeyListener(new KeyboardShortcut());
 		rightLines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		final JScrollPane panRightLines = new JScrollPane(rightLines);
-		rightBar.setUI(makeScrollBarUi(rightLines, actions.right()));
+		rightBar.setUI(makeScrollBarUi(rightLines, actions.right(), false));
 		panRightLines.setVerticalScrollBar(rightBar);
 		rightBar.setUnitIncrement(10);
 		if (Options.getInstance().getSwingColumns().isEmpty() || Options.getInstance().getSwingColumns().equalsIgnoreCase("right")) {
@@ -104,8 +104,8 @@ public class LogsPanel extends JPanel {
 		List<int[]> lcs = new ArrayList<>();
 		for (int i = 0; i < left.size(); i++) {
 			Action action = actions.left().get(i);
-			if (action.type == Action.Type.UPDATED || action.type == Action.Type.UNCHANGED) {
-				lcs.add(new int[]{action.leftLogLine.index(), action.rightLogLine.index()});
+			if (action.type() == Action.Type.UPDATED || action.type() == Action.Type.UNCHANGED) {
+				lcs.add(new int[]{action.left().index(), action.right().index()});
 			}
 		}
 		int i = 0;
@@ -130,26 +130,25 @@ public class LogsPanel extends JPanel {
 		// this means only one of these two for loop will be executed
 		for (int j = i; j < left.size(); j++) {
 			Action oldLeft = actions.left().get(j);
-			if (oldLeft.type == Action.Type.MOVED_UNCHANGED || oldLeft.type == Action.Type.MOVED_UPDATED) {
+			if (oldLeft.type() == Action.Type.MOVED_UNCHANGED || oldLeft.type() == Action.Type.MOVED_UPDATED) {
 				right.add(Line.EMPTY);
 				actions.right().add(Action.EMPTY);
-			} else if (oldLeft.type == Action.Type.DELETED) {
+			} else if (oldLeft.type() == Action.Type.DELETED) {
 				Line line = new Line(-1, "r" + j, "r" + j);
 				right.add(line);
-				Action newAction = new Action(oldLeft.leftLogLine, line, oldLeft.type);
+				Action newAction = new Action(oldLeft.left(), line, oldLeft.type());
 				actions.left().set(j, newAction);
 				actions.right().add(newAction);
 			}
 		}
 		for (int j = i; j < right.size(); j++) {
 			Action oldRight = actions.right().get(j);
-			if (oldRight.type == Action.Type.MOVED_UNCHANGED || oldRight.type == Action.Type.MOVED_UPDATED) {
+			if (oldRight.type() == Action.Type.MOVED_UNCHANGED || oldRight.type() == Action.Type.MOVED_UPDATED) {
 				left.add(Line.EMPTY);
 				actions.left().add(Action.EMPTY);
-			} else if (oldRight.type == Action.Type.ADDED) {
-				Line line = new Line(-1, "l" + j, "l" + j);
-				left.add(line);
-				Action newAction = new Action(line, oldRight.rightLogLine, oldRight.type);
+			} else if (oldRight.type() == Action.Type.ADDED) {
+				left.add(Line.EMPTY);
+				Action newAction = new Action(Line.EMPTY, oldRight.right(), oldRight.type());
 				actions.left().add(newAction);
 				actions.right().set(j, newAction);
 			}
@@ -159,30 +158,28 @@ public class LogsPanel extends JPanel {
 	private static void insertLineAtPosition(Pair<List<Action>> actions, List<Line> left, List<Line> right, int i) {
 		Action oldLeft = actions.left().get(i);
 		Action oldRight = actions.right().get(i);
-		if (oldLeft.type != Action.Type.DELETED || oldRight.type != Action.Type.ADDED) {
-			if (oldLeft.type == Action.Type.MOVED_UNCHANGED || oldLeft.type == Action.Type.MOVED_UPDATED) {
+		if (oldLeft.type() != Action.Type.DELETED || oldRight.type() != Action.Type.ADDED) {
+			if (oldLeft.type() == Action.Type.MOVED_UNCHANGED || oldLeft.type() == Action.Type.MOVED_UPDATED) {
 				right.add(i, Line.EMPTY);
 				actions.right().add(i, Action.EMPTY);
-			} else if (oldRight.type == Action.Type.MOVED_UNCHANGED || oldRight.type == Action.Type.MOVED_UPDATED) {
+			} else if (oldRight.type() == Action.Type.MOVED_UNCHANGED || oldRight.type() == Action.Type.MOVED_UPDATED) {
 				left.add(i, Line.EMPTY);
 				actions.left().add(i, Action.EMPTY);
-			} else if (oldLeft.type == Action.Type.DELETED) {
-				Line line = new Line(-1, "r" + i, "r" + i);
-				right.add(i, line);
-				Action newAction = new Action(oldLeft.leftLogLine, line, oldLeft.type);
+			} else if (oldLeft.type() == Action.Type.DELETED) {
+				right.add(i, Line.EMPTY);
+				Action newAction = new Action(oldLeft.left(), Line.EMPTY, oldLeft.type());
 				actions.left().set(i, newAction);
 				actions.right().add(i, newAction);
-			} else if (oldRight.type == Action.Type.ADDED) {
-				Line line = new Line(-1, "l" + i, "l" + i);
-				left.add(i, line);
-				Action newAction = new Action(line, oldRight.rightLogLine, oldRight.type);
+			} else if (oldRight.type() == Action.Type.ADDED) {
+				left.add(i, Line.EMPTY);
+				Action newAction = new Action(Line.EMPTY, oldRight.right(), oldRight.type());
 				actions.left().add(i, newAction);
 				actions.right().set(i, newAction);
 			}
 		}
 	}
 
-	private BasicScrollBarUI makeScrollBarUi(JList<Line> lines, List<Action> scrollActions) {
+	private BasicScrollBarUI makeScrollBarUi(JList<Line> lines, List<Action> scrollActions, boolean isLeftSide) {
 		return new BasicScrollBarUI() {
 			@Override
 			protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
@@ -193,32 +190,26 @@ public class LogsPanel extends JPanel {
 				for (int i = 0; i < scrollActions.size(); i++) {
 					Action a = scrollActions.get(i);
 					if (a == null) continue;
-					if (a.type == Action.Type.UNCHANGED) continue;
+					if (a.type() == Action.Type.UNCHANGED) continue;
 
 					Rectangle r = lines.getCellBounds(i, i);
 					Rectangle s = at.createTransformedShape(r).getBounds();
 					int h = 2; //Math.max(2, s.height-2);
-					if (a.type == Action.Type.DELETED) {
-						g.setColor(COLOR_DELETED_LEFT);
-						g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
-					} else if (a.type == Action.Type.ADDED) {
-						g.setColor(COLOR_ADDED_RIGHT);
-						g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
-					} else if (a.type == Action.Type.UPDATED) {
-						g.setColor(COLOR_UPDATED);
-						g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
-					} else if (a.type == Action.Type.SKIPPED) {
-						g.setColor(COLOR_SKIPPED);
-						g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
-					} else if (a.type == Action.Type.MOVED_UNCHANGED || a.type == Action.Type.MOVED_UPDATED) {
-						g.setColor(COLOR_MOVED);
-						g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
-					} else if (a.debug == 1 && Options.getInstance().getSwingDisplayDebug()) {
-						g.setColor(COLOR_DEBUG_1);
-						g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
-					}
+					Color color = colorForAction(a, isLeftSide);
+					g.setColor(color);
+					g.fillRect(trackBounds.x + 2, trackBounds.y + 1 + s.y, trackBounds.width, h);
 				}
 			}
+		};
+	}
+
+	private static Color colorForAction(Action action, boolean isLeftSide) {
+		return switch (action.type()) {
+			case ADDED -> isLeftSide ? COLOR_ADDED_LEFT : COLOR_ADDED_RIGHT;
+			case DELETED -> isLeftSide ? COLOR_DELETED_LEFT : COLOR_DELETED_RIGHT;
+			case UNCHANGED, UPDATED, SKIPPED -> null;
+			case NONE -> COLOR_MOVED_LIGHTER;
+			case MOVED_UNCHANGED, MOVED_UPDATED -> COLOR_MOVED;
 		};
 	}
 
@@ -277,12 +268,12 @@ public class LogsPanel extends JPanel {
 			}
 
 			final Action action = cellActions.get(index);
-			int l = action.leftLogLine == null ? -1 : action.leftLogLine.index();
-			int r = action.rightLogLine == null ? -1 : action.rightLogLine.index();
+			int l = action.left() == null ? -1 : action.left().index();
+			int r = action.right() == null ? -1 : action.right().index();
 
-			setToolTipText(String.format("%s %d - %d - %.2f %d", action.type, l, r, action.sim, logLine.hash()));
+			setToolTipText(String.format("%s %d - %d - %.2f %d", action.type(), l, r, action.sim(), logLine.hash()));
 
-			Color color = colorForAction(action, isLeftSide);
+			Color color = LogsPanel.colorForAction(action, isLeftSide);
 			String text = textForAction(action, logLine, isLeftSide);
 			setBackground(color);
 			setText(text);
@@ -291,7 +282,7 @@ public class LogsPanel extends JPanel {
 		}
 
 		private String textForAction(Action action, Line line, boolean isLeftSide) {
-			return switch (action.type) {
+			return switch (action.type()) {
 				case ADDED -> isLeftSide ? " " : line.displayValue();
 				case DELETED -> isLeftSide ? line.displayValue() : " ";
 				case UNCHANGED, MOVED_UNCHANGED -> line.displayValue();
@@ -300,20 +291,10 @@ public class LogsPanel extends JPanel {
 			};
 		}
 
-		private Color colorForAction(Action action, boolean isLeftSide) {
-			return switch (action.type) {
-				case ADDED -> isLeftSide ? COLOR_ADDED_LEFT : COLOR_ADDED_RIGHT;
-				case DELETED -> isLeftSide ? COLOR_DELETED_LEFT : COLOR_DELETED_RIGHT;
-				case UNCHANGED, UPDATED, SKIPPED -> null;
-				case NONE -> COLOR_MOVED_LIGHTER;
-				case MOVED_UNCHANGED, MOVED_UPDATED -> COLOR_MOVED;
-			};
-		}
-
 		private String toHtml(Action action, Line line) {
 			String otherText;
 			try {
-				otherText = this.cellActions == actions.left() ? action.rightLogLine.value() : action.leftLogLine.value();
+				otherText = this.cellActions == actions.left() ? action.right().value() : action.left().value();
 			} catch (NullPointerException e) {
 				otherText = "";
 			}
@@ -342,7 +323,7 @@ public class LogsPanel extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			Action action = actions.left().get(leftLines.getSelectedIndex());
-			rightLines.setSelectedValue(action.rightLogLine, true);
+			rightLines.setSelectedValue(action.right(), true);
 		}
 
 		@Override
@@ -366,7 +347,7 @@ public class LogsPanel extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			Action action = actions.right().get(rightLines.getSelectedIndex());
-			leftLines.setSelectedValue(action.leftLogLine, true);
+			leftLines.setSelectedValue(action.left(), true);
 		}
 
 		@Override
@@ -392,8 +373,8 @@ public class LogsPanel extends JPanel {
 		public void keyTyped(KeyEvent e) {
 
 			if (e.getKeyChar() == 'g') {
-				if (e.isAltDown() && lastGreen > 0 && actions.right().get(lastGreen).type == Action.Type.ADDED) {
-					while (lastGreen < rightLines.getModel().getSize() && actions.right().get(lastGreen).type == Action.Type.ADDED) {
+				if (e.isAltDown() && lastGreen > 0 && actions.right().get(lastGreen).type() == Action.Type.ADDED) {
+					while (lastGreen < rightLines.getModel().getSize() && actions.right().get(lastGreen).type() == Action.Type.ADDED) {
 						lastGreen++;
 					}
 					lastGreen--;
@@ -402,7 +383,7 @@ public class LogsPanel extends JPanel {
 					int again = 0;
 					while (again < 2) {
 						for (int j = lastGreen + 1; j < rightLines.getModel().getSize(); j++) {
-							if (actions.right().get(j).type == Action.Type.ADDED) {
+							if (actions.right().get(j).type() == Action.Type.ADDED) {
 								lastGreen = j;
 								rightLines.setSelectedValue(rightLines.getModel().getElementAt(j), true);
 								again = 2;
@@ -416,8 +397,8 @@ public class LogsPanel extends JPanel {
 					}
 				}
 			} else if (e.getKeyChar() == 'G') {
-				if (e.isAltDown() && lastGreen < rightLines.getModel().getSize() && actions.right().get(lastGreen).type == Action.Type.ADDED) {
-					while (lastGreen > 0 && actions.right().get(lastGreen).type == Action.Type.ADDED) {
+				if (e.isAltDown() && lastGreen < rightLines.getModel().getSize() && actions.right().get(lastGreen).type() == Action.Type.ADDED) {
+					while (lastGreen > 0 && actions.right().get(lastGreen).type() == Action.Type.ADDED) {
 						lastGreen--;
 					}
 					lastGreen++;
@@ -426,7 +407,7 @@ public class LogsPanel extends JPanel {
 					int again = 0;
 					while (again < 2) {
 						for (int j = lastGreen - 1; j > 0; j--) {
-							if (actions.right().get(j).type == Action.Type.ADDED) {
+							if (actions.right().get(j).type() == Action.Type.ADDED) {
 								lastGreen = j;
 								rightLines.setSelectedValue(rightLines.getModel().getElementAt(j), true);
 								again = 2;

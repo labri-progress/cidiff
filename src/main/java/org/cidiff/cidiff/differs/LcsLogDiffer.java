@@ -62,7 +62,7 @@ public final class LcsLogDiffer implements LogDiffer {
 		for (int[] match : lcs) {
 			Line leftLine = leftLines.get(match[0]);
 			Line rightLine = rightLines.get(match[1]);
-			Action action = Action.unchanged(leftLine, rightLine);
+			Action action = Action.unchanged(leftLine, rightLine, 1);
 			leftActions.set(match[0], action);
 			rightActions.set(match[1], action);
 		}

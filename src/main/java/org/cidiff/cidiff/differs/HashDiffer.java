@@ -120,7 +120,7 @@ public class HashDiffer implements LogDiffer {
 			}
 
 			if (bestLine != null) {
-				final Action action = Action.unchanged(bestLine, rightLine);
+				final Action action = Action.unchanged(bestLine, rightLine, 1);
 				leftActions.set(bestI, action);
 				rightActions.set(j, action);
 			}
@@ -177,7 +177,7 @@ public class HashDiffer implements LogDiffer {
 			}
 
 			if (bestLine != null) {
-				final Action action = Action.updated(bestLine, rightLine);
+				final Action action = Action.updated(bestLine, rightLine, similarity(valueFingerprints.get(bestLine.value()), valueFingerprints.get(rightLine.value())));
 				leftActions.set(bestI, action);
 				rightActions.set(j, action);
 			}
