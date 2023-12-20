@@ -1,0 +1,5044 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/Spork
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Wiping out workspace first.
+Cloning the remote Git repository
+Cloning repository https://github.com/KTH/spork.git
+ > git init /builds/workspace/Spork # timeout=10
+Fetching upstream changes from https://github.com/KTH/spork.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/KTH/spork.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/KTH/spork.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 3bc4e9050b1197a6f5dea6bbd9ee04015cf31e8a (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 3bc4e9050b1197a6f5dea6bbd9ee04015cf31e8a # timeout=10
+Commit message: "[misc] Bump maven-compiler-plugin from 3.9.0 to 3.10.1 (#319)"
+ > git rev-list --no-walk 3bc4e9050b1197a6f5dea6bbd9ee04015cf31e8a # timeout=10
+[Spork] $ /bin/sh -xe /tmp/jenkins7872166575362329986.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  17768      0 --:--:-- --:--:-- --:--:-- 17902
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 21 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 30 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (900 B at 64 kB/s)
+[INFO] 
+[INFO] ----------------------------< se.kth:spork >----------------------------
+[INFO] Building spork 0.5.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.10.0:use-latest-versions (default-cli) @ spork ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from central
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:10.0.0 to version 10.2.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.968 s
+[INFO] Finished at: 2022-05-08T01:34:09+02:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------------< se.kth:spork >----------------------------
+[INFO] Building spork 0.5.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ spork ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.412 s
+[INFO] Finished at: 2022-05-08T01:34:15+02:00
+[INFO] ------------------------------------------------------------------------
++ mvn clean test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m----------------------------< [0;36mse.kth:spork[0;1m >----------------------------[m
+[[1;34mINFO[m] [1mBuilding spork 0.5.0-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/labs/gumtree-spoon-ast-diff/1.46/gumtree-spoon-ast-diff-1.46.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/labs/gumtree-spoon-ast-diff/1.46/gumtree-spoon-ast-diff-1.46.pom
+Progress (1): 1.4/8.9 kBProgress (1): 2.7/8.9 kBProgress (1): 4.1/8.9 kBProgress (1): 5.5/8.9 kBProgress (1): 6.9/8.9 kBProgress (1): 8.2/8.9 kBProgress (1): 8.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/labs/gumtree-spoon-ast-diff/1.46/gumtree-spoon-ast-diff-1.46.pom (8.9 kB at 65 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/labs/gumtree-spoon-ast-diff/1.46/gumtree-spoon-ast-diff-1.46.jar
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/labs/gumtree-spoon-ast-diff/1.46/gumtree-spoon-ast-diff-1.46.jar
+Progress (1): 1.4/43 kBProgress (1): 2.7/43 kBProgress (1): 4.1/43 kBProgress (1): 5.5/43 kBProgress (1): 6.9/43 kBProgress (1): 8.2/43 kBProgress (1): 9.6/43 kBProgress (1): 11/43 kB Progress (1): 12/43 kBProgress (1): 14/43 kBProgress (1): 15/43 kBProgress (1): 16/43 kBProgress (1): 17/43 kBProgress (1): 19/43 kBProgress (1): 20/43 kBProgress (1): 21/43 kBProgress (1): 23/43 kBProgress (1): 24/43 kBProgress (1): 25/43 kBProgress (1): 27/43 kBProgress (1): 28/43 kBProgress (1): 30/43 kBProgress (1): 31/43 kBProgress (1): 32/43 kBProgress (1): 34/43 kBProgress (1): 35/43 kBProgress (1): 36/43 kBProgress (1): 38/43 kBProgress (1): 39/43 kBProgress (1): 40/43 kBProgress (1): 42/43 kBProgress (1): 43/43 kBProgress (1): 43 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/labs/gumtree-spoon-ast-diff/1.46/gumtree-spoon-ast-diff-1.46.jar (43 kB at 487 kB/s)
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:2.5:clean[m [1m(default-clean)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.7:prepare-agent[m [1m(default-prepare-agent)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] argLine set to -javaagent:/builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.7/org.jacoco.agent-0.8.7-runtime.jar=destfile=/builds/workspace/Spork/target/jacoco.exec
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mkotlin-maven-plugin:1.6.10:compile[m [1m(compile)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 1 resource
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.10.1:compile[m [1m(default-compile)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 9 source files to /builds/workspace/Spork/target/classes
+[[1;34mINFO[m] /builds/workspace/Spork/src/main/java/se/kth/spork/spoon/printer/SourceExtractor.java: /builds/workspace/Spork/src/main/java/se/kth/spork/spoon/printer/SourceExtractor.java uses or overrides a deprecated API.
+[[1;34mINFO[m] /builds/workspace/Spork/src/main/java/se/kth/spork/spoon/printer/SourceExtractor.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] /builds/workspace/Spork/src/main/java/se/kth/spork/cli/Cli.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /builds/workspace/Spork/src/main/java/se/kth/spork/cli/Cli.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.10.1:compile[m [1m(compile)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 9 source files to /builds/workspace/Spork/target/classes
+[[1;34mINFO[m] /builds/workspace/Spork/src/main/java/se/kth/spork/spoon/printer/SourceExtractor.java: /builds/workspace/Spork/src/main/java/se/kth/spork/spoon/printer/SourceExtractor.java uses or overrides a deprecated API.
+[[1;34mINFO[m] /builds/workspace/Spork/src/main/java/se/kth/spork/spoon/printer/SourceExtractor.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] /builds/workspace/Spork/src/main/java/se/kth/spork/cli/Cli.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /builds/workspace/Spork/src/main/java/se/kth/spork/cli/Cli.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:testResources[m [1m(default-testResources)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 324 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.10.1:testCompile[m [1m(default-testCompile)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 3 source files to /builds/workspace/Spork/target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mkotlin-maven-plugin:1.6.10:test-compile[m [1m(test-compile)[m @ [36mspork[0;1m ---[m
+[[1;33mWARNING[m] No sources found skipping Kotlin compile
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.10.1:testCompile[m [1m(testCompile)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 3 source files to /builds/workspace/Spork/target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.22.2:test[m [1m(default-test)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running se.kth.spork.cli.[1mCliTest[m
+
+
+class Cls {
+    public static void main(String[] args) {
+        int a;
+        int b;
+        int c;
+        double d;
+        double e = 1;
+    }
+}
+
+
+public class Main {
+    int generateNumber() {
+        return 42;
+    }
+}
+
+
+public final enum BestColor {
+
+    RED,
+    GREEN,
+    BLUE;}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        int res = a + b;
+        return res;
+    }
+}
+
+
+class Cls {
+    public int add(int a, int b) {
+        /*
+        this doesn't work, because c is not defined
+        return a + c;
+         */
+        return a + b;
+    }
+}
+
+
+public class Cls {
+    public static final int x = 0;
+}
+
+
+class Cls {
+    public int add(int a, int b) {
+        // add a and b
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+public class Cls {}
+
+
+class Cls {
+    int a;
+
+    int b;
+
+    int c;
+
+    double d;
+
+    double e = 1;
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedGetTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedGetTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        if (a < b) {
+            return b + a;
+        }
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        InputChecker.checkInput(a, b);
+        return a + b;
+    }
+
+    private static class InputChecker {
+        static int checkInput(int a, int b) {
+            if (b <= a) {
+                throw new IllegalArgumentException("a must be smaller than b");
+            }
+        }
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+
+        return (T) elements[size - 1];
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Main {
+    int method() {
+    }
+}
+
+
+abstract interface Iface {
+    public default void someMethod() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i);
+        }
+    }
+}
+
+
+class Cls {
+    public void meth() {
+        return;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(expected = java.lang.IllegalArgumentException.class)
+    void testSomething() {
+        Class<?> clazz = null;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<K> implements Stack<K> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(K element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public K pop() {
+        K elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public K top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private K checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((K) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(timeout = 3000, otherValue = "hello")
+    void testSomething() {
+        throw new IllegalStateException();
+    }
+}
+
+
+public class Adder {
+    public long add(long a, long b) {
+        long result = a + b;
+        return result;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    @java.lang.SuppressWarnings(value = { "unchecked", "rawtypes" }, garbage = 2)
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+class Cls {
+    private Object arr;
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        new InputChecker().checkInput(a, b);
+        return a + b;
+    }
+}
+
+class InputChecker {
+    static int checkInput(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("a must be smaller than b");
+        }
+    }
+}
+/**
+ * A generic interface for some collection-esque data type.
+ *
+ * @author Simon Larsén
+ */
+
+
+public abstract interface SimpleCollection<T> {
+    /**
+     * Add an element to this collection.
+     *
+     * @param e The element to add.
+     * @return true iff element was added.
+     */
+    boolean add(T e);
+
+    /**
+     * Remove an element from this collection.
+     *
+     * @param e The element to remove.
+     * @return true iff the element was present (and removed).
+     */
+    boolean remove(T e);
+
+    /**
+     * Check if this collection contains some element.
+     *
+     * @param o The element whose presence to check for.
+     * @return true iff o was in the collection.
+     */
+    boolean contains(Object o);
+}
+
+
+public class GoodClass {
+    public static void main(String[] args) {
+        GoodClass bc = new GoodClass();
+    }
+}
+
+
+class Cls {
+    private int x = 3;
+
+    protected String modelPackage = "";
+
+    protected String apiPackage = "";
+
+    protected String fileSuffix;
+}
+
+
+public class Adder {
+    public int add(int aa, int bb) {
+        return a + b;
+    }
+}
+package totally.different.pkg.statement;
+
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b, int c) {
+        return (a + b) + c;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(timeout = 3000)
+    void testSomething() {
+        throw new IllegalStateException();
+    }
+}
+
+
+public class Cls {
+    public <T> void method(List<T> list) {
+        System.out.println(list);
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        int x = 3;
+        String modelPackage = "";
+        String apiPackage = "";
+        String fileSuffix;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        int a;
+        int b;
+        int c;
+        double d;
+        double e = 1;
+    }
+}
+
+
+public class Main {
+    int generateNumber() {
+        return 42;
+    }
+}
+
+
+public final enum BestColor {
+
+    RED,
+    GREEN,
+    BLUE;}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        int res = a + b;
+        return res;
+    }
+}
+
+
+class Cls {
+    public int add(int a, int b) {
+        /*
+        this doesn't work, because c is not defined
+        return a + c;
+         */
+        return a + b;
+    }
+}
+
+
+public class Cls {
+    public static final int x = 0;
+}
+
+
+class Cls {
+    public int add(int a, int b) {
+        // add a and b
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+public class Cls {}
+
+
+class Cls {
+    int a;
+
+    int b;
+
+    int c;
+
+    double d;
+
+    double e = 1;
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedGetTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedGetTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        if (a < b) {
+            return b + a;
+        }
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        InputChecker.checkInput(a, b);
+        return a + b;
+    }
+
+    private static class InputChecker {
+        static int checkInput(int a, int b) {
+            if (b <= a) {
+                throw new IllegalArgumentException("a must be smaller than b");
+            }
+        }
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+
+        return (T) elements[size - 1];
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Main {
+    int method() {
+    }
+}
+
+
+abstract interface Iface {
+    public default void someMethod() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i);
+        }
+    }
+}
+
+
+class Cls {
+    public void meth() {
+        return;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(expected = java.lang.IllegalArgumentException.class)
+    void testSomething() {
+        Class<?> clazz = null;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<K> implements Stack<K> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(K element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public K pop() {
+        K elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public K top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private K checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((K) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(timeout = 3000, otherValue = "hello")
+    void testSomething() {
+        throw new IllegalStateException();
+    }
+}
+
+
+public class Adder {
+    public long add(long a, long b) {
+        long result = a + b;
+        return result;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    @java.lang.SuppressWarnings(value = { "unchecked", "rawtypes" }, garbage = 2)
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+class Cls {
+    private Object arr;
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        new InputChecker().checkInput(a, b);
+        return a + b;
+    }
+}
+
+class InputChecker {
+    static int checkInput(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("a must be smaller than b");
+        }
+    }
+}
+/**
+ * A generic interface for some collection-esque data type.
+ *
+ * @author Simon Larsén
+ */
+
+
+public abstract interface SimpleCollection<T> {
+    /**
+     * Add an element to this collection.
+     *
+     * @param e The element to add.
+     * @return true iff element was added.
+     */
+    boolean add(T e);
+
+    /**
+     * Remove an element from this collection.
+     *
+     * @param e The element to remove.
+     * @return true iff the element was present (and removed).
+     */
+    boolean remove(T e);
+
+    /**
+     * Check if this collection contains some element.
+     *
+     * @param o The element whose presence to check for.
+     * @return true iff o was in the collection.
+     */
+    boolean contains(Object o);
+}
+
+
+public class GoodClass {
+    public static void main(String[] args) {
+        GoodClass bc = new GoodClass();
+    }
+}
+
+
+class Cls {
+    private int x = 3;
+
+    protected String modelPackage = "";
+
+    protected String apiPackage = "";
+
+    protected String fileSuffix;
+}
+
+
+public class Adder {
+    public int add(int aa, int bb) {
+        return a + b;
+    }
+}
+package totally.different.pkg.statement;
+
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b, int c) {
+        return (a + b) + c;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(timeout = 3000)
+    void testSomething() {
+        throw new IllegalStateException();
+    }
+}
+
+
+public class Cls {
+    public <T> void method(List<T> list) {
+        System.out.println(list);
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        int x = 3;
+        String modelPackage = "";
+        String apiPackage = "";
+        String fileSuffix;
+    }
+}
+
+
+public class Adder {
+    public int add(int lhs, int 
+<<<<<<< LEFT
+rhs
+=======
+r
+>>>>>>> RIGHT
+    ) {
+        return lhs + 
+<<<<<<< LEFT
+rhs
+=======
+r
+>>>>>>> RIGHT
+        ;
+    }
+}
+
+
+public class Declarations {
+    public void pointlessMethod() {
+        int a = 1;
+<<<<<<< LEFT
+        if (a < 2) {
+            a = 2;
+        }
+=======
+        long q = 10;
+>>>>>>> RIGHT
+
+        int b = 2;
+    }
+}
+
+
+class Cls {
+<<<<<<< LEFT
+=======
+protected
+>>>>>>> RIGHT
+     static final void method() {
+    }
+}
+
+
+class Main {
+    public static void main(String[] args) {
+        int a = 2;
+<<<<<<< LEFT
+        int b = 3;
+=======
+        int c = 4;
+>>>>>>> RIGHT
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+<<<<<<< LEFT
+     * Create an empty ArrayStack.
+=======
+     * Creat an empty ArrayStack with an initial capacity of 10.
+>>>>>>> RIGHT
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+<<<<<<< LEFT
+// null element to avoid blocking garbage collector
+=======
+// null element to avoid blocking the garbage collector
+>>>>>>> RIGHT
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public T top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+
+        return (T) elements[size - 1];
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Declarations {
+    public void pointlessMethod() {
+        int a = 1;
+<<<<<<< LEFT
+        int c = 3;
+        int d = 4;
+=======
+        long q = 10;
+        long x = 1;
+        long y = 1;
+        long z = 1;
+>>>>>>> RIGHT
+
+        int b = 2;
+<<<<<<< LEFT
+        int e = 5;
+=======
+        long w = 12;
+>>>>>>> RIGHT
+
+    }
+}
+
+
+public class Adder {
+    public 
+<<<<<<< LEFT
+long
+=======
+double
+>>>>>>> RIGHT
+     add(
+<<<<<<< LEFT
+long
+=======
+double
+>>>>>>> RIGHT
+     a, int b) {
+        return a + b;
+    }
+}
+
+
+class Main {
+    public static void main(String[] args) {
+<<<<<<< LEFT
+=======
+        int a = 2;
+        int b = 3;
+>>>>>>> RIGHT
+    }
+}
+
+
+public class Declarations {
+    public void pointlessMethod() {
+        int a = 1;
+<<<<<<< LEFT
+        int c = 3;
+        int d = 2;
+=======
+        long q = 10;
+        long x = 20;
+>>>>>>> RIGHT
+
+        int b = 2;
+    }
+}
+import java.util.List;
+
+
+class Cls {
+    public static void print(List<? 
+<<<<<<< LEFT
+super
+=======
+extends
+>>>>>>> RIGHT
+     String> list) {
+        System.out.println(list);
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a 
+<<<<<<< LEFT
+*
+=======
+/
+>>>>>>> RIGHT
+         b;
+    }
+
+    public int otherOps() {
+        int a = 1;
+        a 
+<<<<<<< LEFT
+-=
+=======
+*=
+>>>>>>> RIGHT
+         1;
+        a = 
+<<<<<<< LEFT
++
+=======
+-
+>>>>>>> RIGHT
+        a;
+        return a;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + 
+<<<<<<< LEFT
+1
+=======
+2
+>>>>>>> RIGHT
+        ;
+    }
+}
+
+
+<<<<<<< LEFT
+public
+=======
+private
+>>>>>>> RIGHT
+ static class Cls {}
+
+
+class Cls {
+<<<<<<< LEFT
+public
+=======
+private
+>>>>>>> RIGHT
+     void method() {
+    }
+}
+
+
+public class Main {
+    int calcNumber() {
+        return (1 + 2) + 
+<<<<<<< LEFT
+99
+=======
+102
+>>>>>>> RIGHT
+        ;
+    }
+}
+
+
+public class Main {
+    Integer a = 2;
+
+    Integer b = 3;
+
+<<<<<<< LEFT
+Object
+=======
+Integer
+>>>>>>> RIGHT
+     field = Integer.valueOf(
+<<<<<<< LEFT
+2
+=======
+3
+>>>>>>> RIGHT
+    );
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        java.lang.String s = args[0];
+        System.out.println(s);
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+        System.out.println((("calculating sum from " + a) + " to ") + b);
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    public void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+        if (a < 0) {
+            // this will be a strange sum
+            throw new IllegalArgumentException("a must be at least 0");
+        }
+    }
+}
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+
+
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        int a = 2;
+        int b = 2;
+        Integer sum = a + b;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        try {
+            System.out.println("Hello");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Woopsie!");
+            System.out.println("My bad!");
+        } finally {
+            System.out.println("Bye bye!");
+        }
+    }
+}
+/**
+ * This parameter add is technically conflicting, but should be automatically resolved with an optimistic conflict
+ * handler.
+ */
+
+
+public class Adder {
+    public int add(int a, int b, int c, int d, int e) {
+        return a + b;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        if (true) {
+            System.out.println("Hello");
+        }
+        if (true) {
+            System.out.println("Hello");
+        }
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * It's pretty neat.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking garbage collection
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public T top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     *
+     * @return The top element.
+     * @throws EmptyStackException
+     * 		if the stack is empty
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     *
+     * Time complexity: O(n)
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        // fastest way to copy an array
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+class Cls {
+    public static void add(int... b) {
+        int sum = 0;
+        for (int val : b) {
+            sum += val;
+        }
+        return sum;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+
+        return (T) elements[size - 1];
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private int sumTo(int to) {
+        checkToBound(to);
+        int sum = 0;
+        for (int i = 0; i < to; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private void checkToBound(int to) {
+        if (to >= 1_000) {
+            throw new IllegalArgumentException("I can't count that high: " + to);
+        }
+    }
+
+    private int multiplyBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int prod = 1;
+        for (int i = a; i < b; i++) {
+            prod *= i;
+        }
+
+        return prod;
+    }
+
+    private void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+}
+
+
+public class Cls {
+    public static void main(String[] args) {
+        int a = 1 / 2;
+        int b = 1 * 2;
+        int c = 1 + 2;
+        int d = 1 - 2;
+        a -= 1;
+        b += 2;
+        c /= 3;
+        d *= 2;
+    }
+}
+package main;
+
+
+
+// this is a comment that will appear at the end of the direct children of this class
+class Main {
+    int a = 2;
+}
+
+
+public class Arithmetic {
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int sub(int a, int b) {
+        return a - b;
+    }
+
+    public int div(int a, int b) {
+        if (b == 0) {
+            throw new IllegalArgumentException("b must be non-zero");
+        }
+        return a / b;
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    public void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+}
+
+
+class Main {
+    public static void main(String[] args) {
+        int a = 2;
+        int b = 2;
+        System.out.println(a + b);
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private int sumTo(int to) {
+        checkToBound(to);
+        int sum = 0;
+        for (int i = 0; i < to; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private void checkToBound(int to) {
+        if (to >= 1_000) {
+            throw new IllegalArgumentException("I can't count that high: " + to);
+        }
+    }
+
+    private int multiplyBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int prod = 1;
+        for (int i = a; i < b; i++) {
+            prod *= i;
+        }
+
+        return prod;
+    }
+
+    private void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+
+    public int sumBetweenUndirected(int a, int b) {
+        return a <= b ? sumBetween(a, b) : sumBetween(b, a);
+    }
+
+    public int sumAndMultiplyBetween(int a, int b) {
+        int sum = sumBetween(a, b);
+        int prod = multiplyBetween(a, b);
+        return sum + prod;
+    }
+}
+
+
+public class Cls {
+    private static final int x = 0;
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    public void helloWorld() {
+        System.out.println("Hello, world!");
+    }
+
+    public void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+}
+import java.util.Arrays;
+
+
+/**
+ * Implementation of the Sieve of Eratosthenes algorithm for checking if a
+ * number is prime or not. The implementation is lacking in error-checking
+ * and optimization, and needs some patching up!
+ *
+ * @author Simon Larsén
+ * @version 2017-08-05
+ */
+public class Sieve {
+    /**
+     * Check if a number is prime or not!
+     *
+     * Note that prime[n] denotes the primality of number n.
+     *
+     * @param   number  An integer value to be checked for primality.
+     * @return  true if number is prime, false otherwise.
+     */
+    public boolean isPrime(int number) {
+        if (number <= 1) {
+            System.out.println("Now it's in the right place!");
+            return false;
+        }
+        boolean[] prime = new boolean[number + 1];// + 1 because of 0-indexing
+
+        Arrays.fill(prime, true);// assume all numbers are prime
+
+        int sqrt = ((int) (Math.floor(Math.sqrt(number))));
+        for (int i = 2; i <= sqrt; i++) {
+            if (number <= 1) {
+                return false;
+            }
+            if (prime[i]) {
+                for (int j = i * 2; j < prime.length; j += i) {
+                    prime[j] = false;// mark multiples of i as not prime
+
+                }
+            }
+        }
+        return prime[number];
+    }
+}
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020, Simon Larsén
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package se.kth.spork;
+
+
+
+/**
+ * This is the main class :)
+ */
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+/*
+ * Add some stuff in the left revision!
+ *
+ * This comment will be attached to the compilation unit.
+ * We want to merge it textually, separately from all other merging.
+ *
+ * And add some stuff in the right revision!
+ */
+package se.kth.spork;
+
+
+
+/**
+ * And this is the normal Javadoc comment.
+ */
+public class Cls {}
+
+
+public class Main {
+    public int add(int a, int b, int c) throws IllegalArgumentException {
+        return (a + b) + c;
+    }
+}
+import java.util.List;
+
+
+public class Clazz {
+    public void meth(List<? extends Number> listOne, List<? super String> listTwo) {
+        System.out.println(listOne);
+        System.out.println(listTwo);
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b, int c) {
+        return (a + b) + c;
+    }
+
+    public int sub(int a, int b, int c) {
+        return (a - b) - c;
+    }
+}
+
+
+public class Cls {
+    public static void main(String[] args) {
+        int a = -1;
+        int b = +2;
+        boolean c = false;
+        int d = ~1;
+        a--;
+        b++;
+        a++;
+        b--;
+        --a;
+        ++b;
+        ++a;
+        --b;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        java.lang.String s = args[0];
+        System.out.println(s);
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+        System.out.println((("calculating sum from " + a) + " to ") + b);
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    public void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+        if (a < 0) {
+            // this will be a strange sum
+            throw new IllegalArgumentException("a must be at least 0");
+        }
+    }
+}
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+
+
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        int a = 2;
+        int b = 2;
+        Integer sum = a + b;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        try {
+            System.out.println("Hello");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Woopsie!");
+            System.out.println("My bad!");
+        } finally {
+            System.out.println("Bye bye!");
+        }
+    }
+}
+/**
+ * This parameter add is technically conflicting, but should be automatically resolved with an optimistic conflict
+ * handler.
+ */
+
+
+public class Adder {
+    public int add(int a, int b, int c, int d, int e) {
+        return a + b;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        if (true) {
+            System.out.println("Hello");
+        }
+        if (true) {
+            System.out.println("Hello");
+        }
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * It's pretty neat.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking garbage collection
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public T top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     *
+     * @return The top element.
+     * @throws EmptyStackException
+     * 		if the stack is empty
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     *
+     * Time complexity: O(n)
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        // fastest way to copy an array
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+class Cls {
+    public static void add(int... b) {
+        int sum = 0;
+        for (int val : b) {
+            sum += val;
+        }
+        return sum;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+
+        return (T) elements[size - 1];
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private int sumTo(int to) {
+        checkToBound(to);
+        int sum = 0;
+        for (int i = 0; i < to; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private void checkToBound(int to) {
+        if (to >= 1_000) {
+            throw new IllegalArgumentException("I can't count that high: " + to);
+        }
+    }
+
+    private int multiplyBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int prod = 1;
+        for (int i = a; i < b; i++) {
+            prod *= i;
+        }
+
+        return prod;
+    }
+
+    private void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+}
+
+
+public class Cls {
+    public static void main(String[] args) {
+        int a = 1 / 2;
+        int b = 1 * 2;
+        int c = 1 + 2;
+        int d = 1 - 2;
+        a -= 1;
+        b += 2;
+        c /= 3;
+        d *= 2;
+    }
+}
+package main;
+
+
+
+// this is a comment that will appear at the end of the direct children of this class
+class Main {
+    int a = 2;
+}
+
+
+public class Arithmetic {
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int sub(int a, int b) {
+        return a - b;
+    }
+
+    public int div(int a, int b) {
+        if (b == 0) {
+            throw new IllegalArgumentException("b must be non-zero");
+        }
+        return a / b;
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    public void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+}
+
+
+class Main {
+    public static void main(String[] args) {
+        int a = 2;
+        int b = 2;
+        System.out.println(a + b);
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private int sumTo(int to) {
+        checkToBound(to);
+        int sum = 0;
+        for (int i = 0; i < to; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private void checkToBound(int to) {
+        if (to >= 1_000) {
+            throw new IllegalArgumentException("I can't count that high: " + to);
+        }
+    }
+
+    private int multiplyBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int prod = 1;
+        for (int i = a; i < b; i++) {
+            prod *= i;
+        }
+
+        return prod;
+    }
+
+    private void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+
+    public int sumBetweenUndirected(int a, int b) {
+        return a <= b ? sumBetween(a, b) : sumBetween(b, a);
+    }
+
+    public int sumAndMultiplyBetween(int a, int b) {
+        int sum = sumBetween(a, b);
+        int prod = multiplyBetween(a, b);
+        return sum + prod;
+    }
+}
+
+
+public class Cls {
+    private static final int x = 0;
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    public void helloWorld() {
+        System.out.println("Hello, world!");
+    }
+
+    public void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+}
+import java.util.Arrays;
+
+
+/**
+ * Implementation of the Sieve of Eratosthenes algorithm for checking if a
+ * number is prime or not. The implementation is lacking in error-checking
+ * and optimization, and needs some patching up!
+ *
+ * @author Simon Larsén
+ * @version 2017-08-05
+ */
+public class Sieve {
+    /**
+     * Check if a number is prime or not!
+     *
+     * Note that prime[n] denotes the primality of number n.
+     *
+     * @param   number  An integer value to be checked for primality.
+     * @return  true if number is prime, false otherwise.
+     */
+    public boolean isPrime(int number) {
+        if (number <= 1) {
+            System.out.println("Now it's in the right place!");
+            return false;
+        }
+        boolean[] prime = new boolean[number + 1];// + 1 because of 0-indexing
+
+        Arrays.fill(prime, true);// assume all numbers are prime
+
+        int sqrt = ((int) (Math.floor(Math.sqrt(number))));
+        for (int i = 2; i <= sqrt; i++) {
+            if (number <= 1) {
+                return false;
+            }
+            if (prime[i]) {
+                for (int j = i * 2; j < prime.length; j += i) {
+                    prime[j] = false;// mark multiples of i as not prime
+
+                }
+            }
+        }
+        return prime[number];
+    }
+}
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020, Simon Larsén
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package se.kth.spork;
+
+
+
+/**
+ * This is the main class :)
+ */
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+/*
+ * Add some stuff in the left revision!
+ *
+ * This comment will be attached to the compilation unit.
+ * We want to merge it textually, separately from all other merging.
+ *
+ * And add some stuff in the right revision!
+ */
+package se.kth.spork;
+
+
+
+/**
+ * And this is the normal Javadoc comment.
+ */
+public class Cls {}
+
+
+public class Main {
+    public int add(int a, int b, int c) throws IllegalArgumentException {
+        return (a + b) + c;
+    }
+}
+import java.util.List;
+
+
+public class Clazz {
+    public void meth(List<? extends Number> listOne, List<? super String> listTwo) {
+        System.out.println(listOne);
+        System.out.println(listTwo);
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b, int c) {
+        return (a + b) + c;
+    }
+
+    public int sub(int a, int b, int c) {
+        return (a - b) - c;
+    }
+}
+
+
+public class Cls {
+    public static void main(String[] args) {
+        int a = -1;
+        int b = +2;
+        boolean c = false;
+        int d = ~1;
+        a--;
+        b++;
+        a++;
+        b--;
+        --a;
+        ++b;
+        ++a;
+        --b;
+    }
+}
+
+
+public class Adder {
+    public int add(int lhs, int 
+<<<<<<< LEFT
+rhs
+=======
+r
+>>>>>>> RIGHT
+    ) {
+        return lhs + 
+<<<<<<< LEFT
+rhs
+=======
+r
+>>>>>>> RIGHT
+        ;
+    }
+}
+
+
+public class Declarations {
+    public void pointlessMethod() {
+        int a = 1;
+<<<<<<< LEFT
+        if (a < 2) {
+            a = 2;
+        }
+=======
+        long q = 10;
+>>>>>>> RIGHT
+
+        int b = 2;
+    }
+}
+
+
+class Cls {
+<<<<<<< LEFT
+=======
+protected
+>>>>>>> RIGHT
+     static final void method() {
+    }
+}
+
+
+class Main {
+    public static void main(String[] args) {
+        int a = 2;
+<<<<<<< LEFT
+        int b = 3;
+=======
+        int c = 4;
+>>>>>>> RIGHT
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+<<<<<<< LEFT
+     * Create an empty ArrayStack.
+=======
+     * Creat an empty ArrayStack with an initial capacity of 10.
+>>>>>>> RIGHT
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+<<<<<<< LEFT
+// null element to avoid blocking garbage collector
+=======
+// null element to avoid blocking the garbage collector
+>>>>>>> RIGHT
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public T top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+
+        return (T) elements[size - 1];
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Declarations {
+    public void pointlessMethod() {
+        int a = 1;
+<<<<<<< LEFT
+        int c = 3;
+        int d = 4;
+=======
+        long q = 10;
+        long x = 1;
+        long y = 1;
+        long z = 1;
+>>>>>>> RIGHT
+
+        int b = 2;
+<<<<<<< LEFT
+        int e = 5;
+=======
+        long w = 12;
+>>>>>>> RIGHT
+
+    }
+}
+
+
+public class Adder {
+    public 
+<<<<<<< LEFT
+long
+=======
+double
+>>>>>>> RIGHT
+     add(
+<<<<<<< LEFT
+long
+=======
+double
+>>>>>>> RIGHT
+     a, int b) {
+        return a + b;
+    }
+}
+
+
+class Main {
+    public static void main(String[] args) {
+<<<<<<< LEFT
+=======
+        int a = 2;
+        int b = 3;
+>>>>>>> RIGHT
+    }
+}
+
+
+public class Declarations {
+    public void pointlessMethod() {
+        int a = 1;
+<<<<<<< LEFT
+        int c = 3;
+        int d = 2;
+=======
+        long q = 10;
+        long x = 20;
+>>>>>>> RIGHT
+
+        int b = 2;
+    }
+}
+import java.util.List;
+
+
+class Cls {
+    public static void print(List<? 
+<<<<<<< LEFT
+super
+=======
+extends
+>>>>>>> RIGHT
+     String> list) {
+        System.out.println(list);
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a 
+<<<<<<< LEFT
+*
+=======
+/
+>>>>>>> RIGHT
+         b;
+    }
+
+    public int otherOps() {
+        int a = 1;
+        a 
+<<<<<<< LEFT
+-=
+=======
+*=
+>>>>>>> RIGHT
+         1;
+        a = 
+<<<<<<< LEFT
++
+=======
+-
+>>>>>>> RIGHT
+        a;
+        return a;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + 
+<<<<<<< LEFT
+1
+=======
+2
+>>>>>>> RIGHT
+        ;
+    }
+}
+
+
+<<<<<<< LEFT
+public
+=======
+private
+>>>>>>> RIGHT
+ static class Cls {}
+
+
+class Cls {
+<<<<<<< LEFT
+public
+=======
+private
+>>>>>>> RIGHT
+     void method() {
+    }
+}
+
+
+public class Main {
+    int calcNumber() {
+        return (1 + 2) + 
+<<<<<<< LEFT
+99
+=======
+102
+>>>>>>> RIGHT
+        ;
+    }
+}
+
+
+public class Main {
+    Integer a = 2;
+
+    Integer b = 3;
+
+<<<<<<< LEFT
+Object
+=======
+Integer
+>>>>>>> RIGHT
+     field = Integer.valueOf(
+<<<<<<< LEFT
+2
+=======
+3
+>>>>>>> RIGHT
+    );
+}
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m168[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 40.23 s - in se.kth.spork.cli.[1mCliTest[m
+[[1;34mINFO[m] Running se.kth.spork.spoon.[1mSpoon3dmMergeTest[m
+
+
+class Cls {
+    public static void main(String[] args) {
+        int a;
+        int b;
+        int c;
+        double d;
+        double e = 1;
+    }
+}
+
+
+public class Main {
+    int generateNumber() {
+        return 42;
+    }
+}
+
+
+public final enum BestColor {
+
+    RED,
+    GREEN,
+    BLUE;}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        int res = a + b;
+        return res;
+    }
+}
+
+
+class Cls {
+    public int add(int a, int b) {
+        /*
+        this doesn't work, because c is not defined
+        return a + c;
+         */
+        return a + b;
+    }
+}
+
+
+public class Cls {
+    public static final int x = 0;
+}
+
+
+class Cls {
+    public int add(int a, int b) {
+        // add a and b
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+public class Cls {}
+
+
+class Cls {
+    int a;
+
+    int b;
+
+    int c;
+
+    double d;
+
+    double e = 1;
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedGetTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedGetTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        if (a < b) {
+            return b + a;
+        }
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        InputChecker.checkInput(a, b);
+        return a + b;
+    }
+
+    private static class InputChecker {
+        static int checkInput(int a, int b) {
+            if (b <= a) {
+                throw new IllegalArgumentException("a must be smaller than b");
+            }
+        }
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+
+        return (T) elements[size - 1];
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Main {
+    int method() {
+    }
+}
+
+
+abstract interface Iface {
+    public default void someMethod() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i);
+        }
+    }
+}
+
+
+class Cls {
+    public void meth() {
+        return;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(expected = java.lang.IllegalArgumentException.class)
+    void testSomething() {
+        Class<?> clazz = null;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<K> implements Stack<K> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(K element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public K pop() {
+        K elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public K top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private K checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((K) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(timeout = 3000, otherValue = "hello")
+    void testSomething() {
+        throw new IllegalStateException();
+    }
+}
+
+
+public class Adder {
+    public long add(long a, long b) {
+        long result = a + b;
+        return result;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    @java.lang.SuppressWarnings(value = { "unchecked", "rawtypes" }, garbage = 2)
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+class Cls {
+    private Object arr;
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        new InputChecker().checkInput(a, b);
+        return a + b;
+    }
+}
+
+class InputChecker {
+    static int checkInput(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("a must be smaller than b");
+        }
+    }
+}
+/**
+ * A generic interface for some collection-esque data type.
+ *
+ * @author Simon Larsén
+ */
+
+
+public abstract interface SimpleCollection<T> {
+    /**
+     * Add an element to this collection.
+     *
+     * @param e The element to add.
+     * @return true iff element was added.
+     */
+    boolean add(T e);
+
+    /**
+     * Remove an element from this collection.
+     *
+     * @param e The element to remove.
+     * @return true iff the element was present (and removed).
+     */
+    boolean remove(T e);
+
+    /**
+     * Check if this collection contains some element.
+     *
+     * @param o The element whose presence to check for.
+     * @return true iff o was in the collection.
+     */
+    boolean contains(Object o);
+}
+
+
+public class GoodClass {
+    public static void main(String[] args) {
+        GoodClass bc = new GoodClass();
+    }
+}
+
+
+class Cls {
+    private int x = 3;
+
+    protected String modelPackage = "";
+
+    protected String apiPackage = "";
+
+    protected String fileSuffix;
+}
+
+
+public class Adder {
+    public int add(int aa, int bb) {
+        return a + b;
+    }
+}
+package totally.different.pkg.statement;
+
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b, int c) {
+        return (a + b) + c;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(timeout = 3000)
+    void testSomething() {
+        throw new IllegalStateException();
+    }
+}
+
+
+public class Cls {
+    public <T> void method(List<T> list) {
+        System.out.println(list);
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        int x = 3;
+        String modelPackage = "";
+        String apiPackage = "";
+        String fileSuffix;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        int a;
+        int b;
+        int c;
+        double d;
+        double e = 1;
+    }
+}
+
+
+public class Main {
+    int generateNumber() {
+        return 42;
+    }
+}
+
+
+public final enum BestColor {
+
+    RED,
+    GREEN,
+    BLUE;}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        int res = a + b;
+        return res;
+    }
+}
+
+
+class Cls {
+    public int add(int a, int b) {
+        /*
+        this doesn't work, because c is not defined
+        return a + c;
+         */
+        return a + b;
+    }
+}
+
+
+public class Cls {
+    public static final int x = 0;
+}
+
+
+class Cls {
+    public int add(int a, int b) {
+        // add a and b
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+public class Cls {}
+
+
+class Cls {
+    int a;
+
+    int b;
+
+    int c;
+
+    double d;
+
+    double e = 1;
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedGetTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedGetTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        if (a < b) {
+            return b + a;
+        }
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        InputChecker.checkInput(a, b);
+        return a + b;
+    }
+
+    private static class InputChecker {
+        static int checkInput(int a, int b) {
+            if (b <= a) {
+                throw new IllegalArgumentException("a must be smaller than b");
+            }
+        }
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+
+        return (T) elements[size - 1];
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Main {
+    int method() {
+    }
+}
+
+
+abstract interface Iface {
+    public default void someMethod() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i);
+        }
+    }
+}
+
+
+class Cls {
+    public void meth() {
+        return;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(expected = java.lang.IllegalArgumentException.class)
+    void testSomething() {
+        Class<?> clazz = null;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<K> implements Stack<K> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(K element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public K pop() {
+        K elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public K top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private K checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((K) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(timeout = 3000, otherValue = "hello")
+    void testSomething() {
+        throw new IllegalStateException();
+    }
+}
+
+
+public class Adder {
+    public long add(long a, long b) {
+        long result = a + b;
+        return result;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    @java.lang.SuppressWarnings(value = { "unchecked", "rawtypes" }, garbage = 2)
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+class Cls {
+    private Object arr;
+}
+
+
+public class Adder {
+    public int add(int a, int b) {
+        new InputChecker().checkInput(a, b);
+        return a + b;
+    }
+}
+
+class InputChecker {
+    static int checkInput(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("a must be smaller than b");
+        }
+    }
+}
+/**
+ * A generic interface for some collection-esque data type.
+ *
+ * @author Simon Larsén
+ */
+
+
+public abstract interface SimpleCollection<T> {
+    /**
+     * Add an element to this collection.
+     *
+     * @param e The element to add.
+     * @return true iff element was added.
+     */
+    boolean add(T e);
+
+    /**
+     * Remove an element from this collection.
+     *
+     * @param e The element to remove.
+     * @return true iff the element was present (and removed).
+     */
+    boolean remove(T e);
+
+    /**
+     * Check if this collection contains some element.
+     *
+     * @param o The element whose presence to check for.
+     * @return true iff o was in the collection.
+     */
+    boolean contains(Object o);
+}
+
+
+public class GoodClass {
+    public static void main(String[] args) {
+        GoodClass bc = new GoodClass();
+    }
+}
+
+
+class Cls {
+    private int x = 3;
+
+    protected String modelPackage = "";
+
+    protected String apiPackage = "";
+
+    protected String fileSuffix;
+}
+
+
+public class Adder {
+    public int add(int aa, int bb) {
+        return a + b;
+    }
+}
+package totally.different.pkg.statement;
+
+
+
+public class Adder {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b, int c) {
+        return (a + b) + c;
+    }
+}
+import org.junit.jupiter.api.Test;
+
+
+class Cls {
+    @Test(timeout = 3000)
+    void testSomething() {
+        throw new IllegalStateException();
+    }
+}
+
+
+public class Cls {
+    public <T> void method(List<T> list) {
+        System.out.println(list);
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        int x = 3;
+        String modelPackage = "";
+        String apiPackage = "";
+        String fileSuffix;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        java.lang.String s = args[0];
+        System.out.println(s);
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+        System.out.println((("calculating sum from " + a) + " to ") + b);
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    public void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+        if (a < 0) {
+            // this will be a strange sum
+            throw new IllegalArgumentException("a must be at least 0");
+        }
+    }
+}
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+
+
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        int a = 2;
+        int b = 2;
+        Integer sum = a + b;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        try {
+            System.out.println("Hello");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Woopsie!");
+            System.out.println("My bad!");
+        } finally {
+            System.out.println("Bye bye!");
+        }
+    }
+}
+/**
+ * This parameter add is technically conflicting, but should be automatically resolved with an optimistic conflict
+ * handler.
+ */
+
+
+public class Adder {
+    public int add(int a, int b, int c, int d, int e) {
+        return a + b;
+    }
+}
+
+
+class Cls {
+    public static void main(String[] args) {
+        if (true) {
+            System.out.println("Hello");
+        }
+        if (true) {
+            System.out.println("Hello");
+        }
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * It's pretty neat.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking garbage collection
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public T top() {
+        return checkedTop();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     *
+     * @return The top element.
+     * @throws EmptyStackException
+     * 		if the stack is empty
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        return ((T) (elements[size - 1]));
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     *
+     * Time complexity: O(n)
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        // fastest way to copy an array
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+class Cls {
+    public static void add(int... b) {
+        int sum = 0;
+        for (int val : b) {
+            sum += val;
+        }
+        return sum;
+    }
+}
+import java.util.EmptyStackException;
+
+
+/**
+ * An array-based implementation of the Stack interface.
+ *
+ * @author Simon Larsén
+ */
+public class ArrayStack<T> implements Stack<T> {
+    private static final int INITIAL_CAPACITY = 10;
+
+    private Object[] elements;
+
+    private int size;
+
+    /**
+     * Creat an empty ArrayStack.
+     */
+    public ArrayStack() {
+        elements = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public void push(T element) {
+        ensureCapacity(size + 1);
+        elements[size++] = element;
+    }
+
+    @Override
+    public T pop() {
+        T elem = checkedTop();
+        // null element to avoid blocking GC
+        elements[size--] = null;
+        return elem;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Checked fetching of the top element, throws an EmptyStackException if
+     * the stack is empty.
+     */
+    private T checkedTop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+
+        return (T) elements[size - 1];
+    }
+
+    /**
+     * Ensure that the capacity is at least minCapacity.
+     */
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            grow();
+        }
+    }
+
+    /**
+     * Replace the current backing array with a larger one and copy over the
+     * elements to the now array.
+     */
+    private void grow() {
+        Object[] newElements = new Object[elements.length << 1];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private int sumTo(int to) {
+        checkToBound(to);
+        int sum = 0;
+        for (int i = 0; i < to; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private void checkToBound(int to) {
+        if (to >= 1_000) {
+            throw new IllegalArgumentException("I can't count that high: " + to);
+        }
+    }
+
+    private int multiplyBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int prod = 1;
+        for (int i = a; i < b; i++) {
+            prod *= i;
+        }
+
+        return prod;
+    }
+
+    private void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+}
+
+
+public class Cls {
+    public static void main(String[] args) {
+        int a = 1 / 2;
+        int b = 1 * 2;
+        int c = 1 + 2;
+        int d = 1 - 2;
+        a -= 1;
+        b += 2;
+        c /= 3;
+        d *= 2;
+    }
+}
+package main;
+
+
+
+// this is a comment that will appear at the end of the direct children of this class
+class Main {
+    int a = 2;
+}
+
+
+public class Arithmetic {
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int sub(int a, int b) {
+        return a - b;
+    }
+
+    public int div(int a, int b) {
+        if (b == 0) {
+            throw new IllegalArgumentException("b must be non-zero");
+        }
+        return a / b;
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    public void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+}
+
+
+class Main {
+    public static void main(String[] args) {
+        int a = 2;
+        int b = 2;
+        System.out.println(a + b);
+    }
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private int sumTo(int to) {
+        checkToBound(to);
+        int sum = 0;
+        for (int i = 0; i < to; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private void checkToBound(int to) {
+        if (to >= 1_000) {
+            throw new IllegalArgumentException("I can't count that high: " + to);
+        }
+    }
+
+    private int multiplyBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int prod = 1;
+        for (int i = a; i < b; i++) {
+            prod *= i;
+        }
+
+        return prod;
+    }
+
+    private void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+
+    public int sumBetweenUndirected(int a, int b) {
+        return a <= b ? sumBetween(a, b) : sumBetween(b, a);
+    }
+
+    public int sumAndMultiplyBetween(int a, int b) {
+        int sum = sumBetween(a, b);
+        int prod = multiplyBetween(a, b);
+        return sum + prod;
+    }
+}
+
+
+public class Cls {
+    private static final int x = 0;
+}
+
+
+public class Sum {
+    public int sumBetween(int a, int b) {
+        checkBounds(a, b);
+
+        int sum = 0;
+        for (int i = a; i < b; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    public void helloWorld() {
+        System.out.println("Hello, world!");
+    }
+
+    public void checkBounds(int a, int b) {
+        if (b <= a) {
+            throw new IllegalArgumentException("b must be greater than or equal to a");
+        }
+    }
+}
+import java.util.Arrays;
+
+
+/**
+ * Implementation of the Sieve of Eratosthenes algorithm for checking if a
+ * number is prime or not. The implementation is lacking in error-checking
+ * and optimization, and needs some patching up!
+ *
+ * @author Simon Larsén
+ * @version 2017-08-05
+ */
+public class Sieve {
+    /**
+     * Check if a number is prime or not!
+     *
+     * Note that prime[n] denotes the primality of number n.
+     *
+     * @param   number  An integer value to be checked for primality.
+     * @return  true if number is prime, false otherwise.
+     */
+    public boolean isPrime(int number) {
+        if (number <= 1) {
+            System.out.println("Now it's in the right place!");
+            return false;
+        }
+        boolean[] prime = new boolean[number + 1];// + 1 because of 0-indexing
+
+        Arrays.fill(prime, true);// assume all numbers are prime
+
+        int sqrt = ((int) (Math.floor(Math.sqrt(number))));
+        for (int i = 2; i <= sqrt; i++) {
+            if (number <= 1) {
+                return false;
+            }
+            if (prime[i]) {
+                for (int j = i * 2; j < prime.length; j += i) {
+                    prime[j] = false;// mark multiples of i as not prime
+
+                }
+            }
+        }
+        return prime[number];
+    }
+}
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020, Simon Larsén
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package se.kth.spork;
+
+
+
+/**
+ * This is the main class :)
+ */
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+/*
+ * Add some stuff in the left revision!
+ *
+ * This comment will be attached to the compilation unit.
+ * We want to merge it textually, separately from all other merging.
+ *
+ * And add some stuff in the right revision!
+ */
+package se.kth.spork;
+
+
+
+/**
+ * And this is the normal Javadoc comment.
+ */
+public class Cls {}
+
+
+public class Main {
+    public int add(int a, int b, int c) throws IllegalArgumentException {
+        return (a + b) + c;
+    }
+}
+import java.util.List;
+
+
+public class Clazz {
+    public void meth(List<? extends Number> listOne, List<? super String> listTwo) {
+        System.out.println(listOne);
+        System.out.println(listTwo);
+    }
+}
+
+
+public class Adder {
+    public int add(int a, int b, int c) {
+        return (a + b) + c;
+    }
+
+    public int sub(int a, int b, int c) {
+        return (a - b) - c;
+    }
+}
+
+
+public class Cls {
+    public static void main(String[] args) {
+        int a = -1;
+        int b = +2;
+        boolean c = false;
+        int d = ~1;
+        a--;
+        b++;
+        a++;
+        b--;
+        --a;
+        ++b;
+        ++a;
+        --b;
+    }
+}
+[[1;33mWARNING[m] [1;33mTests [0;1mrun: [0;1m94[m, Failures: 0, Errors: 0, [1;33mSkipped: [0;1;33m1[m, Time elapsed: 12.866 s - in se.kth.spork.spoon.[1mSpoon3dmMergeTest[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;33mWARNING[m] [1;33mTests run: 262, Failures: 0, Errors: 0, Skipped: 1[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.7:report[m [1m(default-report)[m @ [36mspork[0;1m ---[m
+[[1;34mINFO[m] Loading execution data file /builds/workspace/Spork/target/jacoco.exec
+[[1;34mINFO[m] Analyzed bundle 'spork' with 73 classes
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  02:02 min
+[[1;34mINFO[m] Finished at: 2022-05-08T01:36:19+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+Finished: SUCCESS

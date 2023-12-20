@@ -99,7 +99,7 @@ public class LogsPanel extends JPanel {
 		this.setPreferredSize(new Dimension(1024, 768));
 	}
 
-	private static void insertLinesForParallelScrolling(Pair<List<Line>> pair, Pair<List<Action>> actions) {
+	public static void insertLinesForParallelScrolling(Pair<List<Line>> pair, Pair<List<Action>> actions) {
 		List<Line> left = pair.left();
 		List<Line> right = pair.right();
 		List<int[]> lcs = new ArrayList<>();
@@ -121,7 +121,7 @@ public class LogsPanel extends JPanel {
 			i++;
 			I++;
 		}
-		i = Math.max(lcs.get(lcs.size() - 1)[0], lcs.get(lcs.size() - 1)[1]);
+		i = lcs.isEmpty() ? 0 : Math.max(lcs.get(lcs.size() - 1)[0], lcs.get(lcs.size() - 1)[1]);
 		// lines after the lcs
 		while (i < left.size() && i < right.size()) {
 			insertLineAtPosition(actions, left, right, i);

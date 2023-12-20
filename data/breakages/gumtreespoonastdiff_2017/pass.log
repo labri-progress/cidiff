@@ -1,0 +1,999 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/gumtree-spoon-ast-diff
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/gumtree-spoon-ast-diff.git
+ > git init /builds/workspace/gumtree-spoon-ast-diff # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/gumtree-spoon-ast-diff.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/SpoonLabs/gumtree-spoon-ast-diff.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/gumtree-spoon-ast-diff.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 6533706e98ba0b7be088a2933641aeee3c458c85 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6533706e98ba0b7be088a2933641aeee3c458c85 # timeout=10
+Commit message: "Bump spoon-core from 10.0.0 to 10.1.0 (#240)"
+ > git rev-list --no-walk 6533706e98ba0b7be088a2933641aeee3c458c85 # timeout=10
+[gumtree-spoon-ast-diff] $ /bin/sh -xe /tmp/jenkins9851398852002651539.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  17253      0 --:--:-- --:--:-- --:--:-- 17379
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff:jar:SNAPSHOT
+[WARNING] 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ line 14, column 12
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 24 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 34 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (932 B at 67 kB/s)
+[INFO] 
+[INFO] ---------< fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff >----------
+[INFO] Building Gumtree Spoon AST Diff SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.11.0:use-latest-versions (default-cli) @ gumtree-spoon-ast-diff ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from gforge.inria.fr-release
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from central
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:10.1.0 to version 10.2.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.698 s
+[INFO] Finished at: 2022-05-26T10:20:11+02:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff:jar:SNAPSHOT
+[WARNING] 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ line 14, column 12
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] 
+[INFO] ---------< fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff >----------
+[INFO] Building Gumtree Spoon AST Diff SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ gumtree-spoon-ast-diff ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.309 s
+[INFO] Finished at: 2022-05-26T10:20:18+02:00
+[INFO] ------------------------------------------------------------------------
++ mvn -U dependency:resolve
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective model for fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff:jar:SNAPSHOT
+[[1;33mWARNING[m] 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ line 14, column 12
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] It is highly recommended to fix these problems because they threaten the stability of your build.
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] For this reason, future Maven versions might no longer support building such malformed projects.
+[[1;33mWARNING[m] 
+[[1;34mINFO[m] Inspecting build with total of 1 modules...
+[[1;34mINFO[m] Installing Nexus Staging features:
+[[1;34mINFO[m]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m---------< [0;36mfr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff[0;1m >----------[m
+[[1;34mINFO[m] [1mBuilding Gumtree Spoon AST Diff SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml
+Downloading from gforge.inria.fr-release: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 1.5 kB/s)
+Downloading from gforge.inria.fr-release: http://maven.inria.fr/artifactory/spoon-public-snapshot/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/org/apache/maven/maven-model/maven-metadata.xml
+Progress (1): 1.4/2.4 kBProgress (1): 2.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-model/maven-metadata.xml (2.4 kB at 11 kB/s)
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:2.8:resolve[m [1m(default-cli)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] The following files have been resolved:
+[[1;34mINFO[m]    com.martiansoftware:jsap:jar:2.1:compile
+[[1;34mINFO[m]    com.github.gumtreediff:core:jar:3.0.0:compile
+[[1;34mINFO[m]    org.apache.commons:commons-compress:jar:1.21:compile
+[[1;34mINFO[m]    log4j:log4j:jar:1.2.17:test
+[[1;34mINFO[m]    fr.inria.gforge.spoon:spoon-core:jar:10.2.0-SNAPSHOT:compile
+[[1;34mINFO[m]    org.eclipse.jdt:org.eclipse.jdt.core:jar:3.29.0:compile
+[[1;34mINFO[m]    org.slf4j:slf4j-api:jar:1.7.36:compile
+[[1;34mINFO[m]    org.jgrapht:jgrapht-core:jar:1.5.1:runtime
+[[1;34mINFO[m]    commons-io:commons-io:jar:2.11.0:compile
+[[1;34mINFO[m]    com.fasterxml.jackson.core:jackson-databind:jar:2.13.3:compile
+[[1;34mINFO[m]    org.apache.commons:commons-lang3:jar:3.12.0:compile
+[[1;34mINFO[m]    commons-codec:commons-codec:jar:1.10:runtime
+[[1;34mINFO[m]    it.unimi.dsi:fastutil:jar:8.3.1:runtime
+[[1;34mINFO[m]    org.apache.maven:maven-model:jar:3.8.5:compile
+[[1;34mINFO[m]    com.github.mpkorstanje:simmetrics-core:jar:3.2.3:runtime
+[[1;34mINFO[m]    javax.inject:javax.inject:jar:1:compile
+[[1;34mINFO[m]    org.apache.maven.shared:maven-shared-utils:jar:3.3.4:compile
+[[1;34mINFO[m]    junit:junit:jar:4.13.2:test
+[[1;34mINFO[m]    org.codehaus.plexus:plexus-utils:jar:3.3.0:compile
+[[1;34mINFO[m]    commons-cli:commons-cli:jar:1.5.0:test
+[[1;34mINFO[m]    org.hamcrest:hamcrest-core:jar:1.3:test
+[[1;34mINFO[m]    com.google.guava:guava:jar:18.0:runtime
+[[1;34mINFO[m]    com.fasterxml.jackson.core:jackson-annotations:jar:2.13.3:compile
+[[1;34mINFO[m]    org.apache.maven.shared:maven-invoker:jar:3.2.0:compile
+[[1;34mINFO[m]    com.google.code.gson:gson:jar:2.9.0:compile
+[[1;34mINFO[m]    com.fasterxml.jackson.core:jackson-core:jar:2.13.3:compile
+[[1;34mINFO[m]    net.sf.trove4j:trove4j:jar:3.0.3:compile
+[[1;34mINFO[m]    org.atteo.classindex:classindex:jar:3.10:runtime
+[[1;34mINFO[m]    org.jheaps:jheaps:jar:0.13:runtime
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  5.633 s
+[[1;34mINFO[m] Finished at: 2022-05-26T10:20:26+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
++ mvn test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective model for fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff:jar:SNAPSHOT
+[[1;33mWARNING[m] 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ line 14, column 12
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] It is highly recommended to fix these problems because they threaten the stability of your build.
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] For this reason, future Maven versions might no longer support building such malformed projects.
+[[1;33mWARNING[m] 
+[[1;34mINFO[m] Inspecting build with total of 1 modules...
+[[1;34mINFO[m] Installing Nexus Staging features:
+[[1;34mINFO[m]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m---------< [0;36mfr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff[0;1m >----------[m
+[[1;34mINFO[m] [1mBuilding Gumtree Spoon AST Diff SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-enforcer-plugin:1.0:enforce[m [1m(enforce-maven)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] skip non existing resourceDirectory /builds/workspace/gumtree-spoon-ast-diff/src/main/resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.10.0:compile[m [1m(default-compile)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 24 source files to /builds/workspace/gumtree-spoon-ast-diff/target/classes
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/diff/DiffImpl.java: /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/diff/DiffImpl.java uses or overrides a deprecated API.
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/diff/DiffImpl.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/builder/NodeCreator.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/builder/NodeCreator.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:testResources[m [1m(default-testResources)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 234 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.10.0:testCompile[m [1m(default-testCompile)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 4 source files to /builds/workspace/gumtree-spoon-ast-diff/target/test-classes
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/test/java/gumtree/spoon/AstComparatorTest.java: Some input files use or override a deprecated API.
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/test/java/gumtree/spoon/AstComparatorTest.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.22.2:test[m [1m(default-test)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running gumtree.spoon.[1mAstComparatorTest[m
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Output: Update JavaDoc at org.apache.derby.jdbc.EmbedPooledConnection:70
+	/**
+	 * The list of {@code ConnectionEventListener}s. It is initially {@code null} and will be initialized lazily when the first listener is added.
+	 */ to /**
+	 * The list of UPDATED commented {@code ConnectionEventListener}s. It is initially {@code null} and will be initialized lazily when the first listener is added.
+	 */
+
+OperationKind.Delete, "BinaryOperator(CtBinaryOperatorImpl)", "EQ" (size: 3)BinaryOperator: EQ [0,0]
+    FieldRead: DATE_VALUE [0,0]
+        TypeAccess: org.apache.commons.cli.PatternOptionBuilder [0,0]
+    VariableRead: clazz [0,0]OperationKind.Insert, "Invocation(CtInvocationImpl)", "println" (size: 3)Invocation: println [0,0]
+    FieldRead: out [0,0]
+        TypeAccess: java.lang.System [0,0]
+    Literal: "Hola" [0,0]OperationKind.Insert, "BinaryOperator(CtBinaryOperatorImpl)", "EQ" (size: 3)BinaryOperator: EQ [0,0]
+    FieldRead: CLASS_VALUE [0,0]
+        TypeAccess: org.apache.commons.cli.PatternOptionBuilder [0,0]
+    VariableRead: clazz [0,0]OperationKind.Move, "BinaryOperator(CtBinaryOperatorImpl)", "EQ" (size: 3)BinaryOperator: EQ [0,0]
+    FieldRead: DATE_VALUE [0,0]
+        TypeAccess: org.apache.commons.cli.PatternOptionBuilder [0,0]
+    VariableRead: clazz [0,0]
+Insert Method at org.apache.commons.cli.CommandLine:207
+	private org.apache.commons.cli.Option resolveOptionNew(java.lang.String opt) {
+	    opt = org.apache.commons.cli.Util.stripLeadingHyphens(opt);
+	    for (org.apache.commons.cli.Option option : options) {
+	        if (opt.equals(option.getOpt())) {
+	            return option;
+	        }
+	        if (opt.equals(option.getLongOpt())) {
+	            return option;
+	        }
+	    }
+	    return null;
+	}
+
+OperationKind.Insert, "Field(CtFieldImpl)", "serialVersionUID" (size: 6)Field: serialVersionUID [0,0]
+    VARIABLE_TYPE: long [0,0]
+    Modifiers_Field [0,0]
+        Modifier: final [0,0]
+        Modifier: private [0,0]
+        Modifier: static [0,0]
+    Literal: 6890869588365483936L [0,0]
+OperationKind.Delete, "Break(CtBreakImpl)", "break" (size: 0)Break: break [0,0]
+OperationKind.Update, "BinaryOperator(CtBinaryOperatorImpl)", "GT",  "GE" (size: 6)BinaryOperator: GT [0,0]
+    FieldRead: y [0,0]
+        VariableRead: c [0,0]
+    BinaryOperator: MINUS [0,0]
+        FieldRead: height [0,0]
+            TypeAccess: megamek.common.Board [0,0]
+        VariableRead: nLimit [0,0]
+OperationKind.Update, "Invocation(CtInvocationImpl)", "remove",  "removeElement" (size: 3)Invocation: remove [0,0]
+    FieldRead: turns [0,0]
+        TypeAccess: megamek.server.Server [0,0]
+    VariableRead: loop [0,0]
+OperationKind.Update, "Invocation(CtInvocationImpl)", "removeElement",  "removeElementAt" (size: 3)Invocation: removeElement [0,0]
+    FieldRead: turns [0,0]
+        TypeAccess: megamek.server.Server [0,0]
+    VariableRead: loop [0,0]
+OperationKind.Update, "Invocation(CtInvocationImpl)", "add",  "addElement" (size: 5)Invocation: add [0,0]
+    VariableRead: loadVector [0,0]
+    Invocation: getEntity [0,0]
+        FieldRead: game [0,0]
+            TypeAccess: megamek.server.Server [0,0]
+        VariableRead: loadedId [0,0]
+OperationKind.Insert, "Literal(CtLiteralImpl)", "null" (size: 0)Literal: null [0,0]
+OperationKind.Delete, "Invocation(CtInvocationImpl)", "println" (size: 6)Invocation: println [0,0]
+    FieldRead: out [0,0]
+        TypeAccess: java.lang.System [0,0]
+    BinaryOperator: PLUS [0,0]
+        Literal: "->TIE: " [0,0]
+        Invocation: getId [0,0]
+            VariableRead: item [0,0]
+OperationKind.Update, "Literal(CtLiteralImpl)", ""By holding down CTL and dragging."",  ""By holding down CTRL and dragging."" (size: 0)Literal: "By holding down CTL and dragging." [0,0]
+OperationKind.Update, "Invocation(CtInvocationImpl)", "equals",  "indexOf" (size: 4)Invocation: equals [0,0]
+    Invocation: getContent [0,0]
+        Invocation: nextElement [0,0]
+            VariableRead: children [0,0]
+    FieldRead: DOUBLE [0,0]OperationKind.Insert, "BinaryOperator(CtBinaryOperatorImpl)", "NE" (size: 7)BinaryOperator: NE [0,0]
+    Invocation: indexOf [0,0]
+        Invocation: getContent [0,0]
+            Invocation: nextElement [0,0]
+                VariableRead: children [0,0]
+        FieldRead: DOUBLE [0,0]
+    UnaryOperator: NEG [0,0]
+        Literal: 1 [0,0]OperationKind.Move, "Invocation(CtInvocationImpl)", "equals" (size: 4)Invocation: equals [0,0]
+    Invocation: getContent [0,0]
+        Invocation: nextElement [0,0]
+            VariableRead: children [0,0]
+    FieldRead: DOUBLE [0,0]
+OperationKind.Insert, "Invocation(CtInvocationImpl)", "append" (size: 7)Invocation: append [0,0]
+    Invocation: append [0,0]
+        Invocation: append [0,0]
+            VariableRead: sWeapons [0,0]
+            Literal: " " [0,0]
+        Invocation: getHeat [0,0]
+            VariableRead: wtype [0,0]
+    Literal: " Heat" [0,0]
+OperationKind.Insert, "BinaryOperator(CtBinaryOperatorImpl)", "AND" (size: 7)BinaryOperator: AND [0,0]
+    FieldRead: keepServerlog [0,0]
+        TypeAccess: Settings [0,0]
+    UnaryOperator: NOT [0,0]
+        BinaryOperator: INSTANCEOF [0,0]
+            ThisAccess: this [0,0]
+                TypeAccess: megamek.client.Client [0,0]
+            TypeAccess: megamek.client.bot.BotClient [0,0]OperationKind.Move, "FieldRead(CtFieldReadImpl)", "keepServerlog" (size: 1)FieldRead: keepServerlog [0,0]
+    TypeAccess: Settings [0,0]
+OperationKind.Update, "Field(CtFieldImpl)", "GAME_NEW_ATTACK",  "GAME_NEW_ACTION" (size: 6)Field: GAME_NEW_ATTACK [0,0]
+    VARIABLE_TYPE: int [0,0]
+    Modifiers_Field [0,0]
+        Modifier: final [0,0]
+        Modifier: public [0,0]
+        Modifier: static [0,0]
+    Literal: 16 [0,0]
+OperationKind.Update, "Literal(CtLiteralImpl)", ""        \n"",  ""\n        "" (size: 0)Literal: "        \n" [0,0]OperationKind.Update, "Literal(CtLiteralImpl)", "" "",  ""\n        "" (size: 0)Literal: " " [0,0]
+OperationKind.Insert, "Invocation(CtInvocationImpl)", "refresh" (size: 1)Invocation: refresh [0,0]
+    VariableRead: enemy [0,0]
+OperationKind.Update, "ConstructorCall(CtConstructorCallImpl)", "java.io.FileInputStream(java.lang.String)",  "java.io.FileInputStream(java.io.File)" (size: 4)ConstructorCall: java.io.FileInputStream(java.lang.String) [0,0]
+    ConstructorCall: java.io.File(java.lang.String,java.lang.String) [0,0]
+        VariableRead: filePath [0,0]
+        VariableRead: fileName [0,0]
+    Literal: "UTF-8" [0,0]
+OperationKind.Update, "FieldRead(CtFieldReadImpl)", "MOVE_VTOL_RUN",  "MOVE_VTOL_WALK" (size: 1)FieldRead: MOVE_VTOL_RUN [0,0]
+    TypeAccess: IEntityMovementType [0,0]
+OperationKind.Insert, "BinaryOperator(CtBinaryOperatorImpl)", "AND" (size: 18)BinaryOperator: AND [0,0]
+    BinaryOperator: AND [0,0]
+        BinaryOperator: INSTANCEOF [0,0]
+            VariableRead: en [0,0]
+            TypeAccess: Mech [0,0]
+        BinaryOperator: AND [0,0]
+            Invocation: hasEdgeRemaining [0,0]
+                FieldRead: crew [0,0]
+                    VariableRead: en [0,0]
+            Invocation: booleanOption [0,0]
+                Invocation: getOptions [0,0]
+                    FieldRead: crew [0,0]
+                        VariableRead: en [0,0]
+                Literal: "edge_when_explosion" [0,0]
+    BinaryOperator: EQ [0,0]
+        Invocation: getType [0,0]
+            VariableRead: slot [0,0]
+        FieldRead: TYPE_EQUIPMENT [0,0]
+            TypeAccess: CriticalSlot [0,0]OperationKind.Move, "BinaryOperator(CtBinaryOperatorImpl)", "AND" (size: 12)BinaryOperator: AND [0,0]
+    BinaryOperator: INSTANCEOF [0,0]
+        VariableRead: en [0,0]
+        TypeAccess: Mech [0,0]
+    BinaryOperator: AND [0,0]
+        Invocation: hasEdgeRemaining [0,0]
+            FieldRead: crew [0,0]
+                VariableRead: en [0,0]
+        Invocation: booleanOption [0,0]
+            Invocation: getOptions [0,0]
+                FieldRead: crew [0,0]
+                    VariableRead: en [0,0]
+            Literal: "edge_when_explosion" [0,0]
+OperationKind.Update, "Invocation(CtInvocationImpl)", "format",  "println" (size: 7)Invocation: format [0,0]
+    TypeAccess: java.lang.String [0,0]
+    Literal: "%s has %d moves" [0,0]
+    Invocation: getShortName [0,0]
+        Invocation: getEntity [0,0]
+            VariableRead: self [0,0]
+    FieldRead: length [0,0]
+        VariableRead: move_array [0,0]OperationKind.Delete, "Invocation(CtInvocationImpl)", "println" (size: 10)Invocation: println [0,0]
+    FieldRead: out [0,0]
+        TypeAccess: java.lang.System [0,0]
+    Invocation: format [0,0]
+        TypeAccess: java.lang.String [0,0]
+        Literal: "%s has %d moves" [0,0]
+        Invocation: getShortName [0,0]
+            Invocation: getEntity [0,0]
+                VariableRead: self [0,0]
+        FieldRead: length [0,0]
+            VariableRead: move_array [0,0]OperationKind.Move, "Invocation(CtInvocationImpl)", "format" (size: 7)Invocation: format [0,0]
+    TypeAccess: java.lang.String [0,0]
+    Literal: "%s has %d moves" [0,0]
+    Invocation: getShortName [0,0]
+        Invocation: getEntity [0,0]
+            VariableRead: self [0,0]
+    FieldRead: length [0,0]
+        VariableRead: move_array [0,0]OperationKind.Move, "FieldRead(CtFieldReadImpl)", "length" (size: 1)FieldRead: length [0,0]
+    VariableRead: move_array [0,0]OperationKind.Move, "Invocation(CtInvocationImpl)", "getShortName" (size: 2)Invocation: getShortName [0,0]
+    Invocation: getEntity [0,0]
+        VariableRead: self [0,0]
+OperationKind.Insert, "If(CtIfImpl)", "if" (size: 11)If: if [0,0]
+    BinaryOperator: NE [0,0]
+        FieldRead: term [0,0]
+            TypeAccess: org.apache.lucene.index.SegmentTermEnum [0,0]
+        Literal: null [0,0]
+    then: THEN [0,0]
+        Invocation: growBuffer [0,0]
+            VariableRead: clone [0,0]
+            Invocation: length [0,0]
+                FieldRead: text [0,0]
+                    FieldRead: term [0,0]
+                        TypeAccess: org.apache.lucene.index.SegmentTermEnum [0,0]OperationKind.Move, "Invocation(CtInvocationImpl)", "growBuffer" (size: 5)Invocation: growBuffer [0,0]
+    VariableRead: clone [0,0]
+    Invocation: length [0,0]
+        FieldRead: text [0,0]
+            FieldRead: term [0,0]
+                TypeAccess: org.apache.lucene.index.SegmentTermEnum [0,0]
+OperationKind.Insert, "BinaryOperator(CtBinaryOperatorImpl)", "OR" (size: 14)BinaryOperator: OR [0,0]
+    Invocation: hasDeletions [0,0]
+        TypeAccess: org.apache.lucene.index.SegmentReader [0,0]
+        Invocation: info [0,0]
+            FieldRead: segmentInfos [0,0]
+                TypeAccess: org.apache.lucene.index.IndexWriter [0,0]
+            Literal: 0 [0,0]
+    BinaryOperator: NE [0,0]
+        FieldRead: dir [0,0]
+            Invocation: info [0,0]
+                FieldRead: segmentInfos [0,0]
+                    TypeAccess: org.apache.lucene.index.IndexWriter [0,0]
+                Literal: 0 [0,0]
+        FieldRead: directory [0,0]
+            TypeAccess: org.apache.lucene.index.IndexWriter [0,0]OperationKind.Move, "Invocation(CtInvocationImpl)", "hasDeletions" (size: 5)Invocation: hasDeletions [0,0]
+    TypeAccess: org.apache.lucene.index.SegmentReader [0,0]
+    Invocation: info [0,0]
+        FieldRead: segmentInfos [0,0]
+            TypeAccess: org.apache.lucene.index.IndexWriter [0,0]
+        Literal: 0 [0,0]
+OperationKind.Update, "Invocation(CtInvocationImpl)", "delete",  "doDelete" (size: 10)Invocation: delete [0,0]
+    ArrayRead [0,0]
+        FieldRead: readers [0,0]
+            TypeAccess: org.apache.lucene.index.SegmentsReader [0,0]
+        VariableRead: i [0,0]
+    BinaryOperator: MINUS [0,0]
+        VariableRead: n [0,0]
+        ArrayRead [0,0]
+            FieldRead: starts [0,0]
+                TypeAccess: org.apache.lucene.index.SegmentsReader [0,0]
+            VariableRead: i [0,0]
+OperationKind.Update, "SUPER_TYPE(CtTypeReferenceImpl)", "PriorityQueue",  "org.apache.lucene.util.PriorityQueue" (size: 0)SUPER_TYPE: PriorityQueue [0,0]OperationKind.Update, "VARIABLE_TYPE(CtTypeReferenceImpl)", "PriorityQueue",  "org.apache.lucene.util.PriorityQueue" (size: 0)VARIABLE_TYPE: PriorityQueue [0,0]OperationKind.Insert, "Method(CtMethodImpl)", "testClear" (size: 29)Method: testClear [0,0]
+    RETURN_TYPE: void [0,0]
+    Modifiers_Method [0,0]
+        Modifier: public [0,0]
+    LocalVariable: pq [0,0]
+        VARIABLE_TYPE: org.apache.lucene.util.PriorityQueue [0,0]
+        ConstructorCall: org.apache.lucene.util.TestPriorityQueue$IntegerQueue(int) [0,0]
+            Literal: 3 [0,0]
+    Invocation: put [0,0]
+        VariableRead: pq [0,0]
+        ConstructorCall: java.lang.Integer(int) [0,0]
+            Literal: 2 [0,0]
+    Invocation: put [0,0]
+        VariableRead: pq [0,0]
+        ConstructorCall: java.lang.Integer(int) [0,0]
+            Literal: 3 [0,0]
+    Invocation: put [0,0]
+        VariableRead: pq [0,0]
+        ConstructorCall: java.lang.Integer(int) [0,0]
+            Literal: 1 [0,0]
+    Invocation: assertEquals [0,0]
+        Literal: 3 [0,0]
+        Invocation: size [0,0]
+            VariableRead: pq [0,0]
+    Invocation: clear [0,0]
+        VariableRead: pq [0,0]
+    Invocation: assertEquals [0,0]
+        Literal: 0 [0,0]
+        Invocation: size [0,0]
+            VariableRead: pq [0,0]
+OperationKind.Insert, "Assignment(CtAssignmentImpl)", "=" (size: 3)Assignment: = [0,0]
+    FieldWrite: idf [0,0]
+        TypeAccess: org.apache.lucene.search.PhraseQuery [0,0]
+    Literal: 0.0F [0,0]
+OperationKind.Update, "Literal(CtLiteralImpl)", ""Increment must be positive: "",  ""Increment must be zero or greater: "" (size: 0)Literal: "Increment must be positive: " [0,0]
+OperationKind.Update, "Literal(CtLiteralImpl)", "' '",  "0" (size: 0)Literal: ' ' [0,0]
+OperationKind.Update, "NewClass(CtNewClassImpl)", "org.apache.lucene.store.Lock$With()",  "org.apache.lucene.store.Lock$With(long)" (size: 21)NewClass: org.apache.lucene.store.Lock$With() [0,0]
+    Invocation: makeLock [0,0]
+        FieldRead: directory [0,0]
+            TypeAccess: org.apache.lucene.index.IndexWriter [0,0]
+        Literal: "commit.lock" [0,0]
+    Class: 2 [0,0]
+        Modifiers_Class [0,0]
+            Modifier: final [0,0]
+        SUPER_TYPE: org.apache.lucene.store.Lock$With [0,0]
+        Method: doBody [0,0]
+            RETURN_TYPE: java.lang.Object [0,0]
+            THROWN_TYPES [0,0]
+                THROWN: java.io.IOException [0,0]
+            Modifiers_Method [0,0]
+                Modifier: public [0,0]
+            Invocation: write [0,0]
+                FieldRead: segmentInfos [0,0]
+                    TypeAccess: org.apache.lucene.index.IndexWriter [0,0]
+                FieldRead: directory [0,0]
+                    TypeAccess: org.apache.lucene.index.IndexWriter [0,0]
+            Return: return [0,0]
+                Literal: null [0,0]
+OperationKind.Update, "BinaryOperator(CtBinaryOperatorImpl)", "GT",  "GE" (size: 9)BinaryOperator: GT [0,0]
+    BinaryOperator: PLUS [0,0]
+        BinaryOperator: PLUS [0,0]
+            FieldRead: count [0,0]
+                TypeAccess: org.apache.lucene.index.SegmentTermDocs [0,0]
+            VariableRead: numSkipped [0,0]
+        FieldRead: skipInterval [0,0]
+            TypeAccess: org.apache.lucene.index.SegmentTermDocs [0,0]
+    FieldRead: df [0,0]
+        TypeAccess: org.apache.lucene.index.SegmentTermDocs [0,0]
+OperationKind.Delete, "LocalVariable(CtLocalVariableImpl)", "buffer" (size: 2)LocalVariable: buffer [0,0]
+    VARIABLE_TYPE: java.lang.StringBuffer [0,0]
+    ConstructorCall: java.lang.StringBuffer() [0,0]
+OperationKind.Update, "BinaryOperator(CtBinaryOperatorImpl)", "BITOR",  "OR" (size: 6)BinaryOperator: BITOR [0,0]
+    BinaryOperator: NE [0,0]
+        FieldRead: first [0,0]
+            FieldRead: bucketTable [0,0]
+                TypeAccess: org.apache.lucene.search.BooleanScorer [0,0]
+        Literal: null [0,0]
+    VariableRead: more [0,0]
+OperationKind.Insert, "Break(CtBreakImpl)", "break" (size: 0)Break: break [0,0]
+OperationKind.Update, "Invocation(CtInvocationImpl)", "getMessage",  "toString" (size: 1)Invocation: getMessage [0,0]
+    VariableRead: e [0,0]
+OperationKind.Update, "BinaryOperator(CtBinaryOperatorImpl)", "EQ",  "LE" (size: 3)BinaryOperator: EQ [0,0]
+    FieldRead: bufferLength [0,0]
+        TypeAccess: org.apache.lucene.store.BufferedIndexInput [0,0]
+    Literal: 0 [0,0]
+OperationKind.Insert, "Method(CtMethodImpl)", "getAttributes" (size: 37)Method: getAttributes [0,0]
+    RETURN_TYPE: org.tigris.scarab.om.Attribute[] [0,0]
+    THROWN_TYPES [0,0]
+        THROWN: java.lang.Exception [0,0]
+    Modifiers_Method [0,0]
+        Modifier: public [0,0]
+    Parameter: criteria [0,0]
+        VARIABLE_TYPE: org.apache.turbine.util.db.Criteria [0,0]
+    LocalVariable: moduleAttributes [0,0]
+        VARIABLE_TYPE: java.util.List [0,0]
+        Invocation: getRModuleAttributesJoinAttribute [0,0]
+            TypeAccess: org.tigris.scarab.om.Module [0,0]
+            VariableRead: criteria [0,0]
+    LocalVariable: attributes [0,0]
+        VARIABLE_TYPE: Attribute[] [0,0]
+        NewArray [0,0]
+            Invocation: size [0,0]
+                VariableRead: moduleAttributes [0,0]
+    For [0,0]
+        LocalVariable: i [0,0]
+            VARIABLE_TYPE: int [0,0]
+            Literal: 0 [0,0]
+        BinaryOperator: LT [0,0]
+            VariableRead: i [0,0]
+            Invocation: size [0,0]
+                VariableRead: moduleAttributes [0,0]
+        UnaryOperator: POSTINC [0,0]
+            VariableWrite: i [0,0]
+        Assignment: = [0,0]
+            ArrayWrite [0,0]
+                VariableRead: attributes [0,0]
+                VariableRead: i [0,0]
+            Invocation: getAttribute [0,0]
+                Invocation: get [0,0]
+                    VariableRead: moduleAttributes [0,0]
+                    VariableRead: i [0,0]
+    Return: return [0,0]
+        VariableRead: attributes [0,0]
+OperationKind.Insert, "Method(CtMethodImpl)", "delete" (size: 45)Method: delete [0,0]
+    RETURN_TYPE: void [0,0]
+    THROWN_TYPES [0,0]
+        THROWN: java.lang.Exception [0,0]
+    Modifiers_Method [0,0]
+        Modifier: public [0,0]
+    Parameter: user [0,0]
+        VARIABLE_TYPE: org.tigris.scarab.om.ScarabUser [0,0]
+    Parameter: module [0,0]
+        VARIABLE_TYPE: org.tigris.scarab.om.ScarabModule [0,0]
+    LocalVariable: security [0,0]
+        VARIABLE_TYPE: org.tigris.scarab.security.ScarabSecurity [0,0]
+        Invocation: getInstance [0,0]
+            TypeAccess: org.tigris.scarab.security.SecurityFactory [0,0]
+    If: if [0,0]
+        BinaryOperator: OR [0,0]
+            Invocation: equals [0,0]
+                Invocation: getUserId [0,0]
+                    VariableRead: user [0,0]
+                Invocation: getUserId [0,0]
+                    TypeAccess: org.tigris.scarab.om.RQueryUser [0,0]
+            Invocation: hasPermission [0,0]
+                VariableRead: security [0,0]
+                TypeAccess: ScarabSecurity.ITEM__APPROVE [0,0]
+                VariableRead: user [0,0]
+                VariableRead: module [0,0]
+        then: THEN [0,0]
+            LocalVariable: c [0,0]
+                VARIABLE_TYPE: org.apache.torque.util.Criteria [0,0]
+                Invocation: add [0,0]
+                    Invocation: add [0,0]
+                        ConstructorCall: org.apache.torque.util.Criteria() [0,0]
+                        TypeAccess: RQueryUserPeer.USER_ID [0,0]
+                        Invocation: getUserId [0,0]
+                            TypeAccess: org.tigris.scarab.om.RQueryUser [0,0]
+                    TypeAccess: RQueryUserPeer.QUERY_ID [0,0]
+                    Invocation: getQueryId [0,0]
+                        TypeAccess: org.tigris.scarab.om.RQueryUser [0,0]
+            Invocation: doDelete [0,0]
+                TypeAccess: org.tigris.scarab.om.RQueryUserPeer [0,0]
+                VariableRead: c [0,0]
+        else: ELSE [0,0]
+            Throw [0,0]
+                ConstructorCall: java.lang.Object() [0,0]
+                    FieldRead: NO_PERMISSION_MESSAGE [0,0]
+                        TypeAccess: org.tigris.scarab.util.ScarabConstants [0,0]
+OperationKind.Insert, "Method(CtMethodImpl)", "getIssueByUniqueId" (size: 50)Method: getIssueByUniqueId [0,0]
+    RETURN_TYPE: org.tigris.scarab.om.Issue [0,0]
+    THROWN_TYPES [0,0]
+        THROWN: java.lang.Exception [0,0]
+    Modifiers_Method [0,0]
+        Modifier: public [0,0]
+    LocalVariable: issue [0,0]
+        VARIABLE_TYPE: org.tigris.scarab.om.Issue [0,0]
+        Literal: null [0,0]
+    Try [0,0]
+        LocalVariable: uniqueId [0,0]
+            VARIABLE_TYPE: java.lang.String [0,0]
+            Invocation: getString [0,0]
+                Invocation: getParameters [0,0]
+                    FieldRead: data [0,0]
+                        TypeAccess: org.tigris.scarab.tools.ScarabRequestTool [0,0]
+                Literal: "unique_id" [0,0]
+        Assignment: = [0,0]
+            VariableWrite: issue [0,0]
+            Invocation: getIssueById [0,0]
+                TypeAccess: org.tigris.scarab.om.Issue [0,0]
+                VariableRead: uniqueId [0,0]
+        If: if [0,0]
+            BinaryOperator: EQ [0,0]
+                VariableRead: issue [0,0]
+                Literal: null [0,0]
+            then: THEN [0,0]
+                LocalVariable: code [0,0]
+                    VARIABLE_TYPE: java.lang.String [0,0]
+                    Invocation: getCode [0,0]
+                        Invocation: getCurrentModule [0,0]
+                            TypeAccess: org.tigris.scarab.tools.ScarabRequestTool [0,0]
+                Assignment: = [0,0]
+                    VariableWrite: uniqueId [0,0]
+                    BinaryOperator: PLUS [0,0]
+                        VariableRead: code [0,0]
+                        VariableRead: uniqueId [0,0]
+                Assignment: = [0,0]
+                    VariableWrite: issue [0,0]
+                    Invocation: getIssueById [0,0]
+                        TypeAccess: org.tigris.scarab.om.Issue [0,0]
+                        VariableRead: uniqueId [0,0]
+        Catch [0,0]
+            CatchVariable: e [0,0]
+                VARIABLE_TYPE: java.lang.Exception [0,0]
+            Invocation: setMessage [0,0]
+                FieldRead: data [0,0]
+                    TypeAccess: org.tigris.scarab.tools.ScarabRequestTool [0,0]
+                Literal: "That id is not valid." [0,0]
+    Return: return [0,0]
+        VariableRead: issue [0,0]
+OperationKind.Update, "TypeAccess(CtTypeAccessImpl)", "DBImport.STATE_DB_INSERTION",  "XMLImport.STATE_DB_INSERTION" (size: 0)TypeAccess: DBImport.STATE_DB_INSERTION [0,0]
+OperationKind.Insert, "Invocation(CtInvocationImpl)", "debug" (size: 4)Invocation: debug [0,0]
+    TypeAccess: org.apache.turbine.Log [0,0]
+    BinaryOperator: PLUS [0,0]
+        Literal: "Unable to retrieve Module: " [0,0]
+        VariableRead: e [0,0]
+OperationKind.Delete, "FieldRead(CtFieldReadImpl)", "separator" (size: 1)FieldRead: separator [0,0]
+    TypeAccess: java.io.File [0,0]OperationKind.Insert, "Literal(CtLiteralImpl)", "'/'" (size: 0)Literal: '/' [0,0]
+OperationKind.Delete, "SUPER_TYPE(CtTypeReferenceImpl)", "org.tigris.scarab.om.BaseAttributeValue" (size: 0)SUPER_TYPE: org.tigris.scarab.om.BaseAttributeValue [0,0]OperationKind.Insert, "SUPER_TYPE(CtTypeReferenceImpl)", "org.tigris.scarab.om.BaseAttributeValue" (size: 0)SUPER_TYPE: org.tigris.scarab.om.BaseAttributeValue [0,0]OperationKind.Insert, "BinaryOperator(CtBinaryOperatorImpl)", "AND" (size: 6)BinaryOperator: AND [0,0]
+    Invocation: isModified [0,0]
+        TypeAccess: org.tigris.scarab.om.AttributeValue [0,0]
+    UnaryOperator: NOT [0,0]
+        Invocation: isTemplate [0,0]
+            Invocation: getIssue [0,0]
+                TypeAccess: org.tigris.scarab.om.AttributeValue [0,0]OperationKind.Move, "Invocation(CtInvocationImpl)", "isModified" (size: 1)Invocation: isModified [0,0]
+    TypeAccess: org.tigris.scarab.om.AttributeValue [0,0]
+OperationKind.Delete, "Invocation(CtInvocationImpl)", "println" (size: 3)Invocation: println [0,0]
+    FieldRead: out [0,0]
+        TypeAccess: java.lang.System [0,0]
+    VariableRead: s [0,0]
+OperationKind.Update, "Modifier(CtWrapper)", "public",  "protected" (size: 0)Modifier: public [0,0]
+OperationKind.Update, "Invocation(CtInvocationImpl)", "addAscendingOrderByColumn",  "addDescendingOrderByColumn" (size: 12)Invocation: addAscendingOrderByColumn [0,0]
+    Invocation: add [0,0]
+        Invocation: addJoin [0,0]
+            Invocation: add [0,0]
+                ConstructorCall: org.apache.torque.util.Criteria() [0,0]
+                TypeAccess: AttachmentPeer.ISSUE_ID [0,0]
+                Invocation: getIssueId [0,0]
+                    TypeAccess: org.tigris.scarab.om.Issue [0,0]
+            TypeAccess: AttachmentTypePeer.ATTACHMENT_TYPE_ID [0,0]
+            TypeAccess: AttachmentPeer.ATTACHMENT_TYPE_ID [0,0]
+        TypeAccess: AttachmentTypePeer.ATTACHMENT_TYPE_ID [0,0]
+        TypeAccess: Attachment.COMMENT__PK [0,0]
+    TypeAccess: AttachmentPeer.CREATED_DATE [0,0]
+OperationKind.Insert, "BinaryOperator(CtBinaryOperatorImpl)", "AND" (size: 11)BinaryOperator: AND [0,0]
+    BinaryOperator: AND [0,0]
+        UnaryOperator: NOT [0,0]
+            Invocation: isNew [0,0]
+                TypeAccess: org.tigris.scarab.om.AttributeValue [0,0]
+        UnaryOperator: NOT [0,0]
+            FieldRead: oldOptionIdIsSet [0,0]
+                TypeAccess: org.tigris.scarab.om.AttributeValue [0,0]
+    BinaryOperator: NE [0,0]
+        Invocation: getOptionId [0,0]
+            TypeAccess: org.tigris.scarab.om.AttributeValue [0,0]
+        Literal: null [0,0]OperationKind.Move, "BinaryOperator(CtBinaryOperatorImpl)", "AND" (size: 6)BinaryOperator: AND [0,0]
+    UnaryOperator: NOT [0,0]
+        Invocation: isNew [0,0]
+            TypeAccess: org.tigris.scarab.om.AttributeValue [0,0]
+    UnaryOperator: NOT [0,0]
+        FieldRead: oldOptionIdIsSet [0,0]
+            TypeAccess: org.tigris.scarab.om.AttributeValue [0,0]
+OperationKind.Insert, "Method(CtMethodImpl)", "create" (size: 14)Method: create [0,0]
+    RETURN_TYPE: void [0,0]
+    THROWN_TYPES [0,0]
+        THROWN: java.lang.Exception [0,0]
+    Modifiers_Method [0,0]
+        Modifier: public [0,0]
+    Parameter: typeId [0,0]
+        VARIABLE_TYPE: org.apache.torque.om.NumberKey [0,0]
+    Parameter: user [0,0]
+        VARIABLE_TYPE: org.tigris.scarab.om.ScarabUser [0,0]
+    Invocation: create [0,0]
+        TypeAccess: org.tigris.scarab.om.Transaction [0,0]
+        VariableRead: typeId [0,0]
+        VariableRead: user [0,0]
+        Literal: null [0,0]
+OperationKind.Insert, "Literal(CtLiteralImpl)", "null" (size: 0)Literal: null [0,0]
+OperationKind.Insert, "Invocation(CtInvocationImpl)", "setDisplayDescription" (size: 3)Invocation: setDisplayDescription [0,0]
+    VariableRead: rmit2 [0,0]
+    Invocation: getDisplayDescription [0,0]
+        TypeAccess: org.tigris.scarab.om.RModuleIssueType [0,0]
+OperationKind.Insert, "Assignment(CtAssignmentImpl)", "=" (size: 2)Assignment: = [0,0]
+    VariableWrite: prevPk [0,0]
+    VariableRead: pk [0,0]
+OperationKind.Update, "Modifier(CtWrapper)", "public",  "protected" (size: 0)Modifier: public [0,0]
+OperationKind.Update, "Literal(CtLiteralImpl)", ""ForgotPassword.vm"",  ""email/ForgotPassword.vm"" (size: 0)Literal: "ForgotPassword.vm" [0,0]
+OperationKind.Update, "ConstructorCall(CtConstructorCallImpl)", "org.apache.torque.util.Criteria()",  "org.apache.torque.util.Criteria(int)" (size: 0)ConstructorCall: org.apache.torque.util.Criteria() [0,0]
+OperationKind.Update, "FieldRead(CtFieldReadImpl)", "SERVER_JRMP_PORT",  "SERVER_IRMI_PORT" (size: 1)FieldRead: SERVER_JRMP_PORT [0,0]
+    TypeAccess: org.objectweb.carol.util.configuration.CarolDefaultValues [0,0]
+OperationKind.Delete, "FieldRead(CtFieldReadImpl)", "cAvailableLocaleSet" (size: 0)FieldRead: cAvailableLocaleSet [0,0]OperationKind.Insert, "Invocation(CtInvocationImpl)", "availableLocaleList" (size: 0)Invocation: availableLocaleList [0,0]
+[Delete Invocation at QuickNotepad:113
+	textArea.addKeyListener(new QuickNotepad.KeyHandler())
+, Delete Class at QuickNotepad:253
+	private class KeyHandler extends java.awt.event.KeyAdapter {
+	    public void keyPressed(java.awt.event.KeyEvent evt) {
+	        if (QuickNotepad.this.floating && (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE)) {
+	            evt.consume();
+	            org.gjt.sp.jedit.gui.DockableWindowManager wm = QuickNotepad.this.view.getDockableWindowManager();
+	            wm.removeDockableWindow(QuickNotepadPlugin.NAME);
+	        }
+	    }
+	}
+]
+Output: Insert Invocation at org.apache.commons.math3.linear.RectangularCholeskyDecomposition:162
+	// See output
+	java.lang.System.out.println("Test")
+
+// See output
+Actions [Delete LocalVariable at com.vmware.xenon.common.test.AuthorizationHelper:252
+	java.lang.String statsResourceGroupLink = createResourceGroup(target, "stats-resource-group", com.vmware.xenon.services.common.QueryTask.Query.Builder.create().addFieldClause(ServiceDocument.FIELD_NAME_SELF_LINK, com.vmware.xenon.services.common.ExampleService.FACTORY_LINK + com.vmware.xenon.common.ServiceHost.SERVICE_URI_SUFFIX_STATS).build())
+, Delete LocalVariable at com.vmware.xenon.common.test.AuthorizationHelper:259
+	java.lang.String subscriptionsResourceGroupLink = createResourceGroup(target, "subs-resource-group", com.vmware.xenon.services.common.QueryTask.Query.Builder.create().addFieldClause(ServiceDocument.FIELD_NAME_SELF_LINK, com.vmware.xenon.services.common.ServiceUriPaths.CORE_LOCAL_QUERY_TASKS + com.vmware.xenon.common.ServiceHost.SERVICE_URI_SUFFIX_SUBSCRIPTIONS).build())
+, Delete Invocation at com.vmware.xenon.common.test.AuthorizationHelper:283
+	paths.add(createRole(target, userGroupLink, statsResourceGroupLink, new java.util.HashSet<>(java.util.Arrays.asList(Action.GET, Action.POST, Action.PATCH, Action.DELETE))))
+, Delete Invocation at com.vmware.xenon.common.test.AuthorizationHelper:288
+	paths.add(createRole(target, userGroupLink, subscriptionsResourceGroupLink, new java.util.HashSet<>(java.util.Arrays.asList(Action.GET, Action.POST, Action.PATCH, Action.DELETE))))
+]
+Actions [Delete Method at com.vmware.xenon.common.TestUtilityService:838
+	@org.junit.Test
+	public void endpointAuthorization() throws java.lang.Throwable {
+	    com.vmware.xenon.common.test.VerificationHost host = com.vmware.xenon.common.test.VerificationHost.create(0);
+	    host.setAuthorizationService(new com.vmware.xenon.services.common.AuthorizationContextService());
+	    host.setAuthorizationEnabled(true);
+	    host.setMaintenanceIntervalMicros(java.util.concurrent.TimeUnit.MILLISECONDS.toMicros(100));
+	    host.start();
+	    com.vmware.xenon.common.test.TestRequestSender sender = host.getTestRequestSender();
+	    host.setSystemAuthorizationContext();
+	    host.waitForReplicatedFactoryServiceAvailable(com.vmware.xenon.common.UriUtils.buildUri(host, ExampleService.FACTORY_LINK));
+	    java.lang.String exampleUser = "example@vmware.com";
+	    java.lang.String examplePass = "password";
+	    com.vmware.xenon.common.test.TestContext authCtx = host.testCreate(1);
+	    com.vmware.xenon.common.AuthorizationSetupHelper.create().setHost(host).setUserEmail(exampleUser).setUserPassword(examplePass).setResourceQuery(Query.Builder.create().addFieldClause(ServiceDocument.FIELD_NAME_KIND, com.vmware.xenon.common.Utils.buildKind(com.vmware.xenon.services.common.ExampleService.ExampleServiceState.class)).build()).setCompletion(authCtx.getCompletion()).start();
+	    authCtx.await();
+	    com.vmware.xenon.services.common.ExampleService.ExampleServiceState doc = new com.vmware.xenon.services.common.ExampleService.ExampleServiceState();
+	    doc.name = "foo";
+	    doc.documentSelfLink = "foo";
+	    com.vmware.xenon.common.Operation post = com.vmware.xenon.common.Operation.createPost(host, ExampleService.FACTORY_LINK).setBody(doc);
+	    com.vmware.xenon.services.common.ExampleService.ExampleServiceState postResult = sender.sendAndWait(post, com.vmware.xenon.services.common.ExampleService.ExampleServiceState.class);
+	    host.resetAuthorizationContext();
+	    java.net.URI factoryAvailableUri = com.vmware.xenon.common.UriUtils.buildAvailableUri(host, ExampleService.FACTORY_LINK);
+	    java.net.URI factoryStatsUri = com.vmware.xenon.common.UriUtils.buildStatsUri(host, ExampleService.FACTORY_LINK);
+	    java.net.URI factoryConfigUri = com.vmware.xenon.common.UriUtils.buildConfigUri(host, ExampleService.FACTORY_LINK);
+	    java.net.URI factorySubscriptionUri = com.vmware.xenon.common.UriUtils.buildSubscriptionUri(host, ExampleService.FACTORY_LINK);
+	    java.net.URI factoryTemplateUri = com.vmware.xenon.common.UriUtils.buildUri(host, com.vmware.xenon.common.UriUtils.buildUriPath(ExampleService.FACTORY_LINK, com.vmware.xenon.common.ServiceHost.SERVICE_URI_SUFFIX_TEMPLATE));
+	    java.net.URI factorySynchUri = com.vmware.xenon.common.UriUtils.buildUri(host, com.vmware.xenon.common.UriUtils.buildUriPath(ExampleService.FACTORY_LINK, com.vmware.xenon.common.ServiceHost.SERVICE_URI_SUFFIX_SYNCHRONIZATION));
+	    java.net.URI factoryUiUri = com.vmware.xenon.common.UriUtils.buildUri(host, com.vmware.xenon.common.UriUtils.buildUriPath(ExampleService.FACTORY_LINK, com.vmware.xenon.common.ServiceHost.SERVICE_URI_SUFFIX_UI));
+	    java.net.URI serviceAvailableUri = com.vmware.xenon.common.UriUtils.buildAvailableUri(host, postResult.documentSelfLink);
+	    java.net.URI serviceStatsUri = com.vmware.xenon.common.UriUtils.buildStatsUri(host, postResult.documentSelfLink);
+	    java.net.URI serviceConfigUri = com.vmware.xenon.common.UriUtils.buildConfigUri(host, postResult.documentSelfLink);
+	    java.net.URI serviceSubscriptionUri = com.vmware.xenon.common.UriUtils.buildSubscriptionUri(host, postResult.documentSelfLink);
+	    java.net.URI serviceTemplateUri = com.vmware.xenon.common.UriUtils.buildUri(host, com.vmware.xenon.common.UriUtils.buildUriPath(postResult.documentSelfLink, com.vmware.xenon.common.ServiceHost.SERVICE_URI_SUFFIX_TEMPLATE));
+	    java.net.URI serviceSynchUri = com.vmware.xenon.common.UriUtils.buildUri(host, com.vmware.xenon.common.UriUtils.buildUriPath(postResult.documentSelfLink, com.vmware.xenon.common.ServiceHost.SERVICE_URI_SUFFIX_SYNCHRONIZATION));
+	    java.net.URI serviceUiUri = com.vmware.xenon.common.UriUtils.buildUri(host, com.vmware.xenon.common.UriUtils.buildUriPath(postResult.documentSelfLink, com.vmware.xenon.common.ServiceHost.SERVICE_URI_SUFFIX_UI));
+	    com.vmware.xenon.common.test.TestRequestSender.FailureResponse failureResponse;
+	    com.vmware.xenon.common.Operation uiOpResult;
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(factoryAvailableUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(factoryStatsUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(factoryConfigUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(factorySubscriptionUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(factoryTemplateUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(factorySynchUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    uiOpResult = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(factoryUiUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, uiOpResult.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(serviceAvailableUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(serviceStatsUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(serviceConfigUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(serviceSubscriptionUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(serviceTemplateUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(serviceSynchUri));
+	    org.junit.Assert.assertEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    uiOpResult = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(serviceUiUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, uiOpResult.getStatusCode());
+	    com.vmware.xenon.common.test.AuthTestUtils.login(host, exampleUser, examplePass);
+	    com.vmware.xenon.common.Operation response;
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(factoryAvailableUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(factoryStatsUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(factoryConfigUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(factorySubscriptionUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(factoryTemplateUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(factorySynchUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(factoryUiUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(serviceAvailableUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(serviceStatsUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(serviceConfigUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(serviceSubscriptionUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(serviceTemplateUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	    failureResponse = sender.sendAndWaitFailure(com.vmware.xenon.common.Operation.createGet(serviceSynchUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, failureResponse.op.getStatusCode());
+	    response = sender.sendAndWait(com.vmware.xenon.common.Operation.createGet(serviceUiUri));
+	    org.junit.Assert.assertNotEquals(Operation.STATUS_CODE_FORBIDDEN, response.getStatusCode());
+	}
+]
+root: 2
+DeleteOperation CtIfImpl 445
+MoveOperation CtIfImpl 448
+all: 10
+OperationKind.Insert, "THROWN_TYPES(CtVirtualElement)", "" (size: 1)THROWN_TYPES [0,0]
+    THROWN: java.sql.SQLException [0,0]
+Output: Insert Field at org.apache.derby.jdbc.EmbedPooledConnection:81
+	/**
+	 * This is another
+	 */
+	private java.util.ArrayList anotherListener;
+
+action
+action []
+action [Insert Invocation at org.objectweb.carol.jndi.spi.CmiContext:108
+	java.lang.System.out.println("MyInsertedStmt")
+]
+[[1;34mINFO[m] Running gumtree.spoon.[1mTreeTest[m
+[Update Wra at org.apache.camel.processor.MulticastProcessor
+	 to protected
+]
+[[1;34mINFO[m] Running gumtree.spoon.diff.support.[1mSpoonSupportTest[m
+[[1;34mINFO[m] Running gumtree.spoon.diff.[1mDiffTest[m
+[[1;33mWARNING[m] ForkStarter IOException: Unable to create file for report: /builds/workspace/gumtree-spoon-ast-diff/target/surefire-reports/gumtree.spoon.AstComparatorTest.txt (No space left on device)
+Unable to create file for report: /builds/workspace/gumtree-spoon-ast-diff/target/surefire-reports/gumtree.spoon.TreeTest.txt (No space left on device)
+Unable to create file for report: /builds/workspace/gumtree-spoon-ast-diff/target/surefire-reports/gumtree.spoon.diff.support.SpoonSupportTest.txt (No space left on device)
+Unable to create file for report: /builds/workspace/gumtree-spoon-ast-diff/target/surefire-reports/gumtree.spoon.diff.DiffTest.txt (No space left on device). See the dump file /builds/workspace/gumtree-spoon-ast-diff/target/surefire-reports/2022-05-26T10-20-38_684-jvmRun1.dumpstream
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  01:49 min
+[[1;34mINFO[m] Finished at: 2022-05-26T10:22:18+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+Finished: SUCCESS

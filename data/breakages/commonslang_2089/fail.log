@@ -1,0 +1,814 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu18 (lin) in workspace /builds/workspace/Commons-lang
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/apache/commons-lang.git
+ > git init /builds/workspace/Commons-lang # timeout=10
+Fetching upstream changes from https://github.com/apache/commons-lang.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/apache/commons-lang.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/apache/commons-lang.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision d1b750eaca45c9e33ca3900c72541d86e2d92565 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f d1b750eaca45c9e33ca3900c72541d86e2d92565 # timeout=10
+Commit message: "Javadoc"
+ > git rev-list --no-walk 65fb650380c063f1aece7e93d14e2052fc2ec747 # timeout=10
+[Commons-lang] $ /bin/sh -xe /tmp/jenkins7944882635253317743.sh
++ stdbuf -i 50k bash
++ curl -k https://spoon.gforge.inria.fr/jenkins/build.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0 43 21399   43  9281    0     0  66292      0 --:--:-- --:--:-- --:--:-- 65822 
+-------------------------------------------------------
+Initizalizes project
+-------------------------------------------------------
+ 
+100 21399  100 21399    0     0   147k      0 --:--:-- --:--:-- --:--:--  146k
+HEAD is now at d1b750eac Javadoc
+
+--- Displays variables used in the build ---
+Artifact id: commons-lang3
+Version: 3.13.0-SNAPSHOT
+Modules job:
+- Commons-lang
+Has checkstyle: true
+Has enforcer: true
+Git version id: d1b750eaca45c9e33ca3900c72541d86e2d92565
+Java version: Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+openjdk version "11.0.15" 2022-04-19
+OpenJDK Runtime Environment (build 11.0.15+10-Ubuntu-0ubuntu0.18.04.1)
+OpenJDK 64-Bit Server VM (build 11.0.15+10-Ubuntu-0ubuntu0.18.04.1, mixed mode, sharing)
+Java home: /usr/lib/jvm/java-11-openjdk-amd64
+ 
+-------------------------------------------------------
+Compiles project (at the root project if it's a multi module project) without spoon
+-------------------------------------------------------
+ 
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< org.apache.commons:commons-lang3 >------------------
+[INFO] Building Apache Commons Lang 3.13.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ commons-lang3 ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.0.0:enforce (enforce-maven-version) @ commons-lang3 ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.0.0:enforce (enforce-java-version) @ commons-lang3 ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.0.0:enforce (enforce-output-timestamp-property) @ commons-lang3 ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.0.0:enforce (enforce-maven-3) @ commons-lang3 ---
+[INFO] 
+[INFO] --- apache-rat-plugin:0.13:check (rat-check) @ commons-lang3 ---
+[INFO] RAT will not execute since it is configured to be skipped via system property 'rat.skip'.
+[INFO] 
+[INFO] --- build-helper-maven-plugin:3.2.0:parse-version (parse-version) @ commons-lang3 ---
+[INFO] 
+[INFO] --- maven-antrun-plugin:3.0.0:run (javadoc.resources) @ commons-lang3 ---
+[INFO] Executing tasks
+[INFO]      [copy] Copying 2 files to /builds/workspace/Commons-lang/target/apidocs/META-INF
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.7.0:process (process-resource-bundles) @ commons-lang3 ---
+[INFO] Skipping remote resources execution.
+[INFO] 
+[INFO] --- buildnumber-maven-plugin:3.0.0:create (default) @ commons-lang3 ---
+[INFO] Executing: /bin/sh -c cd '/builds/workspace/Commons-lang' && 'git' 'rev-parse' '--verify' 'HEAD'
+[INFO] Working directory: /builds/workspace/Commons-lang
+[INFO] Storing buildNumber: null at timestamp: 1653804853779
+[WARNING] Cannot get the branch information from the git repository: 
+Detecting the current branch failed: fatal: ref HEAD is not a symbolic ref
+
+[INFO] Executing: /bin/sh -c cd '/builds/workspace/Commons-lang' && 'git' 'rev-parse' '--verify' 'HEAD'
+[INFO] Working directory: /builds/workspace/Commons-lang
+[INFO] Storing buildScmBranch: UNKNOWN
+[INFO] 
+[INFO] --- maven-resources-plugin:3.2.0:resources (default-resources) @ commons-lang3 ---
+[INFO] Using 'ISO-8859-1' encoding to copy filtered resources.
+[INFO] Using 'ISO-8859-1' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory /builds/workspace/Commons-lang/src/main/resources
+[INFO] Copying 2 resources to META-INF
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ commons-lang3 ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 234 source files to /builds/workspace/Commons-lang/target/classes
+[INFO] /builds/workspace/Commons-lang/src/main/java/org/apache/commons/lang3/builder/ToStringStyle.java: Some input files use or override a deprecated API.
+[INFO] /builds/workspace/Commons-lang/src/main/java/org/apache/commons/lang3/builder/ToStringStyle.java: Recompile with -Xlint:deprecation for details.
+[INFO] /builds/workspace/Commons-lang/src/main/java/org/apache/commons/lang3/function/FailableObjLongConsumer.java: Some input files use unchecked or unsafe operations.
+[INFO] /builds/workspace/Commons-lang/src/main/java/org/apache/commons/lang3/function/FailableObjLongConsumer.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-bundle-plugin:5.1.2:manifest (bundle-manifest) @ commons-lang3 ---
+[INFO] 
+[INFO] --- maven-resources-plugin:3.2.0:testResources (default-testResources) @ commons-lang3 ---
+[INFO] Using 'ISO-8859-1' encoding to copy filtered resources.
+[INFO] Using 'ISO-8859-1' encoding to copy filtered properties files.
+[INFO] Copying 2 resources
+[INFO] Copying 2 resources to META-INF
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:testCompile (default-testCompile) @ commons-lang3 ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 218 source files to /builds/workspace/Commons-lang/target/test-classes
+[INFO] /builds/workspace/Commons-lang/src/test/java/org/apache/commons/lang3/StringUtilsTest.java: Some input files use or override a deprecated API.
+[INFO] /builds/workspace/Commons-lang/src/test/java/org/apache/commons/lang3/StringUtilsTest.java: Recompile with -Xlint:deprecation for details.
+[INFO] /builds/workspace/Commons-lang/src/test/java/org/apache/commons/lang3/builder/ReflectionDiffBuilderTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /builds/workspace/Commons-lang/src/test/java/org/apache/commons/lang3/builder/ReflectionDiffBuilderTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- animal-sniffer-maven-plugin:1.21:check (checkAPIcompatibility) @ commons-lang3 ---
+[INFO] Checking unresolved references to org.codehaus.mojo.signature:java18:1.0
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.8:prepare-agent (prepare-agent) @ commons-lang3 ---
+[INFO] argLine set to -javaagent:/builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.8/org.jacoco.agent-0.8.8-runtime.jar=destfile=/builds/workspace/Commons-lang/target/jacoco.exec -Xmx512m --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.0.0-M6:test (default-test) @ commons-lang3 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Running org.apache.commons.lang3.reflect.FieldUtilsTest
+[INFO] Tests run: 64, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.809 s - in org.apache.commons.lang3.reflect.FieldUtilsTest
+[INFO] Running org.apache.commons.lang3.reflect.TypeUtilsTest
+[WARNING] Tests run: 28, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.247 s - in org.apache.commons.lang3.reflect.TypeUtilsTest
+[INFO] Running org.apache.commons.lang3.reflect.InheritanceUtilsTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s - in org.apache.commons.lang3.reflect.InheritanceUtilsTest
+[INFO] Running org.apache.commons.lang3.reflect.MethodUtilsTest
+[INFO] Tests run: 43, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.25 s - in org.apache.commons.lang3.reflect.MethodUtilsTest
+[INFO] Running org.apache.commons.lang3.reflect.ConstructorUtilsTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.081 s - in org.apache.commons.lang3.reflect.ConstructorUtilsTest
+[INFO] Running org.apache.commons.lang3.reflect.TypeLiteralTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s - in org.apache.commons.lang3.reflect.TypeLiteralTest
+[INFO] Running org.apache.commons.lang3.RandomStringUtilsTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.334 s - in org.apache.commons.lang3.RandomStringUtilsTest
+[INFO] Running org.apache.commons.lang3.stream.StreamsTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.157 s - in org.apache.commons.lang3.stream.StreamsTest
+[INFO] Running org.apache.commons.lang3.stream.IntStreamsTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s - in org.apache.commons.lang3.stream.IntStreamsTest
+[INFO] Running org.apache.commons.lang3.ClassLoaderUtilsTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s - in org.apache.commons.lang3.ClassLoaderUtilsTest
+[INFO] Running org.apache.commons.lang3.SerializationUtilsTest
+[INFO] Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.201 s - in org.apache.commons.lang3.SerializationUtilsTest
+[INFO] Running org.apache.commons.lang3.RangeTest
+[INFO] Tests run: 27, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.086 s - in org.apache.commons.lang3.RangeTest
+[INFO] Running org.apache.commons.lang3.ArrayUtilsAddTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.083 s - in org.apache.commons.lang3.ArrayUtilsAddTest
+[INFO] Running org.apache.commons.lang3.StringUtilsTest
+[WARNING] Tests run: 168, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.632 s - in org.apache.commons.lang3.StringUtilsTest
+[INFO] Running org.apache.commons.lang3.EnumUtilsTest
+[INFO] Tests run: 46, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s - in org.apache.commons.lang3.EnumUtilsTest
+[INFO] Running org.apache.commons.lang3.concurrent.BasicThreadFactoryTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.127 s - in org.apache.commons.lang3.concurrent.BasicThreadFactoryTest
+[INFO] Running org.apache.commons.lang3.concurrent.LazyInitializerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s - in org.apache.commons.lang3.concurrent.LazyInitializerTest
+[INFO] Running org.apache.commons.lang3.concurrent.CircuitBreakingExceptionTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.03 s - in org.apache.commons.lang3.concurrent.CircuitBreakingExceptionTest
+[INFO] Running org.apache.commons.lang3.concurrent.ThresholdCircuitBreakerTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s - in org.apache.commons.lang3.concurrent.ThresholdCircuitBreakerTest
+[INFO] Running org.apache.commons.lang3.concurrent.MemoizerFunctionTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s - in org.apache.commons.lang3.concurrent.MemoizerFunctionTest
+[INFO] Running org.apache.commons.lang3.concurrent.AtomicInitializerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s - in org.apache.commons.lang3.concurrent.AtomicInitializerTest
+[INFO] Running org.apache.commons.lang3.concurrent.UncheckedExecutionExceptionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in org.apache.commons.lang3.concurrent.UncheckedExecutionExceptionTest
+[INFO] Running org.apache.commons.lang3.concurrent.CallableBackgroundInitializerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s - in org.apache.commons.lang3.concurrent.CallableBackgroundInitializerTest
+[INFO] Running org.apache.commons.lang3.concurrent.TimedSemaphoreTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.348 s - in org.apache.commons.lang3.concurrent.TimedSemaphoreTest
+[INFO] Running org.apache.commons.lang3.concurrent.MultiBackgroundInitializerTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.219 s - in org.apache.commons.lang3.concurrent.MultiBackgroundInitializerTest
+[INFO] Running org.apache.commons.lang3.concurrent.FutureTasksTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s - in org.apache.commons.lang3.concurrent.FutureTasksTest
+[INFO] Running org.apache.commons.lang3.concurrent.BackgroundInitializerTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 s - in org.apache.commons.lang3.concurrent.BackgroundInitializerTest
+[INFO] Running org.apache.commons.lang3.concurrent.ConstantInitializerTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s - in org.apache.commons.lang3.concurrent.ConstantInitializerTest
+[INFO] Running org.apache.commons.lang3.concurrent.AtomicSafeInitializerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.087 s - in org.apache.commons.lang3.concurrent.AtomicSafeInitializerTest
+[INFO] Running org.apache.commons.lang3.concurrent.UncheckedFutureTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 s - in org.apache.commons.lang3.concurrent.UncheckedFutureTest
+[INFO] Running org.apache.commons.lang3.concurrent.locks.LockingVisitorsTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 33.376 s - in org.apache.commons.lang3.concurrent.locks.LockingVisitorsTest
+[INFO] Running org.apache.commons.lang3.concurrent.MemoizerComputableTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 s - in org.apache.commons.lang3.concurrent.MemoizerComputableTest
+[INFO] Running org.apache.commons.lang3.concurrent.EventCountCircuitBreakerTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.384 s - in org.apache.commons.lang3.concurrent.EventCountCircuitBreakerTest
+[INFO] Running org.apache.commons.lang3.concurrent.ConcurrentUtilsTest
+[INFO] Tests run: 41, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s - in org.apache.commons.lang3.concurrent.ConcurrentUtilsTest
+[INFO] Running org.apache.commons.lang3.concurrent.UncheckedTimeoutExceptionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s - in org.apache.commons.lang3.concurrent.UncheckedTimeoutExceptionTest
+[INFO] Running org.apache.commons.lang3.builder.CompareToBuilderTest
+[INFO] Tests run: 48, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.102 s - in org.apache.commons.lang3.builder.CompareToBuilderTest
+[INFO] Running org.apache.commons.lang3.builder.StandardToStringStyleTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.059 s - in org.apache.commons.lang3.builder.StandardToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.HashCodeBuilderAndEqualsBuilderTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s - in org.apache.commons.lang3.builder.HashCodeBuilderAndEqualsBuilderTest
+[INFO] Running org.apache.commons.lang3.builder.EqualsBuilderTest
+[INFO] Tests run: 56, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.082 s - in org.apache.commons.lang3.builder.EqualsBuilderTest
+[INFO] Running org.apache.commons.lang3.builder.DiffResultTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s - in org.apache.commons.lang3.builder.DiffResultTest
+[INFO] Running org.apache.commons.lang3.builder.ReflectionToStringBuilderConcurrencyTest
+[WARNING] Tests run: 3, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 0.012 s - in org.apache.commons.lang3.builder.ReflectionToStringBuilderConcurrencyTest
+[INFO] Running org.apache.commons.lang3.builder.RecursiveToStringStyleTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.apache.commons.lang3.builder.RecursiveToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.ShortPrefixToStringStyleTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s - in org.apache.commons.lang3.builder.ShortPrefixToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.ToStringStyleTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s - in org.apache.commons.lang3.builder.ToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.ReflectionToStringBuilderMutateInspectConcurrencyTest
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.002 s - in org.apache.commons.lang3.builder.ReflectionToStringBuilderMutateInspectConcurrencyTest
+[INFO] Running org.apache.commons.lang3.builder.ReflectionToStringBuilderExcludeNullValuesTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s - in org.apache.commons.lang3.builder.ReflectionToStringBuilderExcludeNullValuesTest
+[INFO] Running org.apache.commons.lang3.builder.DefaultToStringStyleTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s - in org.apache.commons.lang3.builder.DefaultToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.HashCodeBuilderTest
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.05 s - in org.apache.commons.lang3.builder.HashCodeBuilderTest
+[INFO] Running org.apache.commons.lang3.builder.SimpleToStringStyleTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 s - in org.apache.commons.lang3.builder.SimpleToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.ReflectionDiffBuilderTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s - in org.apache.commons.lang3.builder.ReflectionDiffBuilderTest
+[INFO] Running org.apache.commons.lang3.builder.ReflectionToStringBuilderSummaryTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s - in org.apache.commons.lang3.builder.ReflectionToStringBuilderSummaryTest
+[INFO] Running org.apache.commons.lang3.builder.ToStringBuilderTest
+[INFO] Tests run: 94, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 s - in org.apache.commons.lang3.builder.ToStringBuilderTest
+[INFO] Running org.apache.commons.lang3.builder.ToStringStyleConcurrencyTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.159 s - in org.apache.commons.lang3.builder.ToStringStyleConcurrencyTest
+[INFO] Running org.apache.commons.lang3.builder.DiffTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.03 s - in org.apache.commons.lang3.builder.DiffTest
+[INFO] Running org.apache.commons.lang3.builder.ReflectionToStringBuilderTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s - in org.apache.commons.lang3.builder.ReflectionToStringBuilderTest
+[INFO] Running org.apache.commons.lang3.builder.NoClassNameToStringStyleTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s - in org.apache.commons.lang3.builder.NoClassNameToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.ReflectionToStringBuilderExcludeTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s - in org.apache.commons.lang3.builder.ReflectionToStringBuilderExcludeTest
+[INFO] Running org.apache.commons.lang3.builder.MultiLineToStringStyleTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s - in org.apache.commons.lang3.builder.MultiLineToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.ReflectionToStringBuilderExcludeWithAnnotationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s - in org.apache.commons.lang3.builder.ReflectionToStringBuilderExcludeWithAnnotationTest
+[INFO] Running org.apache.commons.lang3.builder.JsonToStringStyleTest
+[INFO] Tests run: 29, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.164 s - in org.apache.commons.lang3.builder.JsonToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.MultilineRecursiveToStringStyleTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s - in org.apache.commons.lang3.builder.MultilineRecursiveToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.NoFieldNamesToStringStyleTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.02 s - in org.apache.commons.lang3.builder.NoFieldNamesToStringStyleTest
+[INFO] Running org.apache.commons.lang3.builder.DiffBuilderTest
+[INFO] Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 s - in org.apache.commons.lang3.builder.DiffBuilderTest
+[INFO] Running org.apache.commons.lang3.RegExUtilsTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s - in org.apache.commons.lang3.RegExUtilsTest
+[INFO] Running org.apache.commons.lang3.RandomUtilsTest
+[INFO] Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s - in org.apache.commons.lang3.RandomUtilsTest
+[INFO] Running org.apache.commons.lang3.ArrayUtilsRemoveTest
+[INFO] Tests run: 37, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.07 s - in org.apache.commons.lang3.ArrayUtilsRemoveTest
+[INFO] Running org.apache.commons.lang3.ThreadUtilsTest
+[INFO] Tests run: 29, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.133 s - in org.apache.commons.lang3.ThreadUtilsTest
+[INFO] Running org.apache.commons.lang3.compare.ObjectToStringComparatorTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s - in org.apache.commons.lang3.compare.ObjectToStringComparatorTest
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_10
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_10$C_is_10
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_10$C_is_10
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_10$C_is_1
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_10$C_is_1
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_10$C_is_0
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_10$C_is_0
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_10
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_1
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_1$C_is_10
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_1$C_is_10
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_1$C_is_1
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_1$C_is_1
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_1$C_is_0
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_1$C_is_0
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.13 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_1
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_0
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_0$C_is_10
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_0$C_is_10
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_0$C_is_1
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_0$C_is_1
+[INFO] Running org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_0$C_is_0
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_0$C_is_0
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.112 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1$B_is_0
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.365 s - in org.apache.commons.lang3.compare.ComparableUtilsTest$A_is_1
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.389 s - in org.apache.commons.lang3.compare.ComparableUtilsTest
+[INFO] Running org.apache.commons.lang3.StringUtilsContainsTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.097 s - in org.apache.commons.lang3.StringUtilsContainsTest
+[INFO] Running org.apache.commons.lang3.AnnotationUtilsTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s - in org.apache.commons.lang3.AnnotationUtilsTest
+[INFO] Running org.apache.commons.lang3.ValidateTest
+[INFO] Running org.apache.commons.lang3.ValidateTest$UtilClassConventions
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in org.apache.commons.lang3.ValidateTest$UtilClassConventions
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsAssignable
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsAssignable$WithMessage
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s - in org.apache.commons.lang3.ValidateTest$IsAssignable$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsAssignable$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s - in org.apache.commons.lang3.ValidateTest$IsAssignable$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s - in org.apache.commons.lang3.ValidateTest$IsAssignable
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsInstanceOf
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsInstanceOf$WithMessageTemplate
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.02 s - in org.apache.commons.lang3.ValidateTest$IsInstanceOf$WithMessageTemplate
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsInstanceOf$WithMessage
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 s - in org.apache.commons.lang3.ValidateTest$IsInstanceOf$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsInstanceOf$WithoutMessage
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s - in org.apache.commons.lang3.ValidateTest$IsInstanceOf$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.066 s - in org.apache.commons.lang3.ValidateTest$IsInstanceOf
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithDouble
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithDouble$WithMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithDouble$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithDouble$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithDouble$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.096 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithDouble
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithLong
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithLong$WithMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithLong$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithLong$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithLong$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithLong
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithComparable
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithComparable$WithMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithComparable$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithComparable$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithComparable$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween$WithComparable
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.215 s - in org.apache.commons.lang3.ValidateTest$ExclusiveBetween
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithDouble
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithDouble$WithMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithDouble$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithDouble$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithDouble$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithDouble
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithLong
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithLong$WithMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithLong$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithLong$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.03 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithLong$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithLong
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithComparable
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithComparable$WithMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithComparable$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithComparable$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithComparable$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.084 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween$WithComparable
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.199 s - in org.apache.commons.lang3.ValidateTest$InclusiveBetween
+[INFO] Running org.apache.commons.lang3.ValidateTest$Finite
+[INFO] Running org.apache.commons.lang3.ValidateTest$Finite$WithMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s - in org.apache.commons.lang3.ValidateTest$Finite$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$Finite$WithoutMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s - in org.apache.commons.lang3.ValidateTest$Finite$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s - in org.apache.commons.lang3.ValidateTest$Finite
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotNaN
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotNaN$WithMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.apache.commons.lang3.ValidateTest$NotNaN$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotNaN$WithoutMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s - in org.apache.commons.lang3.ValidateTest$NotNaN$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s - in org.apache.commons.lang3.ValidateTest$NotNaN
+[INFO] Running org.apache.commons.lang3.ValidateTest$MatchesPattern
+[INFO] Running org.apache.commons.lang3.ValidateTest$MatchesPattern$WithMessage
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.apache.commons.lang3.ValidateTest$MatchesPattern$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$MatchesPattern$WithoutMessage
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s - in org.apache.commons.lang3.ValidateTest$MatchesPattern$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s - in org.apache.commons.lang3.ValidateTest$MatchesPattern
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex$WithCharSequence
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex$WithCharSequence$WithMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s - in org.apache.commons.lang3.ValidateTest$ValidIndex$WithCharSequence$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex$WithCharSequence$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 s - in org.apache.commons.lang3.ValidateTest$ValidIndex$WithCharSequence$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.05 s - in org.apache.commons.lang3.ValidateTest$ValidIndex$WithCharSequence
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex$WithCollection
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex$WithCollection$WithMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s - in org.apache.commons.lang3.ValidateTest$ValidIndex$WithCollection$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex$WithCollection$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 s - in org.apache.commons.lang3.ValidateTest$ValidIndex$WithCollection$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 s - in org.apache.commons.lang3.ValidateTest$ValidIndex$WithCollection
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex$WithArray
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex$WithArray$WithMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s - in org.apache.commons.lang3.ValidateTest$ValidIndex$WithArray$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$ValidIndex$WithArray$WithoutMessage
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s - in org.apache.commons.lang3.ValidateTest$ValidIndex$WithArray$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.088 s - in org.apache.commons.lang3.ValidateTest$ValidIndex$WithArray
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.244 s - in org.apache.commons.lang3.ValidateTest$ValidIndex
+[INFO] Running org.apache.commons.lang3.ValidateTest$NoNullElements
+[INFO] Running org.apache.commons.lang3.ValidateTest$NoNullElements$WithCollection
+[INFO] Running org.apache.commons.lang3.ValidateTest$NoNullElements$WithCollection$WithMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s - in org.apache.commons.lang3.ValidateTest$NoNullElements$WithCollection$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$NoNullElements$WithCollection$WithoutMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s - in org.apache.commons.lang3.ValidateTest$NoNullElements$WithCollection$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s - in org.apache.commons.lang3.ValidateTest$NoNullElements$WithCollection
+[INFO] Running org.apache.commons.lang3.ValidateTest$NoNullElements$WithArray
+[INFO] Running org.apache.commons.lang3.ValidateTest$NoNullElements$WithArray$WithMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s - in org.apache.commons.lang3.ValidateTest$NoNullElements$WithArray$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$NoNullElements$WithArray$WithoutMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s - in org.apache.commons.lang3.ValidateTest$NoNullElements$WithArray$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.066 s - in org.apache.commons.lang3.ValidateTest$NoNullElements$WithArray
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.144 s - in org.apache.commons.lang3.ValidateTest$NoNullElements
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotBlank
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotBlank$WithMessage
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s - in org.apache.commons.lang3.ValidateTest$NotBlank$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotBlank$WithoutMessage
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s - in org.apache.commons.lang3.ValidateTest$NotBlank$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.106 s - in org.apache.commons.lang3.ValidateTest$NotBlank
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithCharSequence
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithCharSequence$WithMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithCharSequence$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithCharSequence$WithoutMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithCharSequence$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithCharSequence
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithMap
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithMap$WithMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithMap$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithMap$WithoutMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithMap$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithMap
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithCollection
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithCollection$WithMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithCollection$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithCollection$WithoutMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithCollection$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithCollection
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithArray
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithArray$WithMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.036 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithArray$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotEmpty$WithArray$WithoutMessage
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithArray$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s - in org.apache.commons.lang3.ValidateTest$NotEmpty$WithArray
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.242 s - in org.apache.commons.lang3.ValidateTest$NotEmpty
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotNull
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotNull$WithMessage
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in org.apache.commons.lang3.ValidateTest$NotNull$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$NotNull$WithoutMessage
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s - in org.apache.commons.lang3.ValidateTest$NotNull$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 s - in org.apache.commons.lang3.ValidateTest$NotNull
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsTrue
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsTrue$WithObjectTemplate
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s - in org.apache.commons.lang3.ValidateTest$IsTrue$WithObjectTemplate
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsTrue$WithDoubleTemplate
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s - in org.apache.commons.lang3.ValidateTest$IsTrue$WithDoubleTemplate
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsTrue$WithLongTemplate
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s - in org.apache.commons.lang3.ValidateTest$IsTrue$WithLongTemplate
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsTrue$WithMessage
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in org.apache.commons.lang3.ValidateTest$IsTrue$WithMessage
+[INFO] Running org.apache.commons.lang3.ValidateTest$IsTrue$WithoutMessage
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.apache.commons.lang3.ValidateTest$IsTrue$WithoutMessage
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 s - in org.apache.commons.lang3.ValidateTest$IsTrue
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.664 s - in org.apache.commons.lang3.ValidateTest
+[INFO] Running org.apache.commons.lang3.ArrayUtilsTest
+[INFO] Tests run: 338, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.256 s - in org.apache.commons.lang3.ArrayUtilsTest
+[INFO] Running org.apache.commons.lang3.StringUtilsStartsEndsWithTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s - in org.apache.commons.lang3.StringUtilsStartsEndsWithTest
+[INFO] Running org.apache.commons.lang3.ArrayUtilsSetTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in org.apache.commons.lang3.ArrayUtilsSetTest
+[INFO] Running org.apache.commons.lang3.ArrayUtilsInsertTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s - in org.apache.commons.lang3.ArrayUtilsInsertTest
+[INFO] Running org.apache.commons.lang3.event.EventListenerSupportTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s - in org.apache.commons.lang3.event.EventListenerSupportTest
+[INFO] Running org.apache.commons.lang3.event.EventUtilsTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s - in org.apache.commons.lang3.event.EventUtilsTest
+[INFO] Running org.apache.commons.lang3.ConversionTest
+[INFO] Tests run: 46, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s - in org.apache.commons.lang3.ConversionTest
+[INFO] Running org.apache.commons.lang3.StringUtilsIsTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s - in org.apache.commons.lang3.StringUtilsIsTest
+[INFO] Running org.apache.commons.lang3.CharSequenceUtilsTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.165 s - in org.apache.commons.lang3.CharSequenceUtilsTest
+[INFO] Running org.apache.commons.lang3.exception.DefaultExceptionContextTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s - in org.apache.commons.lang3.exception.DefaultExceptionContextTest
+[INFO] Running org.apache.commons.lang3.exception.ContextedRuntimeExceptionTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s - in org.apache.commons.lang3.exception.ContextedRuntimeExceptionTest
+[INFO] Running org.apache.commons.lang3.exception.UncheckedIllegalAccessExceptionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s - in org.apache.commons.lang3.exception.UncheckedIllegalAccessExceptionTest
+[INFO] Running org.apache.commons.lang3.exception.ExceptionUtilsTest
+[INFO] Tests run: 40, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s - in org.apache.commons.lang3.exception.ExceptionUtilsTest
+[INFO] Running org.apache.commons.lang3.exception.ContextedExceptionTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s - in org.apache.commons.lang3.exception.ContextedExceptionTest
+[INFO] Running org.apache.commons.lang3.exception.UncheckedInterruptedExceptionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in org.apache.commons.lang3.exception.UncheckedInterruptedExceptionTest
+[INFO] Running org.apache.commons.lang3.exception.UncheckedExceptionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in org.apache.commons.lang3.exception.UncheckedExceptionTest
+[INFO] Running org.apache.commons.lang3.exception.CloneFailedExceptionTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s - in org.apache.commons.lang3.exception.CloneFailedExceptionTest
+[INFO] Running org.apache.commons.lang3.exception.UncheckedReflectiveOperationExceptionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in org.apache.commons.lang3.exception.UncheckedReflectiveOperationExceptionTest
+[INFO] Running org.apache.commons.lang3.JavaVersionTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in org.apache.commons.lang3.JavaVersionTest
+[INFO] Running org.apache.commons.lang3.StreamsTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.036 s - in org.apache.commons.lang3.StreamsTest
+[INFO] Running org.apache.commons.lang3.tuple.TripleTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s - in org.apache.commons.lang3.tuple.TripleTest
+[INFO] Running org.apache.commons.lang3.tuple.PairTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s - in org.apache.commons.lang3.tuple.PairTest
+[INFO] Running org.apache.commons.lang3.tuple.MutablePairTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s - in org.apache.commons.lang3.tuple.MutablePairTest
+[INFO] Running org.apache.commons.lang3.tuple.ImmutablePairTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in org.apache.commons.lang3.tuple.ImmutablePairTest
+[INFO] Running org.apache.commons.lang3.tuple.MutableTripleTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s - in org.apache.commons.lang3.tuple.MutableTripleTest
+[INFO] Running org.apache.commons.lang3.tuple.ImmutableTripleTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s - in org.apache.commons.lang3.tuple.ImmutableTripleTest
+[INFO] Running org.apache.commons.lang3.StringUtilsEqualsIndexOfTest
+[INFO] Tests run: 37, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s - in org.apache.commons.lang3.StringUtilsEqualsIndexOfTest
+[INFO] Running org.apache.commons.lang3.mutable.MutableIntTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s - in org.apache.commons.lang3.mutable.MutableIntTest
+[INFO] Running org.apache.commons.lang3.mutable.MutableObjectTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s - in org.apache.commons.lang3.mutable.MutableObjectTest
+[INFO] Running org.apache.commons.lang3.mutable.MutableByteTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s - in org.apache.commons.lang3.mutable.MutableByteTest
+[INFO] Running org.apache.commons.lang3.mutable.MutableFloatTest
+[INFO] Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s - in org.apache.commons.lang3.mutable.MutableFloatTest
+[INFO] Running org.apache.commons.lang3.mutable.MutableBooleanTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s - in org.apache.commons.lang3.mutable.MutableBooleanTest
+[INFO] Running org.apache.commons.lang3.mutable.MutableShortTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s - in org.apache.commons.lang3.mutable.MutableShortTest
+[INFO] Running org.apache.commons.lang3.mutable.MutableDoubleTest
+[INFO] Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s - in org.apache.commons.lang3.mutable.MutableDoubleTest
+[INFO] Running org.apache.commons.lang3.mutable.MutableLongTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s - in org.apache.commons.lang3.mutable.MutableLongTest
+[INFO] Running org.apache.commons.lang3.CharUtilsTest
+[INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.03 s - in org.apache.commons.lang3.CharUtilsTest
+[INFO] Running org.apache.commons.lang3.CharSetUtilsTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.apache.commons.lang3.CharSetUtilsTest
+[INFO] Running org.apache.commons.lang3.NotImplementedExceptionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in org.apache.commons.lang3.NotImplementedExceptionTest
+[INFO] Running org.apache.commons.lang3.StringUtilsValueOfTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in org.apache.commons.lang3.StringUtilsValueOfTest
+[INFO] Running org.apache.commons.lang3.BitFieldTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s - in org.apache.commons.lang3.BitFieldTest
+[INFO] Running org.apache.commons.lang3.ClassPathUtilsTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s - in org.apache.commons.lang3.ClassPathUtilsTest
+[INFO] Running org.apache.commons.lang3.StringUtilsEmptyBlankTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s - in org.apache.commons.lang3.StringUtilsEmptyBlankTest
+[INFO] Running org.apache.commons.lang3.CharsetsTestCase
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s - in org.apache.commons.lang3.CharsetsTestCase
+[INFO] Running org.apache.commons.lang3.ArraySorterTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 s - in org.apache.commons.lang3.ArraySorterTest
+[INFO] Running org.apache.commons.lang3.LocaleUtilsTest
+[INFO] Tests run: 1512, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.849 s - in org.apache.commons.lang3.LocaleUtilsTest
+[INFO] Running org.apache.commons.lang3.FunctionsTest
+[INFO] Tests run: 43, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.204 s - in org.apache.commons.lang3.FunctionsTest
+[INFO] Running org.apache.commons.lang3.text.StrBuilderTest
+[INFO] Tests run: 91, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s - in org.apache.commons.lang3.text.StrBuilderTest
+[INFO] Running org.apache.commons.lang3.text.WordUtilsTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s - in org.apache.commons.lang3.text.WordUtilsTest
+[INFO] Running org.apache.commons.lang3.text.StrBuilderAppendInsertTest
+[INFO] Tests run: 51, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s - in org.apache.commons.lang3.text.StrBuilderAppendInsertTest
+[INFO] Running org.apache.commons.lang3.text.ExtendedMessageFormatTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.429 s - in org.apache.commons.lang3.text.ExtendedMessageFormatTest
+[INFO] Running org.apache.commons.lang3.text.CompositeFormatTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s - in org.apache.commons.lang3.text.CompositeFormatTest
+[INFO] Running org.apache.commons.lang3.text.StrMatcherTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s - in org.apache.commons.lang3.text.StrMatcherTest
+[INFO] Running org.apache.commons.lang3.text.StrSubstitutorTest
+[INFO] Tests run: 41, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 s - in org.apache.commons.lang3.text.StrSubstitutorTest
+[INFO] Running org.apache.commons.lang3.text.StrTokenizerTest
+[INFO] Tests run: 55, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s - in org.apache.commons.lang3.text.StrTokenizerTest
+[INFO] Running org.apache.commons.lang3.text.translate.EntityArraysTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s - in org.apache.commons.lang3.text.translate.EntityArraysTest
+[INFO] Running org.apache.commons.lang3.text.translate.UnicodeUnpairedSurrogateRemoverTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s - in org.apache.commons.lang3.text.translate.UnicodeUnpairedSurrogateRemoverTest
+[INFO] Running org.apache.commons.lang3.text.translate.OctalUnescaperTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s - in org.apache.commons.lang3.text.translate.OctalUnescaperTest
+[INFO] Running org.apache.commons.lang3.text.translate.UnicodeEscaperTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in org.apache.commons.lang3.text.translate.UnicodeEscaperTest
+[INFO] Running org.apache.commons.lang3.text.translate.UnicodeUnescaperTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s - in org.apache.commons.lang3.text.translate.UnicodeUnescaperTest
+[INFO] Running org.apache.commons.lang3.text.translate.NumericEntityEscaperTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s - in org.apache.commons.lang3.text.translate.NumericEntityEscaperTest
+[INFO] Running org.apache.commons.lang3.text.translate.NumericEntityUnescaperTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s - in org.apache.commons.lang3.text.translate.NumericEntityUnescaperTest
+[INFO] Running org.apache.commons.lang3.text.translate.LookupTranslatorTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s - in org.apache.commons.lang3.text.translate.LookupTranslatorTest
+[INFO] Running org.apache.commons.lang3.text.FormattableUtilsTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s - in org.apache.commons.lang3.text.FormattableUtilsTest
+[INFO] Running org.apache.commons.lang3.text.StrLookupTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s - in org.apache.commons.lang3.text.StrLookupTest
+[INFO] Running org.apache.commons.lang3.ArchUtilsTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s - in org.apache.commons.lang3.ArchUtilsTest
+[INFO] Running org.apache.commons.lang3.SystemUtilsTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 s - in org.apache.commons.lang3.SystemUtilsTest
+[INFO] Running org.apache.commons.lang3.ObjectUtilsTest
+[INFO] Tests run: 56, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s - in org.apache.commons.lang3.ObjectUtilsTest
+[INFO] Running org.apache.commons.lang3.StringUtilsSubstringTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s - in org.apache.commons.lang3.StringUtilsSubstringTest
+[INFO] Running org.apache.commons.lang3.ClassUtilsTest
+[INFO] Tests run: 65, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.12 s - in org.apache.commons.lang3.ClassUtilsTest
+[INFO] Running org.apache.commons.lang3.function.MethodInvokersSupplierTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s - in org.apache.commons.lang3.function.MethodInvokersSupplierTest
+[INFO] Running org.apache.commons.lang3.function.TriConsumerTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s - in org.apache.commons.lang3.function.TriConsumerTest
+[INFO] Running org.apache.commons.lang3.function.MethodInvokersBiConsumerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.02 s - in org.apache.commons.lang3.function.MethodInvokersBiConsumerTest
+[INFO] Running org.apache.commons.lang3.function.MethodInvokersFunctionTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s - in org.apache.commons.lang3.function.MethodInvokersFunctionTest
+[INFO] Running org.apache.commons.lang3.function.MethodInvokersFailableSupplierTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s - in org.apache.commons.lang3.function.MethodInvokersFailableSupplierTest
+[INFO] Running org.apache.commons.lang3.function.MethodInvokersFailableFunctionTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s - in org.apache.commons.lang3.function.MethodInvokersFailableFunctionTest
+[INFO] Running org.apache.commons.lang3.function.ConsumersTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s - in org.apache.commons.lang3.function.ConsumersTest
+[INFO] Running org.apache.commons.lang3.function.TriFunctionTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.apache.commons.lang3.function.TriFunctionTest
+[INFO] Running org.apache.commons.lang3.function.MethodInvokersFailableBiConsumerTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s - in org.apache.commons.lang3.function.MethodInvokersFailableBiConsumerTest
+[INFO] Running org.apache.commons.lang3.function.SuppliersTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s - in org.apache.commons.lang3.function.SuppliersTest
+[INFO] Running org.apache.commons.lang3.function.ObjectsTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s - in org.apache.commons.lang3.function.ObjectsTest
+[INFO] Running org.apache.commons.lang3.function.MethodInvokersBiFunctionTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s - in org.apache.commons.lang3.function.MethodInvokersBiFunctionTest
+[INFO] Running org.apache.commons.lang3.function.ToBooleanBiFunctionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s - in org.apache.commons.lang3.function.ToBooleanBiFunctionTest
+[INFO] Running org.apache.commons.lang3.function.MethodInvokersFailableBiFunctionTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s - in org.apache.commons.lang3.function.MethodInvokersFailableBiFunctionTest
+[INFO] Running org.apache.commons.lang3.function.IntToCharFunctionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.apache.commons.lang3.function.IntToCharFunctionTest
+[INFO] Running org.apache.commons.lang3.function.BooleanConsumerTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s - in org.apache.commons.lang3.function.BooleanConsumerTest
+[INFO] Running org.apache.commons.lang3.function.FailableFunctionsTest
+[INFO] Tests run: 141, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.329 s - in org.apache.commons.lang3.function.FailableFunctionsTest
+[INFO] Running org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest
+[INFO] Tests run: 55, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 s - in org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest
+[INFO] Running org.apache.commons.lang3.BooleanUtilsTest
+[INFO] Tests run: 76, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.084 s - in org.apache.commons.lang3.BooleanUtilsTest
+[INFO] Running org.apache.commons.lang3.util.FluentBitSetTest
+[INFO] Tests run: 43, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 s - in org.apache.commons.lang3.util.FluentBitSetTest
+[INFO] Running org.apache.commons.lang3.CharSetTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s - in org.apache.commons.lang3.CharSetTest
+[INFO] Running org.apache.commons.lang3.CharEncodingTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s - in org.apache.commons.lang3.CharEncodingTest
+[INFO] Running org.apache.commons.lang3.math.IEEE754rUtilsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s - in org.apache.commons.lang3.math.IEEE754rUtilsTest
+[INFO] Running org.apache.commons.lang3.math.NumberUtilsTest
+[INFO] Tests run: 113, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 s - in org.apache.commons.lang3.math.NumberUtilsTest
+[INFO] Running org.apache.commons.lang3.math.FractionTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.228 s - in org.apache.commons.lang3.math.FractionTest
+[INFO] Running org.apache.commons.lang3.StringUtilsTrimStripTest
+[WARNING] Tests run: 12, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.024 s - in org.apache.commons.lang3.StringUtilsTrimStripTest
+[INFO] Running org.apache.commons.lang3.StringEscapeUtilsTest
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.679 s - in org.apache.commons.lang3.StringEscapeUtilsTest
+[INFO] Running org.apache.commons.lang3.CharRangeTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 s - in org.apache.commons.lang3.CharRangeTest
+[INFO] Running org.apache.commons.lang3.time.FastDateParserSDFTest
+[INFO] Tests run: 276, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.461 s - in org.apache.commons.lang3.time.FastDateParserSDFTest
+[INFO] Running org.apache.commons.lang3.time.FastDateFormat_PrinterTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 s - in org.apache.commons.lang3.time.FastDateFormat_PrinterTest
+[INFO] Running org.apache.commons.lang3.time.FastDatePrinterTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s - in org.apache.commons.lang3.time.FastDatePrinterTest
+[INFO] Running org.apache.commons.lang3.time.DateUtilsRoundingTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.091 s - in org.apache.commons.lang3.time.DateUtilsRoundingTest
+[INFO] Running org.apache.commons.lang3.time.FastDateParserTest
+[INFO] Tests run: 44, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.651 s - in org.apache.commons.lang3.time.FastDateParserTest
+[INFO] Running org.apache.commons.lang3.time.DurationFormatUtilsTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.268 s - in org.apache.commons.lang3.time.DurationFormatUtilsTest
+[INFO] Running org.apache.commons.lang3.time.FastTimeZoneTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in org.apache.commons.lang3.time.FastTimeZoneTest
+[INFO] Running org.apache.commons.lang3.time.FastDatePrinterTimeZonesTest
+[INFO] Tests run: 629, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.925 s - in org.apache.commons.lang3.time.FastDatePrinterTimeZonesTest
+[INFO] Running org.apache.commons.lang3.time.WeekYearTest
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.11 s - in org.apache.commons.lang3.time.WeekYearTest
+[INFO] Running org.apache.commons.lang3.time.DateUtilsTest
+[INFO] Tests run: 63, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.186 s - in org.apache.commons.lang3.time.DateUtilsTest
+[INFO] Running org.apache.commons.lang3.time.Java15BugFastDateParserTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.828 s - in org.apache.commons.lang3.time.Java15BugFastDateParserTest
+[INFO] Running org.apache.commons.lang3.time.CalendarUtilsTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s - in org.apache.commons.lang3.time.CalendarUtilsTest
+[INFO] Running org.apache.commons.lang3.time.FastDateFormatTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.183 s - in org.apache.commons.lang3.time.FastDateFormatTest
+[INFO] Running org.apache.commons.lang3.time.DurationUtilsTest
+[ERROR] Tests run: 10, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.036 s <<< FAILURE! - in org.apache.commons.lang3.time.DurationUtilsTest
+[ERROR] org.apache.commons.lang3.time.DurationUtilsTest.testOfConsumer  Time elapsed: 0.003 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:40)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:35)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at org.apache.commons.lang3.time.DurationUtilsTest.lambda$testOfConsumer$1(DurationUtilsTest.java:84)
+	at org.apache.commons.lang3.time.DurationUtils.now(DurationUtils.java:118)
+	at org.apache.commons.lang3.time.DurationUtils.of(DurationUtils.java:100)
+	at org.apache.commons.lang3.time.DurationUtilsTest.testOfConsumer(DurationUtilsTest.java:84)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:55)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:223)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:175)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:139)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:456)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:169)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:595)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:581)
+
+[INFO] Running org.apache.commons.lang3.time.DateFormatUtilsTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s - in org.apache.commons.lang3.time.DateFormatUtilsTest
+[INFO] Running org.apache.commons.lang3.time.FastDateParser_MoreOrLessTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s - in org.apache.commons.lang3.time.FastDateParser_MoreOrLessTest
+[INFO] Running org.apache.commons.lang3.time.FastDateParser_TimeZoneStrategyTest
+[INFO] Tests run: 749, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 29.06 s - in org.apache.commons.lang3.time.FastDateParser_TimeZoneStrategyTest
+[INFO] Running org.apache.commons.lang3.time.StopWatchTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.687 s - in org.apache.commons.lang3.time.StopWatchTest
+[INFO] Running org.apache.commons.lang3.time.GmtTimeZoneTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s - in org.apache.commons.lang3.time.GmtTimeZoneTest
+[INFO] Running org.apache.commons.lang3.time.DateUtilsFragmentTest
+[INFO] Tests run: 57, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 s - in org.apache.commons.lang3.time.DateUtilsFragmentTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   DurationUtilsTest.testOfConsumer:84->lambda$testOfConsumer$1:84 expected: <true> but was: <false>
+[INFO] 
+[ERROR] Tests run: 7147, Failures: 1, Errors: 0, Skipped: 7
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:00 min
+[INFO] Finished at: 2022-05-29T08:17:09+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M6:test (default-test) on project commons-lang3: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /builds/workspace/Commons-lang/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+Error: Maven compile original project unsuccessful!
+Build step 'Execute shell' marked build as failure
+Archiving artifacts
+/net/www/ci/sos/jobs/Commons-lang/builds/2089/archive does not exist.
+ERROR: Step ‘Publish XML Summary Reports’ failed: /net/www/ci/sos/jobs/Commons-lang/builds/2089/archive does not exist.
+Finished: FAILURE

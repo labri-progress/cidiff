@@ -1,0 +1,433 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu16 (lin) in workspace /builds/workspace/cocospoon
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/CoCoSpoon.git
+ > git init /builds/workspace/cocospoon # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/CoCoSpoon.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.7.4'
+ > git fetch --tags --progress https://github.com/SpoonLabs/CoCoSpoon.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/CoCoSpoon.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 5fa074ff31f36b438829ba57910bc727f8cb765b (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 5fa074ff31f36b438829ba57910bc727f8cb765b # timeout=10
+Commit message: "move ui in this repo"
+ > git rev-list --no-walk 5fa074ff31f36b438829ba57910bc727f8cb765b # timeout=10
+[cocospoon] $ /bin/sh -xe /tmp/jenkins3543140593007632726.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  11087      0 --:--:-- --:--:-- --:--:-- 11126
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 31 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (835 B at 70 kB/s)
+[INFO] 
+[INFO] --------------------< fil.iagl.cocospoon:CocoSpoon >--------------------
+[INFO] Building CocoSpoon 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.8.1:use-latest-versions (default-cli) @ CocoSpoon ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from sonatype-oss-public
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from gforge.inria.fr-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from central
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:6.2.0 to version 9.2.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.172 s
+[INFO] Finished at: 2021-09-27T17:36:07+02:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< fil.iagl.cocospoon:CocoSpoon >--------------------
+[INFO] Building CocoSpoon 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ CocoSpoon ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.315 s
+[INFO] Finished at: 2021-09-27T17:36:10+02:00
+[INFO] ------------------------------------------------------------------------
++ mvn test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< fil.iagl.cocospoon:CocoSpoon >--------------------
+[INFO] Building CocoSpoon 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from sonatype-oss-public: https://oss.sonatype.org/content/groups/public/fr/inria/gforge/spoon/spoon-core/9.2.0-SNAPSHOT/maven-metadata.xml
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/9.2.0-SNAPSHOT/maven-metadata.xml
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ CocoSpoon ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource to instrumenting
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ CocoSpoon ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 20 source files to /builds/workspace/cocospoon/target/classes
+[WARNING] /builds/workspace/cocospoon/src/main/java/fil/iagl/opl/cocospoon/insert/impl/SwitchInsert.java: /builds/workspace/cocospoon/src/main/java/fil/iagl/opl/cocospoon/insert/impl/SwitchInsert.java uses unchecked or unsafe operations.
+[WARNING] /builds/workspace/cocospoon/src/main/java/fil/iagl/opl/cocospoon/insert/impl/SwitchInsert.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ CocoSpoon ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /builds/workspace/cocospoon/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ CocoSpoon ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 23 source files to /builds/workspace/cocospoon/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ CocoSpoon ---
+[INFO] Surefire report directory: /builds/workspace/cocospoon/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Running fil.iagl.opl.cocospoon.CocoSpoonTest
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+maMethode
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.322 sec
+Running fil.iagl.opl.cocospoon.processors.WhileInsertTest
+public class WhileSample {
+    public static void main(java.lang.String[] args) {
+        int i = 0;
+        TO BE INSERT;
+        while (i < 10) {
+            java.lang.System.out.println("mon while");
+            i++;
+        } 
+        TO BE INSERT;
+        while (true) {
+            java.lang.System.out.println("mon while sans block");
+        } 
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.097 sec
+Running fil.iagl.opl.cocospoon.processors.ConstructorInsertTest
+public class ConstructorSample {
+    private java.lang.String foo;
+
+    private java.lang.String bar;
+
+    public ConstructorSample() {
+        super();
+        TO BE INSERT;
+    }
+
+    public ConstructorSample(java.lang.String foo) {
+        this();
+        TO BE INSERT;
+        this.foo = foo;
+    }
+
+    public ConstructorSample(java.lang.String foo, java.lang.String bar) {
+        this(foo);
+        TO BE INSERT;
+        this.bar = bar;
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.13 sec
+Running fil.iagl.opl.cocospoon.processors.DoInsertTest
+public class DoSample {
+    public static void main(java.lang.String[] args) {
+        int i = 10;
+        do {
+            TO BE INSERT;
+            i--;
+        } while (i > 10 );
+        do {
+            TO BE INSERT;
+            i++;
+        } while (i < 10 );
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.142 sec
+Running fil.iagl.opl.cocospoon.processors.BeforeInsertTest
+public class BeforeSample {
+    public static void main(java.lang.String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            TO BE INSERT;
+            continue;
+        }
+        switch (args.length) {
+            case 1 :
+                TO BE INSERT;
+                break;
+        }
+        TO BE INSERT;
+        throw new java.lang.RuntimeException();
+    }
+
+    public int nonVoidMethod() {
+        TO BE INSERT;
+        return 1;
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.08 sec
+Running fil.iagl.opl.cocospoon.processors.TryInsertTest
+public class TrySample {
+    public static void main(java.lang.String[] args) {
+        TO BE INSERT;
+        try {
+            java.lang.System.out.println("test");
+            java.lang.System.out.println("test");
+            java.lang.System.out.println("test");
+        } catch (java.lang.Exception e) {
+            java.lang.System.out.println("exception");
+        } catch (java.lang.IllegalAccessError e) {
+            java.lang.System.out.println("exception");
+        }
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 sec
+Running fil.iagl.opl.cocospoon.processors.CatchInsertTest
+public class TrySample {
+    public static void main(java.lang.String[] args) {
+        try {
+            java.lang.System.out.println("test");
+            java.lang.System.out.println("test");
+            java.lang.System.out.println("test");
+        } catch (java.lang.Exception e) {
+            TO BE INSERT;
+            java.lang.System.out.println("exception");
+        } catch (java.lang.IllegalAccessError e) {
+            TO BE INSERT;
+            java.lang.System.out.println("exception");
+        }
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.19 sec
+Running fil.iagl.opl.cocospoon.processors.IfInsertTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec
+Running fil.iagl.opl.cocospoon.processors.SwitchInsertTest
+public class SwitchSample {
+    public static void main(java.lang.String[] args) {
+        int i = 0;
+        TO BE INSERT;
+        switch (i) {
+            case 1 :
+                break;
+            case 2 :
+                break;
+            case 3 :
+                break;
+            default :
+        }
+        TO BE INSERT;
+        switch (i) {
+            case 1 :
+                {
+                    break;
+                }
+            case 2 :
+                {
+                    break;
+                }
+            case 3 :
+                {
+                    break;
+                }
+            default :
+                {
+                }
+        }
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.082 sec
+Running fil.iagl.opl.cocospoon.processors.SynchronizedInsertTest
+public class SynchronizedSample {
+    public static void main(java.lang.String[] args) {
+        synchronized(args) {
+            TO BE INSERT;
+            java.lang.System.out.println("foo");
+        }
+        synchronized(args) {
+            TO BE INSERT;
+            java.lang.System.out.println("bar");
+        }
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.113 sec
+Running fil.iagl.opl.cocospoon.processors.MethodInsertTest
+public class MethodSample {
+    public MethodSample() {
+        fil.iagl.opl.cocospoon.samples.MethodSample.main(new java.lang.String[]{  });
+    }
+
+    public static void main(java.lang.String[] args) {
+        TO BE INSERT;
+        java.lang.System.out.println("maMethode");
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.154 sec
+Running fil.iagl.opl.cocospoon.processors.ForInsertTest
+public class ForSample {
+    public static void main(java.lang.String[] args) {
+        for (int i = 0; i < 10; i++) {
+            TO BE INSERT;
+            java.lang.System.out.println(i);
+        }
+        for (int i = 0; i < 10; i++) {
+            TO BE INSERT;
+            java.lang.System.out.println(i);
+        }
+        for (int i : java.util.Arrays.asList(1, 2, 3)) {
+            TO BE INSERT;
+            java.lang.System.out.println(i);
+        }
+        for (int i : java.util.Arrays.asList(1, 2, 3)) {
+            TO BE INSERT;
+            java.lang.System.out.println(i);
+        }
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.131 sec
+Running fil.iagl.opl.cocospoon.processors.CaseInsertTest
+public class SwitchSample {
+    public static void main(java.lang.String[] args) {
+        int i = 0;
+        switch (i) {
+            case 1 :
+                TO BE INSERT;
+                break;
+            case 2 :
+                TO BE INSERT;
+                break;
+            case 3 :
+                TO BE INSERT;
+                break;
+            default :
+                TO BE INSERT;
+        }
+        switch (i) {
+            case 1 :
+                TO BE INSERT;
+                {
+                    break;
+                }
+            case 2 :
+                TO BE INSERT;
+                {
+                    break;
+                }
+            case 3 :
+                TO BE INSERT;
+                {
+                    break;
+                }
+            default :
+                TO BE INSERT;
+                {
+                }
+        }
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.117 sec
+
+Results :
+
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.482 s
+[INFO] Finished at: 2021-09-27T17:36:18+02:00
+[INFO] ------------------------------------------------------------------------
+Finished: SUCCESS

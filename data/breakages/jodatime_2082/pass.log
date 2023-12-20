@@ -1,0 +1,1052 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/Joda Time
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/monperrus/joda-time.git
+ > git init /builds/workspace/Joda Time # timeout=10
+Fetching upstream changes from https://github.com/monperrus/joda-time.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/monperrus/joda-time.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/monperrus/joda-time.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 25857b9e206f03058d9940473cb1f22a875b6d22 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 25857b9e206f03058d9940473cb1f22a875b6d22 # timeout=10
+Commit message: "@monperrus at work"
+ > git rev-list --no-walk 25857b9e206f03058d9940473cb1f22a875b6d22 # timeout=10
+[Joda Time] $ /bin/sh -xe /tmp/jenkins6686076792927833594.sh
++ stdbuf -i 50k bash
++ curl https://spoon.gforge.inria.fr/jenkins/build.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0 
+-------------------------------------------------------
+Initizalizes project
+-------------------------------------------------------
+ 
+100 21399  100 21399    0     0   485k      0 --:--:-- --:--:-- --:--:--  485k
+HEAD is now at 25857b9e @monperrus at work
+
+--- Displays variables used in the build ---
+Artifact id: joda-time
+Version: 2.10.12
+Modules job:
+- Joda Time
+Has checkstyle: true
+Has enforcer: true
+Git version id: 25857b9e206f03058d9940473cb1f22a875b6d22
+Java version: Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+openjdk version "11.0.9.1" 2020-11-04
+OpenJDK Runtime Environment (build 11.0.9.1+1-Ubuntu-0ubuntu1.18.04)
+OpenJDK 64-Bit Server VM (build 11.0.9.1+1-Ubuntu-0ubuntu1.18.04, mixed mode, sharing)
+Java home: /usr/lib/jvm/java-11-openjdk-amd64
+ 
+-------------------------------------------------------
+Compiles project (at the root project if it's a multi module project) without spoon
+-------------------------------------------------------
+ 
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------< [0;36mjoda-time:joda-time[0;1m >-------------------------[m
+[[1;34mINFO[m] [1mBuilding Joda-Time 2.10.12[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:3.1.0:clean[m [1m(default-clean)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:resources[m [1m(default-resources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 2 resources to META-INF
+[[1;34mINFO[m] Copying 18 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.0:compile[m [1m(default-compile)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 166 source files to /builds/workspace/Joda Time/target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mexec-maven-plugin:1.4.0:java[m [1m(compile-tzdb)[m @ [36mjoda-time[0;1m ---[m
+Writing zoneinfo files
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Namibia'
+Fixed negative save values for rule 'Eire'
+Writing ZoneInfoMap
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:testResources[m [1m(default-testResources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 35 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.0:testCompile[m [1m(default-testCompile)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 159 source files to /builds/workspace/Joda Time/target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.21.0:test[m [1m(default-test)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running org.joda.time.[1mTestAllPackages[m
+
+TestBuddhistChronology.testCalendar
+
+TestCopticChronology.testCalendar
+
+TestEthiopicChronology.testCalendar
+
+TestIslamicChronology.testCalendar
+
+Testing Gregorian chronology over 1000 iterations
+100% complete (i=1000)
+
+Testing Julian chronology over 1000 iterations
+100% complete (i=1000)
+Writing zoneinfo files
+Writing ZoneInfoMap
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4237[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.837 s - in org.joda.time.[1mTestAllPackages[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1;32mTests run: 4237, Failures: 0, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:3.1.0:jar[m [1m(default-jar)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Building jar: /builds/workspace/Joda Time/target/joda-time-2.10.12.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:3.1.0:jar[m [1m(no-tzdb)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Building jar: /builds/workspace/Joda Time/target/joda-time-2.10.12-no-tzdb.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-javadoc-plugin:3.0.0-M1:jar[m [1m(attach-javadocs)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Skipping javadoc generation
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-source-plugin:3.0.1:jar-no-fork[m [1m(attach-sources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Building jar: /builds/workspace/Joda Time/target/joda-time-2.10.12-sources.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-source-plugin:3.0.1:jar-no-fork[m [1m(attach-no-tztb-sources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Building jar: /builds/workspace/Joda Time/target/joda-time-2.10.12-no-tzdb-sources.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-install-plugin:2.5.2:install[m [1m(default-install)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/target/joda-time-2.10.12.jar to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12.jar
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/pom.xml to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12.pom
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/target/joda-time-2.10.12-no-tzdb.jar to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12-no-tzdb.jar
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/target/joda-time-2.10.12-sources.jar to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12-sources.jar
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/target/joda-time-2.10.12-no-tzdb-sources.jar to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12-no-tzdb-sources.jar
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  38.823 s
+[[1;34mINFO[m] Finished at: 2022-05-24T15:15:46+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+bash: line 97: bc: command not found
+ 
+--- Displays results of the maven compile ---
+Time to compile: 
+Number of tests: 4237
+Number of tests skipped: 0
+Number of failures in tests: 0
+Number of errors in tests: 0
+ 
+-------------------------------------------------------
+Inserts the maven plugin to spoon the project
+-------------------------------------------------------
+ 
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------< [0;36mjoda-time:joda-time[0;1m >-------------------------[m
+[[1;34mINFO[m] [1mBuilding Joda-Time 2.10.12[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:purge-local-repository[m [1m(default-cli)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  3.023 s
+[[1;34mINFO[m] Finished at: 2022-05-24T15:15:52+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------< [0;36mjoda-time:joda-time[0;1m >-------------------------[m
+[[1;34mINFO[m] [1mBuilding Joda-Time 2.10.12[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:3.1.0:clean[m [1m(default-clean)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Deleting /builds/workspace/Joda Time/target
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:resources[m [1m(default-resources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 2 resources to META-INF
+[[1;34mINFO[m] Copying 18 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.0:compile[m [1m(default-compile)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 166 source files to /builds/workspace/Joda Time/target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mexec-maven-plugin:1.4.0:java[m [1m(compile-tzdb)[m @ [36mjoda-time[0;1m ---[m
+Writing zoneinfo files
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Namibia'
+Fixed negative save values for rule 'Eire'
+Writing ZoneInfoMap
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:testResources[m [1m(default-testResources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 35 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.0:testCompile[m [1m(default-testCompile)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 159 source files to /builds/workspace/Joda Time/target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.21.0:test[m [1m(default-test)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Tests are skipped.
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  25.285 s
+[[1;34mINFO[m] Finished at: 2022-05-24T15:16:20+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+bash: line 193: bc: command not found
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------< [0;36mjoda-time:joda-time[0;1m >-------------------------[m
+[[1;34mINFO[m] [1mBuilding Joda-Time 2.10.12[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mspoon-maven-plugin:3.5-SNAPSHOT:generate[m [1m(default-cli)[m @ [36mjoda-time[0;1m ---[m
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/maven-metadata.xml
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/maven-metadata.xml
+Progress (1): 676 BProgress (2): 676 B | 1.4/7.4 kBProgress (2): 676 B | 2.7/7.4 kBProgress (2): 676 B | 4.1/7.4 kBProgress (2): 676 B | 5.5/7.4 kBProgress (2): 676 B | 6.9/7.4 kBProgress (2): 676 B | 7.4 kB                                Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/maven-metadata.xml (7.4 kB at 12 kB/s)
+Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/maven-metadata.xml (676 B at 967 B/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.0.0/spoon-core-7.0.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.0.0/spoon-core-7.0.0.pom
+Progress (1): 1.4/22 kBProgress (1): 2.7/22 kBProgress (1): 4.1/22 kBProgress (1): 5.5/22 kBProgress (1): 6.9/22 kBProgress (1): 8.2/22 kBProgress (1): 9.6/22 kBProgress (1): 11/22 kB Progress (1): 12/22 kBProgress (1): 14/22 kBProgress (1): 15/22 kBProgress (1): 16/22 kBProgress (1): 17/22 kBProgress (1): 19/22 kBProgress (1): 20/22 kBProgress (1): 21/22 kBProgress (1): 22 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.0.0/spoon-core-7.0.0.pom (22 kB at 410 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.1.0/spoon-core-7.1.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.1.0/spoon-core-7.1.0.pom
+Progress (1): 1.4/23 kBProgress (1): 2.7/23 kBProgress (1): 4.1/23 kBProgress (1): 5.5/23 kBProgress (1): 6.9/23 kBProgress (1): 8.2/23 kBProgress (1): 9.6/23 kBProgress (1): 11/23 kB Progress (1): 12/23 kBProgress (1): 14/23 kBProgress (1): 15/23 kBProgress (1): 16/23 kBProgress (1): 17/23 kBProgress (1): 19/23 kBProgress (1): 20/23 kBProgress (1): 21/23 kBProgress (1): 23 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.1.0/spoon-core-7.1.0.pom (23 kB at 563 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.2.0/spoon-core-7.2.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.2.0/spoon-core-7.2.0.pom
+Progress (1): 1.4/6.9 kBProgress (1): 2.7/6.9 kBProgress (1): 4.1/6.9 kBProgress (1): 5.5/6.9 kBProgress (1): 6.9/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.2.0/spoon-core-7.2.0.pom (6.9 kB at 329 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.3.0/spoon-core-7.3.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.3.0/spoon-core-7.3.0.pom
+Progress (1): 4.1/6.7 kBProgress (1): 6.7 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.3.0/spoon-core-7.3.0.pom (6.7 kB at 355 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-09/spoon-core-7.4.0-beta-09.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-09/spoon-core-7.4.0-beta-09.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-09/spoon-core-7.4.0-beta-09.pom (6.6 kB at 412 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-10/spoon-core-7.4.0-beta-10.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-10/spoon-core-7.4.0-beta-10.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-10/spoon-core-7.4.0-beta-10.pom (6.6 kB at 508 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-11/spoon-core-7.4.0-beta-11.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-11/spoon-core-7.4.0-beta-11.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-11/spoon-core-7.4.0-beta-11.pom (6.6 kB at 300 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-12/spoon-core-7.4.0-beta-12.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-12/spoon-core-7.4.0-beta-12.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-12/spoon-core-7.4.0-beta-12.pom (6.6 kB at 508 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-13/spoon-core-7.4.0-beta-13.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-13/spoon-core-7.4.0-beta-13.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-13/spoon-core-7.4.0-beta-13.pom (6.6 kB at 440 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-14/spoon-core-7.4.0-beta-14.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-14/spoon-core-7.4.0-beta-14.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-14/spoon-core-7.4.0-beta-14.pom (6.6 kB at 330 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-15/spoon-core-7.4.0-beta-15.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-15/spoon-core-7.4.0-beta-15.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-15/spoon-core-7.4.0-beta-15.pom (6.6 kB at 300 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-16/spoon-core-7.4.0-beta-16.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-16/spoon-core-7.4.0-beta-16.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-16/spoon-core-7.4.0-beta-16.pom (6.6 kB at 367 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-17/spoon-core-7.4.0-beta-17.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-17/spoon-core-7.4.0-beta-17.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-17/spoon-core-7.4.0-beta-17.pom (6.6 kB at 183 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-18/spoon-core-7.4.0-beta-18.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-18/spoon-core-7.4.0-beta-18.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-18/spoon-core-7.4.0-beta-18.pom (6.6 kB at 72 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-19/spoon-core-7.4.0-beta-19.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-19/spoon-core-7.4.0-beta-19.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0-beta-19/spoon-core-7.4.0-beta-19.pom (6.6 kB at 367 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.4.0/spoon-core-7.4.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0/spoon-core-7.4.0.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.4.0/spoon-core-7.4.0.pom (6.6 kB at 287 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-1/spoon-core-7.5.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-1/spoon-core-7.5.0-beta-1.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-1/spoon-core-7.5.0-beta-1.pom (6.6 kB at 388 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-2/spoon-core-7.5.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-2/spoon-core-7.5.0-beta-2.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-2/spoon-core-7.5.0-beta-2.pom (6.6 kB at 660 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-3/spoon-core-7.5.0-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-3/spoon-core-7.5.0-beta-3.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-3/spoon-core-7.5.0-beta-3.pom (6.6 kB at 471 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-4/spoon-core-7.5.0-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-4/spoon-core-7.5.0-beta-4.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-4/spoon-core-7.5.0-beta-4.pom (6.6 kB at 550 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-5/spoon-core-7.5.0-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-5/spoon-core-7.5.0-beta-5.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-5/spoon-core-7.5.0-beta-5.pom (6.6 kB at 550 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-6/spoon-core-7.5.0-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-6/spoon-core-7.5.0-beta-6.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-6/spoon-core-7.5.0-beta-6.pom (6.6 kB at 507 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-7/spoon-core-7.5.0-beta-7.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-7/spoon-core-7.5.0-beta-7.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-7/spoon-core-7.5.0-beta-7.pom (6.6 kB at 412 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-8/spoon-core-7.5.0-beta-8.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-8/spoon-core-7.5.0-beta-8.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-8/spoon-core-7.5.0-beta-8.pom (6.6 kB at 550 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-9/spoon-core-7.5.0-beta-9.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-9/spoon-core-7.5.0-beta-9.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-9/spoon-core-7.5.0-beta-9.pom (6.6 kB at 507 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-20/spoon-core-7.5.0-beta-20.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-20/spoon-core-7.5.0-beta-20.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-20/spoon-core-7.5.0-beta-20.pom (6.6 kB at 254 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-21/spoon-core-7.5.0-beta-21.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-21/spoon-core-7.5.0-beta-21.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0-beta-21/spoon-core-7.5.0-beta-21.pom (6.6 kB at 440 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.5.0/spoon-core-7.5.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0/spoon-core-7.5.0.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.5.0/spoon-core-7.5.0.pom (6.6 kB at 599 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-1/spoon-core-7.6.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-1/spoon-core-7.6.0-beta-1.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-1/spoon-core-7.6.0-beta-1.pom (6.6 kB at 660 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-2/spoon-core-7.6.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-2/spoon-core-7.6.0-beta-2.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-2/spoon-core-7.6.0-beta-2.pom (6.6 kB at 507 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-3/spoon-core-7.6.0-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-3/spoon-core-7.6.0-beta-3.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-3/spoon-core-7.6.0-beta-3.pom (6.6 kB at 330 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-4/spoon-core-7.6.0-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-4/spoon-core-7.6.0-beta-4.pom
+Progress (1): 4.1/6.6 kBProgress (1): 6.6 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-4/spoon-core-7.6.0-beta-4.pom (6.6 kB at 660 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-5/spoon-core-7.6.0-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-5/spoon-core-7.6.0-beta-5.pom
+Progress (1): 4.1/6.1 kBProgress (1): 6.1 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-5/spoon-core-7.6.0-beta-5.pom (6.1 kB at 678 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-6/spoon-core-7.6.0-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-6/spoon-core-7.6.0-beta-6.pom
+Progress (1): 4.1/6.1 kBProgress (1): 6.1 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0-beta-6/spoon-core-7.6.0-beta-6.pom (6.1 kB at 436 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/7.6.0/spoon-core-7.6.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0/spoon-core-7.6.0.pom
+Progress (1): 4.1/6.1 kBProgress (1): 6.1 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/7.6.0/spoon-core-7.6.0.pom (6.1 kB at 508 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.0.0-beta-1/spoon-core-8.0.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.0.0-beta-1/spoon-core-8.0.0-beta-1.pom
+Progress (1): 4.1/6.1 kBProgress (1): 6.1 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.0.0-beta-1/spoon-core-8.0.0-beta-1.pom (6.1 kB at 610 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.0.0/spoon-core-8.0.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.0.0/spoon-core-8.0.0.pom
+Progress (1): 4.1/6.1 kBProgress (1): 6.1 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.0.0/spoon-core-8.0.0.pom (6.1 kB at 469 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-1/spoon-core-8.1.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-1/spoon-core-8.1.0-beta-1.pom
+Progress (1): 4.1/6.1 kBProgress (1): 6.1 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-1/spoon-core-8.1.0-beta-1.pom (6.1 kB at 102 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-2/spoon-core-8.1.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-2/spoon-core-8.1.0-beta-2.pom
+Progress (1): 4.1/6.1 kBProgress (1): 6.1 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-2/spoon-core-8.1.0-beta-2.pom (6.1 kB at 469 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-3/spoon-core-8.1.0-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-3/spoon-core-8.1.0-beta-3.pom
+Progress (1): 4.1/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-3/spoon-core-8.1.0-beta-3.pom (6.9 kB at 626 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-4/spoon-core-8.1.0-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-4/spoon-core-8.1.0-beta-4.pom
+Progress (1): 4.1/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-4/spoon-core-8.1.0-beta-4.pom (6.9 kB at 48 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-5/spoon-core-8.1.0-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-5/spoon-core-8.1.0-beta-5.pom
+Progress (1): 4.1/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-5/spoon-core-8.1.0-beta-5.pom (6.9 kB at 626 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-6/spoon-core-8.1.0-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-6/spoon-core-8.1.0-beta-6.pom
+Progress (1): 4.1/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-6/spoon-core-8.1.0-beta-6.pom (6.9 kB at 530 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-7/spoon-core-8.1.0-beta-7.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-7/spoon-core-8.1.0-beta-7.pom
+Progress (1): 4.1/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-7/spoon-core-8.1.0-beta-7.pom (6.9 kB at 530 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-8/spoon-core-8.1.0-beta-8.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-8/spoon-core-8.1.0-beta-8.pom
+Progress (1): 4.1/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-8/spoon-core-8.1.0-beta-8.pom (6.9 kB at 44 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-9/spoon-core-8.1.0-beta-9.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-9/spoon-core-8.1.0-beta-9.pom
+Progress (1): 4.1/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-9/spoon-core-8.1.0-beta-9.pom (6.9 kB at 222 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-10/spoon-core-8.1.0-beta-10.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-10/spoon-core-8.1.0-beta-10.pom
+Progress (1): 4.1/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-10/spoon-core-8.1.0-beta-10.pom (6.9 kB at 691 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-11/spoon-core-8.1.0-beta-11.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-11/spoon-core-8.1.0-beta-11.pom
+Progress (1): 4.1/6.9 kBProgress (1): 6.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-11/spoon-core-8.1.0-beta-11.pom (6.9 kB at 364 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-12/spoon-core-8.1.0-beta-12.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-12/spoon-core-8.1.0-beta-12.pom
+Progress (1): 4.1/7.1 kBProgress (1): 7.1 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-12/spoon-core-8.1.0-beta-12.pom (7.1 kB at 26 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-13/spoon-core-8.1.0-beta-13.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-13/spoon-core-8.1.0-beta-13.pom
+Progress (1): 4.1/7.3 kBProgress (1): 7.3 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-13/spoon-core-8.1.0-beta-13.pom (7.3 kB at 65 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-14/spoon-core-8.1.0-beta-14.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-14/spoon-core-8.1.0-beta-14.pom
+Progress (1): 4.1/7.3 kBProgress (1): 7.3 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-14/spoon-core-8.1.0-beta-14.pom (7.3 kB at 523 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-15/spoon-core-8.1.0-beta-15.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-15/spoon-core-8.1.0-beta-15.pom
+Progress (1): 4.1/7.3 kBProgress (1): 7.3 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-15/spoon-core-8.1.0-beta-15.pom (7.3 kB at 523 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-16/spoon-core-8.1.0-beta-16.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-16/spoon-core-8.1.0-beta-16.pom
+Progress (1): 4.1/7.3 kBProgress (1): 7.3 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-16/spoon-core-8.1.0-beta-16.pom (7.3 kB at 610 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-17/spoon-core-8.1.0-beta-17.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-17/spoon-core-8.1.0-beta-17.pom
+Progress (1): 4.1/7.3 kBProgress (1): 7.3 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-17/spoon-core-8.1.0-beta-17.pom (7.3 kB at 385 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-18/spoon-core-8.1.0-beta-18.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-18/spoon-core-8.1.0-beta-18.pom
+Progress (1): 4.1/7.5 kBProgress (1): 7.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-18/spoon-core-8.1.0-beta-18.pom (7.5 kB at 441 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-19/spoon-core-8.1.0-beta-19.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-19/spoon-core-8.1.0-beta-19.pom
+Progress (1): 4.1/7.5 kBProgress (1): 7.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0-beta-19/spoon-core-8.1.0-beta-19.pom (7.5 kB at 749 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 5.9 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-SNAPSHOT/spoon-core-8.1.0-20200317.052413-1.pom
+Progress (1): 889 BProgress (1): 3.5 kBProgress (1): 6.1 kBProgress (1): 7.7 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0-SNAPSHOT/spoon-core-8.1.0-20200317.052413-1.pom (7.7 kB at 76 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.1.0/spoon-core-8.1.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0/spoon-core-8.1.0.pom
+Progress (1): 4.1/7.5 kBProgress (1): 7.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.1.0/spoon-core-8.1.0.pom (7.5 kB at 832 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-1/spoon-core-8.2.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-1/spoon-core-8.2.0-beta-1.pom
+Progress (1): 4.1/7.5 kBProgress (1): 7.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-1/spoon-core-8.2.0-beta-1.pom (7.5 kB at 576 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-2/spoon-core-8.2.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-2/spoon-core-8.2.0-beta-2.pom
+Progress (1): 4.1/7.5 kBProgress (1): 7.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-2/spoon-core-8.2.0-beta-2.pom (7.5 kB at 500 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-3/spoon-core-8.2.0-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-3/spoon-core-8.2.0-beta-3.pom
+Progress (1): 4.1/7.5 kBProgress (1): 7.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-3/spoon-core-8.2.0-beta-3.pom (7.5 kB at 394 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-4/spoon-core-8.2.0-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-4/spoon-core-8.2.0-beta-4.pom
+Progress (1): 4.1/7.5 kBProgress (1): 7.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-4/spoon-core-8.2.0-beta-4.pom (7.5 kB at 624 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-5/spoon-core-8.2.0-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-5/spoon-core-8.2.0-beta-5.pom
+Progress (1): 4.1/7.5 kBProgress (1): 7.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-5/spoon-core-8.2.0-beta-5.pom (7.5 kB at 535 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-6/spoon-core-8.2.0-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-6/spoon-core-8.2.0-beta-6.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-6/spoon-core-8.2.0-beta-6.pom (7.8 kB at 310 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-7/spoon-core-8.2.0-beta-7.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-7/spoon-core-8.2.0-beta-7.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-7/spoon-core-8.2.0-beta-7.pom (7.8 kB at 647 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-8/spoon-core-8.2.0-beta-8.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-8/spoon-core-8.2.0-beta-8.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-8/spoon-core-8.2.0-beta-8.pom (7.8 kB at 862 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-9/spoon-core-8.2.0-beta-9.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-9/spoon-core-8.2.0-beta-9.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-9/spoon-core-8.2.0-beta-9.pom (7.8 kB at 862 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-10/spoon-core-8.2.0-beta-10.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-10/spoon-core-8.2.0-beta-10.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-10/spoon-core-8.2.0-beta-10.pom (7.8 kB at 597 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-11/spoon-core-8.2.0-beta-11.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-11/spoon-core-8.2.0-beta-11.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-11/spoon-core-8.2.0-beta-11.pom (7.8 kB at 776 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-12/spoon-core-8.2.0-beta-12.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-12/spoon-core-8.2.0-beta-12.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-12/spoon-core-8.2.0-beta-12.pom (7.8 kB at 862 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-13/spoon-core-8.2.0-beta-13.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-13/spoon-core-8.2.0-beta-13.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-13/spoon-core-8.2.0-beta-13.pom (7.8 kB at 646 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-14/spoon-core-8.2.0-beta-14.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-14/spoon-core-8.2.0-beta-14.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-14/spoon-core-8.2.0-beta-14.pom (7.8 kB at 250 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-15/spoon-core-8.2.0-beta-15.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-15/spoon-core-8.2.0-beta-15.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-15/spoon-core-8.2.0-beta-15.pom (7.8 kB at 100 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-16/spoon-core-8.2.0-beta-16.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-16/spoon-core-8.2.0-beta-16.pom
+Progress (1): 4.1/7.8 kBProgress (1): 7.8 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-16/spoon-core-8.2.0-beta-16.pom (7.8 kB at 42 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-17/spoon-core-8.2.0-beta-17.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-17/spoon-core-8.2.0-beta-17.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-17/spoon-core-8.2.0-beta-17.pom (7.4 kB at 673 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-18/spoon-core-8.2.0-beta-18.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-18/spoon-core-8.2.0-beta-18.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0-beta-18/spoon-core-8.2.0-beta-18.pom (7.4 kB at 463 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.2.0/spoon-core-8.2.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0/spoon-core-8.2.0.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.2.0/spoon-core-8.2.0.pom (7.4 kB at 81 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-1/spoon-core-8.3.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-1/spoon-core-8.3.0-beta-1.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-1/spoon-core-8.3.0-beta-1.pom (7.4 kB at 673 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-2/spoon-core-8.3.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-2/spoon-core-8.3.0-beta-2.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-2/spoon-core-8.3.0-beta-2.pom (7.4 kB at 493 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-3/spoon-core-8.3.0-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-3/spoon-core-8.3.0-beta-3.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-3/spoon-core-8.3.0-beta-3.pom (7.4 kB at 43 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-4/spoon-core-8.3.0-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-4/spoon-core-8.3.0-beta-4.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-4/spoon-core-8.3.0-beta-4.pom (7.4 kB at 740 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-5/spoon-core-8.3.0-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-5/spoon-core-8.3.0-beta-5.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-5/spoon-core-8.3.0-beta-5.pom (7.4 kB at 529 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-6/spoon-core-8.3.0-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-6/spoon-core-8.3.0-beta-6.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-6/spoon-core-8.3.0-beta-6.pom (7.4 kB at 435 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-7/spoon-core-8.3.0-beta-7.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-7/spoon-core-8.3.0-beta-7.pom
+Progress (1): 4.1/7.4 kBProgress (1): 7.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-7/spoon-core-8.3.0-beta-7.pom (7.4 kB at 529 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-8/spoon-core-8.3.0-beta-8.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-8/spoon-core-8.3.0-beta-8.pom
+Progress (1): 4.1/8.2 kBProgress (1): 8.2 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-8/spoon-core-8.3.0-beta-8.pom (8.2 kB at 628 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-9/spoon-core-8.3.0-beta-9.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-9/spoon-core-8.3.0-beta-9.pom
+Progress (1): 4.1/8.2 kBProgress (1): 8.2 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-9/spoon-core-8.3.0-beta-9.pom (8.2 kB at 583 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-10/spoon-core-8.3.0-beta-10.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-10/spoon-core-8.3.0-beta-10.pom
+Progress (1): 4.1/8.3 kBProgress (1): 8.2/8.3 kBProgress (1): 8.3 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-10/spoon-core-8.3.0-beta-10.pom (8.3 kB at 551 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-11/spoon-core-8.3.0-beta-11.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-11/spoon-core-8.3.0-beta-11.pom
+Progress (1): 4.1/8.3 kBProgress (1): 8.2/8.3 kBProgress (1): 8.3 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-11/spoon-core-8.3.0-beta-11.pom (8.3 kB at 486 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-12/spoon-core-8.3.0-beta-12.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-12/spoon-core-8.3.0-beta-12.pom
+Progress (1): 4.1/8.3 kBProgress (1): 8.2/8.3 kBProgress (1): 8.3 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-12/spoon-core-8.3.0-beta-12.pom (8.3 kB at 551 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-13/spoon-core-8.3.0-beta-13.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-13/spoon-core-8.3.0-beta-13.pom
+Progress (1): 4.1/9.4 kBProgress (1): 8.2/9.4 kBProgress (1): 9.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0-beta-13/spoon-core-8.3.0-beta-13.pom (9.4 kB at 586 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 9.5 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-SNAPSHOT/spoon-core-8.3.0-20201019.214442-4.pom
+Progress (1): 887 BProgress (1): 3.3 kBProgress (1): 6.0 kBProgress (1): 8.1 kBProgress (1): 9.8 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0-SNAPSHOT/spoon-core-8.3.0-20201019.214442-4.pom (9.8 kB at 93 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.3.0/spoon-core-8.3.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0/spoon-core-8.3.0.pom
+Progress (1): 4.1/9.4 kBProgress (1): 8.2/9.4 kBProgress (1): 9.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.3.0/spoon-core-8.3.0.pom (9.4 kB at 302 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-1/spoon-core-8.4.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-1/spoon-core-8.4.0-beta-1.pom
+Progress (1): 4.1/9.4 kBProgress (1): 8.2/9.4 kBProgress (1): 9.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-1/spoon-core-8.4.0-beta-1.pom (9.4 kB at 721 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-2/spoon-core-8.4.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-2/spoon-core-8.4.0-beta-2.pom
+Progress (1): 4.1/9.4 kBProgress (1): 8.2/9.4 kBProgress (1): 9.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-2/spoon-core-8.4.0-beta-2.pom (9.4 kB at 45 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-3/spoon-core-8.4.0-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-3/spoon-core-8.4.0-beta-3.pom
+Progress (1): 4.1/9.5 kBProgress (1): 8.2/9.5 kBProgress (1): 9.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-3/spoon-core-8.4.0-beta-3.pom (9.5 kB at 729 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-4/spoon-core-8.4.0-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-4/spoon-core-8.4.0-beta-4.pom
+Progress (1): 4.1/9.5 kBProgress (1): 8.2/9.5 kBProgress (1): 9.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-4/spoon-core-8.4.0-beta-4.pom (9.5 kB at 558 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-5/spoon-core-8.4.0-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-5/spoon-core-8.4.0-beta-5.pom
+Progress (1): 4.1/9.5 kBProgress (1): 8.2/9.5 kBProgress (1): 9.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-5/spoon-core-8.4.0-beta-5.pom (9.5 kB at 729 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-6/spoon-core-8.4.0-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-6/spoon-core-8.4.0-beta-6.pom
+Progress (1): 4.1/9.5 kBProgress (1): 8.2/9.5 kBProgress (1): 9.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-6/spoon-core-8.4.0-beta-6.pom (9.5 kB at 948 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-7/spoon-core-8.4.0-beta-7.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-7/spoon-core-8.4.0-beta-7.pom
+Progress (1): 4.1/9.5 kBProgress (1): 8.2/9.5 kBProgress (1): 9.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-7/spoon-core-8.4.0-beta-7.pom (9.5 kB at 862 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-8/spoon-core-8.4.0-beta-8.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-8/spoon-core-8.4.0-beta-8.pom
+Progress (1): 4.1/9.5 kBProgress (1): 8.2/9.5 kBProgress (1): 9.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-8/spoon-core-8.4.0-beta-8.pom (9.5 kB at 790 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-9/spoon-core-8.4.0-beta-9.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-9/spoon-core-8.4.0-beta-9.pom
+Progress (1): 4.1/9.5 kBProgress (1): 8.2/9.5 kBProgress (1): 9.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-9/spoon-core-8.4.0-beta-9.pom (9.5 kB at 948 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-10/spoon-core-8.4.0-beta-10.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-10/spoon-core-8.4.0-beta-10.pom
+Progress (1): 4.1/9.5 kBProgress (1): 8.2/9.5 kBProgress (1): 9.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-10/spoon-core-8.4.0-beta-10.pom (9.5 kB at 790 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-11/spoon-core-8.4.0-beta-11.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-11/spoon-core-8.4.0-beta-11.pom
+Progress (1): 4.1/10 kBProgress (1): 8.2/10 kBProgress (1): 10 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-11/spoon-core-8.4.0-beta-11.pom (10 kB at 724 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-12/spoon-core-8.4.0-beta-12.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-12/spoon-core-8.4.0-beta-12.pom
+Progress (1): 4.1/10.0 kBProgress (1): 8.2/10.0 kBProgress (1): 10.0 kB                         Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-12/spoon-core-8.4.0-beta-12.pom (10.0 kB at 664 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-13/spoon-core-8.4.0-beta-13.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-13/spoon-core-8.4.0-beta-13.pom
+Progress (1): 4.1/10.0 kBProgress (1): 8.2/10.0 kBProgress (1): 10.0 kB                         Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-13/spoon-core-8.4.0-beta-13.pom (10.0 kB at 830 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-14/spoon-core-8.4.0-beta-14.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-14/spoon-core-8.4.0-beta-14.pom
+Progress (1): 4.1/10.0 kBProgress (1): 8.2/10.0 kBProgress (1): 10.0 kB                         Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-14/spoon-core-8.4.0-beta-14.pom (10.0 kB at 59 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-15/spoon-core-8.4.0-beta-15.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-15/spoon-core-8.4.0-beta-15.pom
+Progress (1): 4.1/10.0 kBProgress (1): 8.2/10.0 kBProgress (1): 10.0 kB                         Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-15/spoon-core-8.4.0-beta-15.pom (10.0 kB at 1.1 MB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-16/spoon-core-8.4.0-beta-16.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-16/spoon-core-8.4.0-beta-16.pom
+Progress (1): 4.1/10.0 kBProgress (1): 8.2/10.0 kBProgress (1): 10.0 kB                         Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-16/spoon-core-8.4.0-beta-16.pom (10.0 kB at 830 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-17/spoon-core-8.4.0-beta-17.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-17/spoon-core-8.4.0-beta-17.pom
+Progress (1): 4.1/10.0 kBProgress (1): 8.2/10.0 kBProgress (1): 10.0 kB                         Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-17/spoon-core-8.4.0-beta-17.pom (10.0 kB at 84 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-18/spoon-core-8.4.0-beta-18.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-18/spoon-core-8.4.0-beta-18.pom
+Progress (1): 4.1/10.0 kBProgress (1): 8.2/10.0 kBProgress (1): 10.0 kB                         Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0-beta-18/spoon-core-8.4.0-beta-18.pom (10.0 kB at 832 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 9.8 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-SNAPSHOT/spoon-core-8.4.0-20210316.100102-233.pom
+Progress (1): 887 BProgress (1): 3.2 kBProgress (1): 6.1 kBProgress (1): 8.2 kBProgress (1): 10 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0-SNAPSHOT/spoon-core-8.4.0-20210316.100102-233.pom (10 kB at 102 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/8.4.0/spoon-core-8.4.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0/spoon-core-8.4.0.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/8.4.0/spoon-core-8.4.0.pom (11 kB at 621 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.0.0/spoon-core-9.0.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.0.0/spoon-core-9.0.0.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.0.0/spoon-core-9.0.0.pom (11 kB at 917 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-1/spoon-core-9.1.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-1/spoon-core-9.1.0-beta-1.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-1/spoon-core-9.1.0-beta-1.pom (11 kB at 755 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-2/spoon-core-9.1.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-2/spoon-core-9.1.0-beta-2.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-2/spoon-core-9.1.0-beta-2.pom (11 kB at 755 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-3/spoon-core-9.1.0-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-3/spoon-core-9.1.0-beta-3.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-3/spoon-core-9.1.0-beta-3.pom (11 kB at 961 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-4/spoon-core-9.1.0-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-4/spoon-core-9.1.0-beta-4.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-4/spoon-core-9.1.0-beta-4.pom (11 kB at 881 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-5/spoon-core-9.1.0-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-5/spoon-core-9.1.0-beta-5.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-5/spoon-core-9.1.0-beta-5.pom (11 kB at 182 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-6/spoon-core-9.1.0-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-6/spoon-core-9.1.0-beta-6.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-6/spoon-core-9.1.0-beta-6.pom (11 kB at 661 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-7/spoon-core-9.1.0-beta-7.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-7/spoon-core-9.1.0-beta-7.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-7/spoon-core-9.1.0-beta-7.pom (11 kB at 893 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-8/spoon-core-9.1.0-beta-8.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-8/spoon-core-9.1.0-beta-8.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-8/spoon-core-9.1.0-beta-8.pom (11 kB at 767 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-9/spoon-core-9.1.0-beta-9.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-9/spoon-core-9.1.0-beta-9.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-9/spoon-core-9.1.0-beta-9.pom (11 kB at 215 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-10/spoon-core-9.1.0-beta-10.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-10/spoon-core-9.1.0-beta-10.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-10/spoon-core-9.1.0-beta-10.pom (11 kB at 565 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-11/spoon-core-9.1.0-beta-11.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-11/spoon-core-9.1.0-beta-11.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-11/spoon-core-9.1.0-beta-11.pom (11 kB at 671 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-12/spoon-core-9.1.0-beta-12.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-12/spoon-core-9.1.0-beta-12.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-12/spoon-core-9.1.0-beta-12.pom (11 kB at 1.2 MB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-13/spoon-core-9.1.0-beta-13.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-13/spoon-core-9.1.0-beta-13.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-13/spoon-core-9.1.0-beta-13.pom (11 kB at 895 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-14/spoon-core-9.1.0-beta-14.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-14/spoon-core-9.1.0-beta-14.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-14/spoon-core-9.1.0-beta-14.pom (11 kB at 895 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-15/spoon-core-9.1.0-beta-15.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-15/spoon-core-9.1.0-beta-15.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-15/spoon-core-9.1.0-beta-15.pom (11 kB at 826 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-16/spoon-core-9.1.0-beta-16.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-16/spoon-core-9.1.0-beta-16.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-16/spoon-core-9.1.0-beta-16.pom (11 kB at 1.1 MB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-17/spoon-core-9.1.0-beta-17.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-17/spoon-core-9.1.0-beta-17.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-17/spoon-core-9.1.0-beta-17.pom (11 kB at 976 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-18/spoon-core-9.1.0-beta-18.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-18/spoon-core-9.1.0-beta-18.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-18/spoon-core-9.1.0-beta-18.pom (11 kB at 716 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-19/spoon-core-9.1.0-beta-19.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-19/spoon-core-9.1.0-beta-19.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-19/spoon-core-9.1.0-beta-19.pom (11 kB at 358 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-20/spoon-core-9.1.0-beta-20.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-20/spoon-core-9.1.0-beta-20.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-20/spoon-core-9.1.0-beta-20.pom (11 kB at 895 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-21/spoon-core-9.1.0-beta-21.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-21/spoon-core-9.1.0-beta-21.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-21/spoon-core-9.1.0-beta-21.pom (11 kB at 826 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-22/spoon-core-9.1.0-beta-22.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-22/spoon-core-9.1.0-beta-22.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-22/spoon-core-9.1.0-beta-22.pom (11 kB at 826 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-23/spoon-core-9.1.0-beta-23.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-23/spoon-core-9.1.0-beta-23.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0-beta-23/spoon-core-9.1.0-beta-23.pom (11 kB at 88 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 11 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-SNAPSHOT/spoon-core-9.1.0-20210821.134224-292.pom
+Progress (1): 887 BProgress (1): 3.2 kBProgress (1): 6.1 kBProgress (1): 8.2 kBProgress (1): 11 kB Progress (1): 11 kB                   Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0-SNAPSHOT/spoon-core-9.1.0-20210821.134224-292.pom (11 kB at 109 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.1.0/spoon-core-9.1.0.pom (11 kB at 1.1 MB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-1/spoon-core-9.2.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-1/spoon-core-9.2.0-beta-1.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-1/spoon-core-9.2.0-beta-1.pom (11 kB at 716 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-2/spoon-core-9.2.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-2/spoon-core-9.2.0-beta-2.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-2/spoon-core-9.2.0-beta-2.pom (11 kB at 976 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-3/spoon-core-9.2.0-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-3/spoon-core-9.2.0-beta-3.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-3/spoon-core-9.2.0-beta-3.pom (11 kB at 671 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-4/spoon-core-9.2.0-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-4/spoon-core-9.2.0-beta-4.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-4/spoon-core-9.2.0-beta-4.pom (11 kB at 1.2 MB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-5/spoon-core-9.2.0-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-5/spoon-core-9.2.0-beta-5.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-5/spoon-core-9.2.0-beta-5.pom (11 kB at 488 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-6/spoon-core-9.2.0-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-6/spoon-core-9.2.0-beta-6.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-6/spoon-core-9.2.0-beta-6.pom (11 kB at 826 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-7/spoon-core-9.2.0-beta-7.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-7/spoon-core-9.2.0-beta-7.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-7/spoon-core-9.2.0-beta-7.pom (11 kB at 713 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-8/spoon-core-9.2.0-beta-8.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-8/spoon-core-9.2.0-beta-8.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/9.2.0-beta-8/spoon-core-9.2.0-beta-8.pom (11 kB at 822 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 12 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-SNAPSHOT/spoon-core-9.2.0-20211026.224316-154.pom
+Progress (1): 882 BProgress (1): 3.3 kBProgress (1): 6.1 kBProgress (1): 8.2 kBProgress (1): 11 kB Progress (1): 11 kB                   Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/9.2.0-SNAPSHOT/spoon-core-9.2.0-20211026.224316-154.pom (11 kB at 116 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 11 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.0-SNAPSHOT/spoon-core-10.0.0-20211027.200136-4.pom
+Progress (1): 886 BProgress (1): 3.3 kBProgress (1): 6.1 kBProgress (1): 8.2 kBProgress (1): 11 kB Progress (1): 11 kB                   Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.0-SNAPSHOT/spoon-core-10.0.0-20211027.200136-4.pom (11 kB at 10 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.0/spoon-core-10.0.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.0/spoon-core-10.0.0.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.0/spoon-core-10.0.0.pom (11 kB at 743 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-1/spoon-core-10.0.1-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-1/spoon-core-10.0.1-beta-1.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-1/spoon-core-10.0.1-beta-1.pom (11 kB at 891 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-2/spoon-core-10.0.1-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-2/spoon-core-10.0.1-beta-2.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-2/spoon-core-10.0.1-beta-2.pom (11 kB at 858 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-3/spoon-core-10.0.1-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-3/spoon-core-10.0.1-beta-3.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-3/spoon-core-10.0.1-beta-3.pom (11 kB at 987 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-4/spoon-core-10.0.1-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-4/spoon-core-10.0.1-beta-4.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-4/spoon-core-10.0.1-beta-4.pom (11 kB at 905 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-5/spoon-core-10.0.1-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-5/spoon-core-10.0.1-beta-5.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-5/spoon-core-10.0.1-beta-5.pom (11 kB at 1.1 MB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-6/spoon-core-10.0.1-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-6/spoon-core-10.0.1-beta-6.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-6/spoon-core-10.0.1-beta-6.pom (11 kB at 1.1 MB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-7/spoon-core-10.0.1-beta-7.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-7/spoon-core-10.0.1-beta-7.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-7/spoon-core-10.0.1-beta-7.pom (11 kB at 68 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-8/spoon-core-10.0.1-beta-8.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-8/spoon-core-10.0.1-beta-8.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-8/spoon-core-10.0.1-beta-8.pom (11 kB at 350 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-9/spoon-core-10.0.1-beta-9.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-9/spoon-core-10.0.1-beta-9.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-9/spoon-core-10.0.1-beta-9.pom (11 kB at 362 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-10/spoon-core-10.0.1-beta-10.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-10/spoon-core-10.0.1-beta-10.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.0.1-beta-10/spoon-core-10.0.1-beta-10.pom (11 kB at 51 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml (1.0 kB at 9.5 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220403.224331-387.pom
+Progress (1): 882 BProgress (1): 3.2 kBProgress (1): 6.0 kBProgress (1): 8.1 kBProgress (1): 11 kB Progress (1): 11 kB                   Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220403.224331-387.pom (11 kB at 99 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.1.0-beta-1/spoon-core-10.1.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.1.0-beta-1/spoon-core-10.1.0-beta-1.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.1.0-beta-1/spoon-core-10.1.0-beta-1.pom (11 kB at 905 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.1.0-beta-2/spoon-core-10.1.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.1.0-beta-2/spoon-core-10.1.0-beta-2.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.1.0-beta-2/spoon-core-10.1.0-beta-2.pom (11 kB at 727 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.1.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.1.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.1.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 12 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.1.0-SNAPSHOT/spoon-core-10.1.0-20220413.085859-25.pom
+Progress (1): 883 BProgress (1): 3.3 kBProgress (1): 6.0 kBProgress (1): 8.1 kBProgress (1): 11 kB Progress (1): 11 kB                   Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.1.0-SNAPSHOT/spoon-core-10.1.0-20220413.085859-25.pom (11 kB at 115 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.1.0/spoon-core-10.1.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.1.0/spoon-core-10.1.0.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.1.0/spoon-core-10.1.0.pom (11 kB at 375 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.1.1/spoon-core-10.1.1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.1.1/spoon-core-10.1.1.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.1.1/spoon-core-10.1.1.pom (11 kB at 1.0 MB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-1/spoon-core-10.2.0-beta-1.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-1/spoon-core-10.2.0-beta-1.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-1/spoon-core-10.2.0-beta-1.pom (11 kB at 982 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-2/spoon-core-10.2.0-beta-2.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-2/spoon-core-10.2.0-beta-2.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-2/spoon-core-10.2.0-beta-2.pom (11 kB at 982 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-3/spoon-core-10.2.0-beta-3.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-3/spoon-core-10.2.0-beta-3.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-3/spoon-core-10.2.0-beta-3.pom (11 kB at 982 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-4/spoon-core-10.2.0-beta-4.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-4/spoon-core-10.2.0-beta-4.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-4/spoon-core-10.2.0-beta-4.pom (11 kB at 600 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-5/spoon-core-10.2.0-beta-5.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-5/spoon-core-10.2.0-beta-5.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-5/spoon-core-10.2.0-beta-5.pom (11 kB at 831 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-6/spoon-core-10.2.0-beta-6.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-6/spoon-core-10.2.0-beta-6.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-6/spoon-core-10.2.0-beta-6.pom (11 kB at 89 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-7/spoon-core-10.2.0-beta-7.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-7/spoon-core-10.2.0-beta-7.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-7/spoon-core-10.2.0-beta-7.pom (11 kB at 831 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-8/spoon-core-10.2.0-beta-8.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-8/spoon-core-10.2.0-beta-8.pom
+Progress (1): 4.1/11 kBProgress (1): 8.2/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-core/10.2.0-beta-8/spoon-core-10.2.0-beta-8.pom (11 kB at 771 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 11 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/spoon-core-10.2.0-20220523.224306-66.pom
+Progress (1): 883 BProgress (1): 3.3 kBProgress (1): 6.0 kBProgress (1): 8.1 kBProgress (1): 11 kB Progress (1): 11 kB                   Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/spoon-core-10.2.0-20220523.224306-66.pom (11 kB at 116 kB/s)
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/spoon-core-10.2.0-20220523.224306-66.jar
+Progress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.1/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.2/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.3/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.4/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.5/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.6/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.7/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.8/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 0.9/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.0/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.1/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.2/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.3/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.4/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.5/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.6/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.7/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.8/1.9 MBProgress (1): 1.9/1.9 MBProgress (1): 1.9/1.9 MBProgress (1): 1.9/1.9 MBProgress (1): 1.9/1.9 MBProgress (1): 1.9 MB                        Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/spoon-core-10.2.0-20220523.224306-66.jar (1.9 MB at 3.3 MB/s)
+[[1;34mINFO[m] Running in FULLCLASSPATH mode (doc: http://spoon.gforge.inria.fr/launcher.html).
+[[1;34mINFO[m] Spoon version ${project.version}
+[[1;34mINFO[m] running Spoon...
+[[1;34mINFO[m] start processing...
+[[1;34mINFO[m] spoon.processing.SpoonTagger
+[[1;34mINFO[m] spoon.support.JavaOutputProcessor
+[[1;34mINFO[m] end of processing: 
+[[1;34mINFO[m] no errors, no warnings
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  56.287 s
+[[1;34mINFO[m] Finished at: 2022-05-24T15:17:19+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+normal maven case
+diff --git a/src/main/java/org/joda/time/Chronology.java b/src/main/java/org/joda/time/Chronology.java
+index 1e49d229..dd810561 100644
+--- a/src/main/java/org/joda/time/Chronology.java
++++ b/src/main/java/org/joda/time/Chronology.java
+@@ -1,21 +1,18 @@
+-/*
+- *  Copyright 2001-2005 Stephen Colebourne
+- *
+- *  Licensed under the Apache License, Version 2.0 (the "License");
+- *  you may not use this file except in compliance with the License.
+- *  You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- *  Unless required by applicable law or agreed to in writing, software
+- *  distributed under the License is distributed on an "AS IS" BASIS,
+- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- *  See the License for the specific language governing permissions and
+- *  limitations under the License.
+- */
+-package org.joda.time;
++/* Copyright 2001-2005 Stephen Colebourne
++
++ Licensed under the Apache License, Version 2.0 (the "License");
++ you may not use this file except in compliance with the License.
++ You may obtain a copy of the License at
+ 
++     http://www.apache.org/licenses/LICENSE-2.0
+ 
++ Unless required by applicable law or agreed to in writing, software
++ distributed under the License is distributed on an "AS IS" BASIS,
++ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ See the License for the specific language governing permissions and
++ limitations under the License.
++ */
++package org.joda.time;
+ /**
+  * Chronology provides access to the individual date time fields for a
+  * chronological calendar system.
+@@ -57,20 +54,18 @@ package org.joda.time;
+  * @see org.joda.time.chrono.BuddhistChronology
+  * @see org.joda.time.chrono.EthiopicChronology
+  * @see org.joda.time.chrono.IslamicChronology
+- *
+  * @author Stephen Colebourne
+  * @author Brian S O'Neill
+  * @since 1.0
+  */
+ public abstract class Chronology {
+-
+     /**
+      * Returns the DateTimeZone that this Chronology operates in, or null if
+      * unspecified.
+      *
+      * @return the DateTimeZone, null if unspecified
+      */
+-    public abstract DateTimeZone getZone();
++    public abstract org.joda.time.DateTimeZone getZone();
+ 
+     /**
+      * Returns an instance of this Chronology that operates in the UTC time
+@@ -79,16 +74,17 @@ public abstract class Chronology {
+      *
+      * @return a version of this chronology that ignores time zones
+      */
+-    public abstract Chronology withUTC();
+-    
++    public abstract org.joda.time.Chronology withUTC();
++
+     /**
+      * Returns an instance of this Chronology that operates in any time zone.
+      *
+      * @return a version of this chronology with a specific time zone
+-     * @param zone to use, or default if null
++     * @param zone
++     * 		to use, or default if null
+      * @see org.joda.time.chrono.ZonedChronology
+      */
+-    public abstract Chronology withZone(DateTimeZone zone);
++    public abstract org.joda.time.Chronology withZone(org.joda.time.DateTimeZone zone);
+ 
+     /**
+      * Returns a datetime millisecond instant, formed from the given year,
+@@ -99,12 +95,17 @@ public abstract class Chronology {
+      * determine the result. Subclasses are encouraged to provide a more
+      * efficient implementation.
+      *
+-     * @param year year to use
+-     * @param monthOfYear month to use
+-     * @param dayOfMonth day of month to use
+-     * @param millisOfDay millisecond to use
++     * @param year
++     * 		year to use
++     * @param monthOfYear
++     * 		month to use
++     * @param dayOfMonth
++     * 		day of month to use
++     * @param millisOfDay
++     * 		millisecond to use
+      * @return millisecond instant from 1970-01-01T00:00:00Z
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------< [0;36mjoda-time:joda-time[0;1m >-------------------------[m
+[[1;34mINFO[m] [1mBuilding Joda-Time 2.10.12[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:3.1.0:clean[m [1m(default-clean)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Deleting /builds/workspace/Joda Time/target
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:resources[m [1m(default-resources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 2 resources to META-INF
+[[1;34mINFO[m] Copying 54 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.0:compile[m [1m(default-compile)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 167 source files to /builds/workspace/Joda Time/target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mexec-maven-plugin:1.4.0:java[m [1m(compile-tzdb)[m @ [36mjoda-time[0;1m ---[m
+Writing zoneinfo files
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Morocco'
+Fixed negative save values for rule 'Namibia'
+Fixed negative save values for rule 'Eire'
+Writing ZoneInfoMap
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:testResources[m [1m(default-testResources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 35 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.0:testCompile[m [1m(default-testCompile)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 159 source files to /builds/workspace/Joda Time/target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.21.0:test[m [1m(default-test)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running org.joda.time.[1mTestAllPackages[m
+
+TestBuddhistChronology.testCalendar
+
+TestCopticChronology.testCalendar
+
+TestEthiopicChronology.testCalendar
+
+TestIslamicChronology.testCalendar
+
+Testing Gregorian chronology over 1000 iterations
+100% complete (i=1000)
+
+Testing Julian chronology over 1000 iterations
+100% complete (i=1000)
+Writing zoneinfo files
+Writing ZoneInfoMap
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4237[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.096 s - in org.joda.time.[1mTestAllPackages[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1;32mTests run: 4237, Failures: 0, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:3.1.0:jar[m [1m(default-jar)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Building jar: /builds/workspace/Joda Time/target/joda-time-2.10.12.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:3.1.0:jar[m [1m(no-tzdb)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Building jar: /builds/workspace/Joda Time/target/joda-time-2.10.12-no-tzdb.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-javadoc-plugin:3.0.0-M1:jar[m [1m(attach-javadocs)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Skipping javadoc generation
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-source-plugin:3.0.1:jar-no-fork[m [1m(attach-sources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Building jar: /builds/workspace/Joda Time/target/joda-time-2.10.12-sources.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-source-plugin:3.0.1:jar-no-fork[m [1m(attach-no-tztb-sources)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Building jar: /builds/workspace/Joda Time/target/joda-time-2.10.12-no-tzdb-sources.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-install-plugin:2.5.2:install[m [1m(default-install)[m @ [36mjoda-time[0;1m ---[m
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/target/joda-time-2.10.12.jar to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12.jar
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/pom.xml to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12.pom
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/target/joda-time-2.10.12-no-tzdb.jar to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12-no-tzdb.jar
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/target/joda-time-2.10.12-sources.jar to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12-sources.jar
+[[1;34mINFO[m] Installing /builds/workspace/Joda Time/target/joda-time-2.10.12-no-tzdb-sources.jar to /builds/.m2/repository/joda-time/joda-time/2.10.12/joda-time-2.10.12-no-tzdb-sources.jar
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  40.732 s
+[[1;34mINFO[m] Finished at: 2022-05-24T15:18:03+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+bash: line 226: bc: command not found
+ 
+--- Displays results of the maven compile with spoon of spoon ---
+Time to compile with spoon of spoon: 
+ 
+--- Displays results of the maven compile with spoon ---
+Time to compile with spoon: 
+Number of tests: 4237
+Number of tests skipped: 0
+Number of failures in tests: 0
+Number of errors in tests: 0
+ 
+-------------------------------------------------------
+Retrieves all results files in the project (in all sub modules if the project is a multi module project)
+-------------------------------------------------------
+ 
+./result-spoon-tests-spooned-..txt
+./result-spoon-tests-..txt
+find: './target/spoon-maven-plugin': No such file or directory
+rm: cannot remove 'result-spoon.bak*.xml': No such file or directory
+<?xml version="1.0"?>
+<section name="">
+  <table>
+    <tr>
+      <td fontattribute="bold">Project</td>
+      <td fontattribute="bold">Commit id version</td>
+      <td fontattribute="bold">Project compiles</td>
+      <td fontattribute="bold">Project tests run</td>
+      <td fontattribute="bold">Project spooned compiles</td>
+      <td fontattribute="bold">Project spooned tests run</td>
+      <td fontattribute="bold">Time to spoon</td>
+      <td fontattribute="bold">Number of CtStatment</td>
+      <td fontattribute="bold">Time to compile project</td>
+      <td fontattribute="bold">Time to compile project spooned</td>
+      <td fontattribute="bold">Spoon(Spoon(x))=Spoon(x)</td>
+    </tr>
+  </table>
+</section>
+Archiving artifacts
+Finished: SUCCESS

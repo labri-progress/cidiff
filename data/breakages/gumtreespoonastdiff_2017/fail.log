@@ -1,0 +1,310 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/gumtree-spoon-ast-diff
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/gumtree-spoon-ast-diff.git
+ > git init /builds/workspace/gumtree-spoon-ast-diff # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/gumtree-spoon-ast-diff.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/SpoonLabs/gumtree-spoon-ast-diff.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/gumtree-spoon-ast-diff.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 6533706e98ba0b7be088a2933641aeee3c458c85 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6533706e98ba0b7be088a2933641aeee3c458c85 # timeout=10
+Commit message: "Bump spoon-core from 10.0.0 to 10.1.0 (#240)"
+ > git rev-list --no-walk 6533706e98ba0b7be088a2933641aeee3c458c85 # timeout=10
+[gumtree-spoon-ast-diff] $ /bin/sh -xe /tmp/jenkins14579656407886759446.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  17379      0 --:--:-- --:--:-- --:--:-- 17379
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff:jar:SNAPSHOT
+[WARNING] 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ line 14, column 12
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 33 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 23 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (932 B at 67 kB/s)
+[INFO] 
+[INFO] ---------< fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff >----------
+[INFO] Building Gumtree Spoon AST Diff SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.11.0:use-latest-versions (default-cli) @ gumtree-spoon-ast-diff ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from gforge.inria.fr-release
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from central
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:10.1.0 to version 10.2.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.905 s
+[INFO] Finished at: 2022-05-27T10:20:12+02:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff:jar:SNAPSHOT
+[WARNING] 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ line 14, column 12
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] 
+[INFO] ---------< fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff >----------
+[INFO] Building Gumtree Spoon AST Diff SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ gumtree-spoon-ast-diff ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.471 s
+[INFO] Finished at: 2022-05-27T10:20:18+02:00
+[INFO] ------------------------------------------------------------------------
++ mvn -U dependency:resolve
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective model for fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff:jar:SNAPSHOT
+[[1;33mWARNING[m] 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ line 14, column 12
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] It is highly recommended to fix these problems because they threaten the stability of your build.
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] For this reason, future Maven versions might no longer support building such malformed projects.
+[[1;33mWARNING[m] 
+[[1;34mINFO[m] Inspecting build with total of 1 modules...
+[[1;34mINFO[m] Installing Nexus Staging features:
+[[1;34mINFO[m]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m---------< [0;36mfr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff[0;1m >----------[m
+[[1;34mINFO[m] [1mBuilding Gumtree Spoon AST Diff SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml
+Downloading from gforge.inria.fr-release: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.2.0-SNAPSHOT/maven-metadata.xml (1.0 kB at 1.6 kB/s)
+Downloading from gforge.inria.fr-release: http://maven.inria.fr/artifactory/spoon-public-snapshot/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from sonatype-nexus-snapshots: https://oss.sonatype.org/content/repositories/snapshots/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from maven.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/org/apache/maven/maven-model/maven-metadata.xml
+Progress (1): 1.4/2.4 kBProgress (1): 2.4 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-model/maven-metadata.xml (2.4 kB at 21 kB/s)
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:2.8:resolve[m [1m(default-cli)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] The following files have been resolved:
+[[1;34mINFO[m]    com.martiansoftware:jsap:jar:2.1:compile
+[[1;34mINFO[m]    com.github.gumtreediff:core:jar:3.0.0:compile
+[[1;34mINFO[m]    org.apache.commons:commons-compress:jar:1.21:compile
+[[1;34mINFO[m]    log4j:log4j:jar:1.2.17:test
+[[1;34mINFO[m]    org.eclipse.jdt:org.eclipse.jdt.core:jar:3.29.0:compile
+[[1;34mINFO[m]    org.slf4j:slf4j-api:jar:1.7.36:compile
+[[1;34mINFO[m]    org.jgrapht:jgrapht-core:jar:1.5.1:runtime
+[[1;34mINFO[m]    commons-io:commons-io:jar:2.11.0:compile
+[[1;34mINFO[m]    com.fasterxml.jackson.core:jackson-databind:jar:2.13.3:compile
+[[1;34mINFO[m]    org.apache.commons:commons-lang3:jar:3.12.0:compile
+[[1;34mINFO[m]    commons-codec:commons-codec:jar:1.10:runtime
+[[1;34mINFO[m]    it.unimi.dsi:fastutil:jar:8.3.1:runtime
+[[1;34mINFO[m]    org.apache.maven:maven-model:jar:3.8.5:compile
+[[1;34mINFO[m]    com.github.mpkorstanje:simmetrics-core:jar:3.2.3:runtime
+[[1;34mINFO[m]    javax.inject:javax.inject:jar:1:compile
+[[1;34mINFO[m]    org.apache.maven.shared:maven-shared-utils:jar:3.3.4:compile
+[[1;34mINFO[m]    junit:junit:jar:4.13.2:test
+[[1;34mINFO[m]    org.codehaus.plexus:plexus-utils:jar:3.3.0:compile
+[[1;34mINFO[m]    commons-cli:commons-cli:jar:1.5.0:test
+[[1;34mINFO[m]    org.hamcrest:hamcrest-core:jar:1.3:test
+[[1;34mINFO[m]    fr.inria.gforge.spoon:spoon-core:jar:10.2.0-SNAPSHOT:compile
+[[1;34mINFO[m]    com.google.guava:guava:jar:18.0:runtime
+[[1;34mINFO[m]    com.fasterxml.jackson.core:jackson-annotations:jar:2.13.3:compile
+[[1;34mINFO[m]    org.apache.maven.shared:maven-invoker:jar:3.2.0:compile
+[[1;34mINFO[m]    com.google.code.gson:gson:jar:2.9.0:compile
+[[1;34mINFO[m]    com.fasterxml.jackson.core:jackson-core:jar:2.13.3:compile
+[[1;34mINFO[m]    net.sf.trove4j:trove4j:jar:3.0.3:compile
+[[1;34mINFO[m]    org.atteo.classindex:classindex:jar:3.10:runtime
+[[1;34mINFO[m]    org.jheaps:jheaps:jar:0.13:runtime
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  5.530 s
+[[1;34mINFO[m] Finished at: 2022-05-27T10:20:27+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
++ mvn test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective model for fr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff:jar:SNAPSHOT
+[[1;33mWARNING[m] 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ line 14, column 12
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] It is highly recommended to fix these problems because they threaten the stability of your build.
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] For this reason, future Maven versions might no longer support building such malformed projects.
+[[1;33mWARNING[m] 
+[[1;34mINFO[m] Inspecting build with total of 1 modules...
+[[1;34mINFO[m] Installing Nexus Staging features:
+[[1;34mINFO[m]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m---------< [0;36mfr.inria.gforge.spoon.labs:gumtree-spoon-ast-diff[0;1m >----------[m
+[[1;34mINFO[m] [1mBuilding Gumtree Spoon AST Diff SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-enforcer-plugin:1.0:enforce[m [1m(enforce-maven)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] skip non existing resourceDirectory /builds/workspace/gumtree-spoon-ast-diff/src/main/resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.10.0:compile[m [1m(default-compile)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 24 source files to /builds/workspace/gumtree-spoon-ast-diff/target/classes
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/diff/DiffImpl.java: /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/diff/DiffImpl.java uses or overrides a deprecated API.
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/diff/DiffImpl.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/builder/NodeCreator.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /builds/workspace/gumtree-spoon-ast-diff/src/main/java/gumtree/spoon/builder/NodeCreator.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:testResources[m [1m(default-testResources)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 234 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.10.0:testCompile[m [1m(default-testCompile)[m @ [36mgumtree-spoon-ast-diff[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 4 source files to /builds/workspace/gumtree-spoon-ast-diff/target/test-classes
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;31mBUILD FAILURE[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  8.952 s
+[[1;34mINFO[m] Finished at: 2022-05-27T10:20:38+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;31mERROR[m] Failed to execute goal [32morg.apache.maven.plugins:maven-compiler-plugin:3.10.0:testCompile[m [1m(default-testCompile)[m on project [36mgumtree-spoon-ast-diff[m: [1;31mError while storing the mojo status[m: /builds/workspace/gumtree-spoon-ast-diff/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst: No space left on device -> [1m[Help 1][m
+[[1;31mERROR[m] 
+[[1;31mERROR[m] To see the full stack trace of the errors, re-run Maven with the [1m-e[m switch.
+[[1;31mERROR[m] Re-run Maven using the [1m-X[m switch to enable full debug logging.
+[[1;31mERROR[m] 
+[[1;31mERROR[m] For more information about the errors and possible solutions, please read the following articles:
+[[1;31mERROR[m] [1m[Help 1][m http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+Build step 'Execute shell' marked build as failure
+GitHub Issue Notifier: Build has started failing again, reopend GitHub issue #2842
+Sending e-mails to: spoon-devel@lists.gforge.inria.fr
+Finished: FAILURE

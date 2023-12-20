@@ -1,0 +1,869 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu16 (lin) in workspace /builds/workspace/jperturb
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/Spirals-Team/jPerturb.git
+ > git init /builds/workspace/jperturb # timeout=10
+Fetching upstream changes from https://github.com/Spirals-Team/jPerturb.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.7.4'
+ > git fetch --tags --progress https://github.com/Spirals-Team/jPerturb.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/Spirals-Team/jPerturb.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision a0b1fd04f73cb19692b0e74ca34c009612067362 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f a0b1fd04f73cb19692b0e74ca34c009612067362 # timeout=10
+Commit message: "Merge pull request #15 from orestisfl/usability"
+ > git rev-list --no-walk a0b1fd04f73cb19692b0e74ca34c009612067362 # timeout=10
+[jperturb] $ /bin/sh -xe /tmp/jenkins9010483952773816243.sh
++ cd jPerturb
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  11876      0 --:--:-- --:--:-- --:--:-- 11905
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 57 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 39 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (835 B at 35 kB/s)
+[INFO] 
+[INFO] -------------------------< jPerturb:jPerturb >--------------------------
+[INFO] Building jPerturb 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.8.1:use-latest-versions (default-cli) @ jPerturb ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from gforge.inria.fr-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:7.2.0-SNAPSHOT to version 9.2.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.206 s
+[INFO] Finished at: 2021-09-27T23:02:08+02:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< jPerturb:jPerturb >--------------------------
+[INFO] Building jPerturb 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ jPerturb ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.187 s
+[INFO] Finished at: 2021-09-27T23:02:10+02:00
+[INFO] ------------------------------------------------------------------------
++ mvn test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< jPerturb:jPerturb >--------------------------
+[INFO] Building jPerturb 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/9.2.0-SNAPSHOT/maven-metadata.xml
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ jPerturb ---
+[WARNING] Using platform encoding (UTF8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /builds/workspace/jperturb/jPerturb/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ jPerturb ---
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF8, i.e. build is platform dependent!
+[INFO] Compiling 63 source files to /builds/workspace/jperturb/jPerturb/target/classes
+[WARNING] /builds/workspace/jperturb/jPerturb/src/main/java/processor/UtilPerturbation.java: /builds/workspace/jperturb/jPerturb/src/main/java/processor/UtilPerturbation.java uses or overrides a deprecated API.
+[WARNING] /builds/workspace/jperturb/jPerturb/src/main/java/processor/UtilPerturbation.java: Recompile with -Xlint:deprecation for details.
+[WARNING] /builds/workspace/jperturb/jPerturb/src/main/java/experiment/explorer/ExplorerImpl.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/jperturb/jPerturb/src/main/java/experiment/explorer/ExplorerImpl.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ jPerturb ---
+[WARNING] Using platform encoding (UTF8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 9 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ jPerturb ---
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF8, i.e. build is platform dependent!
+[INFO] Compiling 21 source files to /builds/workspace/jperturb/jPerturb/target/test-classes
+[WARNING] /builds/workspace/jperturb/jPerturb/src/test/java/perturbation/TestPerturbationBinaryOp.java: Some input files use or override a deprecated API.
+[WARNING] /builds/workspace/jperturb/jPerturb/src/test/java/perturbation/TestPerturbationBinaryOp.java: Recompile with -Xlint:deprecation for details.
+[WARNING] /builds/workspace/jperturb/jPerturb/src/test/java/perturbation/TestPerturbationBinaryOp.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/jperturb/jPerturb/src/test/java/perturbation/TestPerturbationBinaryOp.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.16:test (default-test) @ jPerturb ---
+[INFO] Surefire report directory: /builds/workspace/jperturb/jPerturb/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Running explorer.TestCallExplorer
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 sec - in explorer.TestCallExplorer
+Running MainTest
+Run IntegerAddOne_CallExplorer on QuickSortInstr ...
+detail of space for CallExplorer with Perturbator = 1
+number of Task :               10                            
+number of Locations :          41                            
+number of executions done :    4331                          
+number of successful executions done :  3323                          
+% Success :                    ---------------- 76.73        
+
+see also files in results/quicksort/
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Run IntegerAddOne_CallExplorer on QuickSortInstr ...
+0 0  0.00
+0 1 - 2.44
+0 2 - 4.88
+0 3 -- 7.32
+0 4 -- 9.76
+0 5 --- 12.20
+0 6 --- 14.63
+0 7 ---- 17.07
+0 8 ---- 19.51
+0 9 ----- 21.95
+0 10 ----- 24.39
+0 11 ------ 26.83
+0 12 ------ 29.27
+0 13 ------- 31.71
+0 14 ------- 34.15
+0 15 -------- 36.59
+0 16 -------- 39.02
+0 17 --------- 41.46
+0 18 --------- 43.90
+0 19 ---------- 46.34
+0 20 ---------- 48.78
+0 21 ----------- 51.22
+0 22 ----------- 53.66
+0 23 ------------ 56.10
+0 24 ------------ 58.54
+0 25 ------------- 60.98
+0 26 ------------- 63.41
+0 27 -------------- 65.85
+0 28 -------------- 68.29
+0 29 --------------- 70.73
+0 30 --------------- 73.17
+0 31 ---------------- 75.61
+0 32 ---------------- 78.05
+0 33 ----------------- 80.49
+0 34 ----------------- 82.93
+0 35 ------------------ 85.37
+0 36 ------------------ 87.80
+0 37 ------------------- 90.24
+0 38 ------------------- 92.68
+0 39 -------------------- 95.12
+0 40 -------------------- 97.56
+1 0  0.00
+1 1 - 2.44
+1 2 - 4.88
+1 3 -- 7.32
+1 4 -- 9.76
+1 5 --- 12.20
+1 6 --- 14.63
+1 7 ---- 17.07
+1 8 ---- 19.51
+1 9 ----- 21.95
+1 10 ----- 24.39
+1 11 ------ 26.83
+1 12 ------ 29.27
+1 13 ------- 31.71
+1 14 ------- 34.15
+1 15 -------- 36.59
+1 16 -------- 39.02
+1 17 --------- 41.46
+1 18 --------- 43.90
+1 19 ---------- 46.34
+1 20 ---------- 48.78
+1 21 ----------- 51.22
+1 22 ----------- 53.66
+1 23 ------------ 56.10
+1 24 ------------ 58.54
+1 25 ------------- 60.98
+1 26 ------------- 63.41
+1 27 -------------- 65.85
+1 28 -------------- 68.29
+1 29 --------------- 70.73
+1 30 --------------- 73.17
+1 31 ---------------- 75.61
+1 32 ---------------- 78.05
+1 33 ----------------- 80.49
+1 34 ----------------- 82.93
+1 35 ------------------ 85.37
+1 36 ------------------ 87.80
+1 37 ------------------- 90.24
+1 38 ------------------- 92.68
+1 39 -------------------- 95.12
+1 40 -------------------- 97.56
+2 0  0.00
+2 1 - 2.44
+2 2 - 4.88
+2 3 -- 7.32
+2 4 -- 9.76
+2 5 --- 12.20
+2 6 --- 14.63
+2 7 ---- 17.07
+2 8 ---- 19.51
+2 9 ----- 21.95
+2 10 ----- 24.39
+2 11 ------ 26.83
+2 12 ------ 29.27
+2 13 ------- 31.71
+2 14 ------- 34.15
+2 15 -------- 36.59
+2 16 -------- 39.02
+2 17 --------- 41.46
+2 18 --------- 43.90
+2 19 ---------- 46.34
+2 20 ---------- 48.78
+2 21 ----------- 51.22
+2 22 ----------- 53.66
+2 23 ------------ 56.10
+2 24 ------------ 58.54
+2 25 ------------- 60.98
+2 26 ------------- 63.41
+2 27 -------------- 65.85
+2 28 -------------- 68.29
+2 29 --------------- 70.73
+2 30 --------------- 73.17
+2 31 ---------------- 75.61
+2 32 ---------------- 78.05
+2 33 ----------------- 80.49
+2 34 ----------------- 82.93
+2 35 ------------------ 85.37
+2 36 ------------------ 87.80
+2 37 ------------------- 90.24
+2 38 ------------------- 92.68
+2 39 -------------------- 95.12
+2 40 -------------------- 97.56
+3 0  0.00
+3 1 - 2.44
+3 2 - 4.88
+3 3 -- 7.32
+3 4 -- 9.76
+3 5 --- 12.20
+3 6 --- 14.63
+3 7 ---- 17.07
+3 8 ---- 19.51
+3 9 ----- 21.95
+3 10 ----- 24.39
+3 11 ------ 26.83
+3 12 ------ 29.27
+3 13 ------- 31.71
+3 14 ------- 34.15
+3 15 -------- 36.59
+3 16 -------- 39.02
+3 17 --------- 41.46
+3 18 --------- 43.90
+3 19 ---------- 46.34
+3 20 ---------- 48.78
+3 21 ----------- 51.22
+3 22 ----------- 53.66
+3 23 ------------ 56.10
+3 24 ------------ 58.54
+3 25 ------------- 60.98
+3 26 ------------- 63.41
+3 27 -------------- 65.85
+3 28 -------------- 68.29
+3 29 --------------- 70.73
+3 30 --------------- 73.17
+3 31 ---------------- 75.61
+3 32 ---------------- 78.05
+3 33 ----------------- 80.49
+3 34 ----------------- 82.93
+3 35 ------------------ 85.37
+3 36 ------------------ 87.80
+3 37 ------------------- 90.24
+3 38 ------------------- 92.68
+3 39 -------------------- 95.12
+3 40 -------------------- 97.56
+4 0  0.00
+4 1 - 2.44
+4 2 - 4.88
+4 3 -- 7.32
+4 4 -- 9.76
+4 5 --- 12.20
+4 6 --- 14.63
+4 7 ---- 17.07
+4 8 ---- 19.51
+4 9 ----- 21.95
+4 10 ----- 24.39
+4 11 ------ 26.83
+4 12 ------ 29.27
+4 13 ------- 31.71
+4 14 ------- 34.15
+4 15 -------- 36.59
+4 16 -------- 39.02
+4 17 --------- 41.46
+4 18 --------- 43.90
+4 19 ---------- 46.34
+4 20 ---------- 48.78
+4 21 ----------- 51.22
+4 22 ----------- 53.66
+4 23 ------------ 56.10
+4 24 ------------ 58.54
+4 25 ------------- 60.98
+4 26 ------------- 63.41
+4 27 -------------- 65.85
+4 28 -------------- 68.29
+4 29 --------------- 70.73
+4 30 --------------- 73.17
+4 31 ---------------- 75.61
+4 32 ---------------- 78.05
+4 33 ----------------- 80.49
+4 34 ----------------- 82.93
+4 35 ------------------ 85.37
+4 36 ------------------ 87.80
+4 37 ------------------- 90.24
+4 38 ------------------- 92.68
+4 39 -------------------- 95.12
+4 40 -------------------- 97.56
+5 0  0.00
+5 1 - 2.44
+5 2 - 4.88
+5 3 -- 7.32
+5 4 -- 9.76
+5 5 --- 12.20
+5 6 --- 14.63
+5 7 ---- 17.07
+5 8 ---- 19.51
+5 9 ----- 21.95
+5 10 ----- 24.39
+5 11 ------ 26.83
+5 12 ------ 29.27
+5 13 ------- 31.71
+5 14 ------- 34.15
+5 15 -------- 36.59
+5 16 -------- 39.02
+5 17 --------- 41.46
+5 18 --------- 43.90
+5 19 ---------- 46.34
+5 20 ---------- 48.78
+5 21 ----------- 51.22
+5 22 ----------- 53.66
+5 23 ------------ 56.10
+5 24 ------------ 58.54
+5 25 ------------- 60.98
+5 26 ------------- 63.41
+5 27 -------------- 65.85
+5 28 -------------- 68.29
+5 29 --------------- 70.73
+5 30 --------------- 73.17
+5 31 ---------------- 75.61
+5 32 ---------------- 78.05
+5 33 ----------------- 80.49
+5 34 ----------------- 82.93
+5 35 ------------------ 85.37
+5 36 ------------------ 87.80
+5 37 ------------------- 90.24
+5 38 ------------------- 92.68
+5 39 -------------------- 95.12
+5 40 -------------------- 97.56
+6 0  0.00
+6 1 - 2.44
+6 2 - 4.88
+6 3 -- 7.32
+6 4 -- 9.76
+6 5 --- 12.20
+6 6 --- 14.63
+6 7 ---- 17.07
+6 8 ---- 19.51
+6 9 ----- 21.95
+6 10 ----- 24.39
+6 11 ------ 26.83
+6 12 ------ 29.27
+6 13 ------- 31.71
+6 14 ------- 34.15
+6 15 -------- 36.59
+6 16 -------- 39.02
+6 17 --------- 41.46
+6 18 --------- 43.90
+6 19 ---------- 46.34
+6 20 ---------- 48.78
+6 21 ----------- 51.22
+6 22 ----------- 53.66
+6 23 ------------ 56.10
+6 24 ------------ 58.54
+6 25 ------------- 60.98
+6 26 ------------- 63.41
+6 27 -------------- 65.85
+6 28 -------------- 68.29
+6 29 --------------- 70.73
+6 30 --------------- 73.17
+6 31 ---------------- 75.61
+6 32 ---------------- 78.05
+6 33 ----------------- 80.49
+6 34 ----------------- 82.93
+6 35 ------------------ 85.37
+6 36 ------------------ 87.80
+6 37 ------------------- 90.24
+6 38 ------------------- 92.68
+6 39 -------------------- 95.12
+6 40 -------------------- 97.56
+7 0  0.00
+7 1 - 2.44
+7 2 - 4.88
+7 3 -- 7.32
+7 4 -- 9.76
+7 5 --- 12.20
+7 6 --- 14.63
+7 7 ---- 17.07
+7 8 ---- 19.51
+7 9 ----- 21.95
+7 10 ----- 24.39
+7 11 ------ 26.83
+7 12 ------ 29.27
+7 13 ------- 31.71
+7 14 ------- 34.15
+7 15 -------- 36.59
+7 16 -------- 39.02
+7 17 --------- 41.46
+7 18 --------- 43.90
+7 19 ---------- 46.34
+7 20 ---------- 48.78
+7 21 ----------- 51.22
+7 22 ----------- 53.66
+7 23 ------------ 56.10
+7 24 ------------ 58.54
+7 25 ------------- 60.98
+7 26 ------------- 63.41
+7 27 -------------- 65.85
+7 28 -------------- 68.29
+7 29 --------------- 70.73
+7 30 --------------- 73.17
+7 31 ---------------- 75.61
+7 32 ---------------- 78.05
+7 33 ----------------- 80.49
+7 34 ----------------- 82.93
+7 35 ------------------ 85.37
+7 36 ------------------ 87.80
+7 37 ------------------- 90.24
+7 38 ------------------- 92.68
+7 39 -------------------- 95.12
+7 40 -------------------- 97.56
+8 0  0.00
+8 1 - 2.44
+8 2 - 4.88
+8 3 -- 7.32
+8 4 -- 9.76
+8 5 --- 12.20
+8 6 --- 14.63
+8 7 ---- 17.07
+8 8 ---- 19.51
+8 9 ----- 21.95
+8 10 ----- 24.39
+8 11 ------ 26.83
+8 12 ------ 29.27
+8 13 ------- 31.71
+8 14 ------- 34.15
+8 15 -------- 36.59
+8 16 -------- 39.02
+8 17 --------- 41.46
+8 18 --------- 43.90
+8 19 ---------- 46.34
+8 20 ---------- 48.78
+8 21 ----------- 51.22
+8 22 ----------- 53.66
+8 23 ------------ 56.10
+8 24 ------------ 58.54
+8 25 ------------- 60.98
+8 26 ------------- 63.41
+8 27 -------------- 65.85
+8 28 -------------- 68.29
+8 29 --------------- 70.73
+8 30 --------------- 73.17
+8 31 ---------------- 75.61
+8 32 ---------------- 78.05
+8 33 ----------------- 80.49
+8 34 ----------------- 82.93
+8 35 ------------------ 85.37
+8 36 ------------------ 87.80
+8 37 ------------------- 90.24
+8 38 ------------------- 92.68
+8 39 -------------------- 95.12
+8 40 -------------------- 97.56
+9 0  0.00
+9 1 - 2.44
+9 2 - 4.88
+9 3 -- 7.32
+9 4 -- 9.76
+9 5 --- 12.20
+9 6 --- 14.63
+9 7 ---- 17.07
+9 8 ---- 19.51
+9 9 ----- 21.95
+9 10 ----- 24.39
+9 11 ------ 26.83
+9 12 ------ 29.27
+9 13 ------- 31.71
+9 14 ------- 34.15
+9 15 -------- 36.59
+9 16 -------- 39.02
+9 17 --------- 41.46
+9 18 --------- 43.90
+9 19 ---------- 46.34
+9 20 ---------- 48.78
+9 21 ----------- 51.22
+9 22 ----------- 53.66
+9 23 ------------ 56.10
+9 24 ------------ 58.54
+9 25 ------------- 60.98
+9 26 ------------- 63.41
+9 27 -------------- 65.85
+9 28 -------------- 68.29
+9 29 --------------- 70.73
+9 30 --------------- 73.17
+9 31 ---------------- 75.61
+9 32 ---------------- 78.05
+9 33 ----------------- 80.49
+9 34 ----------------- 82.93
+9 35 ------------------ 85.37
+9 36 ------------------ 87.80
+9 37 ------------------- 90.24
+9 38 ------------------- 92.68
+9 39 -------------------- 95.12
+9 40 -------------------- 97.56
+detail of space for CallExplorer with Perturbator = 1
+number of Task :               10                            
+number of Locations :          41                            
+number of executions done :    4331                          
+number of successful executions done :  3323                          
+% Success :                    ---------------- 76.73        
+
+see also files in results/quicksort/
+1372 ms
+Run IntegerAddOne_RandomExplorer on QuickSortInstr ...
+0 0  0.00
+0 1 - 2.44
+0 2 - 4.88
+0 3 -- 7.32
+0 4 -- 9.76
+0 5 --- 12.20
+0 6 --- 14.63
+0 7 ---- 17.07
+0 8 ---- 19.51
+0 9 ----- 21.95
+0 10 ----- 24.39
+0 11 ------ 26.83
+0 12 ------ 29.27
+0 13 ------- 31.71
+0 14 ------- 34.15
+0 15 -------- 36.59
+0 16 -------- 39.02
+0 17 --------- 41.46
+0 18 --------- 43.90
+0 19 ---------- 46.34
+0 20 ---------- 48.78
+0 21 ----------- 51.22
+0 22 ----------- 53.66
+0 23 ------------ 56.10
+0 24 ------------ 58.54
+0 25 ------------- 60.98
+0 26 ------------- 63.41
+0 27 -------------- 65.85
+0 28 -------------- 68.29
+0 29 --------------- 70.73
+0 30 --------------- 73.17
+0 31 ---------------- 75.61
+0 32 ---------------- 78.05
+0 33 ----------------- 80.49
+0 34 ----------------- 82.93
+0 35 ------------------ 85.37
+0 36 ------------------ 87.80
+0 37 ------------------- 90.24
+0 38 ------------------- 92.68
+0 39 -------------------- 95.12
+0 40 -------------------- 97.56
+1 0  0.00
+1 1 - 2.44
+1 2 - 4.88
+1 3 -- 7.32
+1 4 -- 9.76
+1 5 --- 12.20
+1 6 --- 14.63
+1 7 ---- 17.07
+1 8 ---- 19.51
+1 9 ----- 21.95
+1 10 ----- 24.39
+1 11 ------ 26.83
+1 12 ------ 29.27
+1 13 ------- 31.71
+1 14 ------- 34.15
+1 15 -------- 36.59
+1 16 -------- 39.02
+1 17 --------- 41.46
+1 18 --------- 43.90
+1 19 ---------- 46.34
+1 20 ---------- 48.78
+1 21 ----------- 51.22
+1 22 ----------- 53.66
+1 23 ------------ 56.10
+1 24 ------------ 58.54
+1 25 ------------- 60.98
+1 26 ------------- 63.41
+1 27 -------------- 65.85
+1 28 -------------- 68.29
+1 29 --------------- 70.73
+1 30 --------------- 73.17
+1 31 ---------------- 75.61
+1 32 ---------------- 78.05
+1 33 ----------------- 80.49
+1 34 ----------------- 82.93
+1 35 ------------------ 85.37
+1 36 ------------------ 87.80
+1 37 ------------------- 90.24
+1 38 ------------------- 92.68
+1 39 -------------------- 95.12
+1 40 -------------------- 97.56
+2 0  0.00
+2 1 - 2.44
+2 2 - 4.88
+2 3 -- 7.32
+2 4 -- 9.76
+2 5 --- 12.20
+2 6 --- 14.63
+2 7 ---- 17.07
+2 8 ---- 19.51
+2 9 ----- 21.95
+2 10 ----- 24.39
+2 11 ------ 26.83
+2 12 ------ 29.27
+2 13 ------- 31.71
+2 14 ------- 34.15
+2 15 -------- 36.59
+2 16 -------- 39.02
+2 17 --------- 41.46
+2 18 --------- 43.90
+2 19 ---------- 46.34
+2 20 ---------- 48.78
+2 21 ----------- 51.22
+2 22 ----------- 53.66
+2 23 ------------ 56.10
+2 24 ------------ 58.54
+2 25 ------------- 60.98
+2 26 ------------- 63.41
+2 27 -------------- 65.85
+2 28 -------------- 68.29
+2 29 --------------- 70.73
+2 30 --------------- 73.17
+2 31 ---------------- 75.61
+2 32 ---------------- 78.05
+2 33 ----------------- 80.49
+2 34 ----------------- 82.93
+2 35 ------------------ 85.37
+2 36 ------------------ 87.80
+2 37 ------------------- 90.24
+2 38 ------------------- 92.68
+2 39 -------------------- 95.12
+2 40 -------------------- 97.56
+3 0  0.00
+3 1 - 2.44
+3 2 - 4.88
+3 3 -- 7.32
+3 4 -- 9.76
+3 5 --- 12.20
+3 6 --- 14.63
+3 7 ---- 17.07
+3 8 ---- 19.51
+3 9 ----- 21.95
+3 10 ----- 24.39
+3 11 ------ 26.83
+3 12 ------ 29.27
+3 13 ------- 31.71
+3 14 ------- 34.15
+3 15 -------- 36.59
+3 16 -------- 39.02
+3 17 --------- 41.46
+3 18 --------- 43.90
+3 19 ---------- 46.34
+3 20 ---------- 48.78
+3 21 ----------- 51.22
+3 22 ----------- 53.66
+3 23 ------------ 56.10
+3 24 ------------ 58.54
+3 25 ------------- 60.98
+3 26 ------------- 63.41
+3 27 -------------- 65.85
+3 28 -------------- 68.29
+3 29 --------------- 70.73
+3 30 --------------- 73.17
+3 31 ---------------- 75.61
+3 32 ---------------- 78.05
+3 33 ----------------- 80.49
+3 34 ----------------- 82.93
+3 35 ------------------ 85.37
+3 36 ------------------ 87.80
+3 37 ------------------- 90.24
+3 38 ------------------- 92.68
+3 39 -------------------- 95.12
+3 40 -------------------- 97.56
+4 0  0.00
+4 1 - 2.44
+4 2 - 4.88
+4 3 -- 7.32
+4 4 -- 9.76
+4 5 --- 12.20
+4 6 --- 14.63
+4 7 ---- 17.07
+4 8 ---- 19.51
+4 9 ----- 21.95
+4 10 ----- 24.39
+4 11 ------ 26.83
+4 12 ------ 29.27
+4 13 ------- 31.71
+4 14 ------- 34.15
+4 15 -------- 36.59
+4 16 -------- 39.02
+4 17 --------- 41.46
+4 18 --------- 43.90
+4 19 ---------- 46.34
+4 20 ---------- 48.78
+4 21 ----------- 51.22
+4 22 ----------- 53.66
+4 23 ------------ 56.10
+4 24 ------------ 58.54
+4 25 ------------- 60.98
+4 26 ------------- 63.41
+4 27 -------------- 65.85
+4 28 -------------- 68.29
+4 29 --------------- 70.73
+4 30 --------------- 73.17
+4 31 ---------------- 75.61
+4 32 ---------------- 78.05
+4 33 ----------------- 80.49
+4 34 ----------------- 82.93
+4 35 ------------------ 85.37
+4 36 ------------------ 87.80
+4 37 ------------------- 90.24
+4 38 ------------------- 92.68
+4 39 -------------------- 95.12
+4 40 -------------------- 97.56
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.135 sec - in MainTest
+Running perturbation.TestPerturbationBinaryOp
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.554 sec - in perturbation.TestPerturbationBinaryOp
+Running perturbation.TestPerturbationLiteralsVariable
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.647 sec - in perturbation.TestPerturbationLiteralsVariable
+Running perturbation.enactor.TestEnactor
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.493 sec - in perturbation.enactor.TestEnactor
+Running perturbation.rmi.TestPerturbationServer
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.728 sec - in perturbation.rmi.TestPerturbationServer
+Running perturbation.perturbator.TestPerturbator
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.581 sec - in perturbation.perturbator.TestPerturbator
+Running processor.TestProcessEnum
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.54 sec - in processor.TestProcessEnum
+Running processor.TestProcessInnerClass
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.06 sec - in processor.TestProcessInnerClass
+Running processor.TestProcessArray
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.472 sec - in processor.TestProcessArray
+Running processor.TestProcessBinaryOp
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.292 sec - in processor.TestProcessBinaryOp
+Running processor.TestProcessNotPerturbable
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.012 sec - in processor.TestProcessNotPerturbable
+Running processor.TestProcessImplicitCast
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.359 sec - in processor.TestProcessImplicitCast
+Running processor.TestProcessUnary
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.322 sec - in processor.TestProcessUnary
+Running processor.TestRenameProcessor
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 sec - in processor.TestRenameProcessor
+Running processor.TestBigInteger
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.333 sec - in processor.TestBigInteger
+Running processor.TestProcessLiteralsVariable
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.365 sec - in processor.TestProcessLiteralsVariable
+
+Results :
+
+Tests run: 33, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  20.644 s
+[INFO] Finished at: 2021-09-27T23:02:32+02:00
+[INFO] ------------------------------------------------------------------------
+Finished: SUCCESS

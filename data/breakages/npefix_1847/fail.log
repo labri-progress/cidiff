@@ -1,0 +1,233 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/npefix
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/Spirals-Team/npefix.git
+ > git init /builds/workspace/npefix # timeout=10
+Fetching upstream changes from https://github.com/Spirals-Team/npefix.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/Spirals-Team/npefix.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/Spirals-Team/npefix.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 7e0b0ee9c5eda2f65ae828e80ab634e51f4752c5 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 7e0b0ee9c5eda2f65ae828e80ab634e51f4752c5 # timeout=10
+Commit message: "bump to Java 11"
+ > git rev-list --no-walk 7e0b0ee9c5eda2f65ae828e80ab634e51f4752c5 # timeout=10
+[npefix] $ /bin/sh -xe /tmp/jenkins8631700124910110833.sh
++ rm -rf /builds/.m2/repository/fr/inria/gforge/spoon
+[npefix] $ /bin/sh -xe /tmp/jenkins15088291797333257004.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  18037      0 --:--:-- --:--:-- --:--:-- 18037
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 22 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 32 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (866 B at 67 kB/s)
+[INFO] 
+[INFO] -------------------< fr.inria.gforge.spirals:npefix >-------------------
+[INFO] Building npefix 0.8-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.9.0:use-latest-versions (default-cli) @ npefix ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from gforge.inria.fr-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:7.5.0-SNAPSHOT to version 10.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.080 s
+[INFO] Finished at: 2022-02-15T05:24:10+01:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] 
+[INFO] -------------------< fr.inria.gforge.spirals:npefix >-------------------
+[INFO] Building npefix 0.8-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ npefix ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.599 s
+[INFO] Finished at: 2022-02-15T05:24:17+01:00
+[INFO] ------------------------------------------------------------------------
++ mvn test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] Inspecting build with total of 1 modules...
+[[1;34mINFO[m] Installing Nexus Staging features:
+[[1;34mINFO[m]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------------< [0;36mfr.inria.gforge.spirals:npefix[0;1m >-------------------[m
+[[1;34mINFO[m] [1mBuilding npefix 0.8-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml
+Progress (1): 1.0 kB                    Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/maven-metadata.xml (1.0 kB at 1.8 kB/s)
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220214.234346-300.pom
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220214.234346-300.pom
+Progress (1): 883 BProgress (1): 3.2 kBProgress (1): 6.0 kBProgress (1): 8.1 kBProgress (1): 11 kB Progress (1): 11 kB                   Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220214.234346-300.pom (11 kB at 269 kB/s)
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-pom/1.0/spoon-pom-1.0.pom
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-pom/1.0/spoon-pom-1.0.pom
+Downloading from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-pom/1.0/spoon-pom-1.0.pom
+Progress (1): 1.4/21 kBProgress (1): 2.7/21 kBProgress (1): 4.1/21 kBProgress (1): 5.5/21 kBProgress (1): 6.9/21 kBProgress (1): 8.2/21 kBProgress (1): 9.6/21 kBProgress (1): 11/21 kB Progress (1): 12/21 kBProgress (1): 14/21 kBProgress (1): 15/21 kBProgress (1): 16/21 kBProgress (1): 18/21 kBProgress (1): 19/21 kBProgress (1): 21/21 kBProgress (1): 21 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/fr/inria/gforge/spoon/spoon-pom/1.0/spoon-pom-1.0.pom (21 kB at 165 kB/s)
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/org/apache/maven/maven-model/maven-metadata.xml
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220214.234346-300.jar
+Progress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.1/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.2/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.3/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.4/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.5/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.6/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.7/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.8/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 0.9/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.0/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.1/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.2/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.3/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.4/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.5/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.6/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.7/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8/1.8 MBProgress (1): 1.8 MB                        Downloaded from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-core/10.0.1-SNAPSHOT/spoon-core-10.0.1-20220214.234346-300.jar (1.8 MB at 2.4 MB/s)
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.4:prepare-agent[m [1m(default)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] argLine set to -javaagent:/builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.4/org.jacoco.agent-0.8.4-runtime.jar=destfile=/builds/workspace/npefix/target/jacoco.exec
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mbuild-helper-maven-plugin:1.7:add-source[m [1m(add-source)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] Source directory: /builds/workspace/npefix/src/evaluation/java added.
+[[1;34mINFO[m] Source directory: /builds/workspace/npefix/src/main/java added.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 1 resource
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.5.1:compile[m [1m(default-compile)[m @ [36mnpefix[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 185 source files to /builds/workspace/npefix/target/classes
+[[1;34mINFO[m] /builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/resi/strategies/AbstractStrategy.java: Some input files use or override a deprecated API.
+[[1;34mINFO[m] /builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/resi/strategies/AbstractStrategy.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] /builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/transformer/processors/ProcessorUtility.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/transformer/processors/ProcessorUtility.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+[[1;34mINFO[m] -------------------------------------------------------------
+[[1;31mERROR[m] COMPILATION ERROR : 
+[[1;34mINFO[m] -------------------------------------------------------------
+[[1;31mERROR[m] /builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/patchTemplate/VariableFinder.java:[107,64] incompatible types: java.util.List<spoon.reflect.code.CtResource<?>> cannot be converted to java.util.Collection<? extends spoon.reflect.declaration.CtVariable>
+[[1;34mINFO[m] 1 error
+[[1;34mINFO[m] -------------------------------------------------------------
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;31mBUILD FAILURE[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  13.154 s
+[[1;34mINFO[m] Finished at: 2022-02-15T05:24:34+01:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;31mERROR[m] Failed to execute goal [32morg.apache.maven.plugins:maven-compiler-plugin:3.5.1:compile[m [1m(default-compile)[m on project [36mnpefix[m: [1;31mCompilation failure[m
+[[1;31mERROR[m] [1;31m/builds/workspace/npefix/src/main/java/fr/inria/spirals/npefix/patchTemplate/VariableFinder.java:[107,64] incompatible types: java.util.List<spoon.reflect.code.CtResource<?>> cannot be converted to java.util.Collection<? extends spoon.reflect.declaration.CtVariable>[m
+[[1;31mERROR[m] [1;31m[m
+[[1;31mERROR[m] -> [1m[Help 1][m
+[[1;31mERROR[m] 
+[[1;31mERROR[m] To see the full stack trace of the errors, re-run Maven with the [1m-e[m switch.
+[[1;31mERROR[m] Re-run Maven using the [1m-X[m switch to enable full debug logging.
+[[1;31mERROR[m] 
+[[1;31mERROR[m] For more information about the errors and possible solutions, please read the following articles:
+[[1;31mERROR[m] [1m[Help 1][m http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+Build step 'Execute shell' marked build as failure
+Sending e-mails to: spoon-devel@lists.gforge.inria.fr
+Finished: FAILURE

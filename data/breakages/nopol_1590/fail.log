@@ -1,0 +1,147 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/nopol
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/nopol.git
+ > git init /builds/workspace/nopol # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/nopol.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/SpoonLabs/nopol.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/nopol.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 779ff9c0c30a8e6e745844ba2c84ef74054f6f7a (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 779ff9c0c30a8e6e745844ba2c84ef74054f6f7a # timeout=10
+FATAL: Could not checkout 779ff9c0c30a8e6e745844ba2c84ef74054f6f7a
+hudson.plugins.git.GitException: Command "git checkout -f 779ff9c0c30a8e6e745844ba2c84ef74054f6f7a" returned status code 128:
+stdout: 
+stderr: error: unable to create file nopol/src/test/java/xxl/java/junit/TestSuiteExecutionTest.java: No space left on device
+fatal: cannot create directory at 'nopol/src/test/java/xxl/java/library': No space left on device
+
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandIn(CliGitAPIImpl.java:2671)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.access$1100(CliGitAPIImpl.java:84)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl$9.execute(CliGitAPIImpl.java:2989)
+Also:   hudson.remoting.Channel$CallSiteStackTrace: Remote call to sos-builder02-ubuntu18
+		at hudson.remoting.Channel.attachCallSiteStackTrace(Channel.java:1784)
+		at hudson.remoting.UserRequest$ExceptionResponse.retrieve(UserRequest.java:356)
+		at hudson.remoting.Channel.call(Channel.java:1000)
+		at org.jenkinsci.plugins.gitclient.RemoteGitImpl$CommandInvocationHandler.execute(RemoteGitImpl.java:143)
+		at sun.reflect.GeneratedMethodAccessor337.invoke(Unknown Source)
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.lang.reflect.Method.invoke(Method.java:498)
+		at org.jenkinsci.plugins.gitclient.RemoteGitImpl$CommandInvocationHandler.invoke(RemoteGitImpl.java:129)
+		at com.sun.proxy.$Proxy92.execute(Unknown Source)
+		at hudson.plugins.git.GitSCM.checkout(GitSCM.java:1358)
+		at hudson.scm.SCM.checkout(SCM.java:540)
+		at hudson.model.AbstractProject.checkout(AbstractProject.java:1215)
+		at hudson.model.AbstractBuild$AbstractBuildExecution.defaultCheckout(AbstractBuild.java:645)
+		at jenkins.scm.SCMCheckoutStrategy.checkout(SCMCheckoutStrategy.java:85)
+		at hudson.model.AbstractBuild$AbstractBuildExecution.run(AbstractBuild.java:517)
+		at hudson.model.Run.execute(Run.java:1896)
+		at hudson.model.FreeStyleBuild.run(FreeStyleBuild.java:44)
+		at hudson.model.ResourceController.execute(ResourceController.java:101)
+		at hudson.model.Executor.run(Executor.java:442)
+Caused: hudson.plugins.git.GitException: Could not checkout 779ff9c0c30a8e6e745844ba2c84ef74054f6f7a
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl$9.execute(CliGitAPIImpl.java:3013)
+	at org.jenkinsci.plugins.gitclient.RemoteGitImpl$CommandInvocationHandler$GitCommandMasterToSlaveCallable.call(RemoteGitImpl.java:158)
+	at org.jenkinsci.plugins.gitclient.RemoteGitImpl$CommandInvocationHandler$GitCommandMasterToSlaveCallable.call(RemoteGitImpl.java:151)
+	at hudson.remoting.UserRequest.perform(UserRequest.java:211)
+	at hudson.remoting.UserRequest.perform(UserRequest.java:54)
+	at hudson.remoting.Request$2.run(Request.java:376)
+	at hudson.remoting.InterceptingExecutorService.lambda$wrap$0(InterceptingExecutorService.java:78)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.lang.Thread.run(Thread.java:834)
+Recording test results
+ERROR: Step ?Publish JUnit test result report? aborted due to exception: 
+java.io.IOException: No space left on device
+	at java.io.UnixFileSystem.createFileExclusively(Native Method)
+	at java.io.File.createTempFile(File.java:2092)
+	at hudson.remoting.FileSystemJarCache.createTempJar(FileSystemJarCache.java:175)
+	at hudson.remoting.FileSystemJarCache.retrieve(FileSystemJarCache.java:111)
+Caused: java.io.IOException: Failed to write to /builds/remoting/jarCache/3A/E261D6102685F1E55044441F468BAF.jar
+	at hudson.remoting.FileSystemJarCache.retrieve(FileSystemJarCache.java:148)
+	at hudson.remoting.JarCacheSupport$DownloadRunnable.run(JarCacheSupport.java:113)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at hudson.remoting.AtmostOneThreadExecutor$Worker.run(AtmostOneThreadExecutor.java:121)
+Caused: java.util.concurrent.ExecutionException
+	at hudson.remoting.AsyncFutureImpl.get(AsyncFutureImpl.java:80)
+	at hudson.remoting.FutureAdapter.get(FutureAdapter.java:61)
+	at hudson.remoting.RemoteClassLoader.findResource(RemoteClassLoader.java:528)
+Also:   hudson.remoting.Channel$CallSiteStackTrace: Remote call to sos-builder02-ubuntu18
+		at hudson.remoting.Channel.attachCallSiteStackTrace(Channel.java:1784)
+		at hudson.remoting.UserRequest$ExceptionResponse.retrieve(UserRequest.java:356)
+		at hudson.remoting.Channel.call(Channel.java:1000)
+		at hudson.FilePath.act(FilePath.java:1194)
+		at hudson.FilePath.act(FilePath.java:1183)
+		at hudson.tasks.junit.JUnitParser.parseResult(JUnitParser.java:107)
+		at hudson.tasks.junit.JUnitResultArchiver.parse(JUnitResultArchiver.java:153)
+		at hudson.tasks.junit.JUnitResultArchiver.parseAndSummarize(JUnitResultArchiver.java:247)
+		at hudson.tasks.junit.JUnitResultArchiver.perform(JUnitResultArchiver.java:170)
+		at jenkins.tasks.SimpleBuildStep.perform(SimpleBuildStep.java:123)
+		at hudson.tasks.BuildStepCompatibilityLayer.perform(BuildStepCompatibilityLayer.java:79)
+		at hudson.tasks.BuildStepMonitor$1.perform(BuildStepMonitor.java:20)
+		at hudson.model.AbstractBuild$AbstractBuildExecution.perform(AbstractBuild.java:814)
+		at hudson.model.AbstractBuild$AbstractBuildExecution.performAllBuildSteps(AbstractBuild.java:763)
+		at hudson.model.Build$BuildExecution.post2(Build.java:179)
+		at hudson.model.AbstractBuild$AbstractBuildExecution.post(AbstractBuild.java:707)
+		at hudson.model.Run.execute(Run.java:1921)
+		at hudson.model.FreeStyleBuild.run(FreeStyleBuild.java:44)
+		at hudson.model.ResourceController.execute(ResourceController.java:101)
+		at hudson.model.Executor.run(Executor.java:442)
+Caused: java.lang.Error: Unable to load resource hudson/tasks/junit/Messages.properties
+	at hudson.remoting.RemoteClassLoader.findResource(RemoteClassLoader.java:532)
+	at java.lang.ClassLoader.getResource(ClassLoader.java:1401)
+	at java.lang.Class.getResource(Class.java:2740)
+	at org.jvnet.localizer.ResourceProvider$1.getResource(ResourceProvider.java:53)
+	at org.jvnet.localizer.ResourceProvider.findResource(ResourceProvider.java:45)
+	at org.jvnet.localizer.ResourceBundleHolder.getFromProperties(ResourceBundleHolder.java:134)
+	at org.jvnet.localizer.ResourceBundleHolder.get(ResourceBundleHolder.java:111)
+	at org.jvnet.localizer.ResourceBundleHolder.get(ResourceBundleHolder.java:123)
+	at org.jvnet.localizer.ResourceBundleHolder.get(ResourceBundleHolder.java:123)
+	at org.jvnet.localizer.ResourceBundleHolder.format(ResourceBundleHolder.java:214)
+	at hudson.tasks.junit.Messages.JUnitResultArchiver_NoTestReportFound(Messages.java:182)
+	at hudson.tasks.junit.JUnitParser$ParseResultCallable.invoke(JUnitParser.java:155)
+	at hudson.FilePath$FileCallableWrapper.call(FilePath.java:3487)
+	at hudson.remoting.UserRequest.perform(UserRequest.java:211)
+	at hudson.remoting.UserRequest.perform(UserRequest.java:54)
+	at hudson.remoting.Request$2.run(Request.java:376)
+	at hudson.remoting.InterceptingExecutorService.lambda$wrap$0(InterceptingExecutorService.java:78)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.lang.Thread.run(Thread.java:834)
+Caused: java.io.IOException: Remote call on sos-builder02-ubuntu18 failed
+	at hudson.remoting.Channel.call(Channel.java:1004)
+	at hudson.FilePath.act(FilePath.java:1194)
+	at hudson.FilePath.act(FilePath.java:1183)
+	at hudson.tasks.junit.JUnitParser.parseResult(JUnitParser.java:107)
+	at hudson.tasks.junit.JUnitResultArchiver.parse(JUnitResultArchiver.java:153)
+	at hudson.tasks.junit.JUnitResultArchiver.parseAndSummarize(JUnitResultArchiver.java:247)
+	at hudson.tasks.junit.JUnitResultArchiver.perform(JUnitResultArchiver.java:170)
+	at jenkins.tasks.SimpleBuildStep.perform(SimpleBuildStep.java:123)
+	at hudson.tasks.BuildStepCompatibilityLayer.perform(BuildStepCompatibilityLayer.java:79)
+	at hudson.tasks.BuildStepMonitor$1.perform(BuildStepMonitor.java:20)
+	at hudson.model.AbstractBuild$AbstractBuildExecution.perform(AbstractBuild.java:814)
+	at hudson.model.AbstractBuild$AbstractBuildExecution.performAllBuildSteps(AbstractBuild.java:763)
+	at hudson.model.Build$BuildExecution.post2(Build.java:179)
+	at hudson.model.AbstractBuild$AbstractBuildExecution.post(AbstractBuild.java:707)
+	at hudson.model.Run.execute(Run.java:1921)
+	at hudson.model.FreeStyleBuild.run(FreeStyleBuild.java:44)
+	at hudson.model.ResourceController.execute(ResourceController.java:101)
+	at hudson.model.Executor.run(Executor.java:442)
+Sending e-mails to: spoon-devel@lists.gforge.inria.fr
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] done
+Finished: FAILURE

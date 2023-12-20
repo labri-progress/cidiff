@@ -1,0 +1,209 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu16 (lin) in workspace /builds/workspace/Mimecraft
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/square/mimecraft.git
+ > git init /builds/workspace/Mimecraft # timeout=10
+Fetching upstream changes from https://github.com/square/mimecraft.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.7.4'
+ > git fetch --tags --progress https://github.com/square/mimecraft.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/square/mimecraft.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 88f689c73972dde450961714ec4766378c777ad0 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 88f689c73972dde450961714ec4766378c777ad0 # timeout=10
+Commit message: "Mark MimeCraft as deprecated."
+ > git rev-list --no-walk 88f689c73972dde450961714ec4766378c777ad0 # timeout=10
+[Mimecraft] $ /bin/sh -xe /tmp/jenkins6699680851270090115.sh
++ curl https://spoon.gforge.inria.fr/jenkins/build.sh
++ stdbuf -i 50k bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0 
+-------------------------------------------------------
+Initizalizes project
+-------------------------------------------------------
+ 
+HEAD is now at 88f689c Mark MimeCraft as deprecated.
+ 90 21399   90 19194    0     0  83466      0 --:--:-- --:--:-- --:--:-- 83452100 21399  100 21399    0     0  93022      0 --:--:-- --:--:-- --:--:-- 93039
+
+--- Displays variables used in the build ---
+Artifact id: mimecraft
+Version: 1.1.2-SNAPSHOT
+Modules job:
+- Mimecraft
+Has checkstyle: true
+Has enforcer: true
+Git version id: 88f689c73972dde450961714ec4766378c777ad0
+Java version: Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+openjdk version "11.0.2" 2019-01-15
+OpenJDK Runtime Environment 18.9 (build 11.0.2+9)
+OpenJDK 64-Bit Server VM 18.9 (build 11.0.2+9, mixed mode)
+Java home: /usr/lib/jvm/java-11-openjdk-amd64
+ 
+-------------------------------------------------------
+Compiles project (at the root project if it's a multi module project) without spoon
+-------------------------------------------------------
+ 
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.squareup.mimecraft:mimecraft >------------------
+[INFO] Building Mime Craft 1.1.2-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ mimecraft ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.0:enforce (enforce-maven) @ mimecraft ---
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ mimecraft ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /builds/workspace/Mimecraft/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ mimecraft ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 4 source files to /builds/workspace/Mimecraft/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ mimecraft ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /builds/workspace/Mimecraft/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ mimecraft ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 6 source files to /builds/workspace/Mimecraft/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ mimecraft ---
+[INFO] Surefire report directory: /builds/workspace/Mimecraft/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Running com.squareup.mimecraft.PartTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.228 sec
+Running com.squareup.mimecraft.ComplexExamplesTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec
+Running com.squareup.mimecraft.FormWriterTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+Running com.squareup.mimecraft.MultipartWriterTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 sec
+
+Results :
+
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ mimecraft ---
+[INFO] Building jar: /builds/workspace/Mimecraft/target/mimecraft-1.1.2-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ mimecraft ---
+[INFO] Installing /builds/workspace/Mimecraft/target/mimecraft-1.1.2-SNAPSHOT.jar to /builds/.m2/repository/com/squareup/mimecraft/mimecraft/1.1.2-SNAPSHOT/mimecraft-1.1.2-SNAPSHOT.jar
+[INFO] Installing /builds/workspace/Mimecraft/pom.xml to /builds/.m2/repository/com/squareup/mimecraft/mimecraft/1.1.2-SNAPSHOT/mimecraft-1.1.2-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.327 s
+[INFO] Finished at: 2022-01-04T15:09:10+01:00
+[INFO] ------------------------------------------------------------------------
+ 
+--- Displays results of the maven compile ---
+Time to compile: 6817
+Number of tests: 14
+Number of tests skipped: 0
+Number of failures in tests: 0
+Number of errors in tests: 0
+ 
+-------------------------------------------------------
+Inserts the maven plugin to spoon the project
+-------------------------------------------------------
+ 
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5-SNAPSHOT/maven-metadata.xml
+[WARNING] Could not transfer metadata fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT/maven-metadata.xml from/to ow2.org-snapshot (https://repository.ow2.org/nexus/content/repositories/snapshots/): Transfer failed for https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5-SNAPSHOT/maven-metadata.xml 503 Service Unavailable
+[WARNING] Failure to transfer fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT/maven-metadata.xml from https://repository.ow2.org/nexus/content/repositories/snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of ow2.org-snapshot has elapsed or updates are forced. Original error: Could not transfer metadata fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT/maven-metadata.xml from/to ow2.org-snapshot (https://repository.ow2.org/nexus/content/repositories/snapshots/): Transfer failed for https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5-SNAPSHOT/maven-metadata.xml 503 Service Unavailable
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5-SNAPSHOT/spoon-maven-plugin-3.5-SNAPSHOT.pom
+[WARNING] Failed to retrieve plugin descriptor for fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT: Plugin fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT or one of its dependencies could not be resolved: Failed to read artifact descriptor for fr.inria.gforge.spoon:spoon-maven-plugin:jar:3.5-SNAPSHOT
+[INFO] 
+[INFO] ------------------< com.squareup.mimecraft:mimecraft >------------------
+[INFO] Building Mime Craft 1.1.2-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] Failed to retrieve plugin descriptor for fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT: Plugin fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT or one of its dependencies could not be resolved: Failed to read artifact descriptor for fr.inria.gforge.spoon:spoon-maven-plugin:jar:3.5-SNAPSHOT
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ mimecraft ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.105 s
+[INFO] Finished at: 2022-01-04T15:09:14+01:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.squareup.mimecraft:mimecraft >------------------
+[INFO] Building Mime Craft 1.1.2-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ mimecraft ---
+[INFO] Deleting /builds/workspace/Mimecraft/target
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.0:enforce (enforce-maven) @ mimecraft ---
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ mimecraft ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /builds/workspace/Mimecraft/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ mimecraft ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 4 source files to /builds/workspace/Mimecraft/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ mimecraft ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /builds/workspace/Mimecraft/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ mimecraft ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 6 source files to /builds/workspace/Mimecraft/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ mimecraft ---
+[INFO] Tests are skipped.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.489 s
+[INFO] Finished at: 2022-01-04T15:09:18+01:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5-SNAPSHOT/maven-metadata.xml
+[WARNING] Could not transfer metadata fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT/maven-metadata.xml from/to ow2.org-snapshot (https://repository.ow2.org/nexus/content/repositories/snapshots/): Transfer failed for https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5-SNAPSHOT/maven-metadata.xml 503 Service Unavailable
+[WARNING] Failure to transfer fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT/maven-metadata.xml from https://repository.ow2.org/nexus/content/repositories/snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of ow2.org-snapshot has elapsed or updates are forced. Original error: Could not transfer metadata fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT/maven-metadata.xml from/to ow2.org-snapshot (https://repository.ow2.org/nexus/content/repositories/snapshots/): Transfer failed for https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5-SNAPSHOT/maven-metadata.xml 503 Service Unavailable
+Downloading from ow2.org-snapshot: https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5-SNAPSHOT/spoon-maven-plugin-3.5-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.948 s
+[INFO] Finished at: 2022-01-04T15:09:20+01:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Plugin fr.inria.gforge.spoon:spoon-maven-plugin:3.5-SNAPSHOT or one of its dependencies could not be resolved: Failed to read artifact descriptor for fr.inria.gforge.spoon:spoon-maven-plugin:jar:3.5-SNAPSHOT: Could not transfer artifact fr.inria.gforge.spoon:spoon-maven-plugin:pom:3.5-SNAPSHOT from/to ow2.org-snapshot (https://repository.ow2.org/nexus/content/repositories/snapshots/): Transfer failed for https://repository.ow2.org/nexus/content/repositories/snapshots/fr/inria/gforge/spoon/spoon-maven-plugin/3.5-SNAPSHOT/spoon-maven-plugin-3.5-SNAPSHOT.pom 503 Service Unavailable -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginResolutionException
+ERROR: no tag class, spoon has failed
+Build step 'Execute shell' marked build as failure
+Archiving artifacts
+/net/www/ci/sos/jobs/Mimecraft/builds/2316/archive does not exist.
+ERROR: Step ‘Publish XML Summary Reports’ failed: /net/www/ci/sos/jobs/Mimecraft/builds/2316/archive does not exist.
+Finished: FAILURE

@@ -1,0 +1,1636 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder01-ubuntu16 (lin) in workspace /builds/workspace/metamutator
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Deferred wipeout is used...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/metamutator.git
+ > git init /builds/workspace/metamutator # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/metamutator.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.7.4'
+ > git fetch --tags --progress https://github.com/SpoonLabs/metamutator.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/metamutator.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 8024bed4159f2868e217257f8be1f1ef79a9edd5 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 8024bed4159f2868e217257f8be1f1ef79a9edd5 # timeout=10
+Commit message: "chore: fix ci"
+ > git rev-list --no-walk 8024bed4159f2868e217257f8be1f1ef79a9edd5 # timeout=10
+[metamutator] $ /bin/sh -xe /tmp/jenkins6597549190527802699.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  11495      0 --:--:-- --:--:-- --:--:-- 11447
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 44 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 29 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (835 B at 20 kB/s)
+[INFO] 
+[INFO] --------------------< fr.inria.spirals:metamutator >--------------------
+[INFO] Building metamutator 0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.8.1:use-latest-versions (default-cli) @ metamutator ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from gforge.inria.fr-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:7.2.0-SNAPSHOT to version 9.2.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.747 s
+[INFO] Finished at: 2021-09-27T14:29:05+02:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< fr.inria.spirals:metamutator >--------------------
+[INFO] Building metamutator 0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ metamutator ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.077 s
+[INFO] Finished at: 2021-09-27T14:29:08+02:00
+[INFO] ------------------------------------------------------------------------
++ mvn test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< fr.inria.spirals:metamutator >--------------------
+[INFO] Building metamutator 0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from gforge.inria.fr-snapshot: http://maven.inria.fr/artifactory/spoon-public-snapshot/fr/inria/gforge/spoon/spoon-core/9.2.0-SNAPSHOT/maven-metadata.xml
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ metamutator ---
+[WARNING] Using platform encoding (UTF8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /builds/workspace/metamutator/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ metamutator ---
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF8, i.e. build is platform dependent!
+[INFO] Compiling 16 source files to /builds/workspace/metamutator/target/classes
+[WARNING] /builds/workspace/metamutator/src/main/java/metamutator/StatementDeletionMetaMutator.java: Some input files use or override a deprecated API.
+[WARNING] /builds/workspace/metamutator/src/main/java/metamutator/StatementDeletionMetaMutator.java: Recompile with -Xlint:deprecation for details.
+[WARNING] /builds/workspace/metamutator/src/main/java/metamutator/Selector.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/metamutator/src/main/java/metamutator/Selector.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ metamutator ---
+[WARNING] Using platform encoding (UTF8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /builds/workspace/metamutator/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ metamutator ---
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF8, i.e. build is platform dependent!
+[INFO] Compiling 23 source files to /builds/workspace/metamutator/target/test-classes
+[WARNING] /builds/workspace/metamutator/src/test/java/resources/search_replay_spoon/search_replay_src/SearchReplayClassBis.java: Some input files use unchecked or unsafe operations.
+[WARNING] /builds/workspace/metamutator/src/test/java/resources/search_replay_spoon/search_replay_src/SearchReplayClassBis.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.16:test (default-test) @ metamutator ---
+[INFO] Surefire report directory: /builds/workspace/metamutator/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+Running UniqueTestGeneratorTest
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+done
+public class TestSuite {
+    public static void main(String[] args) throws Exception {
+        new TestSuite().test();
+    }
+
+    @org.junit.Test
+    public void test() throws Exception {
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.ArithmeticOperatorMetaMutatorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.BinaryOperatorMetaMutatorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.ConstantReplacementMetaMutatorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.LoopExpressionMetaMutatorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.MutantSearchSpaceExploratorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.NumericExpressionMetaMutatorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.ReplayMutantTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.ReturnReplacementOperatorMetaMutatorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.StatementDeletionMetaMutatorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(metamutator.VariabletoNullMetaMutatorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(resources.footest.FooTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(resources.search_replay_test.SearchReplayTestClass.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(resources.search_replay_test.SearchReplayTestClassBis.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+        	new org.junit.runners.BlockJUnit4ClassRunner(UniqueTestGeneratorTest.class).run(new org.junit.runner.notification.RunNotifier() {
+        		@Override
+        		public void fireTestFailure(org.junit.runner.notification.Failure failure) {
+        			if (failure.getException() instanceof RuntimeException) throw (RuntimeException)failure.getException(); 
+        			if (failure.getException() instanceof Error) throw (Error)failure.getException(); 
+                 throw new RuntimeException(failure.getException());
+        		}
+        	});
+    }
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.049 sec - in UniqueTestGeneratorTest
+Running metamutator.MutantSearchSpaceExploratorTest$failingTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec - in metamutator.MutantSearchSpaceExploratorTest$failingTest
+Running metamutator.ReturnReplacementOperatorMetaMutatorTest
+// Metaprogram: 
+public class Bar {
+    public boolean op(java.lang.Boolean a, java.lang.Boolean b) {
+        return ((_returnReplacementOperatorHotSpot1.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL)) ? ( null ) : (a || b));
+    }
+
+    public boolean op2(java.lang.Integer a, java.lang.Integer b) {
+        return ((_returnReplacementOperatorHotSpot2.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL)) ? ( null ) : (a > b));
+    }
+
+    public boolean op3(java.lang.Class c) {
+        return ((_returnReplacementOperatorHotSpot3.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL)) ? ( null ) : (resources.Foo.class == c));
+    }
+
+    public java.lang.Integer op_add(java.lang.Integer a, java.lang.Integer b) {
+        return ((_returnReplacementOperatorHotSpot4.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MIN)) ? ( -2147483647 ) : (_returnReplacementOperatorHotSpot4.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MAX)) ? ( 2147483646 ) : (_returnReplacementOperatorHotSpot4.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.ZERO)) ? ( 0 ) : (a + b));
+    }
+
+    public java.lang.Integer op_minus(java.lang.Integer a, java.lang.Integer b) {
+        return ((_returnReplacementOperatorHotSpot5.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MIN)) ? ( -2147483647 ) : (_returnReplacementOperatorHotSpot5.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MAX)) ? ( 2147483646 ) : (_returnReplacementOperatorHotSpot5.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.ZERO)) ? ( 0 ) : (a - b));
+    }
+
+    public java.lang.String op_concat_ss(java.lang.String a, java.lang.String b) {
+        return ((_returnReplacementOperatorHotSpot6.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL)) ? ( null ) : (a + b));
+    }
+
+    public java.lang.String op_concat_is(java.lang.Integer a, java.lang.String b) {
+        return ((_returnReplacementOperatorHotSpot7.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL)) ? ( null ) : (a + b));
+    }
+
+    public java.lang.String op_get_s(java.lang.String a) {
+        return ((_returnReplacementOperatorHotSpot8.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL)) ? ( null ) : (a));
+    }
+
+    public boolean op_get_b(java.lang.Boolean a) {
+        return a;
+    }
+
+    public int op_constant() {
+        int i = 42;
+        return ((_returnReplacementOperatorHotSpot9.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MIN)) ? ( -2147483647 ) : (_returnReplacementOperatorHotSpot9.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MAX)) ? ( 2147483646 ) : (_returnReplacementOperatorHotSpot9.is(metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.ZERO)) ? ( 0 ) : (i));
+    }
+
+    private static final metamutator.ISelector _returnReplacementOperatorHotSpot1 = metamutator.Selector.of(new metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT[]{metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.INIT,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL}).in(resources.Bar.class).id("_returnReplacementOperatorHotSpot1");
+
+    private static final metamutator.ISelector _returnReplacementOperatorHotSpot2 = metamutator.Selector.of(new metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT[]{metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.INIT,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL}).in(resources.Bar.class).id("_returnReplacementOperatorHotSpot2");
+
+    private static final metamutator.ISelector _returnReplacementOperatorHotSpot3 = metamutator.Selector.of(new metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT[]{metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.INIT,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL}).in(resources.Bar.class).id("_returnReplacementOperatorHotSpot3");
+
+    private static final metamutator.ISelector _returnReplacementOperatorHotSpot4 = metamutator.Selector.of(new metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT[]{metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INIT,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MIN,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MAX,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.ZERO}).in(resources.Bar.class).id("_returnReplacementOperatorHotSpot4");
+
+    private static final metamutator.ISelector _returnReplacementOperatorHotSpot5 = metamutator.Selector.of(new metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT[]{metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INIT,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MIN,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MAX,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.ZERO}).in(resources.Bar.class).id("_returnReplacementOperatorHotSpot5");
+
+    private static final metamutator.ISelector _returnReplacementOperatorHotSpot6 = metamutator.Selector.of(new metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT[]{metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.INIT,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL}).in(resources.Bar.class).id("_returnReplacementOperatorHotSpot6");
+
+    private static final metamutator.ISelector _returnReplacementOperatorHotSpot7 = metamutator.Selector.of(new metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT[]{metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.INIT,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL}).in(resources.Bar.class).id("_returnReplacementOperatorHotSpot7");
+
+    private static final metamutator.ISelector _returnReplacementOperatorHotSpot8 = metamutator.Selector.of(new metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT[]{metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.INIT,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_OBJECT.NULL}).in(resources.Bar.class).id("_returnReplacementOperatorHotSpot8");
+
+    private static final metamutator.ISelector _returnReplacementOperatorHotSpot9 = metamutator.Selector.of(new metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT[]{metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INIT,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MIN,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.INT_MAX,metamutator.ReturnReplacementOperatorMetaMutator.RETURN_REPLACEMENT_INT.ZERO}).in(resources.Bar.class).id("_returnReplacementOperatorHotSpot9");
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.304 sec - in metamutator.ReturnReplacementOperatorMetaMutatorTest
+Running metamutator.NumericExpressionMetaMutatorTest
+// Metaprogram: 
+public class Foo {
+    final int varinchangeable = 1;
+
+    public boolean op(java.lang.Boolean a, java.lang.Boolean b) {
+        return a || b;
+    }
+
+    public boolean op2(java.lang.Integer a, java.lang.Integer b) {
+        return a > b;
+    }
+
+    public boolean op3(java.lang.Class c) {
+        return resources.Foo.class == c;
+    }
+
+    public int add(java.lang.Integer a, java.lang.Integer b) {
+        int c = a + b;
+        return (_numericExpressionMetaMutator1.is(metamutator.NumericVariableMetaMutator.UNARY.ABS)?( Math.abs(c)):_numericExpressionMetaMutator1.is(metamutator.NumericVariableMetaMutator.UNARY.MINUS)?( -(c)):_numericExpressionMetaMutator1.is(metamutator.NumericVariableMetaMutator.UNARY.INC)?( (++c)):_numericExpressionMetaMutator1.is(metamutator.NumericVariableMetaMutator.UNARY.DEC)?( (--c)):(c));
+    }
+
+    public int sum(java.lang.Integer a) {
+        int b = 0;
+        do {
+            b++;
+            a--;
+        } while (a > 1 );
+        return (_numericExpressionMetaMutator2.is(metamutator.NumericVariableMetaMutator.UNARY.ABS)?( Math.abs(b)):_numericExpressionMetaMutator2.is(metamutator.NumericVariableMetaMutator.UNARY.MINUS)?( -(b)):_numericExpressionMetaMutator2.is(metamutator.NumericVariableMetaMutator.UNARY.INC)?( (++b)):_numericExpressionMetaMutator2.is(metamutator.NumericVariableMetaMutator.UNARY.DEC)?( (--b)):(b));
+    }
+
+    private static final metamutator.ISelector _numericExpressionMetaMutator1 = metamutator.Selector.of(new metamutator.NumericVariableMetaMutator.UNARY[]{metamutator.NumericVariableMetaMutator.UNARY.INIT,metamutator.NumericVariableMetaMutator.UNARY.ABS,metamutator.NumericVariableMetaMutator.UNARY.MINUS,metamutator.NumericVariableMetaMutator.UNARY.INC,metamutator.NumericVariableMetaMutator.UNARY.DEC}).in(resources.Foo.class).id("_numericExpressionMetaMutator1");
+
+    private static final metamutator.ISelector _numericExpressionMetaMutator2 = metamutator.Selector.of(new metamutator.NumericVariableMetaMutator.UNARY[]{metamutator.NumericVariableMetaMutator.UNARY.INIT,metamutator.NumericVariableMetaMutator.UNARY.ABS,metamutator.NumericVariableMetaMutator.UNARY.MINUS,metamutator.NumericVariableMetaMutator.UNARY.INC,metamutator.NumericVariableMetaMutator.UNARY.DEC}).in(resources.Foo.class).id("_numericExpressionMetaMutator2");
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.127 sec - in metamutator.NumericExpressionMetaMutatorTest
+Running metamutator.MutantSearchSpaceExploratorTest
+******************resources.footest.FooTest******************
+2
+java.lang.AssertionError: expected:<true> but was:<false>
+2
+java.lang.AssertionError: expected:<false> but was:<true>
+6
+java.lang.AssertionError: expected:<true> but was:<false>
+java.lang.AssertionError: expected:<false> but was:<true>
+java.lang.AssertionError: expected:<true> but was:<false>
+java.lang.AssertionError: expected:<true> but was:<false>
+java.lang.AssertionError: expected:<false> but was:<true>
+2
+java.lang.AssertionError: expected:<true> but was:<false>
+2
+java.lang.AssertionError: expected:<true> but was:<false>
+0_1 expected:<true> but was:<false>
+1_1 expected:<false> but was:<true>
+2_1 expected:<true> but was:<false>
+2_2 expected:<false> but was:<true>
+2_3 expected:<true> but was:<false>
+2_4 expected:<true> but was:<false>
+2_5 expected:<false> but was:<true>
+3_1 expected:<true> but was:<false>
+4_1 expected:<true> but was:<false>
+killed 9
+alive 0
+******************resources.search_replay_test.SearchReplayTestClass******************
+2
+java.lang.NumberFormatException: null
+6
+java.lang.AssertionError
+java.lang.AssertionError
+java.lang.AssertionError
+0_1 null
+1_1 null
+1_2 null
+1_3 null
+killed 4
+alive 2
+******************resources.search_replay_test.SearchReplayTestClassBis******************
+2
+java.lang.NumberFormatException: null
+6
+java.lang.AssertionError
+java.lang.AssertionError
+java.lang.AssertionError
+0_1 null
+1_1 null
+1_2 null
+1_3 null
+killed 4
+alive 2
+******************search_replay_test******************
+total killed 8
+total alive 4
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.288 sec - in metamutator.MutantSearchSpaceExploratorTest
+Running metamutator.ReplayMutantTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0 sec - in metamutator.ReplayMutantTest
+Running metamutator.BinaryOperatorMetaMutatorTest
+// Metaprogram: 
+public class Foo {
+    public boolean op(java.lang.Boolean a, java.lang.Boolean b) {
+        return ((_binaryLogicalOperatorHotSpot2.is(spoon.reflect.code.BinaryOperatorKind.OR) && (a || b)) || (_binaryLogicalOperatorHotSpot2.is(spoon.reflect.code.BinaryOperatorKind.AND) && (a && b)));
+    }
+
+    public boolean op2(java.lang.Integer a, java.lang.Integer b) {
+        return ((_binaryLogicalOperatorHotSpot3.is(spoon.reflect.code.BinaryOperatorKind.EQ) && (a == b)) || (_binaryLogicalOperatorHotSpot3.is(spoon.reflect.code.BinaryOperatorKind.NE) && (a != b)) || (_binaryLogicalOperatorHotSpot3.is(spoon.reflect.code.BinaryOperatorKind.LT) && (a < b)) || (_binaryLogicalOperatorHotSpot3.is(spoon.reflect.code.BinaryOperatorKind.GT) && (a > b)) || (_binaryLogicalOperatorHotSpot3.is(spoon.reflect.code.BinaryOperatorKind.LE) && (a <= b)) || (_binaryLogicalOperatorHotSpot3.is(spoon.reflect.code.BinaryOperatorKind.GE) && (a >= b)));
+    }
+
+    public boolean op3(java.lang.Class c) {
+        return ((_binaryLogicalOperatorHotSpot4.is(spoon.reflect.code.BinaryOperatorKind.EQ) && (resources.foo.Foo.class == c)) || (_binaryLogicalOperatorHotSpot4.is(spoon.reflect.code.BinaryOperatorKind.NE) && (resources.foo.Foo.class != c)));
+    }
+
+    public boolean op4() {
+        java.lang.String medt = "Theobaldie";
+        return ((_binaryLogicalOperatorHotSpot5.is(spoon.reflect.code.BinaryOperatorKind.EQ) && (medt == null)) || (_binaryLogicalOperatorHotSpot5.is(spoon.reflect.code.BinaryOperatorKind.NE) && (medt != null)));
+    }
+
+    private static final metamutator.ISelector _binaryLogicalOperatorHotSpot2 = metamutator.Selector.of(new spoon.reflect.code.BinaryOperatorKind[]{spoon.reflect.code.BinaryOperatorKind.OR,spoon.reflect.code.BinaryOperatorKind.AND}).in(resources.foo.Foo.class).id("_binaryLogicalOperatorHotSpot2");
+
+    private static final metamutator.ISelector _binaryLogicalOperatorHotSpot3 = metamutator.Selector.of(new spoon.reflect.code.BinaryOperatorKind[]{spoon.reflect.code.BinaryOperatorKind.GT,spoon.reflect.code.BinaryOperatorKind.EQ,spoon.reflect.code.BinaryOperatorKind.NE,spoon.reflect.code.BinaryOperatorKind.LT,spoon.reflect.code.BinaryOperatorKind.LE,spoon.reflect.code.BinaryOperatorKind.GE}).in(resources.foo.Foo.class).id("_binaryLogicalOperatorHotSpot3");
+
+    private static final metamutator.ISelector _binaryLogicalOperatorHotSpot4 = metamutator.Selector.of(new spoon.reflect.code.BinaryOperatorKind[]{spoon.reflect.code.BinaryOperatorKind.EQ,spoon.reflect.code.BinaryOperatorKind.NE}).in(resources.foo.Foo.class).id("_binaryLogicalOperatorHotSpot4");
+
+    private static final metamutator.ISelector _binaryLogicalOperatorHotSpot5 = metamutator.Selector.of(new spoon.reflect.code.BinaryOperatorKind[]{spoon.reflect.code.BinaryOperatorKind.NE,spoon.reflect.code.BinaryOperatorKind.EQ}).in(resources.foo.Foo.class).id("_binaryLogicalOperatorHotSpot5");
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.986 sec - in metamutator.BinaryOperatorMetaMutatorTest
+Running metamutator.VariabletoNullMetaMutatorTest
+// Metaprogram: 
+public class Foo {
+    public boolean op(java.lang.Boolean a, java.lang.Boolean b) {
+        return a || b;
+    }
+
+    public boolean op2(java.lang.Integer a, java.lang.Integer b) {
+        return a > b;
+    }
+
+    public boolean op3(java.lang.Class c) {
+        return resources.foo.Foo.class == c;
+    }
+
+    public boolean op4() {
+        java.lang.String medt = ((_variableNullHotSpot1.is(metamutator.Null.NO))?"Theobaldie":null);
+        return medt != null;
+    }
+
+    private static final metamutator.ISelector _variableNullHotSpot1 = metamutator.Selector.of(new metamutator.Null[]{metamutator.Null.NO,metamutator.Null.YES}).in(resources.foo.Foo.class).id("_variableNullHotSpot1");
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 sec - in metamutator.VariabletoNullMetaMutatorTest
+Running metamutator.ConstantReplacementMetaMutatorTest
+nb mutants 1
+// Metaprogram: 
+public class Bar {
+    public boolean op(java.lang.Boolean a, java.lang.Boolean b) {
+        return a || b;
+    }
+
+    public boolean op2(java.lang.Integer a, java.lang.Integer b) {
+        return a > b;
+    }
+
+    public boolean op3(java.lang.Class c) {
+        return resources.Foo.class == c;
+    }
+
+    public java.lang.Integer op_add(java.lang.Integer a, java.lang.Integer b) {
+        return a + b;
+    }
+
+    public java.lang.Integer op_minus(java.lang.Integer a, java.lang.Integer b) {
+        return a - b;
+    }
+
+    public java.lang.String op_concat_ss(java.lang.String a, java.lang.String b) {
+        return a + b;
+    }
+
+    public java.lang.String op_concat_is(java.lang.Integer a, java.lang.String b) {
+        return a + b;
+    }
+
+    public java.lang.String op_get_s(java.lang.String a) {
+        return a;
+    }
+
+    public boolean op_get_b(java.lang.Boolean a) {
+        return a;
+    }
+
+    public int op_constant() {
+        int i = (_constantOperatorMetaMutator1.is(metamutator.IntegerConstantReplacementMetaMutator.CONSTANT_REP.ZERO)?( 0 ):(_constantOperatorMetaMutator1.is(metamutator.IntegerConstantReplacementMetaMutator.CONSTANT_REP.INT_MAX)?( 2147483646 ):(_constantOperatorMetaMutator1.is(metamutator.IntegerConstantReplacementMetaMutator.CONSTANT_REP.INT_MIN)?( -2147483647 ):(42))));
+        return i;
+    }
+
+    private static final metamutator.ISelector _constantOperatorMetaMutator1 = metamutator.Selector.of(new metamutator.IntegerConstantReplacementMetaMutator.CONSTANT_REP[]{metamutator.IntegerConstantReplacementMetaMutator.CONSTANT_REP.ZERO,metamutator.IntegerConstantReplacementMetaMutator.CONSTANT_REP.INT_MAX,metamutator.IntegerConstantReplacementMetaMutator.CONSTANT_REP.INT_MIN}).in(resources.Bar.class).id("_constantOperatorMetaMutator1");
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 sec - in metamutator.ConstantReplacementMetaMutatorTest
+Running metamutator.StatementDeletionMetaMutatorTest
+// Metaprogram: 
+/* public String LocalVariableNotReachableInElse(){
+if()
+}
+ */
+public class StatementResource {
+    public StatementResource() {
+    }
+
+    public int returnMax10(java.lang.Integer a) {
+        if ((_StatementDeletionMutatorHotSpot1.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (a < 10) {
+                return a;
+            } else {
+                return 10;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public void throwException() throws java.lang.Exception {
+        if ((_StatementDeletionMutatorHotSpot2.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            throw new java.lang.Exception();
+        } else {
+            return;
+        }
+    }
+
+    public int returnTotalFromFor(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot3.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (i = 0; i < total; i++) {
+            }
+        }
+        return i;
+    }
+
+    public int returnTotalFromWhile(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot4.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            while (i < total) {
+                i++;
+            } 
+        }
+        return i;
+    }
+
+    public int returnTotalFromDo(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot5.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            do {
+                i++;
+            } while (i < total );
+        }
+        return i;
+    }
+
+    public int returntotalFromForEachFromArray(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot6.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public char returnLetterFromSwitchCase(java.lang.Integer i) {
+        if ((_StatementDeletionMutatorHotSpot7.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            switch (i) {
+                case 1 :
+                    return 'A';
+                case 2 :
+                    return 'B';
+                case 3 :
+                    return 'C';
+                case 4 :
+                    return 'D';
+                default :
+                    return 'E';
+            }
+        } else {
+            return '\u0000';
+        }
+    }
+
+    public int addWithoutNegative(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot10.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                if ((_StatementDeletionMutatorHotSpot9.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                    if (i < 0) {
+                        if ((_StatementDeletionMutatorHotSpot8.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                            continue;
+                        }
+                    }
+                }
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public java.lang.String BonjourOrHello(java.lang.Boolean french) {
+        java.lang.String hello = null;
+        if ((_StatementDeletionMutatorHotSpot11.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (french) {
+                hello = "Bonjour";
+            } else {
+                hello = "Hello";
+            }
+        }
+        return hello;
+    }
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot1 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot1");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot2 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot2");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot3 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot3");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot4 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot4");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot5 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot5");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot6 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot6");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot7 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot7");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot8 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot8");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot9 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot9");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot10 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot10");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot11 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot11");
+}
+// Metaprogram: 
+/* public String LocalVariableNotReachableInElse(){
+if()
+}
+ */
+public class StatementResource {
+    public StatementResource() {
+    }
+
+    public int returnMax10(java.lang.Integer a) {
+        if ((_StatementDeletionMutatorHotSpot1.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (a < 10) {
+                return a;
+            } else {
+                return 10;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public void throwException() throws java.lang.Exception {
+        if ((_StatementDeletionMutatorHotSpot2.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            throw new java.lang.Exception();
+        } else {
+            return;
+        }
+    }
+
+    public int returnTotalFromFor(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot3.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (i = 0; i < total; i++) {
+            }
+        }
+        return i;
+    }
+
+    public int returnTotalFromWhile(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot4.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            while (i < total) {
+                i++;
+            } 
+        }
+        return i;
+    }
+
+    public int returnTotalFromDo(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot5.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            do {
+                i++;
+            } while (i < total );
+        }
+        return i;
+    }
+
+    public int returntotalFromForEachFromArray(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot6.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public char returnLetterFromSwitchCase(java.lang.Integer i) {
+        if ((_StatementDeletionMutatorHotSpot7.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            switch (i) {
+                case 1 :
+                    return 'A';
+                case 2 :
+                    return 'B';
+                case 3 :
+                    return 'C';
+                case 4 :
+                    return 'D';
+                default :
+                    return 'E';
+            }
+        } else {
+            return '\u0000';
+        }
+    }
+
+    public int addWithoutNegative(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot10.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                if ((_StatementDeletionMutatorHotSpot9.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                    if (i < 0) {
+                        if ((_StatementDeletionMutatorHotSpot8.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                            continue;
+                        }
+                    }
+                }
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public java.lang.String BonjourOrHello(java.lang.Boolean french) {
+        java.lang.String hello = null;
+        if ((_StatementDeletionMutatorHotSpot11.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (french) {
+                hello = "Bonjour";
+            } else {
+                hello = "Hello";
+            }
+        }
+        return hello;
+    }
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot1 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot1");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot2 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot2");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot3 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot3");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot4 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot4");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot5 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot5");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot6 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot6");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot7 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot7");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot8 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot8");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot9 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot9");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot10 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot10");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot11 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot11");
+}
+// Metaprogram: 
+/* public String LocalVariableNotReachableInElse(){
+if()
+}
+ */
+public class StatementResource {
+    public StatementResource() {
+    }
+
+    public int returnMax10(java.lang.Integer a) {
+        if ((_StatementDeletionMutatorHotSpot1.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (a < 10) {
+                return a;
+            } else {
+                return 10;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public void throwException() throws java.lang.Exception {
+        if ((_StatementDeletionMutatorHotSpot2.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            throw new java.lang.Exception();
+        } else {
+            return;
+        }
+    }
+
+    public int returnTotalFromFor(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot3.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (i = 0; i < total; i++) {
+            }
+        }
+        return i;
+    }
+
+    public int returnTotalFromWhile(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot4.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            while (i < total) {
+                i++;
+            } 
+        }
+        return i;
+    }
+
+    public int returnTotalFromDo(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot5.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            do {
+                i++;
+            } while (i < total );
+        }
+        return i;
+    }
+
+    public int returntotalFromForEachFromArray(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot6.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public char returnLetterFromSwitchCase(java.lang.Integer i) {
+        if ((_StatementDeletionMutatorHotSpot7.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            switch (i) {
+                case 1 :
+                    return 'A';
+                case 2 :
+                    return 'B';
+                case 3 :
+                    return 'C';
+                case 4 :
+                    return 'D';
+                default :
+                    return 'E';
+            }
+        } else {
+            return '\u0000';
+        }
+    }
+
+    public int addWithoutNegative(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot10.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                if ((_StatementDeletionMutatorHotSpot9.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                    if (i < 0) {
+                        if ((_StatementDeletionMutatorHotSpot8.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                            continue;
+                        }
+                    }
+                }
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public java.lang.String BonjourOrHello(java.lang.Boolean french) {
+        java.lang.String hello = null;
+        if ((_StatementDeletionMutatorHotSpot11.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (french) {
+                hello = "Bonjour";
+            } else {
+                hello = "Hello";
+            }
+        }
+        return hello;
+    }
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot1 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot1");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot2 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot2");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot3 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot3");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot4 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot4");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot5 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot5");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot6 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot6");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot7 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot7");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot8 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot8");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot9 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot9");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot10 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot10");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot11 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot11");
+}
+// Metaprogram: 
+/* public String LocalVariableNotReachableInElse(){
+if()
+}
+ */
+public class StatementResource {
+    public StatementResource() {
+    }
+
+    public int returnMax10(java.lang.Integer a) {
+        if ((_StatementDeletionMutatorHotSpot1.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (a < 10) {
+                return a;
+            } else {
+                return 10;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public void throwException() throws java.lang.Exception {
+        if ((_StatementDeletionMutatorHotSpot2.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            throw new java.lang.Exception();
+        } else {
+            return;
+        }
+    }
+
+    public int returnTotalFromFor(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot3.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (i = 0; i < total; i++) {
+            }
+        }
+        return i;
+    }
+
+    public int returnTotalFromWhile(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot4.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            while (i < total) {
+                i++;
+            } 
+        }
+        return i;
+    }
+
+    public int returnTotalFromDo(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot5.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            do {
+                i++;
+            } while (i < total );
+        }
+        return i;
+    }
+
+    public int returntotalFromForEachFromArray(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot6.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public char returnLetterFromSwitchCase(java.lang.Integer i) {
+        if ((_StatementDeletionMutatorHotSpot7.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            switch (i) {
+                case 1 :
+                    return 'A';
+                case 2 :
+                    return 'B';
+                case 3 :
+                    return 'C';
+                case 4 :
+                    return 'D';
+                default :
+                    return 'E';
+            }
+        } else {
+            return '\u0000';
+        }
+    }
+
+    public int addWithoutNegative(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot10.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                if ((_StatementDeletionMutatorHotSpot9.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                    if (i < 0) {
+                        if ((_StatementDeletionMutatorHotSpot8.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                            continue;
+                        }
+                    }
+                }
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public java.lang.String BonjourOrHello(java.lang.Boolean french) {
+        java.lang.String hello = null;
+        if ((_StatementDeletionMutatorHotSpot11.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (french) {
+                hello = "Bonjour";
+            } else {
+                hello = "Hello";
+            }
+        }
+        return hello;
+    }
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot1 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot1");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot2 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot2");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot3 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot3");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot4 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot4");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot5 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot5");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot6 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot6");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot7 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot7");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot8 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot8");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot9 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot9");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot10 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot10");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot11 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot11");
+}
+// Metaprogram: 
+/* public String LocalVariableNotReachableInElse(){
+if()
+}
+ */
+public class StatementResource {
+    public StatementResource() {
+    }
+
+    public int returnMax10(java.lang.Integer a) {
+        if ((_StatementDeletionMutatorHotSpot1.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (a < 10) {
+                return a;
+            } else {
+                return 10;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public void throwException() throws java.lang.Exception {
+        if ((_StatementDeletionMutatorHotSpot2.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            throw new java.lang.Exception();
+        } else {
+            return;
+        }
+    }
+
+    public int returnTotalFromFor(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot3.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (i = 0; i < total; i++) {
+            }
+        }
+        return i;
+    }
+
+    public int returnTotalFromWhile(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot4.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            while (i < total) {
+                i++;
+            } 
+        }
+        return i;
+    }
+
+    public int returnTotalFromDo(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot5.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            do {
+                i++;
+            } while (i < total );
+        }
+        return i;
+    }
+
+    public int returntotalFromForEachFromArray(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot6.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public char returnLetterFromSwitchCase(java.lang.Integer i) {
+        if ((_StatementDeletionMutatorHotSpot7.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            switch (i) {
+                case 1 :
+                    return 'A';
+                case 2 :
+                    return 'B';
+                case 3 :
+                    return 'C';
+                case 4 :
+                    return 'D';
+                default :
+                    return 'E';
+            }
+        } else {
+            return '\u0000';
+        }
+    }
+
+    public int addWithoutNegative(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot10.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                if ((_StatementDeletionMutatorHotSpot9.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                    if (i < 0) {
+                        if ((_StatementDeletionMutatorHotSpot8.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                            continue;
+                        }
+                    }
+                }
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public java.lang.String BonjourOrHello(java.lang.Boolean french) {
+        java.lang.String hello = null;
+        if ((_StatementDeletionMutatorHotSpot11.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (french) {
+                hello = "Bonjour";
+            } else {
+                hello = "Hello";
+            }
+        }
+        return hello;
+    }
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot1 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot1");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot2 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot2");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot3 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot3");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot4 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot4");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot5 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot5");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot6 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot6");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot7 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot7");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot8 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot8");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot9 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot9");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot10 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot10");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot11 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot11");
+}
+// Metaprogram: 
+/* public String LocalVariableNotReachableInElse(){
+if()
+}
+ */
+public class StatementResource {
+    public StatementResource() {
+    }
+
+    public int returnMax10(java.lang.Integer a) {
+        if ((_StatementDeletionMutatorHotSpot1.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (a < 10) {
+                return a;
+            } else {
+                return 10;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public void throwException() throws java.lang.Exception {
+        if ((_StatementDeletionMutatorHotSpot2.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            throw new java.lang.Exception();
+        } else {
+            return;
+        }
+    }
+
+    public int returnTotalFromFor(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot3.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (i = 0; i < total; i++) {
+            }
+        }
+        return i;
+    }
+
+    public int returnTotalFromWhile(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot4.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            while (i < total) {
+                i++;
+            } 
+        }
+        return i;
+    }
+
+    public int returnTotalFromDo(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot5.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            do {
+                i++;
+            } while (i < total );
+        }
+        return i;
+    }
+
+    public int returntotalFromForEachFromArray(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot6.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public char returnLetterFromSwitchCase(java.lang.Integer i) {
+        if ((_StatementDeletionMutatorHotSpot7.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            switch (i) {
+                case 1 :
+                    return 'A';
+                case 2 :
+                    return 'B';
+                case 3 :
+                    return 'C';
+                case 4 :
+                    return 'D';
+                default :
+                    return 'E';
+            }
+        } else {
+            return '\u0000';
+        }
+    }
+
+    public int addWithoutNegative(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot10.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                if ((_StatementDeletionMutatorHotSpot9.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                    if (i < 0) {
+                        if ((_StatementDeletionMutatorHotSpot8.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                            continue;
+                        }
+                    }
+                }
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public java.lang.String BonjourOrHello(java.lang.Boolean french) {
+        java.lang.String hello = null;
+        if ((_StatementDeletionMutatorHotSpot11.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (french) {
+                hello = "Bonjour";
+            } else {
+                hello = "Hello";
+            }
+        }
+        return hello;
+    }
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot1 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot1");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot2 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot2");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot3 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot3");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot4 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot4");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot5 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot5");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot6 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot6");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot7 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot7");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot8 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot8");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot9 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot9");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot10 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot10");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot11 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot11");
+}
+// Metaprogram: 
+/* public String LocalVariableNotReachableInElse(){
+if()
+}
+ */
+public class StatementResource {
+    public StatementResource() {
+    }
+
+    public int returnMax10(java.lang.Integer a) {
+        if ((_StatementDeletionMutatorHotSpot1.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (a < 10) {
+                return a;
+            } else {
+                return 10;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public void throwException() throws java.lang.Exception {
+        if ((_StatementDeletionMutatorHotSpot2.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            throw new java.lang.Exception();
+        } else {
+            return;
+        }
+    }
+
+    public int returnTotalFromFor(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot3.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (i = 0; i < total; i++) {
+            }
+        }
+        return i;
+    }
+
+    public int returnTotalFromWhile(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot4.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            while (i < total) {
+                i++;
+            } 
+        }
+        return i;
+    }
+
+    public int returnTotalFromDo(java.lang.Integer total) {
+        int i = 0;
+        if ((_StatementDeletionMutatorHotSpot5.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            do {
+                i++;
+            } while (i < total );
+        }
+        return i;
+    }
+
+    public int returntotalFromForEachFromArray(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot6.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public char returnLetterFromSwitchCase(java.lang.Integer i) {
+        if ((_StatementDeletionMutatorHotSpot7.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            switch (i) {
+                case 1 :
+                    return 'A';
+                case 2 :
+                    return 'B';
+                case 3 :
+                    return 'C';
+                case 4 :
+                    return 'D';
+                default :
+                    return 'E';
+            }
+        } else {
+            return '\u0000';
+        }
+    }
+
+    public int addWithoutNegative(int[] array) {
+        int total = 0;
+        if ((_StatementDeletionMutatorHotSpot10.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            for (int i : array) {
+                if ((_StatementDeletionMutatorHotSpot9.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                    if (i < 0) {
+                        if ((_StatementDeletionMutatorHotSpot8.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+                            continue;
+                        }
+                    }
+                }
+                total = total + i;
+            }
+        }
+        return total;
+    }
+
+    public java.lang.String BonjourOrHello(java.lang.Boolean french) {
+        java.lang.String hello = null;
+        if ((_StatementDeletionMutatorHotSpot11.is(metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED))) {
+            if (french) {
+                hello = "Bonjour";
+            } else {
+                hello = "Hello";
+            }
+        }
+        return hello;
+    }
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot1 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot1");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot2 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot2");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot3 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot3");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot4 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot4");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot5 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot5");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot6 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot6");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot7 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot7");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot8 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot8");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot9 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot9");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot10 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot10");
+
+    private static final metamutator.ISelector _StatementDeletionMutatorHotSpot11 = metamutator.Selector.of(new metamutator.StatementDeletionMetaMutator.ACTIVABLE[]{metamutator.StatementDeletionMetaMutator.ACTIVABLE.ENABLED,metamutator.StatementDeletionMetaMutator.ACTIVABLE.DISABLED}).in(resources.StatementResource.class).id("_StatementDeletionMutatorHotSpot11");
+}
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.678 sec - in metamutator.StatementDeletionMetaMutatorTest
+Running metamutator.LoopExpressionMetaMutatorTest
+// Metaprogram: 
+public class Foo {
+    final int varinchangeable = 1;
+
+    public boolean op(java.lang.Boolean a, java.lang.Boolean b) {
+        return a || b;
+    }
+
+    public boolean op2(java.lang.Integer a, java.lang.Integer b) {
+        return a > b;
+    }
+
+    public boolean op3(java.lang.Class c) {
+        return resources.Foo.class == c;
+    }
+
+    public int add(java.lang.Integer a, java.lang.Integer b) {
+        int c = a + b;
+        return c;
+    }
+
+    public int sum(java.lang.Integer a) {
+        int b = 0;
+        int _doExpressionMetaMutator1_Constante = 1;
+        do {
+            b++;
+            a--;
+            if((_doExpressionMetaMutator1.is(metamutator.LoopExpressionMetaMutator.NbRound.Rounds3)) && _doExpressionMetaMutator1_Constante == 3) {break;}else if((_doExpressionMetaMutator1.is(metamutator.LoopExpressionMetaMutator.NbRound.NoRound))) {break;}else if(_doExpressionMetaMutator1_Constante == 100){break;} _doExpressionMetaMutator1_Constante++;
+        } while (a > 1 );
+        return b;
+    }
+
+    private static final metamutator.ISelector _doExpressionMetaMutator1 = metamutator.Selector.of(new metamutator.LoopExpressionMetaMutator.NbRound[]{metamutator.LoopExpressionMetaMutator.NbRound.NoRound,metamutator.LoopExpressionMetaMutator.NbRound.Rounds3,metamutator.LoopExpressionMetaMutator.NbRound.Rounds100}).in(resources.Foo.class).id("_doExpressionMetaMutator1");
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec - in metamutator.LoopExpressionMetaMutatorTest
+Running metamutator.ArithmeticOperatorMetaMutatorTest
+nb mutants 1
+nb mutants 2
+// Metaprogram: 
+public class Bar {
+    public boolean op(java.lang.Boolean a, java.lang.Boolean b) {
+        return a || b;
+    }
+
+    public boolean op2(java.lang.Integer a, java.lang.Integer b) {
+        return a > b;
+    }
+
+    public boolean op3(java.lang.Class c) {
+        return resources.Foo.class == c;
+    }
+
+    public java.lang.Integer op_add(java.lang.Integer a, java.lang.Integer b) {
+        return ((_arithmeticOperatorHotSpot1.is(spoon.reflect.code.BinaryOperatorKind.PLUS)) ? (a + b) : (_arithmeticOperatorHotSpot1.is(spoon.reflect.code.BinaryOperatorKind.MINUS)) ? (a - b) : (_arithmeticOperatorHotSpot1.is(spoon.reflect.code.BinaryOperatorKind.MUL)) ? (a * b) : (_arithmeticOperatorHotSpot1.is(spoon.reflect.code.BinaryOperatorKind.DIV)) ? (a / b) : (a + b));
+    }
+
+    public java.lang.Integer op_minus(java.lang.Integer a, java.lang.Integer b) {
+        return ((_arithmeticOperatorHotSpot2.is(spoon.reflect.code.BinaryOperatorKind.PLUS)) ? (a + b) : (_arithmeticOperatorHotSpot2.is(spoon.reflect.code.BinaryOperatorKind.MINUS)) ? (a - b) : (_arithmeticOperatorHotSpot2.is(spoon.reflect.code.BinaryOperatorKind.MUL)) ? (a * b) : (_arithmeticOperatorHotSpot2.is(spoon.reflect.code.BinaryOperatorKind.DIV)) ? (a / b) : (a - b));
+    }
+
+    public java.lang.String op_concat_ss(java.lang.String a, java.lang.String b) {
+        return a + b;
+    }
+
+    public java.lang.String op_concat_is(java.lang.Integer a, java.lang.String b) {
+        return a + b;
+    }
+
+    public java.lang.String op_get_s(java.lang.String a) {
+        return a;
+    }
+
+    public boolean op_get_b(java.lang.Boolean a) {
+        return a;
+    }
+
+    public int op_constant() {
+        int i = 42;
+        return i;
+    }
+
+    private static final metamutator.ISelector _arithmeticOperatorHotSpot1 = metamutator.Selector.of(new spoon.reflect.code.BinaryOperatorKind[]{spoon.reflect.code.BinaryOperatorKind.PLUS,spoon.reflect.code.BinaryOperatorKind.MINUS,spoon.reflect.code.BinaryOperatorKind.MUL,spoon.reflect.code.BinaryOperatorKind.DIV}).in(resources.Bar.class).id("_arithmeticOperatorHotSpot1");
+
+    private static final metamutator.ISelector _arithmeticOperatorHotSpot2 = metamutator.Selector.of(new spoon.reflect.code.BinaryOperatorKind[]{spoon.reflect.code.BinaryOperatorKind.MINUS,spoon.reflect.code.BinaryOperatorKind.PLUS,spoon.reflect.code.BinaryOperatorKind.MUL,spoon.reflect.code.BinaryOperatorKind.DIV}).in(resources.Bar.class).id("_arithmeticOperatorHotSpot2");
+}
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.099 sec - in metamutator.ArithmeticOperatorMetaMutatorTest
+
+Results :
+
+Tests run: 21, Failures: 0, Errors: 0, Skipped: 1
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  10.172 s
+[INFO] Finished at: 2021-09-27T14:29:19+02:00
+[INFO] ------------------------------------------------------------------------
+Finished: SUCCESS

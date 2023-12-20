@@ -9,7 +9,7 @@ public final class CiDiff {
 	private CiDiff() {}
 
 	public static void main(String[] args) {
-		System.out.println(Arrays.toString(args));
+//		System.out.println(Arrays.toString(args));
 		if (args.length == 0 || Arrays.stream(args).anyMatch(arg -> arg.equals("-h") || arg.equals("--help"))) {
 			System.out.println(Options.getDescription());
 			return;

@@ -1,0 +1,710 @@
+Started by timer
+Running as SYSTEM
+[EnvInject] - Loading node environment variables.
+Building remotely on sos-builder02-ubuntu18 (lin ubuntu18 java11) in workspace /builds/workspace/Sorald
+[WS-CLEANUP] Deleting project workspace...
+[WS-CLEANUP] Done
+The recommended git tool is: NONE
+No credentials specified
+Wiping out workspace first.
+Cloning the remote Git repository
+Cloning repository https://github.com/SpoonLabs/sorald
+ > git init /builds/workspace/Sorald # timeout=10
+Fetching upstream changes from https://github.com/SpoonLabs/sorald
+ > git --version # timeout=10
+ > git --version # 'git version 2.17.1'
+ > git fetch --tags --progress -- https://github.com/SpoonLabs/sorald +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/SpoonLabs/sorald # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 1f73082a98980eceed7f9c1ae08e5733957c5281 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 1f73082a98980eceed7f9c1ae08e5733957c5281 # timeout=10
+Commit message: "chore: configure renovate (#619)"
+ > git rev-list --no-walk 1f73082a98980eceed7f9c1ae08e5733957c5281 # timeout=10
+[Sorald] $ /bin/sh -xe /tmp/jenkins16465534578830907085.sh
++ curl https://spoon.gforge.inria.fr/jenkins/inject_spoon_snapshot.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2381  100  2381    0     0  19201      0 --:--:-- --:--:-- --:--:-- 19048100  2381  100  2381    0     0  19048      0 --:--:-- --:--:-- --:--:-- 19048
++ python3 -c #! /bin/python3
+"""Script for injecting the latest SNAPSHOT version of Spoon into all pom.xml
+files it finds in the curren tworking directory or any subdirectory.
+
+Requires the ``defusedxml`` package to be installed separately.
+
+This script is compatible with Python 3.5+
+"""
+import xml.etree.ElementTree as ET
+import subprocess
+import pathlib
+
+from typing import Optional
+
+SPOON_SNAPSHOT_REPO = """
+<repository>
+    <id>ow2.org-snapshot</id>
+    <name>Maven Repository for Spoon Snapshots</name>
+    <url>https://repository.ow2.org/nexus/content/repositories/snapshots/</url>
+    <snapshots/>
+</repository>
+"""
+MAVEN_NAMESPACE = "http://maven.apache.org/POM/4.0.0"
+NAMESPACES = {"": MAVEN_NAMESPACE}
+
+MAVEN_VERSIONS_COMMAND = "mvn -B -U versions:use-latest-versions -DallowSnapshots -Dincludes=fr.inria.gforge.spoon".split()
+PURGE_LOCAL_REPO_COMMAND = "mvn -B -U dependency:purge-local-repository -DmanualInclude='fr.inria.gforge.spoon:spoon-core' -DsnapshotsOnly=true".split()
+
+
+def main():
+    ET.register_namespace("", MAVEN_NAMESPACE)
+    pom_file = pathlib.Path("pom.xml")
+    inject_snapshot_repo(pom_file)
+    subprocess.run(MAVEN_VERSIONS_COMMAND, cwd=str(pom_file.parent))
+    subprocess.run(PURGE_LOCAL_REPO_COMMAND, cwd=str(pom_file.parent))
+
+
+def inject_snapshot_repo(pom_file: pathlib.Path) -> None:
+    tree = ET.parse(str(pom_file))
+    root = tree.getroot()
+
+    repositories = root.find(in_maven_namespace("repositories"))
+    if not repositories:
+        repositories = ET.fromstring("<repositories></repositories>")
+        root.append(repositories)
+
+    snapshot_repo = ET.fromstring(SPOON_SNAPSHOT_REPO)
+    snapshot_repo_url = snapshot_repo.find("url").text
+
+    for repo in repositories.findall(in_maven_namespace("repository")):
+        url = repo.find(in_maven_namespace("url")).text
+        if url == snapshot_repo_url:
+            return
+
+    repositories.append(snapshot_repo)
+
+    tree.write(str(pom_file))
+
+
+def in_maven_namespace(tag: str) -> str:
+    """Wrap the tag in the default Maven namespace.
+
+    If porting this script to Python 3.6+, then this method can be removed and
+    one can instead search with a default namespace like so:
+
+    someElement.find(tag, namespaces={"": MAVEN_NAMESPACE})
+
+    This does not appear to work in Python 3.5
+    """
+    return "{{{}}}{}".format(MAVEN_NAMESPACE, tag)
+
+
+if __name__ == "__main__":
+    main()
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (20 kB at 45 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 31 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/versions-maven-plugin/maven-metadata.xml (835 B at 84 kB/s)
+[INFO] 
+[INFO] ------------------------< se.kth.castor:sorald >------------------------
+[INFO] Building Sorald 0.3.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions-maven-plugin:2.8.1:use-latest-versions (default-cli) @ sorald ---
+[INFO] Major version changes allowed
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from ow2.org-snapshot
+[INFO] artifact fr.inria.gforge.spoon:spoon-core: checking for updates from central
+[INFO] Updated fr.inria.gforge.spoon:spoon-core:jar:9.1.0-beta-11 to version 10.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.672 s
+[INFO] Finished at: 2021-11-21T03:06:19+01:00
+[INFO] ------------------------------------------------------------------------
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< se.kth.castor:sorald >------------------------
+[INFO] Building Sorald 0.3.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:purge-local-repository (default-cli) @ sorald ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.300 s
+[INFO] Finished at: 2021-11-21T03:06:23+01:00
+[INFO] ------------------------------------------------------------------------
++ mvn clean test
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------< [0;36mse.kth.castor:sorald[0;1m >------------------------[m
+[[1;34mINFO[m] [1mBuilding Sorald 0.3.1-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.resources/maven-metadata.xml
+Progress (1): 828 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.resources/maven-metadata.xml (828 B at 2.2 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.runtime/maven-metadata.xml
+Progress (1): 844 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.runtime/maven-metadata.xml (844 B at 53 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.osgi/maven-metadata.xml
+Progress (1): 943 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.osgi/maven-metadata.xml (943 B at 63 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.common/maven-metadata.xml
+Progress (1): 816 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.common/maven-metadata.xml (816 B at 37 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.jobs/maven-metadata.xml
+Progress (1): 912 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.jobs/maven-metadata.xml (912 B at 9.3 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.preferences/maven-metadata.xml
+Progress (1): 748 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.equinox.preferences/maven-metadata.xml (748 B at 58 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.contenttype/maven-metadata.xml
+Progress (1): 781 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.contenttype/maven-metadata.xml (781 B at 30 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.text/maven-metadata.xml
+Progress (1): 802 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.text/maven-metadata.xml (802 B at 50 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.commands/maven-metadata.xml
+Progress (1): 750 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/platform/org.eclipse.core.commands/maven-metadata.xml (750 B at 58 kB/s)
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:2.5:clean[m [1m(default-clean)[m @ [36msorald[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mbuildnumber-maven-plugin:1.4:create[m [1m(default)[m @ [36msorald[0;1m ---[m
+[[1;34mINFO[m] ShortRevision tag detected. The value is '8'.
+[[1;34mINFO[m] Executing: /bin/sh -c cd '/builds/workspace/Sorald' && 'git' 'rev-parse' '--verify' '--short=8' 'HEAD'
+[[1;34mINFO[m] Working directory: /builds/workspace/Sorald
+[[1;34mINFO[m] Storing buildNumber: 1f73082a at timestamp: 1637460394127
+[[1;33mWARNING[m] Cannot get the branch information from the git repository: 
+Detecting the current branch failed: fatal: ref HEAD is not a symbolic ref
+
+[[1;34mINFO[m] ShortRevision tag detected. The value is '8'.
+[[1;34mINFO[m] Executing: /bin/sh -c cd '/builds/workspace/Sorald' && 'git' 'rev-parse' '--verify' '--short=8' 'HEAD'
+[[1;34mINFO[m] Working directory: /builds/workspace/Sorald
+[[1;34mINFO[m] Storing buildScmBranch: UNKNOWN
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.6:prepare-agent[m [1m(default-prepare-agent)[m @ [36msorald[0;1m ---[m
+[[1;34mINFO[m] argLine set to -javaagent:/builds/.m2/repository/org/jacoco/org.jacoco.agent/0.8.6/org.jacoco.agent-0.8.6-runtime.jar=destfile=/builds/workspace/Sorald/target/jacoco.exec
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36msorald[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] skip non existing resourceDirectory /builds/workspace/Sorald/src/main/resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.1:compile[m [1m(default-compile)[m @ [36msorald[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 87 source files to /builds/workspace/Sorald/target/classes
+[[1;34mINFO[m] /builds/workspace/Sorald/src/main/java/sorald/processor/EqualsOnAtomicClassProcessor.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /builds/workspace/Sorald/src/main/java/sorald/processor/EqualsOnAtomicClassProcessor.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:testResources[m [1m(default-testResources)[m @ [36msorald[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 183 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.1:testCompile[m [1m(default-testCompile)[m @ [36msorald[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 30 source files to /builds/workspace/Sorald/target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.22.2:test[m [1m(default-test)[m @ [36msorald[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running sorald.[1mFileUtilsTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.469 s - in sorald.[1mFileUtilsTest[m
+[[1;34mINFO[m] Running sorald.miner.[1mWarningMinerTest[m
+--resolve-classpath-from is only supported for Maven projects, but /builds/workspace/Sorald/src/test/resources has no pom.xml
+Usage: sorald mine [-hV] [--handled-rules] [--stats-on-git-repos]
+                   [--git-repos-list=<reposList>]
+                   [--miner-output-file=<minerOutputFile>]
+                   [--resolve-classpath-from=<resolveClasspathFrom>]
+                   [--source=<source>] [--stats-output-file=<statsOutputFile>]
+                   [--target=<target>] [--temp-dir=<tempDir>]
+                   [--rule-types=<ruleTypes>[,<ruleTypes>...]]...
+Mine a project for Sonar warnings.
+      --git-repos-list=<reposList>
+                             The path to the repos list.
+  -h, --help                 Show this help message and exit.
+      --handled-rules        When this argument is used, Sorald only mines
+                               violations of the rules that can be fixed by
+                               Sorald.
+      --miner-output-file=<minerOutputFile>
+                             The path to the output file.
+      --resolve-classpath-from=<resolveClasspathFrom>
+                             Path to the root of a project to resolve the
+                               classpath from. Currently only works for Maven
+                               projects.
+      --rule-types=<ruleTypes>[,<ruleTypes>...]
+                             One or more types of rules to check for (use ','
+                               to separate multiple types). Choices: BUG,
+                               VULNERABILITY, CODE_SMELL, SECURITY_HOTSPOT
+      --source=<source>      The path to the file or folder to be analyzed and
+                               possibly repaired.
+      --stats-on-git-repos   If the stats should be computed on git repos.
+      --stats-output-file=<statsOutputFile>
+                             Path to a file to store execution statistics in
+                               (in JSON format). If left unspecified, Sorald
+                               does not gather statistics.
+      --target=<target>      The target of this execution (ex. sorald/92d377).
+                               This will be included in the json report.
+      --temp-dir=<tempDir>   The path to the temp directory.
+  -V, --version              Print version information and exit.
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m8[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 37.107 s - in sorald.miner.[1mWarningMinerTest[m
+[[1;34mINFO[m] Running sorald.[1mCodeGeneratorTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.227 s - in sorald.[1mCodeGeneratorTest[m
+[[1;34mINFO[m] Running sorald.event.collectors.[1mCompilationUnitCollectorTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.68 s - in sorald.event.collectors.[1mCompilationUnitCollectorTest[m
+[[1;34mINFO[m] Running sorald.[1mSegmentStrategyTest[m
+java.lang.IllegalStateException: Just crashing a little bit here :)
+	at sorald.SegmentStrategyTest.throwIllegalStateException(SegmentStrategyTest.java:151)
+	at sorald.SegmentStrategyTest.lambda$segmentStrategy_doesNotFail_onCrashInParsingSegment$1(SegmentStrategyTest.java:108)
+	at sorald.Repair.lambda$segmentRepair$2(Repair.java:165)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:195)
+	at java.base/java.util.LinkedList$LLSpliterator.tryAdvance(LinkedList.java:1253)
+	at java.base/java.util.stream.ReferencePipeline.forEachWithCancel(ReferencePipeline.java:127)
+	at java.base/java.util.stream.AbstractPipeline.copyIntoWithCancel(AbstractPipeline.java:502)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:488)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:913)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:578)
+	at sorald.SegmentStrategyTest.segmentStrategy_doesNotFail_onCrashInParsingSegment(SegmentStrategyTest.java:115)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:688)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$6(TestMethodTestDescriptor.java:210)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:206)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:131)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:65)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:96)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:75)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:150)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:384)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:345)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:126)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:418)
+java.lang.IllegalStateException: Just crashing a little bit here :)
+	at sorald.SegmentStrategyTest.throwIllegalStateException(SegmentStrategyTest.java:151)
+	at sorald.SegmentStrategyTest.lambda$segmentStrategy_doesNotFail_onCrashInParsingSegment$1(SegmentStrategyTest.java:108)
+	at sorald.Repair.lambda$segmentRepair$2(Repair.java:165)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:195)
+	at java.base/java.util.LinkedList$LLSpliterator.tryAdvance(LinkedList.java:1253)
+	at java.base/java.util.stream.ReferencePipeline.forEachWithCancel(ReferencePipeline.java:127)
+	at java.base/java.util.stream.AbstractPipeline.copyIntoWithCancel(AbstractPipeline.java:502)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:488)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:913)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:578)
+	at sorald.SegmentStrategyTest.segmentStrategy_doesNotFail_onCrashInParsingSegment(SegmentStrategyTest.java:115)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:688)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$6(TestMethodTestDescriptor.java:210)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:206)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:131)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:65)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:96)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:75)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:150)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:384)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:345)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:126)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:418)
+--max-files-per-segment must be greater than 0
+Usage: sorald repair [-hV] [--max-files-per-segment=<maxFilesPerSegment>]
+                     [--max-fixes-per-rule=<maxFixesPerRule>]
+                     [--pretty-printing-strategy=<prettyPrintingStrategy>]
+                     [--repair-strategy=<repairStrategy>]
+                     [--resolve-classpath-from=<resolveClasspathFrom>]
+                     --source=<source> [--stats-output-file=<statsOutputFile>]
+                     [--target=<target>] (--rule-key=<ruleKey> |
+                     --violation-specs=<ruleViolationSpecifiers>[,
+                     <ruleViolationSpecifiers>...]
+                     [--violation-specs=<ruleViolationSpecifiers>[,
+                     <ruleViolationSpecifiers>...]]...)
+Repair Sonar rule violations in a targeted project.
+  -h, --help                 Show this help message and exit.
+      --max-files-per-segment=<maxFilesPerSegment>
+                             Max number of files per loaded segment for
+                               segmented repair. It should be >= 3000 files per
+                               segment.
+      --max-fixes-per-rule=<maxFixesPerRule>
+                             Max number of fixes per rule.
+      --pretty-printing-strategy=<prettyPrintingStrategy>
+                             Mode for pretty printing the source code:
+                               'NORMAL', which means that all source code will
+                               be printed and its formatting might change (such
+                               as indentation), and 'SNIPER', which means that
+                               only statements changed towards the repair of
+                               Sonar rule violations will be printed.
+      --repair-strategy=<repairStrategy>
+                             Type of repair strategy. DEFAULT - load everything
+                               without splitting up the folder in segments,
+                               MAVEN - use Maven to locate production source
+                               code and the classpath (test source code is
+                               ignored), SEGMENT - splitting the folder into
+                               smaller segments and repair one segment at a
+                               time (need to specify --maxFilesPerSegment if
+                               not default)
+      --resolve-classpath-from=<resolveClasspathFrom>
+                             Path to the root of a project to resolve the
+                               classpath from. Currently only works for Maven
+                               projects.
+      --rule-key=<ruleKey>   Choose one of the following rule keys:
+                             S1068: Unused "private" fields should be removed
+                             S1118: Utility classes should not have public
+                               constructors
+                             	(incomplete: Only handles implicit public
+                               constructor)
+                             S1132: Strings literals should be placed on the
+                               left side when checking for equality
+                             S1155: Collection.isEmpty() should be used to test
+                               for emptiness
+                             S1217: "Thread.run()" should not be called directly
+                             S1444: "public static" fields should be constant
+                             	(incomplete: does not fix variable naming)
+                             S1481: Unused local variables should be removed
+                             S1596: "Collections.EMPTY_LIST", "EMPTY_MAP", and
+                               "EMPTY_SET" should not be used
+                             S1656: Variables should not be self-assigned
+                             S1854: Unused assignments should be removed
+                             S1860: Synchronization should not be based on
+                               Strings or boxed primitives
+                             S1948: Fields in a "Serializable" class should
+                               either be transient or serializable
+                             S2057: Every class implementing Serializable
+                               should declare a static final serialVersionUID.
+                             	(incomplete: This processor does not address the
+                               case where the class already has a
+                               serialVersionUID with a non long type.)
+                             S2095: Resources should be closed
+                             S2097: "equals(Object obj)" should test argument
+                               type
+                             S2111: "BigDecimal(double)" should not be used
+                             S2116: "hashCode" and "toString" should not be
+                               called on array instances
+                             S2142: "InterruptedException" should not be ignored
+                             S2164: Math should not be performed on floats
+                             S2167: "compareTo" should not return "Integer.
+                               MIN_VALUE"
+                             S2184: Math operands should be cast before
+                               assignment
+                             S2204: ".equals()" should not be used to test the
+                               values of "Atomic" classes
+                             S2225: "toString()" and "clone()" methods should
+                               not return null
+                             	(incomplete: does not fix null returning clone())
+                             S2272: "Iterator.next()" methods should throw
+                               "NoSuchElementException"
+                             S2755: XML parsers should not be vulnerable to XXE
+                               attacks
+                             	(incomplete: This processor is a WIP and
+                               currently supports a subset of rule 2755. See
+                               Sorald's documentation for details.)
+                             S3032: JEE applications should not "getClassLoader"
+                             S3067: "getClass" should not be used for
+                               synchronization
+                             S3984: Exception should not be created without
+                               being thrown
+                             S4973: Strings and Boxed types should be compared
+                               using "equals()"
+      --source=<source>      The path to the file or folder to be analyzed and
+                               possibly repaired.
+      --stats-output-file=<statsOutputFile>
+                             Path to a file to store execution statistics in
+                               (in JSON format). If left unspecified, Sorald
+                               does not gather statistics.
+      --target=<target>      The target of this execution (ex. sorald/92d377).
+                               This will be included in the json report.
+  -V, --version              Print version information and exit.
+      --violation-specs=<ruleViolationSpecifiers>[,<ruleViolationSpecifiers>...]
+                             One or more rule violation specifiers. Specifiers
+                               can be gathered with the 'mine' command using
+                               the --stats-output-file option.
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.523 s - in sorald.[1mSegmentStrategyTest[m
+[[1;34mINFO[m] Running sorald.cli.[1mCliTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s - in sorald.cli.[1mCliTest[m
+[[1;34mINFO[m] Running sorald.cli.[1mSoraldVersionProviderTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 s - in sorald.cli.[1mSoraldVersionProviderTest[m
+[[1;34mINFO[m] Running sorald.[1mRepairTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s - in sorald.[1mRepairTest[m
+[[1;34mINFO[m] Running sorald.[1mTargetedRepairTest[m
+Error: --rule-key=<ruleKey>, --violation-specs=<ruleViolationSpecifiers> are mutually exclusive (specify only one)
+Usage: sorald repair [-hV] [--max-files-per-segment=<maxFilesPerSegment>]
+                     [--max-fixes-per-rule=<maxFixesPerRule>]
+                     [--pretty-printing-strategy=<prettyPrintingStrategy>]
+                     [--repair-strategy=<repairStrategy>]
+                     [--resolve-classpath-from=<resolveClasspathFrom>]
+                     --source=<source> [--stats-output-file=<statsOutputFile>]
+                     [--target=<target>] (--rule-key=<ruleKey> |
+                     --violation-specs=<ruleViolationSpecifiers>[,
+                     <ruleViolationSpecifiers>...]
+                     [--violation-specs=<ruleViolationSpecifiers>[,
+                     <ruleViolationSpecifiers>...]]...)
+Repair Sonar rule violations in a targeted project.
+  -h, --help                 Show this help message and exit.
+      --max-files-per-segment=<maxFilesPerSegment>
+                             Max number of files per loaded segment for
+                               segmented repair. It should be >= 3000 files per
+                               segment.
+      --max-fixes-per-rule=<maxFixesPerRule>
+                             Max number of fixes per rule.
+      --pretty-printing-strategy=<prettyPrintingStrategy>
+                             Mode for pretty printing the source code:
+                               'NORMAL', which means that all source code will
+                               be printed and its formatting might change (such
+                               as indentation), and 'SNIPER', which means that
+                               only statements changed towards the repair of
+                               Sonar rule violations will be printed.
+      --repair-strategy=<repairStrategy>
+                             Type of repair strategy. DEFAULT - load everything
+                               without splitting up the folder in segments,
+                               MAVEN - use Maven to locate production source
+                               code and the classpath (test source code is
+                               ignored), SEGMENT - splitting the folder into
+                               smaller segments and repair one segment at a
+                               time (need to specify --maxFilesPerSegment if
+                               not default)
+      --resolve-classpath-from=<resolveClasspathFrom>
+                             Path to the root of a project to resolve the
+                               classpath from. Currently only works for Maven
+                               projects.
+      --rule-key=<ruleKey>   Choose one of the following rule keys:
+                             S1068: Unused "private" fields should be removed
+                             S1118: Utility classes should not have public
+                               constructors
+                             	(incomplete: Only handles implicit public
+                               constructor)
+                             S1132: Strings literals should be placed on the
+                               left side when checking for equality
+                             S1155: Collection.isEmpty() should be used to test
+                               for emptiness
+                             S1217: "Thread.run()" should not be called directly
+                             S1444: "public static" fields should be constant
+                             	(incomplete: does not fix variable naming)
+                             S1481: Unused local variables should be removed
+                             S1596: "Collections.EMPTY_LIST", "EMPTY_MAP", and
+                               "EMPTY_SET" should not be used
+                             S1656: Variables should not be self-assigned
+                             S1854: Unused assignments should be removed
+                             S1860: Synchronization should not be based on
+                               Strings or boxed primitives
+                             S1948: Fields in a "Serializable" class should
+                               either be transient or serializable
+                             S2057: Every class implementing Serializable
+                               should declare a static final serialVersionUID.
+                             	(incomplete: This processor does not address the
+                               case where the class already has a
+                               serialVersionUID with a non long type.)
+                             S2095: Resources should be closed
+                             S2097: "equals(Object obj)" should test argument
+                               type
+                             S2111: "BigDecimal(double)" should not be used
+                             S2116: "hashCode" and "toString" should not be
+                               called on array instances
+                             S2142: "InterruptedException" should not be ignored
+                             S2164: Math should not be performed on floats
+                             S2167: "compareTo" should not return "Integer.
+                               MIN_VALUE"
+                             S2184: Math operands should be cast before
+                               assignment
+                             S2204: ".equals()" should not be used to test the
+                               values of "Atomic" classes
+                             S2225: "toString()" and "clone()" methods should
+                               not return null
+                             	(incomplete: does not fix null returning clone())
+                             S2272: "Iterator.next()" methods should throw
+                               "NoSuchElementException"
+                             S2755: XML parsers should not be vulnerable to XXE
+                               attacks
+                             	(incomplete: This processor is a WIP and
+                               currently supports a subset of rule 2755. See
+                               Sorald's documentation for details.)
+                             S3032: JEE applications should not "getClassLoader"
+                             S3067: "getClass" should not be used for
+                               synchronization
+                             S3984: Exception should not be created without
+                               being thrown
+                             S4973: Strings and Boxed types should be compared
+                               using "equals()"
+      --source=<source>      The path to the file or folder to be analyzed and
+                               possibly repaired.
+      --stats-output-file=<statsOutputFile>
+                             Path to a file to store execution statistics in
+                               (in JSON format). If left unspecified, Sorald
+                               does not gather statistics.
+      --target=<target>      The target of this execution (ex. sorald/92d377).
+                               This will be included in the json report.
+  -V, --version              Print version information and exit.
+      --violation-specs=<ruleViolationSpecifiers>[,<ruleViolationSpecifiers>...]
+                             One or more rule violation specifiers. Specifiers
+                               can be gathered with the 'mine' command using
+                               the --stats-output-file option.
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m7[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.209 s - in sorald.[1mTargetedRepairTest[m
+[[1;34mINFO[m] Running sorald.sonar.[1mRuleVerifierTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s - in sorald.sonar.[1mRuleVerifierTest[m
+[[1;34mINFO[m] Running sorald.sonar.[1mRuleViolationTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.609 s - in sorald.sonar.[1mRuleViolationTest[m
+[[1;34mINFO[m] Running sorald.sonar.[1mScannedViolationTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s - in sorald.sonar.[1mScannedViolationTest[m
+[[1;34mINFO[m] Running sorald.sonar.[1mChecksTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in sorald.sonar.[1mChecksTest[m
+[[1;34mINFO[m] Running sorald.[1mClasspathModeTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.477 s - in sorald.[1mClasspathModeTest[m
+[[1;34mINFO[m] Running sorald.segment.[1mSoraldTreeBuilderAlgorithmTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s - in sorald.segment.[1mSoraldTreeBuilderAlgorithmTest[m
+[[1;34mINFO[m] Running sorald.segment.[1mFirstFitSegmentationAlgorithmTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in sorald.segment.[1mFirstFitSegmentationAlgorithmTest[m
+[[1;34mINFO[m] Running sorald.[1mMavenLauncherTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.868 s - in sorald.[1mMavenLauncherTest[m
+[[1;34mINFO[m] Running sorald.processor.[1mProcessorDescriptionTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m29[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.215 s - in sorald.processor.[1mProcessorDescriptionTest[m
+[[1;34mINFO[m] Running sorald.processor.[1mBestFitScannerTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.354 s - in sorald.processor.[1mBestFitScannerTest[m
+[[1;34mINFO[m] Running sorald.processor.[1mMaxFixesPerRuleTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.198 s - in sorald.processor.[1mMaxFixesPerRuleTest[m
+[[1;34mINFO[m] Running sorald.processor.[1mSoraldAbstractProcessorTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s - in sorald.processor.[1mSoraldAbstractProcessorTest[m
+[[1;34mINFO[m] Running sorald.processor.[1mProcessorTest[m
+[[1;33mWARNING[m] [1;33mTests [0;1mrun: [0;1m234[m, Failures: 0, Errors: 0, [1;33mSkipped: [0;1;33m2[m, Time elapsed: 55.423 s - in sorald.processor.[1mProcessorTest[m
+[[1;34mINFO[m] Running sorald.processor.[1mProcessorTestFilesCompileTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m140[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 21.594 s - in sorald.processor.[1mProcessorTestFilesCompileTest[m
+[[1;34mINFO[m] Running sorald.processor.[1mNoSonarTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.126 s - in sorald.processor.[1mNoSonarTest[m
+[[1;34mINFO[m] Running sorald.[1mGatherStatsTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m9[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 35.732 s - in sorald.[1mGatherStatsTest[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;33mWARNING[m] [1;33mTests run: 469, Failures: 0, Errors: 0, Skipped: 2[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.6:report[m [1m(default-report)[m @ [36msorald[0;1m ---[m
+[[1;34mINFO[m] Loading execution data file /builds/workspace/Sorald/target/jacoco.exec
+[[1;34mINFO[m] Analyzed bundle 'Sorald' with 86 classes
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  03:39 min
+[[1;34mINFO[m] Finished at: 2021-11-21T03:10:04+01:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+Finished: SUCCESS
