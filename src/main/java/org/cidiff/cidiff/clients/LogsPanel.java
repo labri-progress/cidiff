@@ -305,7 +305,7 @@ public class LogsPanel extends JPanel {
 			final String[] tokens = line.value().strip().split("\\s+");
 			final String[] otherTokens = otherText.strip().split("\\s+");
 			final StringBuilder b = new StringBuilder();
-			b.append("<html>" + line.index() + "&nbsp;");
+			b.append("<html>" + (line.index()-1) + "&nbsp;");
 			if (!line.value().strip().equals(line.value())) {
 				// if there was leading whitespaces, add them back to preserve the indentation
 				b.append(line.value().split("\\w+")[0].replaceAll("\\t", "&nbsp;".repeat(4)));

@@ -17,6 +17,10 @@ public record Line(int index, String raw, String value, long hash) {
 
 	public static final Line EMPTY = new Line(-1, "", "value", 0);
 
+	public Line(int index, String raw) {
+		this(index, raw, raw, raw.hashCode());
+	}
+
 	public Line(int index, String raw, String value) {
 		this(index, raw, value, raw.hashCode());
 	}
@@ -39,7 +43,7 @@ public record Line(int index, String raw, String value, long hash) {
 	}
 
 	public String displayValue() {
-		return this.index + " " + this.value.replace("\\t", "    ");
+		return (this.index-1) + " " + this.value.replace("\\t", "    ");
 	}
 
 }

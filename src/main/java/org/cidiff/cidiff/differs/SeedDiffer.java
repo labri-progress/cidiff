@@ -8,15 +8,18 @@ import org.cidiff.cidiff.Options;
 import org.cidiff.cidiff.Pair;
 import org.cidiff.cidiff.Utils;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class SeedDiffer implements LogDiffer {
@@ -56,7 +59,7 @@ public class SeedDiffer implements LogDiffer {
 		return LcsLogDiffer.extractIndexes(lengths, left.size(), right.size());
 	}
 
-	public Map<Integer, List<Integer>> simpleHash(List<Line> lines) {
+	public static Map<Integer, List<Integer>> simpleHash(List<Line> lines) {
 		Map<Integer, List<Integer>> hashes = new HashMap<>();
 		for (int i = 0; i < lines.size(); i++) {
 			int hash = lines.get(i).value().hashCode();
@@ -71,162 +74,185 @@ public class SeedDiffer implements LogDiffer {
 		return hashes;
 	}
 
-	public List<Seed> backbone(List<Line> leftLines, List<Line> rightLines) {
-		Map<Integer, List<Integer>> leftHashes = simpleHash(leftLines);
-		Map<Integer, List<Integer>> rightHashes = simpleHash(rightLines);
-		Map<Integer, Integer> uniqueLines = new HashMap<>();
-//        List<Seed> seeds = new ArrayList<>();
-		// step 1: setup 100% certainty seed: a line on the left is unique appears only once on the right
-		for (Map.Entry<Integer, List<Integer>> entry : leftHashes.entrySet()) {
-			if (rightHashes.containsKey(entry.getKey())) {
-				if (entry.getValue().size() == 1 && rightHashes.get(entry.getKey()).size() == 1) {
-					int i = entry.getValue().get(0);
-					int j = rightHashes.get(entry.getKey()).get(0);
-//                    seeds.add(new Seed(i, j, 1));
-					uniqueLines.put(i, j);
-				}
-			}
-		}
-		// step 1.5: merge unique lines to produce bigger seeds
+	public static void main(String[] args) {
 		List<Seed> seeds = new ArrayList<>();
-		Map<Integer, Seed> leftLineToSeed = new HashMap<>();
-		Map<Integer, Seed> rightLineToSeed = new HashMap<>();
-		for (Map.Entry<Integer, Integer> entry : uniqueLines.entrySet()) {
-			int i = entry.getKey();
-			int j = entry.getValue();
-			if (!leftLineToSeed.containsKey(i)) {
-				while (uniqueLines.containsKey(i + 1) && uniqueLines.get(i + 1) == j + 1) {
-					i++;
-					j++;
+		seeds.add(new Seed(34, 34, 9));
+		seeds.add(new Seed(19, 19, 16));
+		seeds.add(new Seed(16, 16, 2));
+		seeds.add(new Seed(10, 10, 7));
+		seeds.add(new Seed(0, 0, 11));
+		System.out.println(Arrays.deepToString(seeds.stream().sorted().toArray()));
+		seeds = selectSeeds(seeds);
+		System.out.println(Arrays.deepToString(seeds.stream().sorted().toArray()));
+	}
+
+	public static List<Seed> mergeSeeds(List<Seed> seeds) {
+		// complexity: O(n(n+1)/2), where n is proportional to the size of the list (worst case, no merge happen)
+		// complexity: Omega(n), where n is proportional to the size of the list (best case, all seeds are merged in one)
+		List<Seed> merged = new ArrayList<>();
+		Queue<Seed> remaining = new ArrayDeque<>(seeds.stream().sorted().toList());
+		while (!remaining.isEmpty()) {
+			Seed current = remaining.poll();
+			for (Seed test : remaining) {
+				if (current.left + current.size == test.left && current.right + current.size == test.right) {
+					// current bottom touch test top
+					current.size += test.size;
+					remaining.remove(test);
 				}
-				Seed seed = new Seed(entry.getKey(), entry.getValue(), i - entry.getKey() + 1);
-				seeds.add(seed);
-				for (int k = 0; k < seed.size; k++) {
-					leftLineToSeed.put(seed.left + k, seed);
-					rightLineToSeed.put(seed.right + k, seed);
-				}
+				// we should check if the current seed should merge with seeds from the top
+				// but because the seeds are sorted, we never reach such case, so no check needed
 			}
+			merged.add(current);
 		}
-		// step 2: extends unique lines without overlapping on other unique lines and merge seeds if touching
+		return merged;
+	}
+
+	public static void extendsSeed(Seed seed, boolean[] leftHasSeed, boolean[] rightHasSeed, List<Line> leftLines, List<Line> rightLines, double rewriteMin) {
+		while (seed.left > 0 && seed.right > 0
+				&& !leftHasSeed[seed.left - 1] && !rightHasSeed[seed.right - 1]
+				&& Utils.logsim(leftLines.get(seed.left - 1), rightLines.get(seed.right - 1)) >= rewriteMin) {
+			seed.extendsUp();
+		}
+		while (seed.left + seed.size < leftLines.size() && seed.right + seed.size < rightLines.size()
+				&& !leftHasSeed[seed.left + seed.size] && !rightHasSeed[seed.right + seed.size]
+				&& Utils.logsim(leftLines.get(seed.left + seed.size), rightLines.get(seed.right + seed.size)) >= rewriteMin) {
+			seed.extendsDown();
+		}
+	}
+
+	public static List<Seed> selectSeeds(List<Seed> seeds) {
+		List<Seed> selected = new ArrayList<>();
+		// sort seeds by their size, biggest first, smallest last, then by the smallest left index, then the smallest right index
+//		// ie biggest seeds first, then by order of appearance in the log
+//		Comparator<Seed> sorter = (seed, other) -> seed.size == other.size ? seed.left == other.left ? other.right - seed.right : other.left - seed.left : other.size - seed.size;
+		// sort seeds by their size, biggest first, smallest last, then by the smallest distance between their side
+		Comparator<Seed> sorter = (s1, s2) -> s1.size == s2.size ? Math.abs(s1.right - s1.left) - Math.abs(s2.right - s2.left) : s2.size - s1.size;
+		List<Seed> remaining = new ArrayList<>(seeds);
+		remaining.sort(sorter);
+
+		while (!remaining.isEmpty()) {
+			Seed current = remaining.remove(0);
+			for (Seed test : remaining) {
+				// resize both sides of the seed
+				resizeSeed(current.left, current.left + current.size - 1, test.left, test);
+				resizeSeed(current.right, current.right + current.size - 1, test.right, test);
+			}
+			remaining.removeIf(seed -> seed.size <= 0);
+			remaining.sort(sorter);
+			selected.add(current);
+		}
+
+		return selected;
+	}
+
+	public static void resizeSeed(int currentStart, int currentEnd, int testStart, Seed test) {
+		int start = Math.max(currentStart, testStart);
+		int end = Math.min(currentEnd, testStart + test.size - 1);
+		if (start <= end) {
+			int size = end - start + 1;
+			// intersection has values
+			if (start == testStart) {
+				//  cl----cs        inter=[tl,cs]
+				//      tl----ts
+				// shrink the start of the test seed
+				test.left += size;
+				test.right += size;
+				test.size -= size;
+			} else if (end == testStart + test.size - 1) {
+				//  tl----ts      inter=[cs,tl] for inter valid
+				//      cl----cs
+				// shrink the end of the test seed
+				test.size -= size;
+			}
+			// the case where the intersection is the current seed never happens because the seeds are sorted by
+			// the biggest size first, so it's impossible to have current.size < test.size
+			//     cl----cs        inter=[cl,cs]
+			//  tl----------ts
+		}
+		// when the intersection is empty, the test seed is not shrunk
+	}
+
+	public static void updateCache(List<Seed> seeds, boolean[] leftHasSeed, boolean[] rightHasSeed) {
 		for (Seed seed : seeds) {
-			while (seed.left > 0 && seed.right > 0
-					&& !leftLineToSeed.containsKey(seed.left - 1) && !rightLineToSeed.containsKey(seed.right - 1)
-					&& Utils.rewriteSim(leftLines.get(seed.left - 1).value(), rightLines.get(seed.right - 1).value()) >= rewriteMin) {
-				seed.increaseFromStart();
-				leftLineToSeed.put(seed.left, seed);
-				rightLineToSeed.put(seed.right, seed);
+			for (int i = 0; i < seed.size; i++) {
+				leftHasSeed[seed.left + i] = true;
 			}
-			while (seed.left + seed.size <= leftLines.size() - 1 && seed.right + seed.size <= rightLines.size() - 1
-					&& !leftLineToSeed.containsKey(seed.left + seed.size) && !rightLineToSeed.containsKey(seed.right + seed.size)
-					&& Utils.rewriteSim(leftLines.get(seed.left + seed.size).value(), rightLines.get(seed.right + seed.size).value()) >= rewriteMin) {
-				seed.increaseFromEnd();
-				leftLineToSeed.put(seed.left + seed.size - 1, seed);
-				rightLineToSeed.put(seed.right + seed.size - 1, seed);
+			for (int i = 0; i < seed.size; i++) {
+				rightHasSeed[seed.right + i] = true;
 			}
 		}
-		// step 2.5: merge touching seeds again
-		Iterator<Seed> iterator = seeds.iterator();
+	}
+
+
+	public List<Seed> backbone(List<Line> leftLines, List<Line> rightLines) {
+		Map<Integer, List<Integer>> leftHashes = simpleHash(leftLines);  // hash -> List<line_index>
+		Map<Integer, List<Integer>> rightHashes = simpleHash(rightLines);
+		List<Seed> seeds = new ArrayList<>();
+		boolean[] leftHasSeed = new boolean[leftLines.size()];
+		boolean[] rightHasSeed = new boolean[rightLines.size()];
+		// step 1: setup 100% certainty seed: a line on the left is unique appears only once on the right
+		Iterator<Map.Entry<Integer, List<Integer>>> iterator = leftHashes.entrySet().iterator();
 		while (iterator.hasNext()) {
-			Seed seed = iterator.next();
-			seeds.stream()
-					.filter(s -> seed.left + seed.size == s.left && seed.right + seed.size == s.right)
-					.findAny()
-					.ifPresent(touching -> {
-						touching.left = seed.left;
-						touching.right = seed.right;
-						touching.size += seed.size;
-						iterator.remove();
-					});
+			Map.Entry<Integer, List<Integer>> entry = iterator.next();
+			if (entry.getValue().size() == 1 && rightHashes.containsKey(entry.getKey()) && rightHashes.get(entry.getKey()).size() == 1) {
+				int i = entry.getValue().get(0);
+				int j = rightHashes.get(entry.getKey()).get(0);
+				seeds.add(new Seed(i, j, 1));
+				leftHasSeed[i] = true;
+				rightHasSeed[j] = true;
+				iterator.remove();
+//				rightHashes.remove(entry.getKey());  // it is useless to remove the key-value pair as this map is never iterated on
+			}
 		}
-		// step 3: find seeds in remaining line (lines not in seeds)
+		// step 1.5: merge unique seeds to produce bigger seeds
+		System.out.println("unique seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+		seeds = mergeSeeds(seeds);
+		System.out.println("unique merged seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+		// step 2: extends unique seeds without overlapping on other unique lines and merge seeds if touching
+		for (Seed seed : seeds) {
+			extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, rewriteMin);
+		}
+		System.out.println("unique merged extended seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+		seeds = selectSeeds(seeds);
+		System.out.println("unique merged extended selected seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+		System.out.println("cache before update: " + Arrays.toString(leftHasSeed));
+		updateCache(seeds, leftHasSeed, rightHasSeed);
+		System.out.println("cache after update: " + Arrays.toString(leftHasSeed));
+		System.out.println("cache at 16-16: " + leftHasSeed[16] + ' ' + rightHasSeed[16]);
+		// TODO: 1/16/24 @nhubner continue reworking the following code by moving things in functions or reusing already made ones
+		// step 2.5: merge touching seeds again
+		seeds = mergeSeeds(seeds);
+		System.out.println("unique merged extended selected merged seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+		// step 3: find seeds in remaining line (lines not in seeds) by looking at identical line groups
 		for (Map.Entry<Integer, List<Integer>> entry : leftHashes.entrySet()) {
-			if (!rightHashes.containsKey(entry.getKey()) || entry.getValue().stream().allMatch(leftLineToSeed::containsKey)) {
+			if (!rightHashes.containsKey(entry.getKey()) || entry.getValue().stream().allMatch(index -> rightHasSeed[index])) {
 				continue;
 			}
 			// hash in both side
 			List<Seed> newSeeds = new ArrayList<>();
 			for (Integer leftLine : entry.getValue()) {
-				if (leftLineToSeed.containsKey(leftLine)) {
+				if (leftHasSeed[leftLine]) {
 					// left line already selected
 					continue;
 				}
 				for (Integer rightLine : rightHashes.get(entry.getKey())) {
-					if (rightLineToSeed.containsKey(rightLine)) {
+					if (rightHasSeed[rightLine]) {
 						// right line already selected
 						continue;
 					}
 					// the two lines are equals
 					Seed seed = new Seed(leftLine, rightLine, 1);
-					while (seed.left > 0 && seed.right > 0
-							&& !leftLineToSeed.containsKey(seed.left - 1) && !rightLineToSeed.containsKey(seed.right - 1)
-							&& Utils.rewriteSim(leftLines.get(seed.left - 1).value(), rightLines.get(seed.right - 1).value()) >= rewriteMin) {
-						seed.increaseFromStart();
-					}
-					while (seed.left + seed.size <= leftLines.size() - 1 && seed.right + seed.size <= rightLines.size() - 1
-							&& !leftLineToSeed.containsKey(seed.left + seed.size) && !rightLineToSeed.containsKey(seed.right + seed.size)
-							&& Utils.rewriteSim(leftLines.get(seed.left + seed.size).value(), rightLines.get(seed.right + seed.size).value()) >= rewriteMin) {
-						seed.increaseFromEnd();
-					}
+					extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, rewriteMin);
 					newSeeds.add(seed);
 				}
 			}
 			// add the biggest seeds
-			newSeeds = newSeeds.stream()
-					.distinct()
-					.sorted((s1, s2) -> s1.size() == s2.size()
-							? Integer.compare(Math.abs(s1.right() - s1.left()), Math.abs(s2.right() - s2.left()))
-							: Integer.compare(s2.size(), s1.size()))
-					.collect(Collectors.toList());
-//            System.out.println("new " + Arrays.deepToString(newSeeds.toArray()));
-			while (!newSeeds.isEmpty()) {
-				// add the biggest remaining seed
-				Seed biggest = newSeeds.get(0);
-				for (int i = 0; i < biggest.size; i++) {
-					leftLineToSeed.put(biggest.left + i, biggest);
-					rightLineToSeed.put(biggest.right + i, biggest);
-				}
-				seeds.add(biggest);
-				newSeeds.remove(biggest);
-				// remove remaining seeds inside the biggest seed
-				// and reduce the size of overlapping seeds with the biggest
-				Iterator<Seed> newSeedsIterator = newSeeds.iterator();
-				while (newSeedsIterator.hasNext()) {
-					Seed seed = newSeedsIterator.next();
-					if (containsOneSide(biggest, seed)) {
-						newSeedsIterator.remove();
-						continue;
-					}
-
-					// reduce seed overlapping by its start
-					int biggestEndLeft = biggest.left + biggest.size - 1;
-					if (biggest.left <= seed.left && seed.left <= biggestEndLeft) {
-						while (seed.left <= biggestEndLeft && seed.size > 0) {
-							seed.decreaseFromStart();
-						}
-					}
-					int biggestEndRight = biggest.right + biggest.size - 1;
-					if (biggest.right <= seed.right && seed.right <= biggestEndRight) {
-						while (seed.right <= biggestEndRight && seed.size > 0) {
-							seed.decreaseFromStart();
-						}
-					}
-					// reduce seed overlapping by its end
-					if (biggest.left <= seed.left + seed.size - 1 && seed.left + seed.size - 1 <= biggestEndLeft) {
-						while (seed.left + seed.size - 1 >= biggest.left) {
-							seed.decreaseFromEnd();
-						}
-					}
-					if (biggest.right <= seed.right + seed.size - 1 && seed.right + seed.size - 1 <= biggestEndRight) {
-						while (seed.right + seed.size - 1 >= biggest.right) {
-							seed.decreaseFromEnd();
-						}
-					}
-
-					if (seed.size <= 0) {
-						newSeedsIterator.remove();
-					}
-				}
-			}
+			newSeeds = selectSeeds(newSeeds);
+			System.out.println("potential seeds: " + Arrays.deepToString(newSeeds.stream().sorted().toArray()));
+			seeds.addAll(newSeeds);
+			updateCache(newSeeds, leftHasSeed, rightHasSeed);
+			seeds = mergeSeeds(seeds);
+			System.out.println("seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
 		}
 		// step 4: merge two seeds if 1 add/del
 		Iterator<Seed> seedIterator = seeds.iterator();
@@ -247,14 +273,10 @@ public class SeedDiffer implements LogDiffer {
 
 	@Override
 	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines) {
-		List<Action> leftActions = new ArrayList<>();
-		for (int i = 0; i < leftLines.size(); i++) {
-			leftActions.add(Action.EMPTY);
-		}
-		List<Action> rightActions = new ArrayList<>();
-		for (int i = 0; i < rightLines.size(); i++) {
-			rightActions.add(Action.EMPTY);
-		}
+		Action[] leftActions = new Action[leftLines.size()];
+		Arrays.fill(leftActions, Action.EMPTY);
+		Action[] rightActions = new Action[rightLines.size()];
+		Arrays.fill(rightActions, Action.EMPTY);
 
 		List<Seed> selected = backbone(leftLines, rightLines);
 
@@ -267,21 +289,21 @@ public class SeedDiffer implements LogDiffer {
 				if (left.hasSameValue(right)) {
 					action = Action.unchanged(left, right, 1);
 				} else {
-					action = Action.updated(left, right, Utils.rewriteSim(left, right));
+					action = Action.updated(left, right, Utils.logsim(left, right));
 				}
-				leftActions.set(seed.left + i, action);
-				rightActions.set(seed.right + i, action);
+				leftActions[seed.left + i] = action;
+				rightActions[seed.right + i] = action;
 			}
 		}
 		// Identify deleted lines
 		IntStream.range(0, leftLines.size())
-				.filter(i -> leftActions.get(i).isEmpty())
-				.forEach(i -> leftActions.set(i, Action.deleted(leftLines.get(i))));
+				.filter(i -> leftActions[i].isEmpty())
+				.forEach(i -> leftActions[i] = Action.deleted(leftLines.get(i)));
 
 		// Identify added lines
 		IntStream.range(0, rightLines.size())
-				.filter(i -> rightActions.get(i).isEmpty())
-				.forEach(i -> rightActions.set(i, Action.added(rightLines.get(i))));
+				.filter(i -> rightActions[i].isEmpty())
+				.forEach(i -> rightActions[i] = Action.added(rightLines.get(i)));
 
 		// post process, compute an LCS to determine moved lines (in unchanged and updated lines only)
 		List<Integer> l = new ArrayList<>();
@@ -296,31 +318,31 @@ public class SeedDiffer implements LogDiffer {
 		Collections.sort(r);
 		// lcs values are index of l and r
 		// l and r values are Line#index values (1-indexed) of leftLines and rightLines
-		List<int[]> lcs = lcs(l, r, (i, j) -> leftActions.get(i - 1).right().index() == j);
-		for (int i = 0; i < leftActions.size(); i++) {
-			Action action = leftActions.get(i);
+		List<int[]> lcs = lcs(l, r, (i, j) -> leftActions[i - 1].right().index() == j);
+		for (int i = 0; i < leftActions.length; i++) {
+			Action action = leftActions[i];
 //            Action action = entry.getValue();
 			if (action.type() == Action.Type.ADDED || action.type() == Action.Type.DELETED) {
 				continue;
 			}
 			if (lcs.stream().noneMatch(ints -> action.left().index() == l.get(ints[0]))) {
-				leftActions.set(i, Action.moved(action));
+				leftActions[i] = Action.moved(action);
 			}
 		}
-		for (int j = 0; j < rightActions.size(); j++) {
-			Action action = rightActions.get(j);
+		for (int j = 0; j < rightActions.length; j++) {
+			Action action = rightActions[j];
 			if (action.type() == Action.Type.ADDED || action.type() == Action.Type.DELETED) {
 				continue;
 			}
 			if (lcs.stream().noneMatch(ints -> action.right().index() == r.get(ints[1]))) {
-				rightActions.set(j, Action.moved(action));
+				rightActions[j] = Action.moved(action);
 			}
 		}
 
-		return new Pair<>(leftActions, rightActions);
+		return new Pair<>(new ArrayList<>(Arrays.asList(leftActions)), new ArrayList<>(Arrays.asList(rightActions)));
 	}
 
-	public static final class Seed {
+	public static final class Seed implements Comparable<Seed> {
 
 		/**
 		 * The start of the seed in the left log.
@@ -341,24 +363,14 @@ public class SeedDiffer implements LogDiffer {
 			this.size = size;
 		}
 
-		private void increaseFromStart() {
+		private void extendsUp() {
 			left--;
 			right--;
 			size++;
 		}
 
-		private void increaseFromEnd() {
+		private void extendsDown() {
 			size++;
-		}
-
-		private void decreaseFromStart() {
-			left++;
-			right++;
-			size--;
-		}
-
-		private void decreaseFromEnd() {
-			size--;
 		}
 
 		public int left() {
@@ -392,6 +404,19 @@ public class SeedDiffer implements LogDiffer {
 		@Override
 		public int hashCode() {
 			return Objects.hash(left, right, size);
+		}
+
+		@Override
+		public int compareTo(Seed other) {
+			if (this.left == other.left) {
+				if (this.right == other.right) {
+					return this.size - other.size;
+				} else {
+					return this.right - other.right;
+				}
+			} else {
+				return this.left - other.left;
+			}
 		}
 	}
 
