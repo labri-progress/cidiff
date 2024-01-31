@@ -82,7 +82,7 @@ public class SeedDiffer implements LogDiffer {
 		seeds.add(new Seed(10, 10, 7));
 		seeds.add(new Seed(0, 0, 11));
 		System.out.println(Arrays.deepToString(seeds.stream().sorted().toArray()));
-		seeds = selectSeeds(seeds);
+		seeds = reduceSeeds(seeds);
 		System.out.println(Arrays.deepToString(seeds.stream().sorted().toArray()));
 	}
 
@@ -120,7 +120,7 @@ public class SeedDiffer implements LogDiffer {
 		}
 	}
 
-	public static List<Seed> selectSeeds(List<Seed> seeds) {
+	public static List<Seed> reduceSeeds(List<Seed> seeds) {
 		List<Seed> selected = new ArrayList<>();
 		// sort seeds by their size, biggest first, smallest last, then by the smallest left index, then the smallest right index
 //		// ie biggest seeds first, then by order of appearance in the log
@@ -137,7 +137,7 @@ public class SeedDiffer implements LogDiffer {
 				resizeSeed(current.left, current.left + current.size - 1, test.left, test);
 				resizeSeed(current.right, current.right + current.size - 1, test.right, test);
 			}
-			remaining.removeIf(seed -> seed.size <= 0);
+//			remaining.removeIf(seed -> seed.size <= 0);  // not supposed to happen
 			remaining.sort(sorter);
 			selected.add(current);
 		}
@@ -205,69 +205,71 @@ public class SeedDiffer implements LogDiffer {
 			}
 		}
 		// step 1.5: merge unique seeds to produce bigger seeds
-		System.out.println("unique seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
-		seeds = mergeSeeds(seeds);
-		System.out.println("unique merged seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+//		System.out.println("unique seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+//		seeds = mergeSeeds(seeds);
+//		System.out.println("unique merged seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
 		// step 2: extends unique seeds without overlapping on other unique lines and merge seeds if touching
 		for (Seed seed : seeds) {
 			extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, rewriteMin);
 		}
-		System.out.println("unique merged extended seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
-		seeds = selectSeeds(seeds);
-		System.out.println("unique merged extended selected seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
-		System.out.println("cache before update: " + Arrays.toString(leftHasSeed));
-		updateCache(seeds, leftHasSeed, rightHasSeed);
-		System.out.println("cache after update: " + Arrays.toString(leftHasSeed));
-		System.out.println("cache at 16-16: " + leftHasSeed[16] + ' ' + rightHasSeed[16]);
+//		System.out.println("unique merged extended seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+		// step 3: remove overlaps between seeds
+		seeds = reduceSeeds(seeds);
+//		System.out.println("unique merged extended selected seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+//		System.out.println("cache before update: " + Arrays.toString(leftHasSeed));
+//		updateCache(seeds, leftHasSeed, rightHasSeed);
+//		System.out.println("cache after update: " + Arrays.toString(leftHasSeed));
+//		System.out.println("cache at 16-16: " + leftHasSeed[16] + ' ' + rightHasSeed[16]);
 		// TODO: 1/16/24 @nhubner continue reworking the following code by moving things in functions or reusing already made ones
 		// step 2.5: merge touching seeds again
-		seeds = mergeSeeds(seeds);
-		System.out.println("unique merged extended selected merged seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+//		seeds = mergeSeeds(seeds);
+//		System.out.println("unique merged extended selected merged seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
 		// step 3: find seeds in remaining line (lines not in seeds) by looking at identical line groups
-		for (Map.Entry<Integer, List<Integer>> entry : leftHashes.entrySet()) {
-			if (!rightHashes.containsKey(entry.getKey()) || entry.getValue().stream().allMatch(index -> rightHasSeed[index])) {
-				continue;
-			}
-			// hash in both side
-			List<Seed> newSeeds = new ArrayList<>();
-			for (Integer leftLine : entry.getValue()) {
-				if (leftHasSeed[leftLine]) {
-					// left line already selected
-					continue;
-				}
-				for (Integer rightLine : rightHashes.get(entry.getKey())) {
-					if (rightHasSeed[rightLine]) {
-						// right line already selected
-						continue;
-					}
-					// the two lines are equals
-					Seed seed = new Seed(leftLine, rightLine, 1);
-					extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, rewriteMin);
-					newSeeds.add(seed);
-				}
-			}
-			// add the biggest seeds
-			newSeeds = selectSeeds(newSeeds);
-			System.out.println("potential seeds: " + Arrays.deepToString(newSeeds.stream().sorted().toArray()));
-			seeds.addAll(newSeeds);
-			updateCache(newSeeds, leftHasSeed, rightHasSeed);
-			seeds = mergeSeeds(seeds);
-			System.out.println("seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
-		}
+//		for (Map.Entry<Integer, List<Integer>> entry : leftHashes.entrySet()) {
+//			if (!rightHashes.containsKey(entry.getKey()) || entry.getValue().stream().allMatch(index -> rightHasSeed[index])) {
+//				continue;
+//			}
+//			// hash in both side
+//			List<Seed> newSeeds = new ArrayList<>();
+//			for (Integer leftLine : entry.getValue()) {
+//				if (leftHasSeed[leftLine]) {
+//					// left line already selected
+//					continue;
+//				}
+//				for (Integer rightLine : rightHashes.get(entry.getKey())) {
+//					if (rightHasSeed[rightLine]) {
+//						// right line already selected
+//						continue;
+//					}
+//					// the two lines are equals
+//					Seed seed = new Seed(leftLine, rightLine, 1);
+//					extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, rewriteMin);
+//					newSeeds.add(seed);
+//				}
+//			}
+//			// add the biggest seeds
+//			newSeeds = reduceSeeds(newSeeds);
+//			System.out.println("potential seeds: " + Arrays.deepToString(newSeeds.stream().sorted().toArray()));
+//			seeds.addAll(newSeeds);
+//			updateCache(newSeeds, leftHasSeed, rightHasSeed);
+//			seeds = mergeSeeds(seeds);
+//			System.out.println("seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
+//		}
 		// step 4: merge two seeds if 1 add/del
-		Iterator<Seed> seedIterator = seeds.iterator();
-		while (seedIterator.hasNext()) {
-			Seed seed = seedIterator.next();
-			seeds.stream().filter(s -> s.left == seed.left + seed.size + 1
-					&& s.right == seed.right + seed.size + 1
-			).findFirst().ifPresent(other -> {
-//                System.out.println("found " + seed + " " + other);
-				other.left = seed.left;
-				other.right = seed.right;
-				other.size += seed.size + 1;
-				seedIterator.remove();
-			});
-		}
+//		Iterator<Seed> seedIterator = seeds.iterator();
+//		while (seedIterator.hasNext()) {
+//			Seed seed = seedIterator.next();
+//			seeds.stream().filter(s -> s.left == seed.left + seed.size + 1
+//					&& s.right == seed.right + seed.size + 1
+//			).findFirst().ifPresent(other -> {
+////                System.out.println("found " + seed + " " + other);
+//				other.left = seed.left;
+//				other.right = seed.right;
+//				other.size += seed.size + 1;
+//				seedIterator.remove();
+//			});
+//		}
+//		System.out.println("seeds: " + Arrays.deepToString(seeds.stream().sorted().toArray()));
 		return seeds;
 	}
 
