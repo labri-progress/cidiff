@@ -1,5 +1,11 @@
-package org.cidiff.cidiff;
+package org.cidiff.cidiff.notests;
 
+import org.cidiff.cidiff.Action;
+import org.cidiff.cidiff.Line;
+import org.cidiff.cidiff.LogDiffer;
+import org.cidiff.cidiff.LogParser;
+import org.cidiff.cidiff.Options;
+import org.cidiff.cidiff.Pair;
 import org.cidiff.cidiff.clients.LogsPanel;
 
 import java.io.BufferedWriter;

@@ -25,25 +25,10 @@ import java.util.stream.IntStream;
 public class SeedDiffer implements LogDiffer {
 
 	public static final int PRIME = 31;
-	public final int windowsSize;
 	public final double rewriteMin;
 
-
 	public SeedDiffer() {
-		windowsSize = Options.getInstance().getSeedWindowSize();
 		rewriteMin = Options.getInstance().getRewriteMin();
-	}
-
-	/**
-	 * Determine if a seed contains another seed in at least one side.
-	 *
-	 * @param a the seed to test if b is inside
-	 * @param b the seed to test if it is included in a
-	 * @return true is seed b is inside the seed a left or right
-	 */
-	public static boolean containsOneSide(Seed a, Seed b) {
-		return a.left <= b.left && (b.left + b.size) <= (a.left + a.size)
-				|| a.right <= b.right && (b.right + b.size) <= (a.right + a.size);
 	}
 
 	private static List<int[]> lcs(List<Integer> left, List<Integer> right, BiFunction<Integer, Integer, Boolean> areLinesMatching) {
@@ -72,18 +57,6 @@ public class SeedDiffer implements LogDiffer {
 			}
 		}
 		return hashes;
-	}
-
-	public static void main(String[] args) {
-		List<Seed> seeds = new ArrayList<>();
-		seeds.add(new Seed(34, 34, 9));
-		seeds.add(new Seed(19, 19, 16));
-		seeds.add(new Seed(16, 16, 2));
-		seeds.add(new Seed(10, 10, 7));
-		seeds.add(new Seed(0, 0, 11));
-		System.out.println(Arrays.deepToString(seeds.stream().sorted().toArray()));
-		seeds = reduceSeeds(seeds);
-		System.out.println(Arrays.deepToString(seeds.stream().sorted().toArray()));
 	}
 
 	public static List<Seed> mergeSeeds(List<Seed> seeds) {

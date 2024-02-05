@@ -1,4 +1,4 @@
-package org.cidiff.cidiff;
+package org.cidiff.cidiff.notests;
 
 import java.util.ArrayList;
 import java.util.List;
