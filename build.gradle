@@ -31,6 +31,11 @@ run {
 	standardOutput = System.out
 }
 
+tasks.register('benchmark', JavaExec) {
+	classpath sourceSets.test.runtimeClasspath
+	mainClass = "org.cidiff.cidiff.notests.Benchmark"
+}
+
 tasks.register("cidiff_57") {
 	group 'runs'
 	dependsOn run {

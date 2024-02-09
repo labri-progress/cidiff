@@ -64,6 +64,10 @@ public class Benchmark {
 
 		String csv = csvBuilder.build();
 		try {
+			Path generated = Path.of("generated");
+			if (!Files.exists(generated)) {
+				Files.createDirectory(generated);
+			}
 			BufferedWriter writer = new BufferedWriter(new FileWriter("generated/benchmark.csv"));
 			writer.write(csv);
 			writer.close();
