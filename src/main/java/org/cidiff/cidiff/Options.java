@@ -15,10 +15,13 @@ public final class Options {
 	private DiffClient.Type clientType = DiffClient.Type.CONSOLE;
 	private LogDiffer.Algorithm algorithm = LogDiffer.Algorithm.BRUTE_FORCE;
 	private LogParser.Type parser = LogParser.Type.TRIMMING;
-//    private LogFilter.Type[] filters = new LogFilter.Type[0];
+	//    private LogFilter.Type[] filters = new LogFilter.Type[0];
 //    private DiffProcessor.Type postProcessor = DiffProcessor.Type.NOOP;
 	private double rewriteMin = 0.5;
 	private boolean skipEmptyLines = false;
+	private boolean mergeAdjacentSeeds = false;
+	private boolean recursiveSearch = false;
+	private boolean evenIdentical = false;
 	private int parserDefaultTrim = 0;
 	private boolean consoleDisplayUpdated = false;
 	private boolean consoleDisplayUnchanged = false;
@@ -53,8 +56,14 @@ public final class Options {
 //        }
 		if (options.containsKey(Names.DIFFER_REWRITE_MIN))
 			instance.rewriteMin = Double.parseDouble(options.getProperty(Names.DIFFER_REWRITE_MIN));
-		if (options.containsKey(Names.DIFFER_BF_SKIP_EMPTY))
-			instance.skipEmptyLines = Boolean.parseBoolean(options.getProperty(Names.DIFFER_BF_SKIP_EMPTY));
+		if (options.containsKey(Names.DIFFER_MERGE_ADJACENT_SEEDS))
+			instance.mergeAdjacentSeeds = Boolean.parseBoolean(options.getProperty(Names.DIFFER_MERGE_ADJACENT_SEEDS));
+		if (options.containsKey(Names.DIFFER_RECURSIVE_SEARCH))
+			instance.recursiveSearch = Boolean.parseBoolean(options.getProperty(Names.DIFFER_RECURSIVE_SEARCH));
+		if (options.containsKey(Names.DIFFER_EVEN_IDENTICAL))
+			instance.evenIdentical = Boolean.parseBoolean(options.getProperty(Names.DIFFER_EVEN_IDENTICAL));
+		if (options.containsKey(Names.DIFFER_SKIP_EMPTY))
+			instance.skipEmptyLines = Boolean.parseBoolean(options.getProperty(Names.DIFFER_SKIP_EMPTY));
 		if (options.containsKey(Names.PARSER_DEFAULT_TRIM))
 			instance.parserDefaultTrim = Integer.parseInt(options.getProperty(Names.PARSER_DEFAULT_TRIM));
 		if (options.containsKey(Names.CONSOLE_UPDATED))
@@ -97,6 +106,8 @@ public final class Options {
 				                               BRUTE_FORCE, LCS, SEED_EXTEND, SEED, HASH
 				  differ.rewrite.min           The minimum similitude value to accept two string as modified (default: 0.5)
 				  differ.bf.skip_empty         If the brute force algorithm should skip empty lines. (default: false)
+				  differ.seed.merge_seeds      If the seed-and-extends algorithm should merge adjacent seeds. (default: false)
+				  differ.seed.recursive_search If the seed-and-extends algorithm should search unique lines recursively. (default: false)
 				  parser                       The parser to use before diffing (default: TRIMMING):
 				                               TRIMMING, GITHUB
 				  parser.default.trim          The amount of character to remove at the start of each lines with the DEFAULT parser(default: 0)
@@ -140,6 +151,18 @@ public final class Options {
 		return rewriteMin;
 	}
 
+	public boolean getMergeAdjacentLInes() {
+		return mergeAdjacentSeeds;
+	}
+
+	public boolean getRecursiveSearch() {
+		return recursiveSearch;
+	}
+
+	public boolean getEvenIdentical() {
+		return evenIdentical;
+	}
+
 	public boolean getSkipEmptyLines() {
 		return skipEmptyLines;
 	}
@@ -177,8 +200,10 @@ public final class Options {
 		public static final String DIFFER = "differ";
 
 		public static final String DIFFER_REWRITE_MIN = "differ.rewrite.min";
-
-		public static final String DIFFER_BF_SKIP_EMPTY = "differ.bf.skip_empty";
+		public static final String DIFFER_SKIP_EMPTY = "differ.bf.skip_empty";
+		public static final String DIFFER_MERGE_ADJACENT_SEEDS = "differ.seed.merge_seeds";
+		public static final String DIFFER_RECURSIVE_SEARCH = "differ.seed.recursive_search";
+		public static final String DIFFER_EVEN_IDENTICAL = "differ.seed.even_identical";
 
 		public static final String PARSER = "parser";
 		public static final String PARSER_DEFAULT_TRIM = "parser.default.trim";

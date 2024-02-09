@@ -32,7 +32,7 @@ class OptionsTest {
 		properties.setProperty(Options.Names.DIFFER, "SEED");
 		properties.setProperty(Options.Names.PARSER, "GITHUB");
 		properties.setProperty(Options.Names.DIFFER_REWRITE_MIN, "0.6");
-		properties.setProperty(Options.Names.DIFFER_BF_SKIP_EMPTY, "true");
+		properties.setProperty(Options.Names.DIFFER_SKIP_EMPTY, "true");
 		properties.setProperty(Options.Names.PARSER_DEFAULT_TRIM, "19");
 		properties.setProperty(Options.Names.CONSOLE_UPDATED, "true");
 		properties.setProperty(Options.Names.CONSOLE_UNCHANGED, "true");
@@ -62,7 +62,7 @@ class OptionsTest {
 		assertThrows(NumberFormatException.class, () ->Options.setup(properties(Options.Names.PARSER_DEFAULT_TRIM, "wrong")));
 		// this ones should default to false with "wrong" values
 		Properties wrongProperties = new Properties();
-		wrongProperties.setProperty(Options.Names.DIFFER_BF_SKIP_EMPTY, "wrong");
+		wrongProperties.setProperty(Options.Names.DIFFER_SKIP_EMPTY, "wrong");
 		wrongProperties.setProperty(Options.Names.CONSOLE_UPDATED, "wrong");
 		wrongProperties.setProperty(Options.Names.CONSOLE_UNCHANGED, "wrong");
 		wrongProperties.setProperty(Options.Names.CONSOLE_ADDED, "wrong");
@@ -92,7 +92,7 @@ class OptionsTest {
 		Set<String> allOptions = Options.allOptions();
 		assertTrue(allOptions.contains(Options.Names.DIFFER));
 		assertTrue(allOptions.contains(Options.Names.DIFFER_REWRITE_MIN));
-		assertTrue(allOptions.contains(Options.Names.DIFFER_BF_SKIP_EMPTY));
+		assertTrue(allOptions.contains(Options.Names.DIFFER_SKIP_EMPTY));
 		assertTrue(allOptions.contains(Options.Names.PARSER));
 		assertTrue(allOptions.contains(Options.Names.PARSER_DEFAULT_TRIM));
 		assertTrue(allOptions.contains(Options.Names.CLIENT));

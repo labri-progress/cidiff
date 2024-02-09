@@ -40,8 +40,10 @@ public final class CiDiff {
 		final Set<String> allOptions = Options.allOptions();
 		final Properties options = new Properties();
 		if (args.length > 2) {
-			if ((args.length - 2) % 3 != 0)
+			if ((args.length - 2) % 3 != 0) {
+				System.out.println(Arrays.toString(args));
 				throw new IllegalArgumentException("Wrong number of arguments " + args.length);
+			}
 			for (int i = 2; i < args.length; i = i + 3) {
 				final String option = args[i];
 				if (!"-o".equals(option))
