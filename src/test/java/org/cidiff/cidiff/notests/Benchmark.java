@@ -49,18 +49,18 @@ public class Benchmark {
 		List<Path> directories = collectDirectories();
 		CSVBuilder csvBuilder = new CSVBuilder("directory", "type", "run", "duration", "actions", "added", "deleted", "unchanged", "updated", "moved_unchanged", "moved_updated");
 
-		Options.setup(new Properties());
-		compute(csvBuilder, directories, "default");
-
-		Properties properties = new Properties();
-		properties.setProperty(Options.Names.DIFFER_RECURSIVE_SEARCH, "true");
-		Options.setup(properties);
-		compute(csvBuilder, directories, "recurse");
-
-		Properties properties2 = new Properties();
-		properties2.setProperty(Options.Names.DIFFER_EVEN_IDENTICAL, "true");
-		Options.setup(properties2);
-		compute(csvBuilder, directories, "even");
+//		Options.setup(new Properties());
+//		compute(csvBuilder, directories, "default");
+//
+//		Properties properties = new Properties();
+//		properties.setProperty(Options.Names.DIFFER_RECURSIVE_SEARCH, "true");
+//		Options.setup(properties);
+//		compute(csvBuilder, directories, "recurse");
+//
+//		Properties properties2 = new Properties();
+//		properties2.setProperty(Options.Names.DIFFER_EVEN_IDENTICAL, "true");
+//		Options.setup(properties2);
+//		compute(csvBuilder, directories, "even");
 
 		String csv = csvBuilder.build();
 		try {
