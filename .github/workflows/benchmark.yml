@@ -27,6 +27,14 @@ jobs:
         run: pip install numpy pandas seaborn matplotlip jupyterlab notebook
       - name: Execute Gradle benchmark
         run: ./gradlew benchmark
+      - name: ls
+        run: ls .
+      - name: ls2
+        run: ls ..
+      - name: ls3
+        run: ls generated
+      - name: ls4
+        run: ls ../generated
       - name: Execute jupyter notebook
         uses: yaananth/run-notebook@v2
         env:
@@ -34,7 +42,7 @@ jobs:
           SECRETS: ${{ toJson(secrets) }}
           GITHUB: ${{ toJson(github) }}
         with:
-          notebook: "python/benchmark.ipynb"
+          notebook: "python/benchmark-test.ipynb"
           isReport: False
       - name: Upload notebook as artifact
         uses: actions/upload-artifact@v4
@@ -42,5 +50,5 @@ jobs:
         env:
           RUNNER: ${{ toJson(runner) }}
         with:
-          path: ${{ RUNNER.temp }}nb-output/benchmark.ipynb
+          path: ${{ RUNNER.temp }}nb-output/benchmark-test.ipynb
           compression-level: 0
