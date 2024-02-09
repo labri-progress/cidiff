@@ -31,7 +31,16 @@ jobs:
         run: ls .
       - name: ls2
         run: ls generated && head generated/benchmark.csv
-      - name: Execute jupyter notebook
+#      - name: Execute jupyter notebook
+#        uses: yaananth/run-notebook@v2
+#        env:
+#          RUNNER: ${{ toJson(runner) }}
+#          SECRETS: ${{ toJson(secrets) }}
+#          GITHUB: ${{ toJson(github) }}
+#        with:
+#         notebook: "python/benchmark.ipynb"
+#         isReport: False
+      - name: Execute jupyter notebook test
         uses: yaananth/run-notebook@v2
         env:
           RUNNER: ${{ toJson(runner) }}
@@ -40,11 +49,11 @@ jobs:
         with:
           notebook: "python/benchmark-test.ipynb"
           isReport: False
-      - name: Upload notebook as artifact
+      - name: Upload notebooks as artifact
         uses: actions/upload-artifact@v4
         if: always()
         env:
           RUNNER: ${{ toJson(runner) }}
         with:
-          path: ${{ RUNNER.temp }}/nb-output/benchmark-test.ipynb
+          path: ${{ RUNNER.temp }}/nb-output
           compression-level: 0
