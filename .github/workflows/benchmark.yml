@@ -24,17 +24,23 @@ jobs:
         with:
           python-version: '3.10'
       - name: Setup python dependencies
-        run: pip install numpy pandas seaborn matplotlip
+        run: pip install numpy pandas seaborn matplotlip jupyterlab notebook
       - name: Execute Gradle benchmark
         run: ./gradlew benchmark
       - name: Execute jupyter notebook
         uses: yaananth/run-notebook@v2
+        env:
+          RUNNER: ${{ toJson(runner) }}
+          SECRETS: ${{ toJson(secrets) }}
+          GITHUB: ${{ toJson(github) }}
         with:
           notebook: "python/benchmark.ipynb"
           isReport: False
       - name: Upload notebook as artifact
         uses: actions/upload-artifact@v4
         if: always()
+        env:
+          RUNNER: ${{ toJson(runner) }}
         with:
-          path: nb-output/benchmark.ipynb
+          path: ${{ RUNNER.temp }}nb-output/benchmark.ipynb
           compression-level: 0
