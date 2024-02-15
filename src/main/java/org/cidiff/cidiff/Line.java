@@ -15,7 +15,7 @@ package org.cidiff.cidiff;
  */
 public record Line(int index, String raw, String value, long hash) {
 
-	public static final Line EMPTY = new Line(-1, "", "value", 0);
+	public static final Line EMPTY = new Line(-1, "", "", 0);
 
 	public Line(int index, String raw) {
 		this(index, raw, raw, raw.hashCode());

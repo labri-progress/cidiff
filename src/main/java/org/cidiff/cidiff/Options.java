@@ -15,7 +15,7 @@ public final class Options {
 	private DiffClient.Type clientType = DiffClient.Type.CONSOLE;
 	private LogDiffer.Algorithm algorithm = LogDiffer.Algorithm.BRUTE_FORCE;
 	private LogParser.Type parser = LogParser.Type.TRIMMING;
-	//    private LogFilter.Type[] filters = new LogFilter.Type[0];
+//    private LogFilter.Type[] filters = new LogFilter.Type[0];
 //    private DiffProcessor.Type postProcessor = DiffProcessor.Type.NOOP;
 	private double rewriteMin = 0.5;
 	private boolean skipEmptyLines = false;
