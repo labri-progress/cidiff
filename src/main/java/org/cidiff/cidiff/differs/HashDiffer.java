@@ -18,7 +18,7 @@ public class HashDiffer implements LogDiffer {
 	private final double rewriteMin;
 
 	public HashDiffer() {
-		rewriteMin = Options.getInstance().getRewriteMin();
+		rewriteMin = Options.getRewriteMin();
 	}
 
 	private static double similarity(int[] leftFingerprint, int[] rightFingerprint) {

@@ -3,6 +3,7 @@ package org.cidiff.cidiff.differs;
 import org.cidiff.cidiff.Action;
 import org.cidiff.cidiff.Line;
 import org.cidiff.cidiff.LogDiffer;
+import org.cidiff.cidiff.Options;
 import org.cidiff.cidiff.Pair;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public final class LcsLogDiffer implements LogDiffer {
 		final int[][] lengths = new int[left.size() + 1][right.size() + 1];
 		for (int i = 0; i < left.size(); i++)
 			for (int j = 0; j < right.size(); j++)
-				if (left.get(i).hasSameValue(right.get(j)))
+				if (Options.metric().sim(left.get(i), right.get(j)) >= Options.getRewriteMin())
 					lengths[i + 1][j + 1] = lengths[i][j] + 1;
 				else
 					lengths[i + 1][j + 1] = Math.max(lengths[i + 1][j], lengths[i][j + 1]);
@@ -62,7 +63,12 @@ public final class LcsLogDiffer implements LogDiffer {
 		for (int[] match : lcs) {
 			Line leftLine = leftLines.get(match[0]);
 			Line rightLine = rightLines.get(match[1]);
-			Action action = Action.unchanged(leftLine, rightLine, 1);
+			Action action;
+			if (leftLine.hasSameValue(rightLine)) {
+				action = Action.unchanged(leftLine, rightLine, 1);
+			} else {
+				action = Action.updated(leftLine, rightLine, Options.metric().sim(leftLine, rightLine));
+			}
 			leftActions.set(match[0], action);
 			rightActions.set(match[1], action);
 		}

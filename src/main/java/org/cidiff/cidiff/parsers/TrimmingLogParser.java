@@ -16,7 +16,7 @@ import java.util.List;
  */
 public final class TrimmingLogParser implements LogParser {
 
-	public final int trim = Options.getInstance().getParserDefaultTrim();
+	public final int trim = Options.getParserDefaultTrim();
 
 	public List<Line> parse(String file) {
 		final List<Line> log = new ArrayList<>();

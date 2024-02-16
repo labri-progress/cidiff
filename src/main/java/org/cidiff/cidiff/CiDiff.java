@@ -18,11 +18,11 @@ public final class CiDiff {
 		String rightFile = args[1];
 		Properties options = parseOptions(args);
 		Options.setup(options);
-		DiffClient.Type clientType = Options.getInstance().getClientType();
+		DiffClient.Type clientType = Options.getClientType();
 
-		LogDiffer differ = Options.getInstance().getAlgorithm().construct();
+		LogDiffer differ = Options.getAlgorithm().construct();
 //		var processor = DiffProcessor.get(Options.getInstance().getPostProcessor());
-		LogParser parser = Options.getInstance().getParser().construct();
+		LogParser parser = Options.getParser().construct();
 		List<Line> leftLines = parser.parse(leftFile);
 		List<Line> rightLines = parser.parse(rightFile);
 //		for (LogFilter.Type type : Options.getInstance().getFilters()) {

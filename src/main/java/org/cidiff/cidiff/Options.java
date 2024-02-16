@@ -1,226 +1,158 @@
 package org.cidiff.cidiff;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class Options {
+
 	// TODO: 11/20/23 nhubner add back filters et processors
 
-	private static Options instance;
+	private static final Option<DiffClient.Type> CLIENT = new Option<>(DiffClient.Type.CONSOLE, "client", "The client to use to view the result: CONSOLE, METRICS, JSON, SWING", DiffClient.Type::valueOf);
+	private static final Option<LogDiffer.Algorithm> DIFFER = new Option<>(LogDiffer.Algorithm.BRUTE_FORCE, "differ", "The diff algorithm to use: BRUTE_FORCE, LCS, SEED, HASH", LogDiffer.Algorithm::valueOf);
+	private static final Option<LogParser.Type> PARSER = new Option<>(LogParser.Type.TRIMMING, "parser", "The parser to use before diffing: TRIMMING, GITHUB", LogParser.Type::valueOf);
+	private static final Option<Metric> METRIC = new Option<>(Metric.LOGSIM, "metric", "The string similarity metric to use: LOGSIM, EQUALITY", Metric::valueOf);
+	private static final Option<Double> REWRITE_MIN = new Option<>(0.5, "differ.rewrite_min", "The minimum similitude value to accept two string as modified.", Double::parseDouble);
+	private static final Option<Boolean> SKIP_EMPTY_LINES = new Option<>(false, "differ.bf.skip_empty", "If the brute force algorithm should skip empty lines.", Boolean::parseBoolean);
+	private static final Option<Boolean> MERGE_ADJACENT_SEEDS = new Option<>(false, "differ.seed.merge_seeds", "If the seed-and-extends algorithm should merge adjacent seeds.", Boolean::parseBoolean);
+	private static final Option<Boolean> RECURSIVE_SEARCH = new Option<>(false, "differ.seed.recursive_search", "If the seed-and-extends algorithm should search unique lines recursively.", Boolean::parseBoolean);
+	private static final Option<Boolean> EVEN_IDENTICAL = new Option<>(false, "differ.seed.even", "If the seed-and-extends algorithm should start with even identical lines", Boolean::parseBoolean);
+	private static final Option<Integer> DEFAULT_TRIM = new Option<>(0, "parser.trimming.trim", "The amount of character to remove at the start of each lines with the TRIMMING parser", Integer::parseInt);
+	private static final Option<Boolean> DISPLAY_UPDATED = new Option<>(false, "client.console.updated", "If the updated lines should be shown", Boolean::parseBoolean);
+	private static final Option<Boolean> DISPLAY_UNCHANGED = new Option<>(false, "client.console.unchanged", "If the unchanged lines should be shown", Boolean::parseBoolean);
+	private static final Option<Boolean> DISPLAY_ADDED = new Option<>(true, "client.console.added", "If the added lines should be shown", Boolean::parseBoolean);
+	private static final Option<Boolean> DISPLAY_DELETED = new Option<>(true, "client.console.deleted", "If the deleted lines should be shown", Boolean::parseBoolean);
+	private static final Option<Boolean> DISPLAY_SKIPPED_NOTICE = new Option<>(true, "client.swing.skipped_notice", "If a notice line should be added when some are removed with a filter", Boolean::parseBoolean);
+	private static final Option<String> DISPLAY_COLUMNS = new Option<>("", "client.swing.columns", "If \"left\" or \"right\", will display only the corresponding column", str -> str);
 
-	private DiffClient.Type clientType = DiffClient.Type.CONSOLE;
-	private LogDiffer.Algorithm algorithm = LogDiffer.Algorithm.BRUTE_FORCE;
-	private LogParser.Type parser = LogParser.Type.TRIMMING;
-//    private LogFilter.Type[] filters = new LogFilter.Type[0];
-//    private DiffProcessor.Type postProcessor = DiffProcessor.Type.NOOP;
-	private double rewriteMin = 0.5;
-	private boolean skipEmptyLines = false;
-	private boolean mergeAdjacentSeeds = false;
-	private boolean recursiveSearch = false;
-	private boolean evenIdentical = false;
-	private int parserDefaultTrim = 0;
-	private boolean consoleDisplayUpdated = false;
-	private boolean consoleDisplayUnchanged = false;
-	private boolean consoleDisplayAdded = true;
-	private boolean consoleDisplayDeleted = true;
-	private boolean swingDisplaySkippedNotice = true;
-	private String swingColumns = "";
+	private static final List<Option<?>> options = List.of(CLIENT, DIFFER, PARSER, METRIC, REWRITE_MIN, SKIP_EMPTY_LINES, MERGE_ADJACENT_SEEDS, RECURSIVE_SEARCH, EVEN_IDENTICAL, DEFAULT_TRIM, DISPLAY_UPDATED, DISPLAY_UNCHANGED, DISPLAY_ADDED, DISPLAY_DELETED, DISPLAY_SKIPPED_NOTICE, DISPLAY_COLUMNS);
 
 	private Options() {
 	}
 
-	public static Options getInstance() {
-		return instance;
-	}
-
 	public static void setup(Properties options) {
-		instance = new Options();
-		if (options.containsKey(Names.CLIENT))
-			instance.clientType = DiffClient.Type.valueOf(options.getProperty(Names.CLIENT));
-		if (options.containsKey(Names.DIFFER))
-			instance.algorithm = LogDiffer.Algorithm.valueOf(options.getProperty(Names.DIFFER));
-		if (options.containsKey(Names.PARSER))
-			instance.parser = LogParser.Type.valueOf(options.getProperty(Names.PARSER));
-//        if (options.containsKey(Names.DIFF_PROCESSOR))
-//            instance.postProcessor = DiffProcessor.Type.valueOf(options.getProperty(Names.DIFF_PROCESSOR));
-//        if (options.containsKey(Names.FILTER)) {
-//            final String[] split = options.getProperty(Names.FILTER).split(",");
-//            instance.filters = new LogFilter.Type[split.length];
-//            for (int i = 0; i < split.length; i++) {
-//                instance.filters[i] = LogFilter.Type.valueOf(split[i]);
-//            }
-//        }
-		if (options.containsKey(Names.DIFFER_REWRITE_MIN))
-			instance.rewriteMin = Double.parseDouble(options.getProperty(Names.DIFFER_REWRITE_MIN));
-		if (options.containsKey(Names.DIFFER_MERGE_ADJACENT_SEEDS))
-			instance.mergeAdjacentSeeds = Boolean.parseBoolean(options.getProperty(Names.DIFFER_MERGE_ADJACENT_SEEDS));
-		if (options.containsKey(Names.DIFFER_RECURSIVE_SEARCH))
-			instance.recursiveSearch = Boolean.parseBoolean(options.getProperty(Names.DIFFER_RECURSIVE_SEARCH));
-		if (options.containsKey(Names.DIFFER_EVEN_IDENTICAL))
-			instance.evenIdentical = Boolean.parseBoolean(options.getProperty(Names.DIFFER_EVEN_IDENTICAL));
-		if (options.containsKey(Names.DIFFER_SKIP_EMPTY))
-			instance.skipEmptyLines = Boolean.parseBoolean(options.getProperty(Names.DIFFER_SKIP_EMPTY));
-		if (options.containsKey(Names.PARSER_DEFAULT_TRIM))
-			instance.parserDefaultTrim = Integer.parseInt(options.getProperty(Names.PARSER_DEFAULT_TRIM));
-		if (options.containsKey(Names.CONSOLE_UPDATED))
-			instance.consoleDisplayUpdated = Boolean.parseBoolean(options.getProperty(Names.CONSOLE_UPDATED));
-		if (options.containsKey(Names.CONSOLE_UNCHANGED))
-			instance.consoleDisplayUnchanged = Boolean.parseBoolean(options.getProperty(Names.CONSOLE_UNCHANGED));
-		if (options.containsKey(Names.CONSOLE_ADDED))
-			instance.consoleDisplayAdded = Boolean.parseBoolean(options.getProperty(Names.CONSOLE_ADDED));
-		if (options.containsKey(Names.CONSOLE_DELETED))
-			instance.consoleDisplayDeleted = Boolean.parseBoolean(options.getProperty(Names.CONSOLE_DELETED));
-		if (options.containsKey(Names.SWING_DISPLAY_SKIPPED_NOTICE))
-			instance.swingDisplaySkippedNotice = Boolean
-					.parseBoolean(options.getProperty(Names.SWING_DISPLAY_SKIPPED_NOTICE));
-		if (options.containsKey(Names.SWING_COLUMNS))
-			instance.swingColumns = options.getProperty(Names.SWING_COLUMNS);
+		Options.options.forEach(opt -> opt.setup(options));
 	}
 
 	public static Set<String> allOptions() {
-		final var fields = Arrays.stream(Names.class.getDeclaredFields())
-				.filter(f -> Modifier.isStatic(f.getModifiers()))
-				.toList();
-		final Set<String> options = new HashSet<>();
-		try {
-			for (Field f : fields)
-				options.add((String) f.get(null));
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return options;
+		return options.stream().map(Option::name).collect(Collectors.toSet());
 	}
 
 	public static String getDescription() {
-		return """
+		StringBuilder description = new StringBuilder("""
 				CiDiff - awesome differ for CI build logs
 				                
 				Usage:    cidiff <left_log_path> <right_log_path> [-o <flag> <value>]...
 				                
 				Flags:
-				  differ                       The diff algorithm to use (default: BRUTE_FORCE):
-				                               BRUTE_FORCE, LCS, SEED_EXTEND, SEED, HASH
-				  differ.rewrite.min           The minimum similitude value to accept two string as modified (default: 0.5)
-				  differ.bf.skip_empty         If the brute force algorithm should skip empty lines. (default: false)
-				  differ.seed.merge_seeds      If the seed-and-extends algorithm should merge adjacent seeds. (default: false)
-				  differ.seed.recursive_search If the seed-and-extends algorithm should search unique lines recursively. (default: false)
-				  parser                       The parser to use before diffing (default: TRIMMING):
-				                               TRIMMING, GITHUB
-				  parser.default.trim          The amount of character to remove at the start of each lines with the DEFAULT parser(default: 0)
-				  filter                       Filters to use after parsing to remove lines (default: none):
-				                               NOOP, REWRITE, TERM_FREQUENCY, WHITESPACE
-				                               You can use multiple filers by separating them with a comma (,)
-				  diffprocessor                Processor to use after the differ to modify its output (default: NOOP):
-				                               NOOP, ISOLATED
-				  client                       The client to use to view the result (default: CONSOLE):
-				                               CONSOLE, METRICS, JSON, SWING
-				  client.console.updated       If the updated lines should be shown (default: false)
-				  client.console.added         If the added lines should be shown (default: true)
-				  client.console.deleted       If the deleted lines should be shown (default: true)
-				  client.console.unchanged     If the unchanged lines should be shown (default: false)
-				  client.swing.skipped_notice  If a notice line should be added when some are removed with a filter (default: true)
-				  client.swing.columns         If "left" or "right", will display only the corresponding columns. (default: "")
-				""";
+				""");
+		int max = options.stream().mapToInt(opt -> opt.name.length()).max().orElse(0);
+		for (Option<?> option : options) {
+			description.append("  ").append(option.name).append(" ".repeat(max - option.name.length() + 1)).append(option.description).append(" (default: ").append(option.defaultValue).append(")\n");
+		}
+		return description.toString();
 	}
 
-	public DiffClient.Type getClientType() {
-		return clientType;
+	public static DiffClient.Type getClientType() {
+		return CLIENT.value;
 	}
 
-	public LogDiffer.Algorithm getAlgorithm() {
-		return algorithm;
+	public static LogDiffer.Algorithm getAlgorithm() {
+		return DIFFER.value;
 	}
 
-//    public LogFilter.Type[] getFilters() {
-//        return filters;
-//    }
-//
-//    public DiffProcessor.Type getPostProcessor() {
-//        return postProcessor;
-//    }
-
-	public LogParser.Type getParser() {
-		return parser;
+	public static LogParser.Type getParser() {
+		return PARSER.value;
 	}
 
-	public double getRewriteMin() {
-		return rewriteMin;
+	public static Metric metric() {
+		return METRIC.value;
+	}
+	public static double getRewriteMin() {
+		return REWRITE_MIN.value;
 	}
 
-	public boolean getMergeAdjacentLInes() {
-		return mergeAdjacentSeeds;
+	public static boolean getMergeAdjacentLInes() {
+		return MERGE_ADJACENT_SEEDS.value;
 	}
 
-	public boolean getRecursiveSearch() {
-		return recursiveSearch;
+	public static boolean getRecursiveSearch() {
+		return RECURSIVE_SEARCH.value;
 	}
 
-	public boolean getEvenIdentical() {
-		return evenIdentical;
+	public static boolean getEvenIdentical() {
+		return EVEN_IDENTICAL.value;
 	}
 
-	public boolean getSkipEmptyLines() {
-		return skipEmptyLines;
+	public static boolean getSkipEmptyLines() {
+		return SKIP_EMPTY_LINES.value;
 	}
 
-	public int getParserDefaultTrim() {
-		return parserDefaultTrim;
+	public static int getParserDefaultTrim() {
+		return DEFAULT_TRIM.value;
 	}
 
-	public boolean getConsoleDisplayUpdated() {
-		return consoleDisplayUpdated;
+	public static boolean getConsoleDisplayUpdated() {
+		return DISPLAY_UPDATED.value;
 	}
 
-	public boolean getConsoleDisplayUnchanged() {
-		return consoleDisplayUnchanged;
+	public static boolean getConsoleDisplayUnchanged() {
+		return DISPLAY_UNCHANGED.value;
 	}
 
-	public boolean getConsoleDisplayAdded() {
-		return consoleDisplayAdded;
+	public static boolean getConsoleDisplayAdded() {
+		return DISPLAY_ADDED.value;
 	}
 
-	public boolean getConsoleDisplayDeleted() {
-		return consoleDisplayDeleted;
+	public static boolean getConsoleDisplayDeleted() {
+		return DISPLAY_DELETED.value;
 	}
 
-	public boolean getSwingDisplaySkippedNotice() {
-		return swingDisplaySkippedNotice;
+	public static boolean getSwingDisplaySkippedNotice() {
+		return DISPLAY_SKIPPED_NOTICE.value;
 	}
 
-	public String getSwingColumns() {
-		return swingColumns;
+	public static String getSwingColumns() {
+		return DISPLAY_COLUMNS.value;
 	}
 
-	public static final class Names {
+	public static final class Option<T> {
 
-		public static final String DIFFER = "differ";
+		private final T defaultValue;
+		private final String name;
+		private final String description;
+		private final Function<String, T> parse;
+		private T value;
 
-		public static final String DIFFER_REWRITE_MIN = "differ.rewrite.min";
-		public static final String DIFFER_SKIP_EMPTY = "differ.bf.skip_empty";
-		public static final String DIFFER_MERGE_ADJACENT_SEEDS = "differ.seed.merge_seeds";
-		public static final String DIFFER_RECURSIVE_SEARCH = "differ.seed.recursive_search";
-		public static final String DIFFER_EVEN_IDENTICAL = "differ.seed.even_identical";
+		public Option(T defaultValue, String name, String description, Function<String, T> parse) {
+			this.defaultValue = defaultValue;
+			this.parse = parse;
+			this.value = this.defaultValue;
+			this.name = name;
+			this.description = description;
+		}
 
-		public static final String PARSER = "parser";
-		public static final String PARSER_DEFAULT_TRIM = "parser.default.trim";
+		public T value() {
+			return value;
+		}
 
-//        public static final String FILTER = "filter";
-//
-//        public static final String DIFF_PROCESSOR = "diffprocessor";
+		public String name() {
+			return name;
+		}
 
-		public static final String CLIENT = "client";
+		public String description() {
+			return description;
+		}
 
-		public static final String CONSOLE_UPDATED = "client.console.updated";
-		public static final String CONSOLE_UNCHANGED = "client.console.unchanged";
-		public static final String CONSOLE_ADDED = "client.console.added";
-		public static final String CONSOLE_DELETED = "client.console.deleted";
-
-		public static final String SWING_DISPLAY_SKIPPED_NOTICE = "client.swing.skipped_notice";
-		public static final String SWING_COLUMNS = "client.swing.columns";
+		public void setup(Properties properties) {
+			if (properties.containsKey(this.name)) {
+				this.value = parse.apply(properties.getProperty(this.name));
+			} else {
+				this.value = this.defaultValue;
+			}
+		}
 
 	}
 

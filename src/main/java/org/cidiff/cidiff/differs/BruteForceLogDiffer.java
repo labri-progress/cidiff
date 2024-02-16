@@ -3,9 +3,9 @@ package org.cidiff.cidiff.differs;
 import org.cidiff.cidiff.Action;
 import org.cidiff.cidiff.Line;
 import org.cidiff.cidiff.LogDiffer;
+import org.cidiff.cidiff.Metric;
 import org.cidiff.cidiff.Options;
 import org.cidiff.cidiff.Pair;
-import org.cidiff.cidiff.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +19,8 @@ public final class BruteForceLogDiffer implements LogDiffer {
 	private final boolean skipEmpty;
 
 	public BruteForceLogDiffer() {
-		rewriteMin = Options.getInstance().getRewriteMin();
-		skipEmpty = Options.getInstance().getSkipEmptyLines();
+		rewriteMin = Options.getRewriteMin();
+		skipEmpty = Options.getSkipEmptyLines();
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 					continue;
 				}
 
-				double sim = Utils.logsim(leftLine, rightLine);
+				double sim = Options.metric().sim(leftLine, rightLine);
 				if (sim >= rewriteMin) {
 					Action action = Action.updated(leftLine, rightLine, sim);
 					leftActions.set(i, action);

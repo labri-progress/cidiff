@@ -23,10 +23,10 @@ public final class ConsoleClient extends AbstractDiffClient {
 
 	public ConsoleClient(Pair<List<Line>> lines, Pair<List<Action>> actions) {
 		super(lines, actions);
-		this.displayUpdated = Options.getInstance().getConsoleDisplayUpdated();
-		this.displayUnchanged = Options.getInstance().getConsoleDisplayUnchanged();
-		this.displayAdded = Options.getInstance().getConsoleDisplayAdded();
-		this.displayDeleted = Options.getInstance().getConsoleDisplayDeleted();
+		this.displayUpdated = Options.getConsoleDisplayUpdated();
+		this.displayUnchanged = Options.getConsoleDisplayUnchanged();
+		this.displayAdded = Options.getConsoleDisplayAdded();
+		this.displayDeleted = Options.getConsoleDisplayDeleted();
 	}
 
 	public void execute() {

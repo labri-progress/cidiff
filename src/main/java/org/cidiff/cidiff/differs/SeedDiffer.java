@@ -4,9 +4,9 @@ package org.cidiff.cidiff.differs;
 import org.cidiff.cidiff.Action;
 import org.cidiff.cidiff.Line;
 import org.cidiff.cidiff.LogDiffer;
+import org.cidiff.cidiff.Metric;
 import org.cidiff.cidiff.Options;
 import org.cidiff.cidiff.Pair;
-import org.cidiff.cidiff.Utils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class SeedDiffer implements LogDiffer {
 	public final double rewriteMin;
 
 	public SeedDiffer() {
-		rewriteMin = Options.getInstance().getRewriteMin();
+		rewriteMin = Options.getRewriteMin();
 	}
 
 	private static List<int[]> lcs(List<Integer> left, List<Integer> right, BiFunction<Integer, Integer, Boolean> areLinesMatching) {
@@ -83,12 +83,12 @@ public class SeedDiffer implements LogDiffer {
 	public static void extendsSeed(Seed seed, boolean[] leftHasSeed, boolean[] rightHasSeed, List<Line> leftLines, List<Line> rightLines, double rewriteMin) {
 		while (seed.left > 0 && seed.right > 0
 				&& !leftHasSeed[seed.left - 1] && !rightHasSeed[seed.right - 1]
-				&& Utils.logsim(leftLines.get(seed.left - 1), rightLines.get(seed.right - 1)) >= rewriteMin) {
+				&& Options.metric().sim(leftLines.get(seed.left - 1), rightLines.get(seed.right - 1)) >= rewriteMin) {
 			seed.extendsUp();
 		}
 		while (seed.left + seed.size < leftLines.size() && seed.right + seed.size < rightLines.size()
 				&& !leftHasSeed[seed.left + seed.size] && !rightHasSeed[seed.right + seed.size]
-				&& Utils.logsim(leftLines.get(seed.left + seed.size), rightLines.get(seed.right + seed.size)) >= rewriteMin) {
+				&& Options.metric().sim(leftLines.get(seed.left + seed.size), rightLines.get(seed.right + seed.size)) >= rewriteMin) {
 			seed.extendsDown();
 		}
 	}
@@ -166,7 +166,7 @@ public class SeedDiffer implements LogDiffer {
 		Iterator<Map.Entry<Integer, List<Integer>>> iterator = leftHashes.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<Integer, List<Integer>> entry = iterator.next();
-			if (!Options.getInstance().getEvenIdentical()) {
+			if (!Options.getEvenIdentical()) {
 				// search seeds by unique identical lines
 				if (entry.getValue().size() == 1 && rightHashes.containsKey(entry.getKey()) && rightHashes.get(entry.getKey()).size() == 1) {
 					int i = entry.getValue().get(0);
@@ -190,7 +190,7 @@ public class SeedDiffer implements LogDiffer {
 			}
 		}
 		// step 1.5: (optional) merge unique seeds to produce bigger seeds
-		if (Options.getInstance().getMergeAdjacentLInes()) {
+		if (Options.getMergeAdjacentLInes()) {
 			seeds = mergeSeeds(seeds);
 		}
 		// step 2: extends unique seeds without overlapping on other unique lines and merge seeds if touching
@@ -200,10 +200,10 @@ public class SeedDiffer implements LogDiffer {
 		// step 3: remove overlaps between seeds
 		seeds = reduceSeeds(seeds);
 
-		if (Options.getInstance().getRecursiveSearch()) {
+		if (Options.getRecursiveSearch()) {
 			updateCache(seeds, leftHasSeed, rightHasSeed);
 			// step 2.5: (optional) merge touching seeds again
-			if (Options.getInstance().getMergeAdjacentLInes()) {
+			if (Options.getMergeAdjacentLInes()) {
 				seeds = mergeSeeds(seeds);
 			}
 			// step 3: search all remaining identical (not forced to be unique) and create seeds with them
@@ -221,7 +221,7 @@ public class SeedDiffer implements LogDiffer {
 					}
 				}
 			}
-			if (Options.getInstance().getMergeAdjacentLInes()) {
+			if (Options.getMergeAdjacentLInes()) {
 				newSeeds = mergeSeeds(newSeeds);
 			}
 			for (Seed seed : newSeeds) {
@@ -266,7 +266,7 @@ public class SeedDiffer implements LogDiffer {
 				if (left.hasSameValue(right)) {
 					action = Action.unchanged(left, right, 1);
 				} else {
-					action = Action.updated(left, right, Utils.logsim(left, right));
+					action = Action.updated(left, right, Options.metric().sim(left, right));
 				}
 				leftActions[seed.left + i] = action;
 				rightActions[seed.right + i] = action;

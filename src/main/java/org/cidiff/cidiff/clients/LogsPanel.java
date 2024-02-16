@@ -59,7 +59,7 @@ public class LogsPanel extends JPanel {
 	private static boolean shouldParallelScroll = true;
 
 	public LogsPanel(Pair<List<Line>> lines, Pair<List<Action>> actions) {
-		super(new GridLayout(1, Options.getInstance().getSwingColumns().isEmpty() ? 2 : 1));
+		super(new GridLayout(1, Options.getSwingColumns().isEmpty() ? 2 : 1));
 		this.actions = actions;
 		insertLinesForParallelScrolling(lines, actions);
 		Line[] leftData = new Line[lines.left().size()];
@@ -72,7 +72,7 @@ public class LogsPanel extends JPanel {
 		leftBar.setUI(makeScrollBarUi(leftLines, actions.left(), true));
 		leftBar.setUnitIncrement(10);
 		panLeftLines.setVerticalScrollBar(leftBar);
-		if (Options.getInstance().getSwingColumns().isEmpty() || Options.getInstance().getSwingColumns().equalsIgnoreCase("left")) {
+		if (Options.getSwingColumns().isEmpty() || Options.getSwingColumns().equalsIgnoreCase("left")) {
 			this.add(panLeftLines);
 		}
 
@@ -87,7 +87,7 @@ public class LogsPanel extends JPanel {
 		rightBar.setUI(makeScrollBarUi(rightLines, actions.right(), false));
 		panRightLines.setVerticalScrollBar(rightBar);
 		rightBar.setUnitIncrement(10);
-		if (Options.getInstance().getSwingColumns().isEmpty() || Options.getInstance().getSwingColumns().equalsIgnoreCase("right")) {
+		if (Options.getSwingColumns().isEmpty() || Options.getSwingColumns().equalsIgnoreCase("right")) {
 			this.add(panRightLines);
 		}
 		SyncScrollBar synchronizer = new SyncScrollBar(panLeftLines, panRightLines);
@@ -191,7 +191,7 @@ public class LogsPanel extends JPanel {
 				for (int i = 0; i < scrollActions.size(); i++) {
 					Action a = scrollActions.get(i);
 					if (a == null) continue;
-					if (a.type() == Action.Type.UNCHANGED) continue;
+					if (a.type() == Action.Type.UNCHANGED || a.type() == Action.Type.UPDATED) continue;
 
 					Rectangle r = lines.getCellBounds(i, i);
 					Rectangle s = at.createTransformedShape(r).getBounds();
