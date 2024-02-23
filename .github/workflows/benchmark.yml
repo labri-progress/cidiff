@@ -42,5 +42,6 @@ jobs:
         env:
           RUNNER: ${{ toJson(runner) }}
         with:
-          path: ${{ RUNNER.temp }}/nb-runner/benchmark.ipynb
+          name: benchmark-notebook
+          path: ${{ RUNNER.temp }}/nb-runner/benchmark.*
           compression-level: 0
