@@ -129,6 +129,7 @@ public class Benchmark {
 			BufferedWriter writer = new BufferedWriter(new FileWriter("generated/benchmark.csv"));
 			writer.write(csv);
 			writer.close();
+			System.exit(0);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
