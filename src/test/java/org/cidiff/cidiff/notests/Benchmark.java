@@ -104,7 +104,7 @@ public class Benchmark {
 		Options.setup(properties2);
 		compute(csvBuilder, directories, "seed-even", loops, parser, differ);
 
-
+		/*
 		for (String metric : List.of("EQUALITY", "JARO_WINKLER", "LEVENSHTEIN", "COSINE", "MONGE_ELKMAN", "SMITH_WATERMAN", "JACCARD")) {
 			Properties properties3 = new Properties();
 			properties3.setProperty("metric", metric);
@@ -118,6 +118,7 @@ public class Benchmark {
 
 		Options.setup(new Properties());
 		compute(csvBuilder, directories, "lcs-logsim-no-parse", loops, LogParser.Type.TRIMMING.construct(), LogDiffer.Algorithm.LCS.construct());
+		*/
 
 		String csv = csvBuilder.build();
 		try {
