@@ -7,8 +7,6 @@ import org.cidiff.cidiff.LogParser;
 import org.cidiff.cidiff.Options;
 import org.cidiff.cidiff.Pair;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -28,7 +26,7 @@ public class BenchmarkMergeSeeds {
 
 		List<Path> directories = collectDirectories(datasetPath);
 
-		CSVBuilder csvBuilder = new CSVBuilder("directory", "duration", "actions", "indels", "upuns");
+		CSVWriter csvWriter = new CSVWriter("benchmark-merge-seeds-without.csv", "directory", "duration", "actions", "indels", "upuns");
 		for (int i = 0; i < directories.size(); i++) {
 			Path dir = directories.get(i);
 //			if (dir.toString().contains("juliac")) {
@@ -48,17 +46,10 @@ public class BenchmarkMergeSeeds {
 					+ actions.left().stream().filter(a -> a.type() == Action.Type.UNCHANGED).count()
 					+ actions.left().stream().filter(a -> a.type() == Action.Type.MOVED_UPDATED).count()
 					+ actions.left().stream().filter(a -> a.type() == Action.Type.MOVED_UNCHANGED).count());
-			csvBuilder.add(datasetPath.relativize(directories.get(i)).toString(), (after - before), actionsCount, indels, upuns);
+			csvWriter.write(datasetPath.relativize(directories.get(i)).toString(), (after - before), actionsCount, indels, upuns);
 		}
 
-		String csv = csvBuilder.build();
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter("benchmark-merge-seeds-without.csv"));
-			writer.write(csv);
-			writer.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		csvWriter.close();
 	}
 
 	public static List<Path> collectDirectories(Path datasetPath) {

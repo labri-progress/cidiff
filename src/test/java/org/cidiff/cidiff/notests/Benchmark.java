@@ -7,8 +7,6 @@ import org.cidiff.cidiff.LogParser;
 import org.cidiff.cidiff.Options;
 import org.cidiff.cidiff.Pair;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -17,8 +15,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,11 +36,11 @@ public class Benchmark {
 		}
 	}
 
-	public static void compute(CSVBuilder csv, List<Path> directories, String type, int loops, LogParser parser, LogDiffer differ) {
+	public static void compute(CSVWriter csv, List<Path> directories, String type, int loops, LogParser parser, LogDiffer differ) {
 		Path datasetPath = Path.of("data/breakages/");
 		for (int i = 0; i < directories.size(); i++) {
 			Path dir = directories.get(i);
-			here: for (int j = 0; j < loops; j++) {
+			for (int j = 0; j < loops; j++) {
 				System.out.printf("%d/%d %s %d %s%n", i, directories.size(), type, j, datasetPath.relativize(dir));
 				List<Line> leftLines = parser.parse(dir.resolve("pass.log").toString());
 				List<Line> rightLines = parser.parse(dir.resolve("fail.log").toString());
@@ -53,7 +49,7 @@ public class Benchmark {
 				long after = System.currentTimeMillis();
 				if (actions.left().isEmpty() && actions.right().isEmpty()) {
 					System.out.println("skipped");
-					continue here;
+					break;
 				}
 				// count actions
 				int actionsCount = (int) (actions.left().size() + actions.right().stream().filter(a -> a.type() == Action.Type.ADDED).count());
@@ -80,7 +76,7 @@ public class Benchmark {
 						last = action.type();
 					}
 				}
-				csv.add(datasetPath.relativize(directories.get(i)).toString(), type, j, (after - before), leftLines.size(), rightLines.size(), actionsCount, added, deleted, unchanged, updated, moved_unchanged, moved_updated, (similarLeft + similarRight), similarLeft, similarRight);
+				csv.write(datasetPath.relativize(directories.get(i)).toString(), type, j, (after - before), leftLines.size(), rightLines.size(), actionsCount, added, deleted, unchanged, updated, moved_unchanged, moved_updated, (similarLeft + similarRight), similarLeft, similarRight);
 
 			}
 		}
@@ -88,8 +84,7 @@ public class Benchmark {
 
 	public static void main(String[] args) {
 		List<Path> directories = collectDirectories();
-		CSVBuilder csvBuilder = new CSVBuilder("directory", "type", "run", "duration", "lines-left", "lines-right", "actions", "added", "deleted", "unchanged", "updated", "moved_unchanged", "moved_updated", "similar-groups", "similar-groups-left", "similar-groups-right");
-
+		CSVWriter csvWriter = new CSVWriter("benchmark.csv", "directory", "type", "run", "duration", "lines-left", "lines-right", "actions", "added", "deleted", "unchanged", "updated", "moved_unchanged", "moved_updated", "similar-groups", "similar-groups-left", "similar-groups-right");
 		Options.setup(new Properties());  // for the parser and differ init
 
 		LogParser parser = LogParser.Type.GITHUB.construct();
@@ -97,42 +92,32 @@ public class Benchmark {
 		int loops = 1;
 
 		Options.setup(new Properties());
-		compute(csvBuilder, directories, "seed-default", loops, parser, differ);
+		compute(csvWriter, directories, "seed-default", loops, parser, differ);
 
 		Properties properties2 = new Properties();
 		properties2.setProperty("differ.seed.even", "true");
 		Options.setup(properties2);
-		compute(csvBuilder, directories, "seed-even", loops, parser, differ);
+		compute(csvWriter, directories, "seed-even", loops, parser, differ);
 
 		/*
 		for (String metric : List.of("EQUALITY", "JARO_WINKLER", "LEVENSHTEIN", "COSINE", "MONGE_ELKMAN", "SMITH_WATERMAN", "JACCARD")) {
 			Properties properties3 = new Properties();
 			properties3.setProperty("metric", metric);
 			Options.setup(properties3);
-			compute(csvBuilder, directories, "seed-"+metric.toLowerCase(), loops, parser, differ);
+			compute(csvWriter, directories, "seed-"+metric.toLowerCase(), loops, parser, differ);
 		}
 
-		compute(csvBuilder, directories, "lcs-equality", loops, parser, LogDiffer.Algorithm.LCS.construct());
+		compute(csvWriter, directories, "lcs-equality", loops, parser, LogDiffer.Algorithm.LCS.construct());
 
-		compute(csvBuilder, directories, "lcs-equality-no-parse", loops, LogParser.Type.TRIMMING.construct(), LogDiffer.Algorithm.LCS.construct());
+		compute(csvWriter, directories, "lcs-equality-no-parse", loops, LogParser.Type.TRIMMING.construct(), LogDiffer.Algorithm.LCS.construct());
 
 		Options.setup(new Properties());
-		compute(csvBuilder, directories, "lcs-logsim-no-parse", loops, LogParser.Type.TRIMMING.construct(), LogDiffer.Algorithm.LCS.construct());
+		compute(csvWriter, directories, "lcs-logsim-no-parse", loops, LogParser.Type.TRIMMING.construct(), LogDiffer.Algorithm.LCS.construct());
 		*/
 
-		String csv = csvBuilder.build();
-		try {
-			Path generated = Path.of("generated");
-			if (!Files.exists(generated)) {
-				Files.createDirectory(generated);
-			}
-			BufferedWriter writer = new BufferedWriter(new FileWriter("generated/benchmark.csv"));
-			writer.write(csv);
-			writer.close();
-			System.exit(0);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		System.out.println("done");
+		csvWriter.close();
+		System.out.println("closed");
 	}
 
 	public static List<Path> collectDirectories() {

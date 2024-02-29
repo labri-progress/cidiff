@@ -8,8 +8,6 @@ import org.cidiff.cidiff.Options;
 import org.cidiff.cidiff.Pair;
 import org.cidiff.cidiff.clients.LogsPanel;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -67,7 +65,7 @@ public class Bootstrap50 {
 			selected.add(new BiValue<>(dir, action));
 			System.out.printf("selected %d : %s %d-%d%n", i, datasetPath.relativize(dir), action.left().index(), action.right().index());
 		}
-		CSVBuilder csvBuilder = new CSVBuilder("directory", "left", "right");
+		CSVWriter csvWriter = new CSVWriter("bootstrap50-selection.csv", "directory", "left", "right");
 		selected.sort((val1, val2) -> {
 			int i = val1.a().compareTo(val2.a());
 			if (i == 0) {
@@ -78,16 +76,9 @@ public class Bootstrap50 {
 		for (BiValue<Path, Action> pathActionBiValue : selected) {
 			Path path = pathActionBiValue.a();
 			Action action = pathActionBiValue.b();
-			csvBuilder.add(datasetPath.relativize(path).toString(), action.left().index(), action.right().index());
+			csvWriter.write(datasetPath.relativize(path).toString(), action.left().index(), action.right().index());
 		}
-		String csv = csvBuilder.build();
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter("bootstrap50-selection.csv"));
-			writer.write(csv);
-			writer.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		csvWriter.close();
 	}
 	public static void differenceInQuantityOfBlock() {
 		Options.setup(new Properties());  // defaults options are fine
@@ -162,22 +153,15 @@ public class Bootstrap50 {
 			System.out.printf(" %d %d%n", countSeed, countLcs);
 		}
 
-		CSVBuilder csvBuilder = new CSVBuilder("directory", "lines_left", "lines_right", "actions_seed", "actions_lcs", "blocks_seed", "blocks_lcs");
+		CSVWriter csvWriter = new CSVWriter("bootstrap50-quantitative.csv", "directory", "lines_left", "lines_right", "actions_seed", "actions_lcs", "blocks_seed", "blocks_lcs");
 		for (int i = 0; i < blocksSeed.size(); i++) {
-			csvBuilder.add(datasetPath.relativize(directories.get(i)).toString(), linesLeft.get(i), linesRight.get(i),
+			csvWriter.write(datasetPath.relativize(directories.get(i)).toString(), linesLeft.get(i), linesRight.get(i),
 					countActionsSeed.get(i), countActionsLcs.get(i), blocksSeed.get(i), blocksLcs.get(i));
 		}
-		String csv = csvBuilder.build();
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter("bootstrap50-quantitative.csv"));
-			writer.write(csv);
-			writer.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		csvWriter.close();
 	}
 
-	public static void computeForDiffer(Path directory, LogDiffer differ, List<Line> leftLines, List<Line> rightLines, CSVBuilder csv, String algorithm) {
+	public static void computeForDiffer(Path directory, LogDiffer differ, List<Line> leftLines, List<Line> rightLines, CSVWriter csv, String algorithm) {
 		Pair<List<Action>> actions = differ.diff(leftLines, rightLines);
 		LogsPanel.insertLinesForParallelScrolling(new Pair<>(leftLines, rightLines), actions);
 
@@ -201,7 +185,7 @@ public class Bootstrap50 {
 				+ actions.left().stream().filter(a -> a.type() == Action.Type.UNCHANGED).count()
 				+ actions.left().stream().filter(a -> a.type() == Action.Type.MOVED_UPDATED).count()
 				+ actions.left().stream().filter(a -> a.type() == Action.Type.MOVED_UNCHANGED).count());
-		csv.add(directory.toString(), algorithm, leftLines.size(), actionsCount, indels, upuns, blocks);
+		csv.write(directory.toString(), algorithm, leftLines.size(), actionsCount, indels, upuns, blocks);
 
 	}
 	public static void differenceInQuantityOfBlock2() {
@@ -214,7 +198,7 @@ public class Bootstrap50 {
 
 		List<Path> directories = collectDirectories(datasetPath);
 
-		CSVBuilder csvBuilder = new CSVBuilder("directory", "algorithm", "lines", "actions", "indels", "upuns", "blocks");
+		CSVWriter csvWriter = new CSVWriter("bootstrap50-quantitative2.csv", "directory", "algorithm", "lines", "actions", "indels", "upuns", "blocks");
 		for (int i = 0; i < directories.size(); i++) {
 			Path dir = directories.get(i);
 			if (dir.toString().contains("juliac")) {
@@ -224,18 +208,11 @@ public class Bootstrap50 {
 			System.out.printf("%d/%d %s%n", i, directories.size(), datasetPath.relativize(dir));
 			List<Line> leftLines = parser.parse(dir.resolve("pass.log").toString());
 			List<Line> rightLines = parser.parse(dir.resolve("fail.log").toString());
-			computeForDiffer(datasetPath.relativize(directories.get(i)), differSeed, new ArrayList<>(leftLines), new ArrayList<>(rightLines), csvBuilder, "seed");
-			computeForDiffer(datasetPath.relativize(directories.get(i)), differLcs, new ArrayList<>(leftLines), new ArrayList<>(rightLines), csvBuilder, "lcs");
+			computeForDiffer(datasetPath.relativize(directories.get(i)), differSeed, new ArrayList<>(leftLines), new ArrayList<>(rightLines), csvWriter, "seed");
+			computeForDiffer(datasetPath.relativize(directories.get(i)), differLcs, new ArrayList<>(leftLines), new ArrayList<>(rightLines), csvWriter, "lcs");
 		}
 
-		String csv = csvBuilder.build();
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter("bootstrap50-quantitative2.csv"));
-			writer.write(csv);
-			writer.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		csvWriter.close();
 	}
 
 	public static List<Path> collectDirectories(Path datasetPath) {
