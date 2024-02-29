@@ -302,7 +302,7 @@ public class SeedDiffer implements LogDiffer {
 			if (action.type() == Action.Type.ADDED || action.type() == Action.Type.DELETED) {
 				continue;
 			}
-			if (lcs.stream().noneMatch(ints -> action.left().index() == l.get(ints[0]))) {
+			if (lcs.stream().noneMatch(match -> action.left().index() == l.get(match[0]))) {
 				leftActions[i] = Action.moved(action);
 			}
 		}

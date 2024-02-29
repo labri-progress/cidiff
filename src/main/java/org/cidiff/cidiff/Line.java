@@ -43,6 +43,9 @@ public record Line(int index, String raw, String value, long hash) {
 	}
 
 	public String displayValue() {
+		if (this.isEmpty()) {
+			return " ";
+		}
 		return (this.index-1) + " " + this.value.replace("\\t", "    ");
 	}
 

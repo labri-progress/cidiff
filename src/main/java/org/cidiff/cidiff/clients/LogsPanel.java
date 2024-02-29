@@ -114,7 +114,7 @@ public class LogsPanel extends JPanel {
 		// lines from 0 to last element in the lcs
 		while (I < lcs.size()) {
 			int[] match = lcs.get(I);
-			while (left.get(i).index() < match[0] || right.get(i).index() < match[1]) {
+			while (i < left.size() && i < right.size() && (left.get(i).index() < match[0] || right.get(i).index() < match[1])) {
 				insertLineAtPosition(actions, left, right, i);
 				i++;
 			}
@@ -287,8 +287,8 @@ public class LogsPanel extends JPanel {
 
 		private String textForAction(Action action, Line line, boolean isLeftSide) {
 			return switch (action.type()) {
-				case ADDED -> isLeftSide ? " " : line.displayValue();
-				case DELETED -> isLeftSide ? line.displayValue() : " ";
+				case ADDED -> line.displayValue();
+				case DELETED -> line.displayValue();
 				case UNCHANGED, MOVED_UNCHANGED -> line.displayValue();
 				case UPDATED, MOVED_UPDATED -> toHtml(action, line);
 				case NONE, SKIPPED -> " ";
@@ -305,7 +305,7 @@ public class LogsPanel extends JPanel {
 			final String[] tokens = line.value().strip().split("\\s+");
 			final String[] otherTokens = otherText.strip().split("\\s+");
 			final StringBuilder b = new StringBuilder();
-			b.append("<html>" + (line.index()-1) + "&nbsp;");
+			b.append("<html>" + (line.index() < 0 ? "" : line.index()-1) + "&nbsp;");
 			if (!line.value().strip().equals(line.value())) {
 				// if there was leading whitespaces, add them back to preserve the indentation
 				b.append(line.value().split("\\w+")[0].replaceAll("\\t", "&nbsp;".repeat(4)));
