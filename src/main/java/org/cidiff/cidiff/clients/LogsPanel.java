@@ -19,7 +19,10 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Label;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -59,7 +62,12 @@ public class LogsPanel extends JPanel {
 	private static boolean shouldParallelScroll = true;
 
 	public LogsPanel(Pair<List<Line>> lines, Pair<List<Action>> actions) {
-		super(new GridLayout(1, Options.getSwingColumns().isEmpty() ? 2 : 1));
+		super(new GridBagLayout());  // 1, Options.getSwingColumns().isEmpty() ? 2 : 1)
+		Label label = new Label("Parser: " + Options.getParser() + " - Differ: " + Options.getAlgorithm());
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.gridwidth = 2;
+		constraints.weightx = 1;
+		this.add(label, constraints);
 		this.actions = actions;
 		insertLinesForParallelScrolling(lines, actions);
 		Line[] leftData = new Line[lines.left().size()];
@@ -73,7 +81,13 @@ public class LogsPanel extends JPanel {
 		leftBar.setUnitIncrement(10);
 		panLeftLines.setVerticalScrollBar(leftBar);
 		if (Options.getSwingColumns().isEmpty() || Options.getSwingColumns().equalsIgnoreCase("left")) {
-			this.add(panLeftLines);
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 1;
+			c.fill = GridBagConstraints.BOTH;
+			c.weightx = 1;
+			c.weighty = 1;
+			this.add(panLeftLines, c);
 		}
 
 		Line[] rightData = new Line[lines.right().size()];
@@ -88,7 +102,13 @@ public class LogsPanel extends JPanel {
 		panRightLines.setVerticalScrollBar(rightBar);
 		rightBar.setUnitIncrement(10);
 		if (Options.getSwingColumns().isEmpty() || Options.getSwingColumns().equalsIgnoreCase("right")) {
-			this.add(panRightLines);
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 1;
+			c.gridy = 1;
+			c.fill = GridBagConstraints.BOTH;
+			c.weightx = 1;
+			c.weighty = 1;
+			this.add(panRightLines, c);
 		}
 		SyncScrollBar synchronizer = new SyncScrollBar(panLeftLines, panRightLines);
 		panLeftLines.getVerticalScrollBar().addAdjustmentListener(synchronizer);
