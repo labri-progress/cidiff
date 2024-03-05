@@ -51,11 +51,11 @@ public final class LcsLogDiffer implements LogDiffer {
 	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines) {
 		List<Action> leftActions = new ArrayList<>();
 		for (int i = 0; i < leftLines.size(); i++) {
-			leftActions.add(Action.EMPTY);
+			leftActions.add(Action.NONE);
 		}
 		List<Action> rightActions = new ArrayList<>();
 		for (int i = 0; i < rightLines.size(); i++) {
-			rightActions.add(Action.EMPTY);
+			rightActions.add(Action.NONE);
 		}
 
 		// Identify unchanged lines
@@ -75,12 +75,12 @@ public final class LcsLogDiffer implements LogDiffer {
 
 		// Identify deleted lines
 		IntStream.range(0, leftLines.size())
-				.filter(i -> leftActions.get(i).isEmpty())
+				.filter(i -> leftActions.get(i).isNone())
 				.forEach(i -> leftActions.set(i, Action.deleted(leftLines.get(i))));
 
 		// Identify added lines
 		IntStream.range(0, rightLines.size())
-				.filter(i -> rightActions.get(i).isEmpty())
+				.filter(i -> rightActions.get(i).isNone())
 				.forEach(i -> rightActions.set(i, Action.added(rightLines.get(i))));
 
 		return new Pair<>(leftActions, rightActions);

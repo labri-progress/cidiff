@@ -3,7 +3,6 @@ package org.cidiff.cidiff.differs;
 import org.cidiff.cidiff.Action;
 import org.cidiff.cidiff.Line;
 import org.cidiff.cidiff.LogDiffer;
-import org.cidiff.cidiff.Metric;
 import org.cidiff.cidiff.Options;
 import org.cidiff.cidiff.Pair;
 
@@ -27,11 +26,11 @@ public final class BruteForceLogDiffer implements LogDiffer {
 	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines) {
 		List<Action> leftActions = new ArrayList<>();
 		for (int i = 0; i < leftLines.size(); i++) {
-			leftActions.add(Action.EMPTY);
+			leftActions.add(Action.NONE);
 		}
 		List<Action> rightActions = new ArrayList<>();
 		for (int i = 0; i < rightLines.size(); i++) {
-			rightActions.add(Action.EMPTY);
+			rightActions.add(Action.NONE);
 		}
 
 		// Identify unchanged lines
@@ -39,7 +38,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 			Line leftLine = leftLines.get(i);
 			for (int j = 0; j < rightLines.size(); j++) {
 				Line rightLine = rightLines.get(j);
-				if (!rightActions.get(j).isEmpty()) {
+				if (!rightActions.get(j).isNone()) {
 					continue;
 				}
 
@@ -59,13 +58,13 @@ public final class BruteForceLogDiffer implements LogDiffer {
 		// Identify updated lines
 		for (int i = 0; i < leftLines.size(); i++) {
 			Line leftLine = leftLines.get(i);
-			if (!leftActions.get(i).isEmpty()) {
+			if (!leftActions.get(i).isNone()) {
 				continue;
 			}
 
 			for (int j = 0; j < rightLines.size(); j++) {
 				Line rightLine = rightLines.get(j);
-				if (!rightActions.get(j).isEmpty()) {
+				if (!rightActions.get(j).isNone()) {
 					continue;
 				}
 
@@ -81,12 +80,12 @@ public final class BruteForceLogDiffer implements LogDiffer {
 
 		// Identify deleted lines
 		IntStream.range(0, leftLines.size())
-				.filter(i -> leftActions.get(i).isEmpty())
+				.filter(i -> leftActions.get(i).isNone())
 				.forEach(i -> leftActions.set(i, Action.deleted(leftLines.get(i))));
 
 		// Identify added lines
 		IntStream.range(0, rightLines.size())
-				.filter(i -> rightActions.get(i).isEmpty())
+				.filter(i -> rightActions.get(i).isNone())
 				.forEach(i -> {
 					if (skipEmpty && EMPTY.matcher(rightLines.get(i).value()).matches()) {
 						rightActions.set(i, Action.skipped(rightLines.get(i)));

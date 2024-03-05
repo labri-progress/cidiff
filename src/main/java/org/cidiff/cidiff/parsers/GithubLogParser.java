@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  */
 public final class GithubLogParser implements LogParser {
 
-	private static final Pattern TIMESTAMP_AND_CONTENT_REGEXP = Pattern.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{7}Z )?(.*)");
+	private static final Pattern TIMESTAMP_AND_CONTENT_REGEXP = Pattern.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{7}Z ?)?(.*)");
 	private static final Pattern ANSI_COLOR_REGEXP = Pattern.compile("\\e?\\[(\\d\\d?)?(;\\d\\d?)*m");
 
 	public List<Line> parse(String file) {

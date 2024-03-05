@@ -15,13 +15,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
@@ -35,14 +33,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogsPanel extends JPanel {
-	static final Color COLOR_ADDED_LEFT = new Color(20, 127, 20, 45);
-	static final Color COLOR_ADDED_RIGHT = new Color(20, 127, 20, 134);
-	static final Color COLOR_DELETED_LEFT = new Color(255, 0, 0, 129);
-	static final Color COLOR_DELETED_RIGHT = new Color(255, 0, 0, 45);
+	static final Color COLOR_ADDED = new Color(20, 127, 20, 134);
+	static final Color COLOR_ADDED_DIMMED = new Color(20, 127, 20, 45);
+	static final Color COLOR_DELETED = new Color(255, 0, 0, 129);
+	static final Color COLOR_DELETED_DIMMED = new Color(255, 0, 0, 45);
 	static final Color COLOR_UPDATED = new Color(255, 173, 0, 184);
 	static final Color COLOR_UNCHANGED = new Color(255, 255, 255);
-	static final Color COLOR_MOVED = new Color(200, 200, 200);
-	static final Color COLOR_MOVED_LIGHTER = new Color(200, 200, 200, 145);
+	static final Color COLOR_MOVED = new Color(168, 22, 168, 136);
+	static final Color COLOR_MOVED_DIMMED = new Color(168, 22, 168, 45);
 	static final Color COLOR_SKIPPED = new Color(225, 225, 225, 255);
 	static final Color COLOR_DEBUG_1 = new Color(0, 255, 255, 255);
 
@@ -141,7 +139,6 @@ public class LogsPanel extends JPanel {
 			i++;
 			I++;
 		}
-		i = lcs.isEmpty() ? 0 : Math.max(lcs.get(lcs.size() - 1)[0], lcs.get(lcs.size() - 1)[1]);
 		// lines after the lcs
 		while (i < left.size() && i < right.size()) {
 			insertLineAtPosition(actions, left, right, i);
@@ -152,12 +149,13 @@ public class LogsPanel extends JPanel {
 		for (int j = i; j < left.size(); j++) {
 			Action oldLeft = actions.left().get(j);
 			if (oldLeft.type() == Action.Type.MOVED_UNCHANGED || oldLeft.type() == Action.Type.MOVED_UPDATED) {
-				right.add(Line.EMPTY);
-				actions.right().add(Action.EMPTY);
+				Line empty = new PaddingLine(right.size());
+				right.add(empty);
+				actions.right().add(new Action(oldLeft.left(), empty, Action.Type.NONE));
 			} else if (oldLeft.type() == Action.Type.DELETED) {
-				Line line = new Line(-1, "r" + j, "r" + j);
-				right.add(line);
-				Action newAction = new Action(oldLeft.left(), line, oldLeft.type());
+				Line empty = new PaddingLine(right.size());
+				right.add(empty);
+				Action newAction = new Action(oldLeft.left(), empty, oldLeft.type());
 				actions.left().set(j, newAction);
 				actions.right().add(newAction);
 			}
@@ -165,11 +163,13 @@ public class LogsPanel extends JPanel {
 		for (int j = i; j < right.size(); j++) {
 			Action oldRight = actions.right().get(j);
 			if (oldRight.type() == Action.Type.MOVED_UNCHANGED || oldRight.type() == Action.Type.MOVED_UPDATED) {
-				left.add(Line.EMPTY);
-				actions.left().add(Action.EMPTY);
+				Line empty = new PaddingLine(left.size());
+				left.add(empty);
+				actions.left().add(new Action(empty, oldRight.right(), Action.Type.NONE));
 			} else if (oldRight.type() == Action.Type.ADDED) {
-				left.add(Line.EMPTY);
-				Action newAction = new Action(Line.EMPTY, oldRight.right(), oldRight.type());
+				Line empty = new PaddingLine(left.size());
+				left.add(empty);
+				Action newAction = new Action(empty, oldRight.right(), oldRight.type());
 				actions.left().add(newAction);
 				actions.right().set(j, newAction);
 			}
@@ -179,24 +179,37 @@ public class LogsPanel extends JPanel {
 	private static void insertLineAtPosition(Pair<List<Action>> actions, List<Line> left, List<Line> right, int i) {
 		Action oldLeft = actions.left().get(i);
 		Action oldRight = actions.right().get(i);
-		if (oldLeft.type() != Action.Type.DELETED || oldRight.type() != Action.Type.ADDED) {
-			if (oldLeft.type() == Action.Type.MOVED_UNCHANGED || oldLeft.type() == Action.Type.MOVED_UPDATED) {
-				right.add(i, Line.EMPTY);
-				actions.right().add(i, Action.EMPTY);
-			} else if (oldRight.type() == Action.Type.MOVED_UNCHANGED || oldRight.type() == Action.Type.MOVED_UPDATED) {
-				left.add(i, Line.EMPTY);
-				actions.left().add(i, Action.EMPTY);
-			} else if (oldLeft.type() == Action.Type.DELETED) {
-				right.add(i, Line.EMPTY);
-				Action newAction = new Action(oldLeft.left(), Line.EMPTY, oldLeft.type());
-				actions.left().set(i, newAction);
-				actions.right().add(i, newAction);
-			} else if (oldRight.type() == Action.Type.ADDED) {
-				left.add(i, Line.EMPTY);
-				Action newAction = new Action(Line.EMPTY, oldRight.right(), oldRight.type());
-				actions.left().add(i, newAction);
-				actions.right().set(i, newAction);
-			}
+		if (oldLeft.type() == Action.Type.DELETED && oldRight.type() == Action.Type.ADDED) {
+			return;
+		}
+		if (oldLeft.type() == Action.Type.DELETED) {
+			Line empty = new PaddingLine(right.size());
+			right.add(i, empty);
+			// remap the deleted line action to link to the padding line
+			Action newAction = new Action(oldLeft.left(), empty, oldLeft.type());
+			actions.left().set(i, newAction);
+			actions.right().add(i, newAction);
+		} else if (oldLeft.type() == Action.Type.MOVED_UPDATED || oldLeft.type() == Action.Type.MOVED_UNCHANGED) {
+			Line empty = new PaddingLine(right.size());
+			right.add(i, empty);
+			// create a new action linking the padding line to the moved line
+			// but preserve the old action to keep the moved lines link
+			Action newAction = new Action(oldLeft.left(), empty, oldLeft.type());
+			actions.right().add(i, newAction);
+		} else if (oldRight.type() == Action.Type.ADDED) {
+			Line empty = new PaddingLine(left.size());
+			left.add(i, empty);
+			// remap the added line action to link to the padding line
+			Action newAction = new Action(empty, oldRight.right(), oldRight.type());
+			actions.left().add(i, newAction);
+			actions.right().set(i, newAction);
+		} else if (oldRight.type() == Action.Type.MOVED_UPDATED || oldRight.type() == Action.Type.MOVED_UNCHANGED) {
+			Line empty = new PaddingLine(right.size());
+			left.add(i, empty);
+			// create a new action linking the padding line to the moved line
+			// but preserve the old action to keep the moved lines link
+			Action newAction = new Action(empty, oldRight.right(), Action.Type.NONE);
+			actions.left().add(i, newAction);
 		}
 	}
 
@@ -224,12 +237,12 @@ public class LogsPanel extends JPanel {
 		};
 	}
 
-	private static Color colorForAction(Action action, boolean isLeftSide) {
+	private static Color colorForAction(Action action, boolean isDimmed) {
 		return switch (action.type()) {
-			case ADDED -> isLeftSide ? COLOR_ADDED_LEFT : COLOR_ADDED_RIGHT;
-			case DELETED -> isLeftSide ? COLOR_DELETED_LEFT : COLOR_DELETED_RIGHT;
+			case ADDED -> isDimmed ? COLOR_ADDED_DIMMED : COLOR_ADDED;
+			case DELETED -> isDimmed ? COLOR_DELETED_DIMMED : COLOR_DELETED;
 			case UNCHANGED, UPDATED, SKIPPED -> null;
-			case NONE -> COLOR_MOVED_LIGHTER;
+			case NONE -> COLOR_MOVED_DIMMED;
 			case MOVED_UNCHANGED, MOVED_UPDATED -> COLOR_MOVED;
 		};
 	}
@@ -292,8 +305,8 @@ public class LogsPanel extends JPanel {
 			}
 
 			final Action action = cellActions.get(index);
-			int l = action.left() == null ? -1 : action.left().index();
-			int r = action.right() == null ? -1 : action.right().index();
+			int l = action.left() == null ? -1 : action.left().index()-1;
+			int r = action.right() == null ? -1 : action.right().index()-1;
 
 			setToolTipText(String.format("%s %d - %d - %.2f %d", action.type(), l, r, action.sim(), logLine.hash()));
 
@@ -457,6 +470,18 @@ public class LogsPanel extends JPanel {
 		@Override
 		public void keyReleased(KeyEvent e) {
 
+		}
+	}
+
+	private static class PaddingLine extends Line {
+
+		private PaddingLine(int index) {
+			super(index, "");
+		}
+
+		@Override
+		public String displayValue() {
+			return " ";
 		}
 	}
 }

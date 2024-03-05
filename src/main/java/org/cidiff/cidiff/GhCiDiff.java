@@ -49,7 +49,7 @@ public class GhCiDiff {
         Files.write(rightLogFile, rightLog);
 
         CiDiff.main(new String[] {
-                leftLogFile.toString(), rightLogFile.toString(), "-o", "parser", "GITHUB", "-o", "client", "SWING"}
+                leftLogFile.toString(), rightLogFile.toString(), "-o", "parser", "GITHUB", "-o", "client", "SWING", "-o", "differ", "SEED"}
         );
     }
 

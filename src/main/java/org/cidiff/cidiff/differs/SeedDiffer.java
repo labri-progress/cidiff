@@ -4,7 +4,6 @@ package org.cidiff.cidiff.differs;
 import org.cidiff.cidiff.Action;
 import org.cidiff.cidiff.Line;
 import org.cidiff.cidiff.LogDiffer;
-import org.cidiff.cidiff.Metric;
 import org.cidiff.cidiff.Options;
 import org.cidiff.cidiff.Pair;
 
@@ -251,9 +250,9 @@ public class SeedDiffer implements LogDiffer {
 	@Override
 	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines) {
 		Action[] leftActions = new Action[leftLines.size()];
-		Arrays.fill(leftActions, Action.EMPTY);
+		Arrays.fill(leftActions, Action.NONE);
 		Action[] rightActions = new Action[rightLines.size()];
-		Arrays.fill(rightActions, Action.EMPTY);
+		Arrays.fill(rightActions, Action.NONE);
 
 		List<Seed> selected = backbone(leftLines, rightLines);
 
@@ -274,12 +273,12 @@ public class SeedDiffer implements LogDiffer {
 		}
 		// Identify deleted lines
 		IntStream.range(0, leftLines.size())
-				.filter(i -> leftActions[i].isEmpty())
+				.filter(i -> leftActions[i].isNone())
 				.forEach(i -> leftActions[i] = Action.deleted(leftLines.get(i)));
 
 		// Identify added lines
 		IntStream.range(0, rightLines.size())
-				.filter(i -> rightActions[i].isEmpty())
+				.filter(i -> rightActions[i].isNone())
 				.forEach(i -> rightActions[i] = Action.added(rightLines.get(i)));
 
 		// post process, compute an LCS to determine moved lines (in unchanged and updated lines only)

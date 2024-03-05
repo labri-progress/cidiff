@@ -80,11 +80,11 @@ public class HashDiffer implements LogDiffer {
 	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines) {
 		List<Action> leftActions = new ArrayList<>();
 		for (int i = 0; i < leftLines.size(); i++) {
-			leftActions.add(Action.EMPTY);
+			leftActions.add(Action.NONE);
 		}
 		List<Action> rightActions = new ArrayList<>();
 		for (int i = 0; i < rightLines.size(); i++) {
-			rightActions.add(Action.EMPTY);
+			rightActions.add(Action.NONE);
 		}
 
 		final Map<Integer, List<Line>> leftHashs = new HashMap<>();
@@ -108,7 +108,7 @@ public class HashDiffer implements LogDiffer {
 			List<Line> leftHash = leftHashs.get(rightHash);
 			for (int i = 0; i < leftHash.size(); i++) {
 				Line leftLine = leftHash.get(i);
-				if (!leftActions.get(i).isEmpty() || !leftLine.hasSameValue(rightLine))
+				if (!leftActions.get(i).isNone() || !leftLine.hasSameValue(rightLine))
 					continue;
 
 				final int dist = Math.abs(rightLine.index() - leftLine.index());
@@ -131,7 +131,7 @@ public class HashDiffer implements LogDiffer {
 		final Map<String, int[]> valueFingerprints = new HashMap<>();
 		for (int i = 0; i < leftLines.size(); i++) {
 			Line leftLine = leftLines.get(i);
-			if (!leftActions.get(i).isEmpty()) {
+			if (!leftActions.get(i).isNone()) {
 				continue;
 			}
 
@@ -144,7 +144,7 @@ public class HashDiffer implements LogDiffer {
 
 		for (int j = 0; j < rightLines.size(); j++) {
 			Line rightLine = rightLines.get(j);
-			if (!rightActions.get(j).isEmpty()) {
+			if (!rightActions.get(j).isNone()) {
 				continue;
 			}
 
@@ -161,7 +161,7 @@ public class HashDiffer implements LogDiffer {
 			List<Line> get = leftTermsHashs.get(bucket);
 			for (int i = 0; i < get.size(); i++) {
 				Line leftLine = get.get(i);
-				if (!leftActions.get(i).isEmpty())
+				if (!leftActions.get(i).isNone())
 					continue;
 
 				double similarity = similarity(valueFingerprints.get(leftLine.value()), valueFingerprints.get(rightLine.value()));
@@ -185,12 +185,12 @@ public class HashDiffer implements LogDiffer {
 
 		// Identify deleted lines
 		IntStream.range(0, leftLines.size())
-				.filter(i -> leftActions.get(i).isEmpty())
+				.filter(i -> leftActions.get(i).isNone())
 				.forEach(i -> leftActions.set(i, Action.deleted(leftLines.get(i))));
 
 		// Identify added lines
 		IntStream.range(0, rightLines.size())
-				.filter(i -> rightActions.get(i).isEmpty())
+				.filter(i -> rightActions.get(i).isNone())
 				.forEach(i -> rightActions.set(i, Action.added(rightLines.get(i))));
 
 		return new Pair<>(leftActions, rightActions);

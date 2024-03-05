@@ -2,7 +2,7 @@ package org.cidiff.cidiff;
 
 public record Action(Line left, Line right, Type type, double sim) {
 
-	public static final Action EMPTY = new Action(Line.EMPTY, Line.EMPTY, Type.NONE);
+	public static final Action NONE = new Action(null, null, Type.NONE);
 
 	public Action(Line left, Line right, Type type) {
 		this(left, right, type, 0);
@@ -40,10 +40,10 @@ public record Action(Line left, Line right, Type type, double sim) {
 	}
 
 	/**
-	 * @return true if the line is {@link #EMPTY}.
+	 * @return true if the line is {@link #NONE}.
 	 */
-	public boolean isEmpty() {
-		return this == EMPTY;
+	public boolean isNone() {
+		return this == NONE;
 	}
 
 	@Override
