@@ -1,0 +1,36 @@
+name: Build, test and run the benchmark
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Setup Python dependencies
+        run: pip install numpy pandas seaborn matplotlib jupyter notebook
+      - name: Build project and run benchmark
+        run: ./gradlew build benchmark
+      - name: Execute Jupyter notebook
+        run: jupyter nbconvert --execute --to html benchmark.ipynb
+        working-directory: ./python
+      - name: Upload notebook as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-notebook
+          path: python/benchmark.html

@@ -1,9 +1,9 @@
 plugins {
-	id 'java'
 	id 'application'
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-group = 'org.cidiff.cidiff'
+group = 'org.github.cidiff'
 version = '1.0-SNAPSHOT'
 
 repositories {
@@ -14,42 +14,27 @@ dependencies {
 	implementation 'com.github.mpkorstanje:simmetrics-core:4.1.1'
 	implementation 'com.github.spullara.mustache.java:compiler:0.9.10'
 	implementation 'org.kohsuke:github-api:1.319'
-
-	testImplementation platform('org.junit:junit-bom:5.9.1')
-	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 test {
 	useJUnitPlatform()
+
+	testLogging {
+		exceptionFormat = 'full'
+		events "passed", "skipped", "failed"
+	}
 }
 
 application {
-	mainClass = 'org.cidiff.cidiff.CiDiff'
-}
-
-run {
-	standardInput = System.in
-	standardOutput = System.out
+	mainClass = 'org.github.cidiff.CiDiff'
+	distTar.enabled = false
+	distZip.enabled = false
+	shadowDistTar.enabled = false
 }
 
 tasks.register('benchmark', JavaExec) {
-	classpath sourceSets.test.runtimeClasspath
-	mainClass = "org.cidiff.cidiff.notests.Benchmark"
-}
-
-tasks.register("cidiff_57") {
-	group 'runs'
-	dependsOn run {
-		args = ["../../cidiff/data/breakages/cidiff_57/pass.log",
-		        "../../cidiff/data/breakages/cidiff_57/fail.log",
-		        "-o", "client", "CONSOLE", "-o", "differ", "SEED"]
-	}
-}
-
-jar {
-	manifest {
-		attributes(
-				"Main-Class": "org.cidiff.cidiff.CiDiff"
-		)
-	}
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass = 'org.github.cidiff.benchmark.Benchmark'
 }
