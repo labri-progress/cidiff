@@ -40,7 +40,7 @@ public class Benchmark {
 		differSeedProperty.setProperty("differ.seed.even", "true");
 		Options.setup(differSeedProperty);
 
-		//compute(csvWriter, directories, "seed-even", loops, parser, differ);
+		compute(csvWriter, directories, "seed-even", loops, parser, differ);
 
 		/*
 		for (String metric : List.of("EQUALITY", "JARO_WINKLER", "LEVENSHTEIN", "COSINE", "MONGE_ELKMAN", "SMITH_WATERMAN", "JACCARD")) {
