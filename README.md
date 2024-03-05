@@ -8,11 +8,11 @@ Awesome differ for CI build logs
 
 Clone and compile the repository.
 
-~~~
+```bash
 git clone https://github.com/labri-progress/cidiff.git
 cd cidiff
 ./gradlew build
-~~~
+```
 
 You'll have a binary in the folder `cidiff/build/install/cidiff/bin/`.
 
@@ -20,9 +20,9 @@ You'll have a binary in the folder `cidiff/build/install/cidiff/bin/`.
 
 The command line is defined as such:
 
-~~~
+```bash
 cidiff LEFT_LOG_FILE RIGHT_LOG_FILE -o KEY VALUE -o KEY VALUE
-~~~
+```
 
 With `LEFT_LOG_FILE` the path the original log file and `RIGHT_LOG_FILE` the path to the modified log file.
 
