@@ -22,6 +22,8 @@ public class MetricsClient extends AbstractDiffClient {
 		System.out.println("Deleted lines: " + metrics.deleted + " lines.");
 		System.out.println("Unchanged lines: " + metrics.unchanged + " lines.");
 		System.out.println("Updated lines: " + metrics.updated + " lines.");
+		System.out.println("Moved lines: " + metrics.moved + " lines.");
+		System.out.println("Total actions: " + (metrics.added + metrics.updated + metrics.deleted + metrics.moved));
 	}
 
 	private Metrics getMetrics() {
@@ -33,6 +35,8 @@ public class MetricsClient extends AbstractDiffClient {
 				metrics.unchanged++;
 			else if (a.type() == Action.Type.UPDATED)
 				metrics.updated++;
+			else if (a.type() == Action.Type.MOVED_UPDATED || a.type() == Action.Type.MOVED_UNCHANGED)
+				metrics.moved++;
 
 		for (Action a : actions.right())
 			if (a.type() == Action.Type.ADDED)
@@ -46,5 +50,7 @@ public class MetricsClient extends AbstractDiffClient {
 		int updated = 0;
 		int unchanged = 0;
 		int deleted = 0;
+		int moved = 0;
 	}
+
 }
