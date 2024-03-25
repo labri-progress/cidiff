@@ -4,8 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class CSVWriter {
 
@@ -35,7 +33,7 @@ public class CSVWriter {
 
 	public static String toCSVLine(Object... elements) {
 		if (elements.length > 0) {
-			StringBuilder builder = new StringBuilder(String.valueOf(elements[0]));
+			StringBuilder builder = new StringBuilder("\"" + elements[0] + "\"");
 			for (int i = 1; i < elements.length; i++) {
 				builder.append(SEP).append(elements[i]);
 			}
@@ -47,6 +45,15 @@ public class CSVWriter {
 	public CSVWriter write(Object... elements) {
 		try {
 			this.writer.write(toCSVLine(elements) + "\n");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return this;
+	}
+
+	public CSVWriter write(String str) {
+		try {
+			this.writer.write(str);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
