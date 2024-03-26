@@ -3,6 +3,7 @@ package org.github.cidiff.clients;
 
 import org.github.cidiff.Action;
 import org.github.cidiff.Line;
+import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class MetricsClient extends AbstractDiffClient {
 	}
 
 	@Override
-	public void execute() {
+	public void execute(Options options) {
 		System.out.println("Left log: " + lines.left().size() + " lines.");
 		System.out.println("Right log: " + lines.right().size() + " lines.");
 		final Metrics metrics = getMetrics();

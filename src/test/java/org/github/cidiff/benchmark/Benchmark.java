@@ -4,6 +4,7 @@ import org.github.cidiff.Action;
 import org.github.cidiff.Line;
 import org.github.cidiff.LogDiffer;
 import org.github.cidiff.LogParser;
+import org.github.cidiff.Metric;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
 
@@ -36,39 +37,31 @@ public class Benchmark {
 				"directory", "type", "run", "duration", "lines-left", "lines-right", "actions", "added",
 				"deleted", "unchanged", "updated", "moved_unchanged", "moved_updated", "similar-groups",
 				"similar-groups-left", "similar-groups-right");
-		Options.setup(new Properties());  // for the parser and differ init
 
 		LogParser parser = LogParser.Type.GITHUB.construct();
 		LogDiffer differ = LogDiffer.Algorithm.SEED.construct();
 		int loops = 1;
 
-		Options.setup(new Properties());
-		compute(csvWriter, directories, "seed-default", loops, parser, differ);
+		compute(csvWriter, directories, "seed-default", loops, parser, differ, new Options());
 
-		Properties properties2 = new Properties();
-		properties2.setProperty("differ.seed.even", "true");
-		Options.setup(properties2);
-		compute(csvWriter, directories, "seed-even", loops, parser, differ);
+		compute(csvWriter, directories, "seed-even", loops, parser, differ, new Options().with(Options.EVEN_IDENTICAL, true));
 
-		Properties properties3 = new Properties();
-		properties3.setProperty("metric", "EQUALITY");
-		Options.setup(properties3);
-		compute(csvWriter, directories, "lcs", loops, parser, LogDiffer.Algorithm.LCS.construct());
+		compute(csvWriter, directories, "lcs", loops, parser, LogDiffer.Algorithm.LCS.construct(), new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		System.out.println("done");
 		csvWriter.close();
 		System.out.println("closed");
 	}
 
-	public static void compute(CSVWriter csv, List<Path> directories, String type, int loops, LogParser parser, LogDiffer differ) {
+	public static void compute(CSVWriter csv, List<Path> directories, String type, int loops, LogParser parser, LogDiffer differ, Options options) {
 		for (int i = 0; i < directories.size(); i++) {
 			Path dir = directories.get(i);
 			for (int j = 0; j < loops; j++) {
 				System.out.printf("%d/%d %s %d %s%n", i, directories.size(), type, j, DATASET.relativize(dir));
-				List<Line> leftLines = parser.parse(dir.resolve("pass.log").toString());
-				List<Line> rightLines = parser.parse(dir.resolve("fail.log").toString());
+				List<Line> leftLines = parser.parse(dir.resolve("pass.log").toString(), options);
+				List<Line> rightLines = parser.parse(dir.resolve("fail.log").toString(), options);
 				long before = System.currentTimeMillis();
-				Pair<List<Action>> actions = differ.diff(leftLines, rightLines);
+				Pair<List<Action>> actions = differ.diff(leftLines, rightLines, options);
 				long after = System.currentTimeMillis();
 				// count actions
 				int[] counts = new int[6];
@@ -164,18 +157,18 @@ public class Benchmark {
 			return new Data(this.i, this.path, start, end, actions);
 		}
 	}
-	public static void computeParallel(CSVWriter csv, List<Path> directories, String type, int loops, LogParser parser, LogDiffer differ) {
+	public static void computeParallel(CSVWriter csv, List<Path> directories, String type, int loops, LogParser parser, LogDiffer differ, Options options) {
 		AtomicInteger counter = new AtomicInteger();
 		List<String> csvString = IntStream.range(0, directories.size())
 				.parallel()
 				.mapToObj(index -> new Data(index, directories.get(index)))
 				.map(data -> {
-					List<Line> leftLines = parser.parse(data.path.resolve("pass.log").toString());
-					List<Line> rightLines = parser.parse(data.path.resolve("fail.log").toString());
+					List<Line> leftLines = parser.parse(data.path.resolve("pass.log").toString(), options);
+					List<Line> rightLines = parser.parse(data.path.resolve("fail.log").toString(), options);
 					int i = counter.incrementAndGet();
 					System.out.printf("%d/%d %s%n", i, directories.size(), type);
 					long before = System.currentTimeMillis();
-					Pair<List<Action>> actions = differ.diff(leftLines, rightLines);
+					Pair<List<Action>> actions = differ.diff(leftLines, rightLines, options);
 					long after = System.currentTimeMillis();
 					return data.withActions(before, after, actions);
 				})

@@ -2,6 +2,7 @@ package org.github.cidiff.clients;
 
 import org.github.cidiff.Action;
 import org.github.cidiff.Line;
+import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public final class JsonClient extends AbstractDiffClient {
 		super(lines, actions);
 	}
 
-	public void execute() {
+	public void execute(Options options) {
 		StringBuilder sb = new StringBuilder("[");
 
 		// deduplicate the list of actions

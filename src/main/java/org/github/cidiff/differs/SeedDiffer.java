@@ -4,6 +4,7 @@ package org.github.cidiff.differs;
 import org.github.cidiff.Action;
 import org.github.cidiff.Line;
 import org.github.cidiff.LogDiffer;
+import org.github.cidiff.Metric;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
 
@@ -22,13 +23,6 @@ import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 
 public class SeedDiffer implements LogDiffer {
-
-	public static final int PRIME = 31;
-	public final double rewriteMin;
-
-	public SeedDiffer() {
-		rewriteMin = Options.getRewriteMin();
-	}
 
 	private static List<int[]> lcs(List<Integer> left, List<Integer> right, BiFunction<Integer, Integer, Boolean> areLinesMatching) {
 		final int[][] lengths = new int[left.size() + 1][right.size() + 1];
@@ -79,15 +73,15 @@ public class SeedDiffer implements LogDiffer {
 		return merged;
 	}
 
-	public static void extendsSeed(Seed seed, boolean[] leftHasSeed, boolean[] rightHasSeed, List<Line> leftLines, List<Line> rightLines, double rewriteMin) {
+	public static void extendsSeed(Seed seed, boolean[] leftHasSeed, boolean[] rightHasSeed, List<Line> leftLines, List<Line> rightLines, Metric metric, double rewriteMin) {
 		while (seed.left > 0 && seed.right > 0
 				&& !leftHasSeed[seed.left - 1] && !rightHasSeed[seed.right - 1]
-				&& Options.metric().sim(leftLines.get(seed.left - 1), rightLines.get(seed.right - 1)) >= rewriteMin) {
+				&& metric.sim(leftLines.get(seed.left - 1), rightLines.get(seed.right - 1)) >= rewriteMin) {
 			seed.extendsUp();
 		}
 		while (seed.left + seed.size < leftLines.size() && seed.right + seed.size < rightLines.size()
 				&& !leftHasSeed[seed.left + seed.size] && !rightHasSeed[seed.right + seed.size]
-				&& Options.metric().sim(leftLines.get(seed.left + seed.size), rightLines.get(seed.right + seed.size)) >= rewriteMin) {
+				&& metric.sim(leftLines.get(seed.left + seed.size), rightLines.get(seed.right + seed.size)) >= rewriteMin) {
 			seed.extendsDown();
 		}
 	}
@@ -155,7 +149,7 @@ public class SeedDiffer implements LogDiffer {
 		}
 	}
 
-	public List<Seed> backbone(List<Line> leftLines, List<Line> rightLines) {
+	public List<Seed> backbone(List<Line> leftLines, List<Line> rightLines, Options options) {
 		Map<Integer, List<Integer>> leftHashes = simpleHash(leftLines);  // hash -> List<line_index>
 		Map<Integer, List<Integer>> rightHashes = simpleHash(rightLines);
 		List<Seed> seeds = new ArrayList<>();
@@ -165,7 +159,7 @@ public class SeedDiffer implements LogDiffer {
 		Iterator<Map.Entry<Integer, List<Integer>>> iterator = leftHashes.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<Integer, List<Integer>> entry = iterator.next();
-			if (!Options.getEvenIdentical()) {
+			if (!options.evenIdentical()) {
 				// search seeds by unique identical lines
 				if (entry.getValue().size() == 1 && rightHashes.containsKey(entry.getKey()) && rightHashes.get(entry.getKey()).size() == 1) {
 					int i = entry.getValue().get(0);
@@ -189,20 +183,20 @@ public class SeedDiffer implements LogDiffer {
 			}
 		}
 		// step 1.5: (optional) merge unique seeds to produce bigger seeds
-		if (Options.getMergeAdjacentLInes()) {
+		if (options.mergeAdjacentLines()) {
 			seeds = mergeSeeds(seeds);
 		}
 		// step 2: extends unique seeds without overlapping on other unique lines and merge seeds if touching
 		for (Seed seed : seeds) {
-			extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, rewriteMin);
+			extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, options.metric(), options.rewriteMin());
 		}
 		// step 3: remove overlaps between seeds
 		seeds = reduceSeeds(seeds);
 
-		if (Options.getRecursiveSearch()) {
+		if (options.recursiveSearch()) {
 			updateCache(seeds, leftHasSeed, rightHasSeed);
 			// step 2.5: (optional) merge touching seeds again
-			if (Options.getMergeAdjacentLInes()) {
+			if (options.mergeAdjacentLines()) {
 				seeds = mergeSeeds(seeds);
 			}
 			// step 3: search all remaining identical (not forced to be unique) and create seeds with them
@@ -220,11 +214,11 @@ public class SeedDiffer implements LogDiffer {
 					}
 				}
 			}
-			if (Options.getMergeAdjacentLInes()) {
+			if (options.mergeAdjacentLines()) {
 				newSeeds = mergeSeeds(newSeeds);
 			}
 			for (Seed seed : newSeeds) {
-				extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, rewriteMin);
+				extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, options.metric(), options.rewriteMin());
 			}
 			newSeeds = reduceSeeds(newSeeds);
 			seeds.addAll(newSeeds);
@@ -248,13 +242,13 @@ public class SeedDiffer implements LogDiffer {
 	}
 
 	@Override
-	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines) {
+	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines, Options options) {
 		Action[] leftActions = new Action[leftLines.size()];
 		Arrays.fill(leftActions, Action.NONE);
 		Action[] rightActions = new Action[rightLines.size()];
 		Arrays.fill(rightActions, Action.NONE);
 
-		List<Seed> selected = backbone(leftLines, rightLines);
+		List<Seed> selected = backbone(leftLines, rightLines, options);
 
 		// use the seeds to produce unchanged actions
 		for (Seed seed : selected) {
@@ -265,7 +259,7 @@ public class SeedDiffer implements LogDiffer {
 				if (left.hasSameValue(right)) {
 					action = Action.unchanged(left, right, 1);
 				} else {
-					action = Action.updated(left, right, Options.metric().sim(left, right));
+					action = Action.updated(left, right, options.metric().sim(left, right));
 				}
 				leftActions[seed.left + i] = action;
 				rightActions[seed.right + i] = action;

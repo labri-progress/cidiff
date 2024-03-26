@@ -14,16 +14,8 @@ import java.util.stream.IntStream;
 public final class BruteForceLogDiffer implements LogDiffer {
 	private static final Pattern EMPTY = Pattern.compile("\\s*");
 
-	private final double rewriteMin;
-	private final boolean skipEmpty;
-
-	public BruteForceLogDiffer() {
-		rewriteMin = Options.getRewriteMin();
-		skipEmpty = Options.getSkipEmptyLines();
-	}
-
 	@Override
-	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines) {
+	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines, Options options) {
 		List<Action> leftActions = new ArrayList<>();
 		for (int i = 0; i < leftLines.size(); i++) {
 			leftActions.add(Action.NONE);
@@ -42,7 +34,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 					continue;
 				}
 
-				if (skipEmpty && EMPTY.matcher(leftLine.value()).matches()) {
+				if (options.skipEmptyLines() && EMPTY.matcher(leftLine.value()).matches()) {
 					leftActions.set(i, Action.skipped(leftLine));
 					break;
 				}
@@ -68,8 +60,8 @@ public final class BruteForceLogDiffer implements LogDiffer {
 					continue;
 				}
 
-				double sim = Options.metric().sim(leftLine, rightLine);
-				if (sim >= rewriteMin) {
+				double sim = options.metric().sim(leftLine, rightLine);
+				if (sim >= options.rewriteMin()) {
 					Action action = Action.updated(leftLine, rightLine, sim);
 					leftActions.set(i, action);
 					rightActions.set(j, action);
@@ -87,7 +79,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 		IntStream.range(0, rightLines.size())
 				.filter(i -> rightActions.get(i).isNone())
 				.forEach(i -> {
-					if (skipEmpty && EMPTY.matcher(rightLines.get(i).value()).matches()) {
+					if (options.skipEmptyLines() && EMPTY.matcher(rightLines.get(i).value()).matches()) {
 						rightActions.set(i, Action.skipped(rightLines.get(i)));
 					} else {
 						rightActions.set(i, Action.added(rightLines.get(i)));

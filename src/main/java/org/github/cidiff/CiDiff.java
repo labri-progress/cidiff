@@ -16,24 +16,24 @@ public final class CiDiff {
 		}
 		String leftFile = args[0];
 		String rightFile = args[1];
-		Properties options = parseOptions(args);
-		Options.setup(options);
-		DiffClient.Type clientType = Options.getClientType();
+		Properties properties = parseOptions(args);
+		Options options = Options.from(properties);
+		DiffClient.Type clientType = options.clientType();
 
-		LogDiffer differ = Options.getAlgorithm().construct();
+		LogDiffer differ = options.algorithm().construct();
 //		var processor = DiffProcessor.get(Options.getInstance().getPostProcessor());
-		LogParser parser = Options.getParser().construct();
-		List<Line> leftLines = parser.parse(leftFile);
-		List<Line> rightLines = parser.parse(rightFile);
+		LogParser parser = options.parser().construct();
+		List<Line> leftLines = parser.parse(leftFile, options);
+		List<Line> rightLines = parser.parse(rightFile, options);
 //		for (LogFilter.Type type : Options.getInstance().getFilters()) {
 //			LogFilter filter = LogFilter.get(type);
 //			filter.filter(leftLines);
 //			filter.filter(rightLines);
 //		}
-		Pair<List<Action>> actions = differ.diff(leftLines, rightLines);
+		Pair<List<Action>> actions = differ.diff(leftLines, rightLines, options);
 //		processor.process(lines, actions);
 		DiffClient client = clientType.construct(new Pair<>(leftLines, rightLines), actions);
-		client.execute();
+		client.execute(options);
 	}
 
 	public static Properties parseOptions(String[] args) {

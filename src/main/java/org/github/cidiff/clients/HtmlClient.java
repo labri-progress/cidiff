@@ -4,6 +4,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import org.github.cidiff.Action;
 import org.github.cidiff.Line;
+import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
 
 import java.io.BufferedWriter;
@@ -111,7 +112,7 @@ public class HtmlClient extends AbstractDiffClient {
 	}
 
 	@Override
-	public void execute() {
+	public void execute(Options options) {
 		List<TemplateLine2> left = IntStream.range(0, this.lines.left().size())
 				.mapToObj(i -> {
 					Action action = this.actions.left().get(i);

@@ -16,15 +16,13 @@ import java.util.List;
  */
 public final class TrimmingLogParser implements LogParser {
 
-	public final int trim = Options.getParserDefaultTrim();
-
-	public List<Line> parse(String file) {
+	public List<Line> parse(String file, Options options) {
 		final List<Line> log = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			int lineNumber = 0;
 			for (String line; (line = br.readLine()) != null; ) {
 				lineNumber++;
-				final String value = line.substring(Math.min(trim, line.length()));
+				final String value = line.substring(Math.min(options.parserDefaultTrim(), line.length()));
 				log.add(new Line(lineNumber, line, value));
 			}
 		} catch (IOException e) {

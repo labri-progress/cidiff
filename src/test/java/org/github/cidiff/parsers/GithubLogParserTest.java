@@ -13,9 +13,9 @@ class GithubLogParserTest {
 
 	@Test
 	void parse() {
-		Options.setup(new Properties());
+		Options options = new Options();
 		GithubLogParser parserTrim0 = new GithubLogParser();
-		List<Line> parsed = parserTrim0.parse(GithubLogParserTest.class.getClassLoader().getResource("test-parser-github.log").getPath());
+		List<Line> parsed = parserTrim0.parse(GithubLogParserTest.class.getClassLoader().getResource("test-parser-github.log").getPath(), options);
 		assertEquals(6, parsed.size());
 		assertEquals("2021-10-19T13:45:43.6326799Z ##[debug]Starting: Set up job", parsed.get(0).raw());
 		assertEquals("##[debug]Starting: Set up job", parsed.get(0).value());

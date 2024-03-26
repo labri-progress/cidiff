@@ -12,19 +12,19 @@ class OptionsTest {
 	@Test
 	void setup() {
 		// check defaults
-		Options.setup(new Properties());
-		assertEquals(DiffClient.Type.CONSOLE, Options.getClientType());
-		assertEquals(LogDiffer.Algorithm.BRUTE_FORCE, Options.getAlgorithm());
-		assertEquals(LogParser.Type.TRIMMING, Options.getParser());
-		assertEquals(0.5, Options.getRewriteMin());
-		assertEquals(false, Options.getSkipEmptyLines());
-		assertEquals(0, Options.getParserDefaultTrim());
-		assertEquals(false, Options.getConsoleDisplayUpdated());
-		assertEquals(false, Options.getConsoleDisplayUnchanged());
-		assertEquals(true, Options.getConsoleDisplayAdded());
-		assertEquals(true, Options.getConsoleDisplayDeleted());
-		assertEquals(true, Options.getSwingDisplaySkippedNotice());
-		assertEquals("", Options.getSwingColumns());
+		Options opt = new Options();
+		assertEquals(DiffClient.Type.CONSOLE, opt.clientType());
+		assertEquals(LogDiffer.Algorithm.BRUTE_FORCE, opt.algorithm());
+		assertEquals(LogParser.Type.TRIMMING, opt.parser());
+		assertEquals(0.5, opt.rewriteMin());
+		assertEquals(false, opt.skipEmptyLines());
+		assertEquals(0, opt.parserDefaultTrim());
+		assertEquals(false, opt.consoleDisplayUpdated());
+		assertEquals(false, opt.consoleDisplayUnchanged());
+		assertEquals(true, opt.consoleDisplayAdded());
+		assertEquals(true, opt.consoleDisplayDeleted());
+		assertEquals(true, opt.swingDisplaySkippedNotice());
+		assertEquals("", opt.swingColumns());
 		// check custom properties with good values
 		Properties properties = new Properties();
 		properties.setProperty("client", "SWING");
@@ -39,25 +39,25 @@ class OptionsTest {
 		properties.setProperty("client.console.deleted", "false");
 		properties.setProperty("client.swing.skipped_notice", "false");
 		properties.setProperty("client.swing.columns", "left");
-		Options.setup(properties);
-		assertEquals(DiffClient.Type.SWING, Options.getClientType());
-		assertEquals(LogDiffer.Algorithm.SEED, Options.getAlgorithm());
-		assertEquals(LogParser.Type.GITHUB, Options.getParser());
-		assertEquals(0.6, Options.getRewriteMin());
-		assertEquals(true, Options.getSkipEmptyLines());
-		assertEquals(19, Options.getParserDefaultTrim());
-		assertEquals(true, Options.getConsoleDisplayUpdated());
-		assertEquals(true, Options.getConsoleDisplayUnchanged());
-		assertEquals(false, Options.getConsoleDisplayAdded());
-		assertEquals(false, Options.getConsoleDisplayDeleted());
-		assertEquals(false, Options.getSwingDisplaySkippedNotice());
-		assertEquals("left", Options.getSwingColumns());
+		Options fromProperties = Options.from(properties);
+		assertEquals(DiffClient.Type.SWING, fromProperties.clientType());
+		assertEquals(LogDiffer.Algorithm.SEED, fromProperties.algorithm());
+		assertEquals(LogParser.Type.GITHUB, fromProperties.parser());
+		assertEquals(0.6, fromProperties.rewriteMin());
+		assertEquals(true, fromProperties.skipEmptyLines());
+		assertEquals(19, fromProperties.parserDefaultTrim());
+		assertEquals(true, fromProperties.consoleDisplayUpdated());
+		assertEquals(true, fromProperties.consoleDisplayUnchanged());
+		assertEquals(false, fromProperties.consoleDisplayAdded());
+		assertEquals(false, fromProperties.consoleDisplayDeleted());
+		assertEquals(false, fromProperties.swingDisplaySkippedNotice());
+		assertEquals("left", fromProperties.swingColumns());
 		// check custom properties with wrong values throws errors
-		assertThrows(IllegalArgumentException.class, () ->Options.setup(properties("client", "wrong")));
-		assertThrows(IllegalArgumentException.class, () ->Options.setup(properties("differ", "wrong")));
-		assertThrows(IllegalArgumentException.class, () ->Options.setup(properties("parser", "wrong")));
-		assertThrows(NumberFormatException.class, () ->Options.setup(properties("differ.rewrite_min", "wrong")));
-		assertThrows(NumberFormatException.class, () ->Options.setup(properties("parser.trimming.trim", "wrong")));
+		assertThrows(IllegalArgumentException.class, () ->Options.from(properties("client", "wrong")));
+		assertThrows(IllegalArgumentException.class, () ->Options.from(properties("differ", "wrong")));
+		assertThrows(IllegalArgumentException.class, () ->Options.from(properties("parser", "wrong")));
+		assertThrows(NumberFormatException.class, () ->Options.from(properties("differ.rewrite_min", "wrong")));
+		assertThrows(NumberFormatException.class, () ->Options.from(properties("parser.trimming.trim", "wrong")));
 		// this ones should default to false with "wrong" values
 		Properties wrongProperties = new Properties();
 		wrongProperties.setProperty("differ.bf.skip_empty", "wrong");
@@ -66,17 +66,17 @@ class OptionsTest {
 		wrongProperties.setProperty("client.console.added", "wrong");
 		wrongProperties.setProperty("client.console.deleted", "wrong");
 		wrongProperties.setProperty("client.swing.skipped_notice", "wrong");
-		Options.setup(wrongProperties);
-		assertEquals(false, Options.getSkipEmptyLines());
-		assertEquals(false, Options.getSkipEmptyLines());
-		assertEquals(false, Options.getConsoleDisplayUpdated());
-		assertEquals(false, Options.getConsoleDisplayUnchanged());
-		assertEquals(false, Options.getConsoleDisplayAdded());
-		assertEquals(false, Options.getConsoleDisplayDeleted());
-		assertEquals(false, Options.getSwingDisplaySkippedNotice());
+		Options fromWrongProperties = Options.from(wrongProperties);
+		assertEquals(false, fromWrongProperties.skipEmptyLines());
+		assertEquals(false, fromWrongProperties.skipEmptyLines());
+		assertEquals(false, fromWrongProperties.consoleDisplayUpdated());
+		assertEquals(false, fromWrongProperties.consoleDisplayUnchanged());
+		assertEquals(false, fromWrongProperties.consoleDisplayAdded());
+		assertEquals(false, fromWrongProperties.consoleDisplayDeleted());
+		assertEquals(false, fromWrongProperties.swingDisplaySkippedNotice());
 		// there is no wrong values for this option
-		Options.setup(properties("client.swing.columns", "there is no wrong value for this"));
-		assertEquals("there is no wrong value for this", Options.getSwingColumns());
+		Options options = Options.from(properties("client.swing.columns", "there is no wrong value for this"));
+		assertEquals("there is no wrong value for this", options.swingColumns());
 	}
 
 	private static Properties properties(String key, String value) {

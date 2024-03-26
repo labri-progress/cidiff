@@ -20,9 +20,9 @@ class TrimmingLogParserTest {
 	@Test
 	void parse() {
 		// default, no trim
-		Options.setup(new Properties());
+		Options options = new Options();
 		TrimmingLogParser parserTrim0 = new TrimmingLogParser();
-		List<Line> parsed = parserTrim0.parse(TrimmingLogParserTest.class.getClassLoader().getResource("test-parser-trim.log").getPath());
+		List<Line> parsed = parserTrim0.parse(TrimmingLogParserTest.class.getClassLoader().getResource("test-parser-trim.log").getPath(), options);
 		assertEquals(3, parsed.size());
 		assertEquals("line 1", parsed.get(0).raw());
 		assertEquals("line 1", parsed.get(0).value());
@@ -35,9 +35,9 @@ class TrimmingLogParserTest {
 		assertEquals(3, parsed.get(2).index());
 
 		// trim 2 characters
-		Options.setup(properties("parser.trimming.trim", "2"));
+		Options options1 = new Options().with(Options.DEFAULT_TRIM, 2);
 		TrimmingLogParser parserTrim2 = new TrimmingLogParser();
-		List<Line> parsed1 = parserTrim2.parse(TrimmingLogParserTest.class.getClassLoader().getResource("test-parser-trim.log").getPath());
+		List<Line> parsed1 = parserTrim2.parse(TrimmingLogParserTest.class.getClassLoader().getResource("test-parser-trim.log").getPath(), options1);
 		assertEquals(3, parsed1.size());
 		assertEquals("line 1", parsed1.get(0).raw());
 		assertEquals("ne 1", parsed1.get(0).value());
@@ -51,9 +51,9 @@ class TrimmingLogParserTest {
 
 
 		// trim all characters
-		Options.setup(properties("parser.trimming.trim", "50"));
+		Options options2 = new Options().with(Options.DEFAULT_TRIM, 50);
 		TrimmingLogParser parserTrim50 = new TrimmingLogParser();
-		List<Line> parsed2 = parserTrim50.parse(TrimmingLogParserTest.class.getClassLoader().getResource("test-parser-trim.log").getPath());
+		List<Line> parsed2 = parserTrim50.parse(TrimmingLogParserTest.class.getClassLoader().getResource("test-parser-trim.log").getPath(), options2);
 		assertEquals(3, parsed2.size());
 		assertEquals("line 1", parsed2.get(0).raw());
 		assertEquals("", parsed2.get(0).value());

@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  */
 public interface LogParser {
 
-	List<Line> parse(String file);
+	List<Line> parse(String file, Options options);
 
 	enum Type {
 		TRIMMING(TrimmingLogParser::new),

@@ -12,7 +12,7 @@ import java.util.function.BiFunction;
 @FunctionalInterface
 public interface DiffClient {
 
-	void execute();
+	void execute(Options options);
 
 	enum Type {
 		SWING(SwingClient::new),

@@ -59,9 +59,9 @@ public class LogsPanel extends JPanel {
 	int lastGreen = -1;
 	private static boolean shouldParallelScroll = true;
 
-	public LogsPanel(Pair<List<Line>> lines, Pair<List<Action>> actions) {
+	public LogsPanel(Pair<List<Line>> lines, Pair<List<Action>> actions, Options options) {
 		super(new GridBagLayout());  // 1, Options.getSwingColumns().isEmpty() ? 2 : 1)
-		Label label = new Label("Parser: " + Options.getParser() + " - Differ: " + Options.getAlgorithm());
+		Label label = new Label("Parser: " + options.parser() + " - Differ: " + options.algorithm());
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridwidth = 2;
 		constraints.weightx = 1;
@@ -78,7 +78,7 @@ public class LogsPanel extends JPanel {
 		leftBar.setUI(makeScrollBarUi(leftLines, actions.left(), true));
 		leftBar.setUnitIncrement(10);
 		panLeftLines.setVerticalScrollBar(leftBar);
-		if (Options.getSwingColumns().isEmpty() || Options.getSwingColumns().equalsIgnoreCase("left")) {
+		if (options.swingColumns().isEmpty() || options.swingColumns().equalsIgnoreCase("left")) {
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 1;
@@ -99,7 +99,7 @@ public class LogsPanel extends JPanel {
 		rightBar.setUI(makeScrollBarUi(rightLines, actions.right(), false));
 		panRightLines.setVerticalScrollBar(rightBar);
 		rightBar.setUnitIncrement(10);
-		if (Options.getSwingColumns().isEmpty() || Options.getSwingColumns().equalsIgnoreCase("right")) {
+		if (options.swingColumns().isEmpty() || options.swingColumns().equalsIgnoreCase("right")) {
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 1;
 			c.gridy = 1;

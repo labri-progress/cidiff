@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface LogDiffer {
 
-	Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines);
+	Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines, Options options);
 
 	enum Algorithm {
 		BRUTE_FORCE(BruteForceLogDiffer::new),

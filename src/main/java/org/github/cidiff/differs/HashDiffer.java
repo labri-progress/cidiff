@@ -15,12 +15,6 @@ import java.util.stream.IntStream;
 
 public class HashDiffer implements LogDiffer {
 
-	private final double rewriteMin;
-
-	public HashDiffer() {
-		rewriteMin = Options.getRewriteMin();
-	}
-
 	private static double similarity(int[] leftFingerprint, int[] rightFingerprint) {
 		if (leftFingerprint.length != rightFingerprint.length)
 			return 0.0;
@@ -77,7 +71,7 @@ public class HashDiffer implements LogDiffer {
 	}
 
 	@Override
-	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines) {
+	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines, Options options) {
 		List<Action> leftActions = new ArrayList<>();
 		for (int i = 0; i < leftLines.size(); i++) {
 			leftActions.add(Action.NONE);
@@ -165,7 +159,7 @@ public class HashDiffer implements LogDiffer {
 					continue;
 
 				double similarity = similarity(valueFingerprints.get(leftLine.value()), valueFingerprints.get(rightLine.value()));
-				if (similarity < rewriteMin)
+				if (similarity < options.rewriteMin())
 					continue;
 
 				final int dist = Math.abs(rightLine.index() - leftLine.index());

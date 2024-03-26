@@ -16,20 +16,12 @@ public final class ConsoleClient extends AbstractDiffClient {
 	static final String BOLD_FONT = "\033[0;1m";
 	static final String REGULAR_FONT = "\033[0m";
 
-	final boolean displayUpdated;
-	final boolean displayUnchanged;
-	final boolean displayAdded;
-	final boolean displayDeleted;
-
 	public ConsoleClient(Pair<List<Line>> lines, Pair<List<Action>> actions) {
 		super(lines, actions);
-		this.displayUpdated = Options.getConsoleDisplayUpdated();
-		this.displayUnchanged = Options.getConsoleDisplayUnchanged();
-		this.displayAdded = Options.getConsoleDisplayAdded();
-		this.displayDeleted = Options.getConsoleDisplayDeleted();
 	}
 
-	public void execute() {
+	@Override
+	public void execute(Options options) {
 		int maxLineNumberSize = Integer.toString(Math.max(lines.left().size(), lines.right().size())).length();
 		String lineFormat = "%0" + maxLineNumberSize + "d";
 		int lastDisplayed = 0;
@@ -39,7 +31,7 @@ public final class ConsoleClient extends AbstractDiffClient {
 			Action action = actions.left().get(i);
 
 			if (action.type() == Action.Type.UPDATED) {
-				if (displayUpdated) {
+				if (options.consoleDisplayUpdated()) {
 					boolean newLine = lastDisplayed != 0 && lastDisplayed != leftLine.index() - 1;
 					if (newLine) {
 						System.out.println();
@@ -70,7 +62,7 @@ public final class ConsoleClient extends AbstractDiffClient {
 					System.out.println(rightOutput);
 				}
 			} else if (action.type() == Action.Type.UNCHANGED) {
-				if (displayUnchanged) {
+				if (options.consoleDisplayUnchanged()) {
 					boolean newLine = lastDisplayed != 0 && lastDisplayed != leftLine.index() - 1;
 					if (newLine) {
 						System.out.println();
@@ -85,7 +77,7 @@ public final class ConsoleClient extends AbstractDiffClient {
 					System.out.println(rightOutput);
 				}
 			} else if (action.type() == Action.Type.DELETED) {
-				if (displayDeleted) {
+				if (options.consoleDisplayDeleted()) {
 					boolean newLine = lastDisplayed != 0 && lastDisplayed != leftLine.index() - 1;
 					if (newLine) {
 						System.out.println();
@@ -105,7 +97,7 @@ public final class ConsoleClient extends AbstractDiffClient {
 			Line rightLine = right.get(i);
 			Action action = actions.right().get(i);
 			if (action.type() == Action.Type.ADDED) {
-				if (displayAdded) {
+				if (options.consoleDisplayAdded()) {
 					boolean newLine = lastDisplayed == 0 || lastDisplayed != rightLine.index() - 1;
 					if (newLine) {
 						System.out.println();
