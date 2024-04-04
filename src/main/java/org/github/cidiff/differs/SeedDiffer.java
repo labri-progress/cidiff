@@ -1,17 +1,19 @@
 package org.github.cidiff.differs;
 
 
+import org.apache.commons.collections4.Equator;
+import org.apache.commons.collections4.ListUtils;
 import org.github.cidiff.Action;
 import org.github.cidiff.Line;
 import org.github.cidiff.LogDiffer;
 import org.github.cidiff.Metric;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
+import org.github.cidiff.Utils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,23 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 
 public class SeedDiffer implements LogDiffer {
-
-	private static List<int[]> lcs(List<Integer> left, List<Integer> right, BiFunction<Integer, Integer, Boolean> areLinesMatching) {
-		final int[][] lengths = new int[left.size() + 1][right.size() + 1];
-		for (int i = 0; i < left.size(); i++)
-			for (int j = 0; j < right.size(); j++) {
-				if (areLinesMatching.apply(left.get(i), right.get(j)))
-					lengths[i + 1][j + 1] = lengths[i][j] + 1;
-				else
-					lengths[i + 1][j + 1] = Math.max(lengths[i + 1][j], lengths[i][j + 1]);
-			}
-
-		return LcsLogDiffer.extractIndexes(lengths, left.size(), right.size());
-	}
 
 	public static Map<Integer, List<Integer>> simpleHash(List<Line> lines) {
 		Map<Integer, List<Integer>> hashes = new HashMap<>();
@@ -76,12 +64,12 @@ public class SeedDiffer implements LogDiffer {
 	public static void extendsSeed(Seed seed, boolean[] leftHasSeed, boolean[] rightHasSeed, List<Line> leftLines, List<Line> rightLines, Metric metric, double rewriteMin) {
 		while (seed.left > 0 && seed.right > 0
 				&& !leftHasSeed[seed.left - 1] && !rightHasSeed[seed.right - 1]
-				&& metric.sim(leftLines.get(seed.left - 1), rightLines.get(seed.right - 1)) >= rewriteMin) {
+				&& metric.sim(leftLines.get(seed.left - 1).value(), rightLines.get(seed.right - 1).value()) >= rewriteMin) {
 			seed.extendsUp();
 		}
 		while (seed.left + seed.size < leftLines.size() && seed.right + seed.size < rightLines.size()
 				&& !leftHasSeed[seed.left + seed.size] && !rightHasSeed[seed.right + seed.size]
-				&& metric.sim(leftLines.get(seed.left + seed.size), rightLines.get(seed.right + seed.size)) >= rewriteMin) {
+				&& metric.sim(leftLines.get(seed.left + seed.size).value(), rightLines.get(seed.right + seed.size).value()) >= rewriteMin) {
 			seed.extendsDown();
 		}
 	}
@@ -259,7 +247,7 @@ public class SeedDiffer implements LogDiffer {
 				if (left.hasSameValue(right)) {
 					action = Action.unchanged(left, right, 1);
 				} else {
-					action = Action.updated(left, right, options.metric().sim(left, right));
+					action = Action.updated(left, right, options.metric().sim(left.value(), right.value()));
 				}
 				leftActions[seed.left + i] = action;
 				rightActions[seed.right + i] = action;
@@ -276,37 +264,34 @@ public class SeedDiffer implements LogDiffer {
 				.forEach(i -> rightActions[i] = Action.added(rightLines.get(i)));
 
 		// post process, compute an LCS to determine moved lines (in unchanged and updated lines only)
-		List<Integer> l = new ArrayList<>();
-		List<Integer> r = new ArrayList<>();
+		List<Line> l = new ArrayList<>();
+		List<Line> r = new ArrayList<>();
 		for (Action action : leftActions) {
 			if (action.type() == Action.Type.UNCHANGED || action.type() == Action.Type.UPDATED) {
-				l.add(action.left().index());
-				r.add(action.right().index());
+				l.add(action.left());
+				r.add(action.right());
 			}
 		}
-		Collections.sort(l);
-		Collections.sort(r);
-		// lcs values are index of l and r
-		// l and r values are Line#index values (1-indexed) of leftLines and rightLines
-		List<int[]> lcs = lcs(l, r, (i, j) -> leftActions[i - 1].right().index() == j);
-		for (int i = 0; i < leftActions.length; i++) {
-			Action action = leftActions[i];
-//            Action action = entry.getValue();
-			if (action.type() == Action.Type.ADDED || action.type() == Action.Type.DELETED) {
-				continue;
-			}
-			if (lcs.stream().noneMatch(match -> action.left().index() == l.get(match[0]))) {
-				leftActions[i] = Action.moved(action);
-			}
-		}
-		for (int j = 0; j < rightActions.length; j++) {
-			Action action = rightActions[j];
-			if (action.type() == Action.Type.ADDED || action.type() == Action.Type.DELETED) {
-				continue;
-			}
-			if (lcs.stream().noneMatch(ints -> action.right().index() == r.get(ints[1]))) {
-				rightActions[j] = Action.moved(action);
-			}
+		l.sort(Comparator.comparingInt(Line::index));
+		r.sort(Comparator.comparingInt(Line::index));
+
+		List<Line> lcs = Utils.lcs(l, r, (a, b) -> leftActions[a.index()-1].right().index() == b.index());
+//		List<Line> lcs2 = ListUtils.longestCommonSubsequence(l, r, new Equator<>() {
+//			@Override
+//			public boolean equate(Line a, Line b) {
+//				return leftActions[a.index()-1].right().index() == b.index();
+//			}
+//
+//			@Override
+//			public int hash(Line line) {
+//				return line.hashCode();
+//			}
+//		});
+		for (Line leftLine : lcs) {
+			Action action = leftActions[leftLine.index() - 1];
+			Action moved = Action.moved(action);
+			leftActions[moved.left().index() - 1] = moved;
+			rightActions[moved.right().index() - 1] = moved;
 		}
 
 		return new Pair<>(new ArrayList<>(Arrays.asList(leftActions)), new ArrayList<>(Arrays.asList(rightActions)));

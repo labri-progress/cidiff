@@ -5,47 +5,13 @@ import org.github.cidiff.Line;
 import org.github.cidiff.LogDiffer;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
+import org.github.cidiff.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public final class LcsLogDiffer implements LogDiffer {
-
-	/**
-	 * Returns the longest common subsequence between two strings.
-	 *
-	 * @return a list of size 2 int arrays that corresponds
-	 * to match of index in left sequence to index in right sequence.
-	 */
-	static List<int[]> longestCommonSubsequence(List<Line> left, List<Line> right, Options options) {
-		final int[][] lengths = new int[left.size() + 1][right.size() + 1];
-		for (int i = 0; i < left.size(); i++)
-			for (int j = 0; j < right.size(); j++)
-				if (options.metric().sim(left.get(i), right.get(j)) >= options.rewriteMin())
-					lengths[i + 1][j + 1] = lengths[i][j] + 1;
-				else
-					lengths[i + 1][j + 1] = Math.max(lengths[i + 1][j], lengths[i][j + 1]);
-
-		return extractIndexes(lengths, left.size(), right.size());
-	}
-
-	public static List<int[]> extractIndexes(int[][] lengths, int leftSize, int rightSize) {
-		final List<int[]> indexes = new ArrayList<>();
-
-		for (int x = leftSize, y = rightSize; x != 0 && y != 0; ) {
-			if (lengths[x][y] == lengths[x - 1][y]) x--;
-			else if (lengths[x][y] == lengths[x][y - 1]) y--;
-			else {
-				indexes.add(new int[]{x - 1, y - 1});
-				x--;
-				y--;
-			}
-		}
-		Collections.reverse(indexes);
-		return indexes;
-	}
 
 	@Override
 	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines, Options options) {
@@ -59,29 +25,35 @@ public final class LcsLogDiffer implements LogDiffer {
 		}
 
 		// Identify unchanged lines
-		final List<int[]> lcs = longestCommonSubsequence(leftLines, rightLines, options);
-		for (int[] match : lcs) {
-			Line leftLine = leftLines.get(match[0]);
-			Line rightLine = rightLines.get(match[1]);
-			Action action;
-			if (leftLine.hasSameValue(rightLine)) {
-				action = Action.unchanged(leftLine, rightLine, 1);
-			} else {
-				action = Action.updated(leftLine, rightLine, options.metric().sim(leftLine, rightLine));
+		final List<Line> lcs = Utils.lcs(leftLines, rightLines, (a, b) -> options.metric().sim(a.value(), b.value()) >= options.rewriteMin());
+		int i = 0;
+		for (Line leftLine : lcs) {
+			// TODO: 3/29/24 @nhubner fix this, it doesn't actually produce the real lcs, it may produce a different one if two lines in the left log is similar to the same line in the right log
+			for (int j = i; j < rightLines.size(); j++) {
+				if (options.metric().sim(leftLine.value(), rightLines.get(i).value()) >= options.rewriteMin()) {
+					Action action;
+					if (leftLine.hasSameValue(rightLines.get(i))) {
+						action = Action.unchanged(leftLine, rightLines.get(i), 1);
+					} else {
+						action = Action.updated(leftLine, rightLines.get(i), options.metric().sim(leftLine.value(), rightLines.get(i).value()));
+					}
+					leftActions.set(leftLine.index()-1, action);
+					rightActions.set(i, action);
+				}
+				i++;
 			}
-			leftActions.set(match[0], action);
-			rightActions.set(match[1], action);
 		}
+
 
 		// Identify deleted lines
 		IntStream.range(0, leftLines.size())
-				.filter(i -> leftActions.get(i).isNone())
-				.forEach(i -> leftActions.set(i, Action.deleted(leftLines.get(i))));
+				.filter(j -> leftActions.get(j).isNone())
+				.forEach(j -> leftActions.set(j, Action.deleted(leftLines.get(j))));
 
 		// Identify added lines
 		IntStream.range(0, rightLines.size())
-				.filter(i -> rightActions.get(i).isNone())
-				.forEach(i -> rightActions.set(i, Action.added(rightLines.get(i))));
+				.filter(j -> rightActions.get(j).isNone())
+				.forEach(j -> rightActions.set(j, Action.added(rightLines.get(j))));
 
 		return new Pair<>(leftActions, rightActions);
 	}

@@ -8,25 +8,22 @@ public enum Metric {
 
 	LOGSIM(Metric::logsim),
 	EQUALITY(Metric::equality),
-	JARO_WINKLER((line, line2) -> (double) StringMetrics.jaroWinkler().compare(line.value(), line2.value())),
-	LEVENSHTEIN((line, line2) -> (double) StringMetrics.levenshtein().compare(line.value(), line2.value())),
-	COSINE((line, line2) -> (double) StringMetrics.cosineSimilarity().compare(line.value(), line2.value())),
-	MONGE_ELKMAN((line, line2) -> (double) StringMetrics.mongeElkan().compare(line.value(), line2.value())),
-	SMITH_WATERMAN((line, line2) -> (double) StringMetrics.smithWaterman().compare(line.value(), line2.value())),
-	JACCARD((line, line2) -> (double) StringMetrics.generalizedJaccard().compare(line.value(), line2.value()))
+	JARO_WINKLER((line, line2) -> (double) StringMetrics.jaroWinkler().compare(line, line2)),
+	LEVENSHTEIN((line, line2) -> (double) StringMetrics.levenshtein().compare(line, line2)),
+	COSINE((line, line2) -> (double) StringMetrics.cosineSimilarity().compare(line, line2)),
+	MONGE_ELKMAN((line, line2) -> (double) StringMetrics.mongeElkan().compare(line, line2)),
+	SMITH_WATERMAN((line, line2) -> (double) StringMetrics.smithWaterman().compare(line, line2)),
+	JACCARD((line, line2) -> (double) StringMetrics.generalizedJaccard().compare(line, line2))
 	;
 
-	private final BiFunction<Line, Line, Double> function;
+	private final BiFunction<String, String, Double> function;
 
-	Metric(BiFunction<Line, Line, Double> function) {
+	Metric(BiFunction<String, String, Double> function) {
 		this.function = function;
 	}
-	public double sim(Line left, Line right) {
-		return this.function.apply(left, right);
-	}
 
-	public static double logsim(Line leftLine, Line rightLine) {
-		return logsim(leftLine.value(), rightLine.value());
+	public double sim(String left, String right) {
+		return this.function.apply(left, right);
 	}
 
 	public static double logsim(String leftLine, String rightLine) {
@@ -60,8 +57,8 @@ public enum Metric {
 		return count / leftTokens.length;
 	}
 
-	private static double equality(Line leftLine, Line rightLine) {
-		return leftLine.value().equals(rightLine.value()) ? 1.0 : 0.0;
+	private static double equality(String leftLine, String rightLine) {
+		return leftLine.equals(rightLine) ? 1.0 : 0.0;
 	}
 
 }

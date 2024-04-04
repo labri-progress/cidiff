@@ -30,10 +30,19 @@ public class Line {
 		this.hash = hash;
 	}
 
+	/**
+	 * @param index the index of the line in the log file, 1-indexed
+	 * @param raw   the raw content of the line (the exact string written in the file)
+	 */
 	public Line(int index, String raw) {
 		this(index, raw, raw, raw.hashCode());
 	}
 
+	/**
+	 * @param index the index of the line in the log file, 1-indexed
+	 * @param raw   the raw content of the line (the exact string written in the file)
+	 * @param value the useful information of the line
+	 */
 	public Line(int index, String raw, String value) {
 		this(index, raw, value, raw.hashCode());
 	}
@@ -59,6 +68,9 @@ public class Line {
 		return (this.index - 1) + " " + this.value.replace("\\t", "    ");
 	}
 
+	/**
+	 * @return the index of the line, 1-indexed
+	 */
 	public int index() {
 		return index;
 	}

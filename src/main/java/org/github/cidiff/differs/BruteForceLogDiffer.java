@@ -60,7 +60,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 					continue;
 				}
 
-				double sim = options.metric().sim(leftLine, rightLine);
+				double sim = options.metric().sim(leftLine.value(), rightLine.value());
 				if (sim >= options.rewriteMin()) {
 					Action action = Action.updated(leftLine, rightLine, sim);
 					leftActions.set(i, action);
