@@ -2,7 +2,7 @@ package org.github.cidiff;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UtilsTest {
 
@@ -19,13 +19,4 @@ class UtilsTest {
 		assertEquals(0.5, Metric.logsim("A BBBB C", "A BBBC DD"));  // one token different but lcs identical and one token different with different size
 	}
 
-	@Test
-	void lcsLength() {
-		assertEquals(2, Utils.lcsLength("abcd".toCharArray(), "abef".toCharArray()));
-		assertEquals(2, Utils.lcsLength("abcd".toCharArray(), "faeb".toCharArray()));
-		assertEquals(2, Utils.lcsLength("abcd".toCharArray(), "gchhdi".toCharArray()));
-		assertEquals(1, Utils.lcsLength("abcd".toCharArray(), "jruijfb".toCharArray()));
-		assertEquals(3, Utils.lcsLength("abcd".toCharArray(), "auhbefdoko".toCharArray()));
-		assertEquals(0, Utils.lcsLength("abcd".toCharArray(), "efghi".toCharArray()));
-	}
 }

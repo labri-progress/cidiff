@@ -1,11 +1,11 @@
 package org.github.cidiff.differs;
 
 import org.github.cidiff.Action;
+import org.github.cidiff.LCS;
 import org.github.cidiff.Line;
 import org.github.cidiff.LogDiffer;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
-import org.github.cidiff.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,24 +24,17 @@ public final class LcsLogDiffer implements LogDiffer {
 			rightActions.add(Action.NONE);
 		}
 
-		// Identify unchanged lines
-		final List<Line> lcs = Utils.lcs(leftLines, rightLines, (a, b) -> options.metric().sim(a.value(), b.value()) >= options.rewriteMin());
-		int i = 0;
-		for (Line leftLine : lcs) {
-			// TODO: 3/29/24 @nhubner fix this, it doesn't actually produce the real lcs, it may produce a different one if two lines in the left log is similar to the same line in the right log
-			for (int j = i; j < rightLines.size(); j++) {
-				if (options.metric().sim(leftLine.value(), rightLines.get(i).value()) >= options.rewriteMin()) {
-					Action action;
-					if (leftLine.hasSameValue(rightLines.get(i))) {
-						action = Action.unchanged(leftLine, rightLines.get(i), 1);
-					} else {
-						action = Action.updated(leftLine, rightLines.get(i), options.metric().sim(leftLine.value(), rightLines.get(i).value()));
-					}
-					leftActions.set(leftLine.index()-1, action);
-					rightActions.set(i, action);
-				}
-				i++;
+		// Identify unchanged/updated lines
+		final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> options.metric().sim(a.value(), b.value()) >= options.rewriteMin());
+		for (Pair<Line> pair : lcs) {
+			Action action;
+			if (options.metric().sim(pair.left().value(), pair.right().value()) >= options.rewriteMin()) {
+				action = Action.updated(pair.left(), pair.right(), options.metric().sim(pair.left().value(), pair.right().value()));
+			} else {
+				action = Action.unchanged(pair.left(), pair.right(), 1);
 			}
+			leftActions.set(pair.left().index() - 1, action);
+			rightActions.set(pair.right().index() - 1, action);
 		}
 
 

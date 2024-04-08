@@ -1,5 +1,6 @@
 package org.github.cidiff;
 
+import org.apache.commons.text.similarity.LongestCommonSubsequence;
 import org.simmetrics.metrics.StringMetrics;
 
 import java.util.function.BiFunction;
@@ -44,7 +45,7 @@ public enum Metric {
 				ok = true;
 			} else if (leftTokens[i].length() == rightTokens[i].length()) {
 				count += 0.5;
-			} else if (Utils.lcsLength(leftTokens[i].toCharArray(), rightTokens[i].toCharArray())
+			} else if (new LongestCommonSubsequence().apply(leftTokens[i], rightTokens[i])
 					>= 2 * Math.max(leftTokens[i].length(), rightTokens[i].length()) / 3) {
 				count += 0.5;
 			}

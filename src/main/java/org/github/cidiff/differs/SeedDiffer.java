@@ -1,15 +1,12 @@
 package org.github.cidiff.differs;
 
-
-import org.apache.commons.collections4.Equator;
-import org.apache.commons.collections4.ListUtils;
 import org.github.cidiff.Action;
+import org.github.cidiff.LCS;
 import org.github.cidiff.Line;
 import org.github.cidiff.LogDiffer;
 import org.github.cidiff.Metric;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
-import org.github.cidiff.Utils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -156,9 +153,9 @@ public class SeedDiffer implements LogDiffer {
 					leftHasSeed[i] = true;
 					rightHasSeed[j] = true;
 					iterator.remove();
-	//				rightHashes.remove(entry.getKey());  // it is useless to remove the key-value pair as this map is never iterated on
+					//				rightHashes.remove(entry.getKey());  // it is useless to remove the key-value pair as this map is never iterated on
 				}
-			} else if (rightHashes.containsKey(entry.getKey()) && rightHashes.get(entry.getKey()).size() == entry.getValue().size()){
+			} else if (rightHashes.containsKey(entry.getKey()) && rightHashes.get(entry.getKey()).size() == entry.getValue().size()) {
 				// search seeds by identical lines appearing the same amount of time in both logs
 				List<Integer> l = entry.getValue();
 				List<Integer> r = rightHashes.get(entry.getKey());
@@ -275,20 +272,10 @@ public class SeedDiffer implements LogDiffer {
 		l.sort(Comparator.comparingInt(Line::index));
 		r.sort(Comparator.comparingInt(Line::index));
 
-		List<Line> lcs = Utils.lcs(l, r, (a, b) -> leftActions[a.index()-1].right().index() == b.index());
-//		List<Line> lcs2 = ListUtils.longestCommonSubsequence(l, r, new Equator<>() {
-//			@Override
-//			public boolean equate(Line a, Line b) {
-//				return leftActions[a.index()-1].right().index() == b.index();
-//			}
-//
-//			@Override
-//			public int hash(Line line) {
-//				return line.hashCode();
-//			}
-//		});
-		for (Line leftLine : lcs) {
-			Action action = leftActions[leftLine.index() - 1];
+		List<Pair<Line>> lcs = LCS.myers(l, r, (a, b) -> leftActions[a.index() - 1].right().index() == b.index());
+
+		for (Pair<Line> pair : lcs) {
+			Action action = leftActions[pair.left().index() - 1];
 			Action moved = Action.moved(action);
 			leftActions[moved.left().index() - 1] = moved;
 			rightActions[moved.right().index() - 1] = moved;
