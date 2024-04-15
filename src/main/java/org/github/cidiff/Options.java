@@ -48,7 +48,6 @@ public final class Options {
 		this.map.put(DISPLAY_COLUMNS, "");
 	}
 
-
 	public static Options from(Properties properties) {
 		Options opt = new Options();
 		for (Option<?> option : opt.map.keySet()) {
@@ -66,9 +65,9 @@ public final class Options {
 	public static String getDescription() {
 		StringBuilder description = new StringBuilder("""
 				CiDiff - awesome differ for CI build logs
-				                
+				
 				Usage:    cidiff <left_log_path> <right_log_path> [-o <flag> <value>]...
-				                
+				
 				Flags:
 				""");
 		Options options = new Options();

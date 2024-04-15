@@ -61,6 +61,7 @@ class LCSTest {
 	void hirschberg() {
 		testLCS((left, right) -> LCS.hirschberg(left, right, String::equals));
 	}
+
 	@Test
 	void myers() {
 		testLCS((left, right) -> LCS.myers(left, right, String::equals));

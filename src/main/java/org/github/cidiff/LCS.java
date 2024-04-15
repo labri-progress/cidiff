@@ -190,7 +190,7 @@ public final class LCS {
 			buildScript(left, right, start1, middle.start(),
 					start2, middle.start() - middle.diag(),
 					script, equator);
-			int j = start2;
+			int j = middle.start() - middle.diag();
 			for (int i = middle.start(); i < middle.end(); ++i) {
 				script.add(new Pair<>(left.get(i), right.get(j)));
 				++j;

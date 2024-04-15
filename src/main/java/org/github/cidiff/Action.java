@@ -65,5 +65,15 @@ public record Action(Line left, Line right, Type type, double sim) {
 		MOVED_UNCHANGED,
 		MOVED_UPDATED,
 		NONE;
+
+		public boolean isIn(Type... types) {
+			for (Type type : types) {
+				if (this == type) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 	}
 }
