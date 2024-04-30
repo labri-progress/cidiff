@@ -43,15 +43,19 @@ public class Benchmark {
 
 		Options options = new Options();
 		Options optionsEven = new Options().with(Options.EVEN_IDENTICAL, true);
+		Options optionsEvenRecurse = new Options().with(Options.EVEN_IDENTICAL, true).with(Options.RECURSIVE_SEARCH, true);
 		Options optionsLcs = new Options().with(Options.METRIC, Metric.EQUALITY);
 
 		for (int i = 0; i < directories.size(); i++) {
 			Path dir = directories.get(i);
 			List<Line> leftLines = parser.parse(dir.resolve(SUCCESS_FILE).toString(), options);
 			List<Line> rightLines = parser.parse(dir.resolve(FAILURE_FILE).toString(), options);
-			compute(i, directories.size(), "seed", dir, seed, leftLines, rightLines, options, writer);
-			compute(i, directories.size(), "seed-even", dir, seed, leftLines, rightLines, optionsEven, writer);
-			compute(i, directories.size(), "lcs", dir, lcs, leftLines, rightLines, optionsLcs, writer);
+			if (!leftLines.isEmpty() && !rightLines.isEmpty()) {
+				compute(i, directories.size(), "seed", dir, seed, leftLines, rightLines, options, writer);
+				compute(i, directories.size(), "seed-even", dir, seed, leftLines, rightLines, optionsEven, writer);
+				compute(i, directories.size(), "seed-recurse", dir, seed, leftLines, rightLines, optionsEvenRecurse, writer);
+				compute(i, directories.size(), "lcs", dir, lcs, leftLines, rightLines, optionsLcs, writer);
+			}
 		}
 
 		writer.close();

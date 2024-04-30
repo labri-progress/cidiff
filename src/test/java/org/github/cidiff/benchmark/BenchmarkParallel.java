@@ -43,19 +43,22 @@ public class BenchmarkParallel {
 
 		Options options = new Options();
 		Options optionsEven = new Options().with(Options.EVEN_IDENTICAL, true);
+		Options optionsEvenRecurse = new Options().with(Options.EVEN_IDENTICAL, true).with(Options.RECURSIVE_SEARCH, true);
 		Options optionsLcs = new Options().with(Options.METRIC, Metric.EQUALITY);
 
-		int s = directories.size() * 3;
+		int s = directories.size() * 4;
 		AtomicInteger i = new AtomicInteger();
 		List<String> strs = directories.stream()
 				.parallel()
 				.map(dir -> new Tuple3<>(dir, parser.parse(dir.resolve(SUCCESS_FILE).toString(), options), parser.parse(dir.resolve(FAILURE_FILE).toString(), options)))
-				.map(tuple -> new Tuple4<>(tuple.a,
+				.filter(tuple -> !tuple.b.isEmpty() && !tuple.c.isEmpty())
+				.map(tuple -> new Tuple5<>(tuple.a,
 						compute(i, s, "seed", tuple.a, seed, tuple.b, tuple.c, options),
 						compute(i, s, "seed-even", tuple.a, seed, tuple.b, tuple.c, optionsEven),
+						compute(i, s, "seed-recurse", tuple.a, seed, tuple.b, tuple.c, optionsEvenRecurse),
 						compute(i, s, "lcs", tuple.a, lcs, tuple.b, tuple.c, optionsLcs)
 				))
-				.map(tuple -> tuple.b + tuple.c + tuple.d)
+				.map(tuple -> tuple.b + tuple.c + tuple.d + tuple.e)
 				.toList();
 
 		File file = new File("build/reports/benchmark.csv");
