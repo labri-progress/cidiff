@@ -28,7 +28,9 @@ public final class LCS {
 
 	public static <T> List<Pair<T>> myers(final List<T> left, final List<T> right, BiFunction<T, T, Boolean> isEqual) {
 		final List<Pair<T>> lcs = new ArrayList<>();
-		buildScript(left, right, 0, left.size(), 0, right.size(), lcs, isEqual);
+		final int[] vDown = new int[left.size() + right.size() + 2];
+		final int[] vUp = new int[left.size() + right.size() + 2];
+		buildScript(left, right, 0, left.size(), 0, right.size(), vDown, vUp, lcs, isEqual);
 		return lcs;
 	}
 
@@ -159,9 +161,10 @@ public final class LCS {
 	 */
 	private static <T> void buildScript(final List<T> left, final List<T> right,
 	                                    final int start1, final int end1, final int start2, final int end2,
+										final int[] vDown, final int[] vUp,
 	                                    final List<Pair<T>> script, BiFunction<T, T, Boolean> equator) {
 
-		final Snake middle = getMiddleSnake(left, right, start1, end1, start2, end2, equator);
+		final Snake middle = getMiddleSnake(left, right, start1, end1, start2, end2, vDown, vUp, equator);
 
 		if (middle == null
 				|| middle.start() == end1 && middle.diag() == end1 - end2
@@ -188,7 +191,7 @@ public final class LCS {
 		} else {
 
 			buildScript(left, right, start1, middle.start(),
-					start2, middle.start() - middle.diag(),
+					start2, middle.start() - middle.diag(), vDown, vUp,
 					script, equator);
 			int j = middle.start() - middle.diag();
 			for (int i = middle.start(); i < middle.end(); ++i) {
@@ -196,7 +199,7 @@ public final class LCS {
 				++j;
 			}
 			buildScript(left, right, middle.end(), end1,
-					middle.end() - middle.diag(), end2,
+					middle.end() - middle.diag(), end2, vDown, vUp,
 					script, equator);
 		}
 	}
@@ -221,6 +224,7 @@ public final class LCS {
 	 */
 	private static <T> Snake getMiddleSnake(final List<T> left, final List<T> right,
 	                                        final int start1, final int end1, final int start2, final int end2,
+											final int[] vDown, final int[] vUp,
 	                                        BiFunction<T, T, Boolean> equator) {
 		// Myers Algorithm
 		// Initialisations
@@ -229,8 +233,6 @@ public final class LCS {
 		if (m == 0 || n == 0) {
 			return null;
 		}
-		final int[] vDown = new int[left.size() + right.size() + 2];
-		final int[] vUp = new int[left.size() + right.size() + 2];
 
 		final int delta = m - n;
 		final int sum = n + m;

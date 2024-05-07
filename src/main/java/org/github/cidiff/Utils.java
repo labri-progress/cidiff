@@ -1,14 +1,10 @@
 package org.github.cidiff;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiFunction;
+import java.util.regex.Pattern;
 
 public final class Utils {
 
-	private static final String TOKEN_SEPARATORS = "\\s+";
+	private static final Pattern TOKEN_SEPARATORS = Pattern.compile("\\s+");
 
 	private Utils() {
 	}
@@ -16,8 +12,9 @@ public final class Utils {
 	public static String[] split(Line line) {
 		return split(line.value());
 	}
+
 	public static String[] split(String line) {
-		return line.split(TOKEN_SEPARATORS);
+		return TOKEN_SEPARATORS.split(line);
 	}
 
 	public static int lcsLength(char[] left, char[] right) {

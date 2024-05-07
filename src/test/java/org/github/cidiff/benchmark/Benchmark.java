@@ -79,7 +79,6 @@ public class Benchmark {
 				metrics.updated, metrics.movedUnchanged, metrics.movedUpdated,
 				(metrics.similarBlockLeft + metrics.similarBlockRight), metrics.similarBlockLeft, metrics.similarBlockRight
 		));
-		System.gc();
 	}
 
 	private static Metrics metric(Pair<List<Action>> actions) {

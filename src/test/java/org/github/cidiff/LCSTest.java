@@ -55,6 +55,20 @@ class LCSTest {
 		right = List.of();
 		lcs = lcsFunction.apply(left, right);
 		assertEquals(lcs.size(), 0);
+		
+
+		left = List.of("the fish is in the pond", "moved with a change", "Foo", "Bar", "hello world", "another line");
+		right = List.of("Foo", "Bar", "the fish is in the pond", "hello world", "moved with a change", "another line");
+		lcs = lcsFunction.apply(left, right);
+		assertEquals(lcs.size(), 4);
+		assertEquals(lcs.get(0).left(), left.get(2));
+		assertEquals(lcs.get(0).right(), right.get(0));
+		assertEquals(lcs.get(1).left(), left.get(3));
+		assertEquals(lcs.get(1).right(), right.get(1));
+		assertEquals(lcs.get(2).left(), left.get(4));
+		assertEquals(lcs.get(2).right(), right.get(3));
+		assertEquals(lcs.get(3).left(), left.get(5));
+		assertEquals(lcs.get(3).right(), right.get(5));
 	}
 
 	@Test
