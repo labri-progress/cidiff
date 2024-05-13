@@ -53,7 +53,7 @@ public class Benchmark {
 			if (!leftLines.isEmpty() && !rightLines.isEmpty()) {
 				compute(i, directories.size(), "seed", dir, seed, leftLines, rightLines, options, writer);
 				compute(i, directories.size(), "seed-even", dir, seed, leftLines, rightLines, optionsEven, writer);
-				compute(i, directories.size(), "seed-recurse", dir, seed, leftLines, rightLines, optionsEvenRecurse, writer);
+//				compute(i, directories.size(), "seed-recurse", dir, seed, leftLines, rightLines, optionsEvenRecurse, writer);
 				compute(i, directories.size(), "lcs", dir, lcs, leftLines, rightLines, optionsLcs, writer);
 			}
 		}
@@ -63,22 +63,24 @@ public class Benchmark {
 	}
 
 	private static void compute(int i, int size, String type, Path dir, LogDiffer seed, List<Line> leftLines, List<Line> rightLines, Options options, BufferedWriter writer) throws IOException {
-		System.out.printf("%d/%d %s %s%n", i, size, type, DATASET.relativize(dir));
+		System.out.printf("%d/%d (%.1f%%) %s %s", i, size, i*100.0/size, type, DATASET.relativize(dir));
 		long duration = 0;
+		Pair<List<Action>> actions = Pair.of(List.of(), List.of());
 		for (int loop = 0; loop < LOOPS; loop++) {
 			long b = System.currentTimeMillis();
-			seed.diff(leftLines, rightLines, options);
+			actions = seed.diff(leftLines, rightLines, options);
 			long a = System.currentTimeMillis();
 			duration += a-b;
 		}
-		Pair<List<Action>> actions = seed.diff(leftLines, rightLines, options);
 		Metrics metrics = metric(actions);
+		System.out.printf("\r%d/%d (%.1f%%) %.2fs %s %s%n", i, size, i*100.0/size, (duration / LOOPS / 1000.0), type, DATASET.relativize(dir));
 		writer.write("\"%s\",%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d%n".formatted(
 				DATASET.relativize(dir).toString(), type, (duration / LOOPS),
 				leftLines.size(), rightLines.size(), metrics.actions, metrics.added, metrics.deleted,
 				metrics.updated, metrics.movedUnchanged, metrics.movedUpdated,
 				(metrics.similarBlockLeft + metrics.similarBlockRight), metrics.similarBlockLeft, metrics.similarBlockRight
 		));
+		writer.flush();
 	}
 
 	private static Metrics metric(Pair<List<Action>> actions) {

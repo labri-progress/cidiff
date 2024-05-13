@@ -52,16 +52,16 @@ public class BenchmarkParallel {
 				.parallel()
 				.map(dir -> new Tuple3<>(dir, parser.parse(dir.resolve(SUCCESS_FILE).toString(), options), parser.parse(dir.resolve(FAILURE_FILE).toString(), options)))
 				.filter(tuple -> !tuple.b.isEmpty() && !tuple.c.isEmpty())
-				.map(tuple -> new Tuple5<>(tuple.a,
+				.map(tuple -> new Tuple4<>(tuple.a,
 						compute(i, s, "seed", tuple.a, seed, tuple.b, tuple.c, options),
 						compute(i, s, "seed-even", tuple.a, seed, tuple.b, tuple.c, optionsEven),
-						compute(i, s, "seed-recurse", tuple.a, seed, tuple.b, tuple.c, optionsEvenRecurse),
+//						compute(i, s, "seed-recurse", tuple.a, seed, tuple.b, tuple.c, optionsEvenRecurse),
 						compute(i, s, "lcs", tuple.a, lcs, tuple.b, tuple.c, optionsLcs)
 				))
-				.map(tuple -> tuple.b + tuple.c + tuple.d + tuple.e)
+				.map(tuple -> tuple.b + tuple.c + tuple.d/* + tuple.e*/)
 				.toList();
 
-		File file = new File("build/reports/benchmark.csv");
+		File file = new File("build/reports/benchmarkp.csv");
 		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
 			throw new IllegalStateException("Cannot create directories for " + file.getParentFile().getAbsolutePath());
 		}
@@ -76,23 +76,25 @@ public class BenchmarkParallel {
 	}
 
 	private static String compute(AtomicInteger i, int size, String type, Path dir, LogDiffer seed, List<Line> leftLines, List<Line> rightLines, Options options) {
-		System.out.printf("%d/%d %s %s%n", i.incrementAndGet(), size, type, DATASET.relativize(dir));
 		long duration = 0;
+		Pair<List<Action>> actions = Pair.of(List.of(), List.of());
 		for (int loop = 0; loop < LOOPS; loop++) {
 			long b = System.currentTimeMillis();
-			seed.diff(leftLines, rightLines, options);
+			actions = seed.diff(leftLines, rightLines, options);
 			long a = System.currentTimeMillis();
 			duration += a-b;
 		}
-		Pair<List<Action>> actions = seed.diff(leftLines, rightLines, options);
 		Metrics metrics = metric(actions);
+
+		int n = i.incrementAndGet();
+		System.out.printf("%d/%d (%.1f%%) %.2fs %s %s%n", n, size, n*100.0/size, (duration / LOOPS / 1000.0), type, DATASET.relativize(dir));
 		String res = "\"%s\",%S,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d%n".formatted(
 				DATASET.relativize(dir).toString(), type, (duration / LOOPS),
 				leftLines.size(), rightLines.size(), metrics.actions, metrics.added, metrics.deleted,
 				metrics.updated, metrics.movedUnchanged, metrics.movedUpdated,
 				(metrics.similarBlockLeft + metrics.similarBlockRight), metrics.similarBlockLeft, metrics.similarBlockRight
 		);
-		System.gc();
+
 		return res;
 	}
 
