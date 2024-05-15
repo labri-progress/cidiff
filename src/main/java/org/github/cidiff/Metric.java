@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
 public enum Metric {
 
 	LOGSIM(Metric::logsim),
-	EQUALITY((leftLine, rightLine) -> leftLine.hashCode() == rightLine.hashCode() ? 1.0 : 0.0),
+	EQUALITY((leftLine, rightLine) -> leftLine.equals(rightLine) ? 1.0 : 0.0),
 	JARO_WINKLER((line, line2) -> (double) StringMetrics.jaroWinkler().compare(line, line2)),
 	LEVENSHTEIN((line, line2) -> (double) StringMetrics.levenshtein().compare(line, line2)),
 	COSINE((line, line2) -> (double) StringMetrics.cosineSimilarity().compare(line, line2)),
