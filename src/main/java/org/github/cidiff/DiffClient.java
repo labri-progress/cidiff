@@ -4,7 +4,7 @@ import org.github.cidiff.clients.ConsoleClient;
 import org.github.cidiff.clients.HtmlClient;
 import org.github.cidiff.clients.JsonClient;
 import org.github.cidiff.clients.MetricsClient;
-//import org.github.cidiff.clients.MonacoClient;
+import org.github.cidiff.clients.MonacoClient;
 import org.github.cidiff.clients.SwingClient;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public interface DiffClient {
 		JSON(JsonClient::new),
 		CONSOLE(ConsoleClient::new),
 		METRICS(MetricsClient::new),
-		HTML(HtmlClient::new)/*,
-		MONACO(MonacoClient::new)*/;
+		HTML(HtmlClient::new),
+		MONACO(MonacoClient::new);
 
 		private final BiFunction<Pair<List<Line>>, Pair<List<Action>>, DiffClient> constructor;
 

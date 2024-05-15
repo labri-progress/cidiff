@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/editor/editor.main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/loader.js" ></script>
+    <style>
+		html, body {
+			margin: 0;
+			height: 100%;
+			width: 100%;
+		}
+		.row {
+			display: flex;
+			width: 100%;
+			height: 100%;
+		}
+		.column {
+			width: 100%;
+			height: 100%;
+		}
+
+        .updated {
+            background-color: #FFC107;
+        }
+        .added {
+            background-color: #4CAF50;
+        }
+		.added-light {
+			background-color: #A5D6A7;
+		}
+		.deleted {
+			background-color: #F44336;
+		}
+		.deleted-light {
+			background-color: #EF9A9A;
+		}
+		.moved_updated, .moved_unchanged {
+			background-color: #9C27B0;
+		}
+		.none {
+			background-color: #CE93D8;
+		}
+		.selected { color: #3F51B5 !important; }
+
+    </style>
+    <title>CiDiff</title>
+</head>
+
+<body>
+    <div class='row'>
+        <div class='column' id='left'>
+        </div>
+        <div class='column' id='right'>
+        </div>
+    </div>
+    <script>
+        const ciDiff = {
+            left: [
+                {{#left-lines}}
+                    "{{{.}}}",
+                {{/left-lines}}
+				
+            ],
+            right: [
+				
+                {{#right-lines}}
+                    "{{{.}}}",
+                {{/right-lines}}
+				
+            ],
+        };
+    </script>
+    <script>
+        function getColor(type) {
+            switch (type) {
+                case "updated": return "#FFC107";
+                case "added": return "#4CAF50";
+                case "added-light": return "#A5D6A7";
+                case "deleted": return "#F44336";
+                case "deleted-light": return "#EF9A9A";
+                case "moved_updated":
+                case "moved_unchanged": return "#9C27B0";
+                case "none": return "#CE93D8";
+            }
+        }
+		let parallelScroll = true;
+		let left_actions = [
+			{{#left-actions}}
+				{type:"{{type}}",line:{{line}}},
+			{{/left-actions}}
+		]
+		let right_actions = [
+			{{#right-actions}}
+				{type:"{{type}}",line:{{line}}},
+			{{/right-actions}}
+		]
+		function patch(left_actions, right_actions) {
+			let dl = 0;
+			let dr = 0;
+			for (let i = 0; i < left_actions.length; ++i) {
+				let la = left_actions[i]
+				let ra = right_actions[i]
+				if (la.type == "unchanged" || la.type == "updated" ) {
+					la.line = i + 1;  // because unchanged/updated are alligned so they both have the same index
+				}
+				if (ra.type == "unchanged" || ra.type == "updated" ) {
+					ra.line = i + 1;  // because unchanged/updated are alligned so they both have the same index
+				}
+				if (la.type.includes("moved")) {
+					console.log("bumpl", la);
+					for (let j = la.line - 1; j >= 0; --j) {
+						if (right_actions[j].type == "none") {
+							++la.line
+						}
+					}
+					console.log(la);
+				}
+				if (ra.type.includes("moved")) {
+					console.log("bumpr", ra);
+					for (let j = ra.line - 1; j >= 0; --j) {
+						if (left_actions[j].type == "none") {
+							++ra.line
+						}
+					}
+					console.log(ra);
+				}
+			}
+
+
+
+			/// KETHER: c'est impossible de retrouver les bons index après avoir ajouté les lignes de padding. Il faut modifier les index au moment ou la ligne est ajouté, car on a encore le mapping sous la main
+
+
+
+
+			/*for (let action of actions) {
+				if (action.type == "none") {
+					++delta
+				} else if (delta > 0) {
+					action.line += delta
+				}
+			}
+			*/
+		}
+		patch(left_actions, right_actions)
+		let left_decoration_selection = null;
+		let right_decoration_selection = null;
+
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+			let leftEditor = monaco.editor.create(document.getElementById('left'), {
+                value: ciDiff.left.join('\n'),
+                minimap: { enabled: false },
+                readOnly: true,
+				scrollBeyondLastLine: false,
+                //wordWrap: "on"
+            });
+
+            let rightEditor = monaco.editor.create(document.getElementById('right'), {
+                value: ciDiff.right.join('\n'),
+                minimap: { enabled: false },
+                readOnly: true,
+				scrollBeyondLastLine: false,
+                //wordWrap: "on"
+            });
+			function ranges(l,r,type) {
+				let sl = ciDiff.left[l].split(/\s/);
+				let sr = ciDiff.right[l].split(/\s/);
+				let x = 0;
+				let j = 0;
+				let arr = [];
+				for (let i = 0; i < sl.length; ++i) {
+					if (sl[i] == "") { ++x; continue; }
+					if (sr[j] == "") { --i; ++j; continue; }
+					if (sl[i] != sr[j]) {
+						arr.push({ range: new monaco.Range(l+1, x+1, l+1, x+1+sl[i].length), options: { isWholeLine: false, className: type, overviewRuler: { color: getColor(type) } } });
+					}
+					x += sl[i].length + 1;
+					++j;
+				}
+				return arr;
+			}
+			function mapToDecorations(actions) {
+				return actions.flatMap((a,i) => {
+					let arr = []
+					if (a.type == "unchanged") {
+						return arr;
+					}
+					if (a.type.includes("updated")) {
+						if (a.type == "moved_updated") {
+							arr.push({ range: new monaco.Range(i+1, 1, i+1, 1), options: { isWholeLine: true, className: a.type, overviewRuler: { color: getColor(a.type) } } });
+						}
+						//let tmp = ranges(i, left_actions[i].line-1, a.type);
+						//console.log(i, left_actions[i].line-1, tmp);
+						arr.push(...ranges(i, actions[i].line-1, a.type));
+					} else {
+						arr.push({ range: new monaco.Range(i+1, 1, i+1, 1), options: { isWholeLine: true, className: a.type, overviewRuler: { color: getColor(a.type) } } });
+					}
+					return arr;
+				})
+			}
+			let leftDecorations = leftEditor.createDecorationsCollection(mapToDecorations(left_actions));
+            let rightDecorations = rightEditor.createDecorationsCollection(mapToDecorations(right_actions));
+
+            leftEditor.onDidScrollChange(e => {
+				if (parallelScroll) {
+					rightEditor.setScrollTop(e.scrollTop);
+				}
+				rightEditor.setScrollLeft(e.scrollLeft);
+            });
+            rightEditor.onDidScrollChange(e => {
+				if (parallelScroll) {
+					leftEditor.setScrollTop(e.scrollTop);
+				}
+				leftEditor.setScrollLeft(e.scrollLeft);
+            });
+			console.log(left_actions)
+			console.log(right_actions)
+			function onClick(clickedLine, actions, leftEditor, rightEditor) {
+				if (actions[clickedLine-1].type.includes("moved")) {
+					parallelScroll = false;
+					console.log("click", clickedLine, "map_to", actions[clickedLine-1].line)
+					let topLeft = leftEditor.getTopForLineNumber(clickedLine);
+					let topRight = rightEditor.getTopForLineNumber(actions[clickedLine-1].line);
+					let d = topRight - topLeft;
+					rightEditor.setScrollTop(leftEditor.getScrollTop() + d);
+				} else {
+					parallelScroll = true;
+					rightEditor.setScrollTop(leftEditor.getScrollTop());
+				}
+				let decoration = line => ({ range: new monaco.Range(line, 1, line, 1), options: { isWholeLine: true, inlineClassName: "selected" }})
+				left_decoration_selection?.clear();
+				right_decoration_selection?.clear();
+				left_decoration_selection = leftEditor.createDecorationsCollection([ decoration(clickedLine) ])
+				right_decoration_selection = rightEditor.createDecorationsCollection([ decoration(actions[clickedLine-1].line) ])
+			}
+			leftEditor.onMouseDown(event => onClick(event.target.position.lineNumber, left_actions, leftEditor, rightEditor));
+			rightEditor.onMouseDown(event => onClick(event.target.position.lineNumber, right_actions, rightEditor, leftEditor));
+
+        });
+    </script>
+</body>
+
+</html>
