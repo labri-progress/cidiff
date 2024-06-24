@@ -21,27 +21,22 @@
 		}
 
         .updated {
-            background-color: #FFC107;
+            background-color: #FFF59D;
         }
-        .added {
-            background-color: #4CAF50;
+        .added, .added-light {
+            background-color: #A5D6A7;
         }
-		.added-light {
-			background-color: #A5D6A7;
-		}
-		.deleted {
-			background-color: #F44336;
-		}
-		.deleted-light {
-			background-color: #EF9A9A;
-		}
-		.moved_updated, .moved_unchanged {
-			background-color: #9C27B0;
-		}
-		.none {
-			background-color: #CE93D8;
-		}
-		.selected { color: #3F51B5 !important; }
+        .deleted, .deleted-light {
+            background-color: #EF9A9A;
+        }
+        .moved_updated, .moved_unchanged {
+            background-color: #CE93D8;
+        }
+        .none {
+            background-color: #64B5F6;
+        }
+        .selected { color: #2196F3 !important; }
+
 
     </style>
     <title>CiDiff</title>
@@ -60,28 +55,29 @@
                 {{#left-lines}}
                     "{{{.}}}",
                 {{/left-lines}}
-				
+
             ],
             right: [
-				
+
                 {{#right-lines}}
                     "{{{.}}}",
                 {{/right-lines}}
-				
+
             ],
         };
     </script>
     <script>
         function getColor(type) {
             switch (type) {
-                case "updated": return "#FFC107";
-                case "added": return "#4CAF50";
+                case "updated": return "#FFF59D";
+                case "added": return "#A5D6A7";
                 case "added-light": return "#A5D6A7";
-                case "deleted": return "#F44336";
+                case "deleted": return "#EF9A9A";
                 case "deleted-light": return "#EF9A9A";
                 case "moved_updated":
-                case "moved_unchanged": return "#9C27B0";
+                case "moved_unchanged": return "#CE93D8";
                 case "none": return "#CE93D8";
+
             }
         }
 		let parallelScroll = true;

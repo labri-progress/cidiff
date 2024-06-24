@@ -1,7 +1,7 @@
 package org.github.cidiff;
 
 import org.github.cidiff.clients.ConsoleClient;
-import org.github.cidiff.clients.HtmlClient;
+import org.github.cidiff.clients.FilteredMonacoClient;
 import org.github.cidiff.clients.JsonClient;
 import org.github.cidiff.clients.MetricsClient;
 import org.github.cidiff.clients.MonacoClient;
@@ -20,8 +20,8 @@ public interface DiffClient {
 		JSON(JsonClient::new),
 		CONSOLE(ConsoleClient::new),
 		METRICS(MetricsClient::new),
-		HTML(HtmlClient::new),
-		MONACO(MonacoClient::new);
+		MONACO(MonacoClient::new),
+		FILTERED(FilteredMonacoClient::new);
 
 		private final BiFunction<Pair<List<Line>>, Pair<List<Action>>, DiffClient> constructor;
 
