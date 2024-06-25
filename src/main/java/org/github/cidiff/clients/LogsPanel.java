@@ -4,6 +4,7 @@ import org.github.cidiff.Action;
 import org.github.cidiff.Line;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
+import org.github.cidiff.Utils;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComponent;
@@ -29,7 +30,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LogsPanel extends JPanel {
@@ -66,8 +66,10 @@ public class LogsPanel extends JPanel {
 		constraints.gridwidth = 2;
 		constraints.weightx = 1;
 		this.add(label, constraints);
+		Pair.Free<Pair<List<Line>>,Pair<List<Action>>> alligned = Utils.allignLines(lines, actions);
+		actions = alligned.right();
+		lines = alligned.left();
 		this.actions = actions;
-		insertLinesForParallelScrolling(lines, actions);
 		Line[] leftData = new Line[lines.left().size()];
 		lines.left().toArray(leftData);
 		leftLines = new JList<>(leftData);
@@ -115,102 +117,6 @@ public class LogsPanel extends JPanel {
 		panRightLines.getHorizontalScrollBar().addAdjustmentListener(synchronizer);
 
 		this.setPreferredSize(new Dimension(1024, 768));
-	}
-
-	public static void insertLinesForParallelScrolling(Pair<List<Line>> pair, Pair<List<Action>> actions) {
-		List<Line> left = pair.left();
-		List<Line> right = pair.right();
-		List<int[]> lcs = new ArrayList<>();
-		for (int i = 0; i < left.size(); i++) {
-			Action action = actions.left().get(i);
-			if (action.type() == Action.Type.UPDATED || action.type() == Action.Type.UNCHANGED) {
-				lcs.add(new int[]{action.left().index(), action.right().index()});
-			}
-		}
-		int i = 0;
-		int I = 0;
-		// lines from 0 to last element in the lcs
-		while (I < lcs.size()) {
-			int[] match = lcs.get(I);
-			while (i < left.size() && i < right.size() && (left.get(i).index() < match[0] || right.get(i).index() < match[1])) {
-				insertLineAtPosition(actions, left, right, i);
-				i++;
-			}
-			i++;
-			I++;
-		}
-		// lines after the lcs
-		while (i < left.size() && i < right.size()) {
-			insertLineAtPosition(actions, left, right, i);
-			i++;
-		}
-		// at this point either i >= |left| or i >= |right| or both are higher or equal
-		// this means only one of these two for loop will be executed
-		for (int j = i; j < left.size(); j++) {
-			Action oldLeft = actions.left().get(j);
-			if (oldLeft.type() == Action.Type.MOVED_UNCHANGED || oldLeft.type() == Action.Type.MOVED_UPDATED) {
-				Line empty = new PaddingLine(right.size());
-				right.add(empty);
-				actions.right().add(new Action(oldLeft.left(), empty, Action.Type.NONE));
-			} else if (oldLeft.type() == Action.Type.DELETED) {
-				Line empty = new PaddingLine(right.size());
-				right.add(empty);
-				Action newAction = new Action(oldLeft.left(), empty, oldLeft.type());
-				actions.left().set(j, newAction);
-				actions.right().add(newAction);
-			}
-		}
-		for (int j = i; j < right.size(); j++) {
-			Action oldRight = actions.right().get(j);
-			if (oldRight.type() == Action.Type.MOVED_UNCHANGED || oldRight.type() == Action.Type.MOVED_UPDATED) {
-				Line empty = new PaddingLine(left.size());
-				left.add(empty);
-				actions.left().add(new Action(empty, oldRight.right(), Action.Type.NONE));
-			} else if (oldRight.type() == Action.Type.ADDED) {
-				Line empty = new PaddingLine(left.size());
-				left.add(empty);
-				Action newAction = new Action(empty, oldRight.right(), oldRight.type());
-				actions.left().add(newAction);
-				actions.right().set(j, newAction);
-			}
-		}
-	}
-
-	private static void insertLineAtPosition(Pair<List<Action>> actions, List<Line> left, List<Line> right, int i) {
-		Action oldLeft = actions.left().get(i);
-		Action oldRight = actions.right().get(i);
-		if (oldLeft.type() == Action.Type.DELETED && oldRight.type() == Action.Type.ADDED) {
-			return;
-		}
-		if (oldLeft.type() == Action.Type.DELETED) {
-			Line empty = new PaddingLine(right.size());
-			right.add(i, empty);
-			// remap the deleted line action to link to the padding line
-			Action newAction = new Action(oldLeft.left(), empty, oldLeft.type());
-			actions.left().set(i, newAction);
-			actions.right().add(i, newAction);
-		} else if (oldLeft.type() == Action.Type.MOVED_UPDATED || oldLeft.type() == Action.Type.MOVED_UNCHANGED) {
-			Line empty = new PaddingLine(right.size());
-			right.add(i, empty);
-			// create a new action linking the padding line to the moved line
-			// but preserve the old action to keep the moved lines link
-			Action newAction = new Action(oldLeft.left(), empty, oldLeft.type());
-			actions.right().add(i, newAction);
-		} else if (oldRight.type() == Action.Type.ADDED) {
-			Line empty = new PaddingLine(left.size());
-			left.add(i, empty);
-			// remap the added line action to link to the padding line
-			Action newAction = new Action(empty, oldRight.right(), oldRight.type());
-			actions.left().add(i, newAction);
-			actions.right().set(i, newAction);
-		} else if (oldRight.type() == Action.Type.MOVED_UPDATED || oldRight.type() == Action.Type.MOVED_UNCHANGED) {
-			Line empty = new PaddingLine(right.size());
-			left.add(i, empty);
-			// create a new action linking the padding line to the moved line
-			// but preserve the old action to keep the moved lines link
-			Action newAction = new Action(empty, oldRight.right(), Action.Type.NONE);
-			actions.left().add(i, newAction);
-		}
 	}
 
 	private BasicScrollBarUI makeScrollBarUi(JList<Line> lines, List<Action> scrollActions, boolean isLeftSide) {
@@ -305,8 +211,8 @@ public class LogsPanel extends JPanel {
 			}
 
 			final Action action = cellActions.get(index);
-			int l = action.left() == null ? -1 : action.left().index()-1;
-			int r = action.right() == null ? -1 : action.right().index()-1;
+			int l = action.left() == null ? -1 : action.left().index();
+			int r = action.right() == null ? -1 : action.right().index();
 
 			setToolTipText(String.format("%s %d - %d - %.2f %d", action.type(), l, r, action.sim(), logLine.hash()));
 
@@ -473,15 +379,4 @@ public class LogsPanel extends JPanel {
 		}
 	}
 
-	private static class PaddingLine extends Line {
-
-		private PaddingLine(int index) {
-			super(index, "");
-		}
-
-		@Override
-		public String displayValue() {
-			return " ";
-		}
-	}
 }

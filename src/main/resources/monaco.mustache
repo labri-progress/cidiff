@@ -23,20 +23,19 @@
         .updated {
             background-color: #FFF59D;
         }
-        .added, .added-light {
+        .added {
             background-color: #A5D6A7;
         }
-        .deleted, .deleted-light {
-            background-color: #EF9A9A;
-        }
-        .moved_updated, .moved_unchanged {
-            background-color: #CE93D8;
-        }
-        .none {
-            background-color: #64B5F6;
-        }
-        .selected { color: #2196F3 !important; }
-
+		.deleted {
+			background-color: #EF9A9A;
+		}
+		.moved_updated, .moved_unchanged {
+			background-color: #CE93D8;
+		}
+		.none {
+			background-color: #64B5F6;
+		}
+		.selected { color: #90CAF9 !important; }
 
     </style>
     <title>CiDiff</title>
@@ -58,11 +57,9 @@
 
             ],
             right: [
-
                 {{#right-lines}}
                     "{{{.}}}",
                 {{/right-lines}}
-
             ],
         };
     </script>
@@ -71,9 +68,7 @@
             switch (type) {
                 case "updated": return "#FFF59D";
                 case "added": return "#A5D6A7";
-                case "added-light": return "#A5D6A7";
                 case "deleted": return "#EF9A9A";
-                case "deleted-light": return "#EF9A9A";
                 case "moved_updated":
                 case "moved_unchanged": return "#CE93D8";
                 case "none": return "#CE93D8";
@@ -91,55 +86,6 @@
 				{type:"{{type}}",line:{{line}}},
 			{{/right-actions}}
 		]
-		function patch(left_actions, right_actions) {
-			let dl = 0;
-			let dr = 0;
-			for (let i = 0; i < left_actions.length; ++i) {
-				let la = left_actions[i]
-				let ra = right_actions[i]
-				if (la.type == "unchanged" || la.type == "updated" ) {
-					la.line = i + 1;  // because unchanged/updated are alligned so they both have the same index
-				}
-				if (ra.type == "unchanged" || ra.type == "updated" ) {
-					ra.line = i + 1;  // because unchanged/updated are alligned so they both have the same index
-				}
-				if (la.type.includes("moved")) {
-					console.log("bumpl", la);
-					for (let j = la.line - 1; j >= 0; --j) {
-						if (right_actions[j].type == "none") {
-							++la.line
-						}
-					}
-					console.log(la);
-				}
-				if (ra.type.includes("moved")) {
-					console.log("bumpr", ra);
-					for (let j = ra.line - 1; j >= 0; --j) {
-						if (left_actions[j].type == "none") {
-							++ra.line
-						}
-					}
-					console.log(ra);
-				}
-			}
-
-
-
-			/// KETHER: c'est impossible de retrouver les bons index après avoir ajouté les lignes de padding. Il faut modifier les index au moment ou la ligne est ajouté, car on a encore le mapping sous la main
-
-
-
-
-			/*for (let action of actions) {
-				if (action.type == "none") {
-					++delta
-				} else if (delta > 0) {
-					action.line += delta
-				}
-			}
-			*/
-		}
-		patch(left_actions, right_actions)
 		let left_decoration_selection = null;
 		let right_decoration_selection = null;
 
@@ -160,9 +106,18 @@
 				scrollBeyondLastLine: false,
                 //wordWrap: "on"
             });
-			function ranges(l,r,type) {
-				let sl = ciDiff.left[l].split(/\s/);
-				let sr = ciDiff.right[l].split(/\s/);
+
+			/**
+			 * Compute the monaco ranges needed to highlight the different words in "updated" lines
+			 *
+			 * @param {number} index - the index of the line
+			 * @param {string} line - the line to compute the range for
+			 * @param {string} other - the line to compute the differences against
+			 * @param {string} type - the type of the action of the two lines
+			 */
+			function ranges(index, line, other, type) {
+				let sl = line.split(/\s/);
+				let sr = other.split(/\s/);
 				let x = 0;
 				let j = 0;
 				let arr = [];
@@ -170,14 +125,21 @@
 					if (sl[i] == "") { ++x; continue; }
 					if (sr[j] == "") { --i; ++j; continue; }
 					if (sl[i] != sr[j]) {
-						arr.push({ range: new monaco.Range(l+1, x+1, l+1, x+1+sl[i].length), options: { isWholeLine: false, className: type, overviewRuler: { color: getColor(type) } } });
+						arr.push({ range: new monaco.Range(index+1, x+1, index+1, x+1+sl[i].length), options: { isWholeLine: false, className: type, overviewRuler: { color: getColor(type) } } });
 					}
 					x += sl[i].length + 1;
 					++j;
 				}
 				return arr;
 			}
-			function mapToDecorations(actions) {
+
+			/**
+			 * Map a list of actions to a list of monaco ranges
+			 *
+			 * @param { {type: string, line: number}[]} actions - the list of actions
+			 * @param {boolean} isLeft - if the list correspond to the left actions list
+			 */
+			function mapToDecorations(actions, isLeft) {
 				return actions.flatMap((a,i) => {
 					let arr = []
 					if (a.type == "unchanged") {
@@ -187,17 +149,17 @@
 						if (a.type == "moved_updated") {
 							arr.push({ range: new monaco.Range(i+1, 1, i+1, 1), options: { isWholeLine: true, className: a.type, overviewRuler: { color: getColor(a.type) } } });
 						}
-						//let tmp = ranges(i, left_actions[i].line-1, a.type);
-						//console.log(i, left_actions[i].line-1, tmp);
-						arr.push(...ranges(i, actions[i].line-1, a.type));
+						let l = isLeft ? ciDiff.left[i] : ciDiff.right[i];
+						let r = isLeft ? ciDiff.right[i] : ciDiff.left[i];
+						arr.push(...ranges(i, l, r, a.type));
 					} else {
 						arr.push({ range: new monaco.Range(i+1, 1, i+1, 1), options: { isWholeLine: true, className: a.type, overviewRuler: { color: getColor(a.type) } } });
 					}
 					return arr;
 				})
 			}
-			let leftDecorations = leftEditor.createDecorationsCollection(mapToDecorations(left_actions));
-            let rightDecorations = rightEditor.createDecorationsCollection(mapToDecorations(right_actions));
+			let leftDecorations = leftEditor.createDecorationsCollection(mapToDecorations(left_actions, true));
+            let rightDecorations = rightEditor.createDecorationsCollection(mapToDecorations(right_actions, false));
 
             leftEditor.onDidScrollChange(e => {
 				if (parallelScroll) {
@@ -211,14 +173,11 @@
 				}
 				leftEditor.setScrollLeft(e.scrollLeft);
             });
-			console.log(left_actions)
-			console.log(right_actions)
 			function onClick(clickedLine, actions, leftEditor, rightEditor) {
 				if (actions[clickedLine-1].type.includes("moved")) {
 					parallelScroll = false;
-					console.log("click", clickedLine, "map_to", actions[clickedLine-1].line)
 					let topLeft = leftEditor.getTopForLineNumber(clickedLine);
-					let topRight = rightEditor.getTopForLineNumber(actions[clickedLine-1].line);
+					let topRight = rightEditor.getTopForLineNumber(actions[clickedLine-1].line + 1);
 					let d = topRight - topLeft;
 					rightEditor.setScrollTop(leftEditor.getScrollTop() + d);
 				} else {
@@ -229,7 +188,7 @@
 				left_decoration_selection?.clear();
 				right_decoration_selection?.clear();
 				left_decoration_selection = leftEditor.createDecorationsCollection([ decoration(clickedLine) ])
-				right_decoration_selection = rightEditor.createDecorationsCollection([ decoration(actions[clickedLine-1].line) ])
+				right_decoration_selection = rightEditor.createDecorationsCollection([ decoration(actions[clickedLine-1].line+1) ])
 			}
 			leftEditor.onMouseDown(event => onClick(event.target.position.lineNumber, left_actions, leftEditor, rightEditor));
 			rightEditor.onMouseDown(event => onClick(event.target.position.lineNumber, right_actions, rightEditor, leftEditor));

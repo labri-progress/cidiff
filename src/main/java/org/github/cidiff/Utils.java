@@ -2,7 +2,10 @@ package org.github.cidiff;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+
+import org.github.cidiff.Action.Type;
 
 public final class Utils {
 
@@ -44,112 +47,164 @@ public final class Utils {
 
 		@Override
 		public String displayValue() {
-			return " ";
+			return "" + this.index();
 		}
 
 	}
 
 	/**
-	 * Allign unchanged and updated lines by inserting empty lines around insertion/deletion
+	 * Allign unchanged and updated lines by inserting empty lines around
+	 * added/deleted/moved lines
 	 *
-	 * @param lines the lines to align
+	 * @param lines   the lines to align
 	 * @param actions the actions of the diff
+	 * @return the alligned lines and actions
 	 */
-	public static void allignLines(Pair<List<Line>> lines, Pair<List<Action>> actions) {
-		List<Line> left = lines.left();
-		List<Line> right = lines.right();
-		List<int[]> lcs = new ArrayList<>();  // lines in the lcs are the lines we want to allign
-		for (int i = 0; i < left.size(); i++) {
-			Action action = actions.left().get(i);
-			if (action.type() == Action.Type.UPDATED || action.type() == Action.Type.UNCHANGED) {
-				lcs.add(new int[]{action.left().index(), action.right().index()});
-			}
-		}
+	public static Pair.Free<Pair<List<Line>>, Pair<List<Action>>> allignLines(
+			Pair<List<Line>> lines, Pair<List<Action>> actions) {
+		List<Line> left = new ArrayList<>();
+		List<Line> right = new ArrayList<>();
+		List<Action> rActions = new ArrayList<>();
+		List<Action> lActions = new ArrayList<>();
+
 		int i = 0;
-		int I = 0;
-		// lines from 0 to last element in the lcs
-		while (I < lcs.size()) {
-			int[] match = lcs.get(I);
-			while (i < left.size() && i < right.size() && (left.get(i).index() < match[0] || right.get(i).index() < match[1])) {
-				insertLine(actions, left, right, i);
+		int j = 0;
+		List<Function<Integer, Boolean>> leftConditions = new ArrayList<>();
+		List<Function<Integer, Boolean>> rightConditions = new ArrayList<>();
+
+		while (i < lines.left().size() && j < lines.right().size()) {
+			Line leftLine = lines.left().get(i);
+			Line rightLine = lines.right().get(j);
+			Action leftAction = actions.left().get(i);
+			Action rightAction = actions.right().get(j);
+			if (leftAction.type() == Type.DELETED) {
+				if (rightAction.type() == Type.ADDED) {
+					// deleted line is parallel to an added line, do not add blank lines
+					left.add(leftLine);
+					right.add(rightLine);
+					// let's do a little trick and link the two indel lines together
+					lActions.add(new Action(leftLine, rightLine, Type.DELETED));
+					rActions.add(new Action(leftLine, rightLine, Type.ADDED));
+					i++;
+					j++;
+				} else {
+					// deleted line is alone, add a blank line
+					left.add(leftLine);
+					Line pad = new PaddingLine(j);
+					right.add(pad);
+					Action action = new Action(leftLine, pad, Type.DELETED);
+					lActions.add(action);
+					rActions.add(action);
+					int local = j;
+					rightConditions.add((n) -> n >= local);
+					i++;
+				}
+			} else if (leftAction.type() == Type.MOVED_UPDATED || leftAction.type() == Type.MOVED_UNCHANGED) {
+				if (leftAction.right().equals(rightLine)) {
+					// move is between the two current lines, do not add a blank line
+					left.add(leftLine);
+					right.add(rightLine);
+					lActions.add(leftAction);
+					rActions.add(rightAction);
+					i++;
+					j++;
+				} else {
+					// moved line is not parallel to itself, add a blank line
+					left.add(leftLine);
+					Line pad = new PaddingLine(j);
+					right.add(pad);
+					Action action = new Action(leftLine, pad, leftAction.type());
+					lActions.add(action);
+					rActions.add(action);
+					int local = j;
+					rightConditions.add((n) -> n >= local);
+					i++;
+				}
+			} else if (rightAction.type() == Type.ADDED) {
+				if (leftAction.type() == Type.DELETED) {
+					// added line is parallel to an deleted line, do not add a blank line
+					left.add(leftLine);
+					right.add(rightLine);
+					// let's do a little trick and link the two indel lines together
+					lActions.add(new Action(leftLine, rightLine, Type.DELETED));
+					rActions.add(new Action(leftLine, rightLine, Type.ADDED));
+					lActions.add(leftAction);
+					rActions.add(rightAction);
+					i++;
+					j++;
+				} else {
+					// added line is alone, add a blank line
+					Line pad = new PaddingLine(i);
+					left.add(pad);
+					right.add(rightLine);
+					Action action = new Action(pad, rightLine, Type.ADDED);
+					lActions.add(action);
+					rActions.add(action);
+					int local = i;
+					leftConditions.add((n) -> n >= local);
+					j++;
+				}
+			} else if (rightAction.type() == Type.MOVED_UNCHANGED || rightAction.type() == Type.MOVED_UPDATED) {
+				if (rightAction.left().equals(leftLine)) {
+					// moved line is parallel to itself, do not add a blank line
+					left.add(leftLine);
+					right.add(rightLine);
+					lActions.add(leftAction);
+					rActions.add(rightAction);
+					i++;
+					j++;
+				} else {
+					// moved line is not parallel to itself, add a blank line
+					Line pad = new PaddingLine(i);
+					left.add(pad);
+					right.add(rightLine);
+					Action action = new Action(pad, rightLine, rightAction.type());
+					lActions.add(action);
+					rActions.add(action);
+					int local = i;
+					leftConditions.add((n) -> n >= local);
+					j++;
+				}
+			} else {
+				// two white lines that are parallel (they should be parallel)
+				left.add(leftLine);
+				right.add(rightLine);
+				lActions.add(leftAction);
+				rActions.add(rightAction);
 				i++;
-			}
-			i++;
-			I++;
-		}
-		// lines after the lcs
-		while (i < left.size() && i < right.size()) {
-			insertLine(actions, left, right, i);
-			i++;
-		}
-		// at this point either i >= |left| or i >= |right| or both are higher or equal
-		// this means only one of these two for loop will be executed
-		for (int j = i; j < left.size(); j++) {
-			Action oldLeft = actions.left().get(j);
-			if (oldLeft.type() == Action.Type.MOVED_UNCHANGED || oldLeft.type() == Action.Type.MOVED_UPDATED) {
-				Line empty = new PaddingLine(right.size());
-				right.add(empty);
-				actions.right().add(new Action(oldLeft.left(), empty, Action.Type.NONE));
-			} else if (oldLeft.type() == Action.Type.DELETED) {
-				Line empty = new PaddingLine(right.size());
-				right.add(empty);
-				Action newAction = new Action(oldLeft.left(), empty, oldLeft.type());
-				actions.left().set(j, newAction);
-				actions.right().add(newAction);
+				j++;
 			}
 		}
-		for (int j = i; j < right.size(); j++) {
-			Action oldRight = actions.right().get(j);
-			if (oldRight.type() == Action.Type.MOVED_UNCHANGED || oldRight.type() == Action.Type.MOVED_UPDATED) {
-				Line empty = new PaddingLine(left.size());
-				left.add(empty);
-				actions.left().add(new Action(empty, oldRight.right(), Action.Type.NONE));
-			} else if (oldRight.type() == Action.Type.ADDED) {
-				Line empty = new PaddingLine(left.size());
-				left.add(empty);
-				Action newAction = new Action(empty, oldRight.right(), oldRight.type());
-				actions.left().add(newAction);
-				actions.right().set(j, newAction);
-			}
+		// lines are aligned now but we still need to fix
+		// 1. the moved lines are linked to their padding lines and not their real line
+		// 2. all the lines have the wrong id in their field
+		actions.left().stream()
+				.filter(action -> action.type().isIn(Type.MOVED_UPDATED, Type.MOVED_UNCHANGED))
+				.forEach(action -> {
+					// remap the moved lines together
+					int ii = action.left().index() - 1; // -1 because the lines are 1-indexed
+					for (Function<Integer, Boolean> condition : leftConditions) {
+						if (condition.apply(action.left().index())) {
+							ii++;
+						}
+					}
+					int jj = action.right().index() - 1;
+					for (Function<Integer, Boolean> condition : rightConditions) {
+						if (condition.apply(action.right().index())) {
+							jj++;
+						}
+					}
+					Action move = new Action(left.get(ii), right.get(jj), action.type());
+					lActions.set(ii, move);
+					rActions.set(jj, move);
+				});
+		for (i = 0; i < left.size(); ++i) {
+			left.get(i).setIndex(i);
 		}
-
-	}
-
-	private static void insertLine(Pair<List<Action>> actions, List<Line> left, List<Line> right, int i) {
-		Action oldLeft = actions.left().get(i);
-		Action oldRight = actions.right().get(i);
-		if (oldLeft.type() == Action.Type.DELETED && oldRight.type() == Action.Type.ADDED) {
-			return;
+		for (j = 0; j < right.size(); ++j) {
+			right.get(j).setIndex(j);
 		}
-		if (oldLeft.type() == Action.Type.DELETED) {
-			Line empty = new PaddingLine(right.size());
-			right.add(i, empty);
-			// remap the deleted line action to link to the padding line
-			Action newAction = new Action(oldLeft.left(), empty, oldLeft.type());
-			actions.left().set(i, newAction);
-			actions.right().add(i, newAction);
-		} else if (oldLeft.type() == Action.Type.MOVED_UPDATED || oldLeft.type() == Action.Type.MOVED_UNCHANGED) {
-			Line empty = new PaddingLine(right.size());
-			right.add(i, empty);
-			// create a new action linking the padding line to the moved line
-			// but preserve the old action to keep the moved lines link
-			Action newAction = new Action(oldLeft.left(), empty, Action.Type.NONE);
-			actions.right().add(i, newAction);
-		} else if (oldRight.type() == Action.Type.ADDED) {
-			Line empty = new PaddingLine(left.size());
-			left.add(i, empty);
-			// remap the added line action to link to the padding line
-			Action newAction = new Action(empty, oldRight.right(), oldRight.type());
-			actions.left().add(i, newAction);
-			actions.right().set(i, newAction);
-		} else if (oldRight.type() == Action.Type.MOVED_UPDATED || oldRight.type() == Action.Type.MOVED_UNCHANGED) {
-			Line empty = new PaddingLine(right.size());
-			left.add(i, empty);
-			// create a new action linking the padding line to the moved line
-			// but preserve the old action to keep the moved lines link
-			Action newAction = new Action(empty, oldRight.right(), Action.Type.NONE);
-			actions.left().add(i, newAction);
-		}
+		return Pair.Free.of(Pair.of(left, right), Pair.of(lActions, rActions));
 	}
 
 }

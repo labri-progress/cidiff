@@ -25,6 +25,7 @@ public final class Options {
 	public static final Option<Boolean> DISPLAY_DELETED = new Option<>("client.console.deleted", "If the deleted lines should be shown", Boolean::parseBoolean);
 	public static final Option<Boolean> DISPLAY_SKIPPED_NOTICE = new Option<>("client.swing.skipped_notice", "If a notice line should be added when some are removed with a filter", Boolean::parseBoolean);
 	public static final Option<String> DISPLAY_COLUMNS = new Option<>("client.swing.columns", "If \"left\" or \"right\", will display only the corresponding column", str -> str);
+	public static final Option<String> OUTPUT_PATH = new Option<>("client.monaco.output", "The path to write the html file to", str -> str);
 
 	private final Map<Option<?>, Object> map;
 
@@ -46,6 +47,7 @@ public final class Options {
 		this.map.put(DISPLAY_DELETED, false);
 		this.map.put(DISPLAY_SKIPPED_NOTICE, true);
 		this.map.put(DISPLAY_COLUMNS, "");
+		this.map.put(OUTPUT_PATH, "diff.html");
 	}
 
 	public static Options from(Properties properties) {
@@ -65,9 +67,9 @@ public final class Options {
 	public static String getDescription() {
 		StringBuilder description = new StringBuilder("""
 				CiDiff - awesome differ for CI build logs
-				
+
 				Usage:    cidiff <left_log_path> <right_log_path> [-o <flag> <value>]...
-				
+
 				Flags:
 				""");
 		Options options = new Options();
@@ -153,6 +155,10 @@ public final class Options {
 
 	public String swingColumns() {
 		return this.get(DISPLAY_COLUMNS);
+	}
+
+	public String monacoOutput() {
+		return this.get(OUTPUT_PATH);
 	}
 
 	public static final class Option<T> {

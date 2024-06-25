@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class Line {
 
-	private final int index;
+	private int index;
 	private final String raw;
 	private final String value;
 	private final long hash;
@@ -65,7 +65,7 @@ public class Line {
 	}
 
 	public String displayValue() {
-		return (this.index - 1) + " " + this.value.replace("\\t", "    ");
+		return this.index + " " + this.value.replace("\\t", "    ");
 	}
 
 	/**
@@ -73,6 +73,10 @@ public class Line {
 	 */
 	public int index() {
 		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public String raw() {
@@ -111,6 +115,5 @@ public class Line {
 				"value=" + value + ", " +
 				"hash=" + hash + ']';
 	}
-
 
 }
