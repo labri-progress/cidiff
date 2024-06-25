@@ -90,6 +90,24 @@
         {{/right-actions}}
     ]
 
+	// setup the folds between the "added" hunks
+	let folds = [];
+	for (let i = 1; i < right_actions.length; ++i) {
+		if (right_actions[i-1].type != "added" && right_actions[i].type == "added") {
+			let j = 1;
+			while (i-j >= 0 && right_actions[i-j].type != "added") { ++j; }
+			if (j > 6) {  // we keep a window of 3 lines arounds the "added" hunks
+				folds.push({start: i-j+5, end: i-3});
+			}
+		}
+	}
+	// in case there is non "added" lines after the last added line
+	let last_green = right_actions.length - 1;
+	while (right_actions[last_green].type != "added") { --last_green; }
+	if (last_green < right_actions.length - 4) {
+		folds.push({start: last_green + 5, end: right_actions.length});
+	}
+
     require.config({paths: {'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs'}});
     require(['vs/editor/editor.main'], function () {
         monaco.languages.register({
@@ -97,13 +115,8 @@
         })
 
         monaco.languages.registerFoldingRangeProvider("cidiff", {
-            provideFoldingRanges: (model, context, token) => {
-                return [
-                    // {end: 6, start: 3}
-                ]
-            }
+            provideFoldingRanges: (model, context, token) => folds
         })
-        // editor.trigger('fold', 'editor.foldAll')
         let rightEditor = monaco.editor.create(document.getElementById('right'), {
             value: ciDiff.right.join('\n'),
             minimap: {enabled: false},
@@ -113,6 +126,7 @@
             automaticLayout: true,
             //wordWrap: "on"
         });
+        rightEditor.trigger('fold', 'editor.foldAll')
 
         function ranges(l, r, type) {
             let sl = ciDiff.left[l].split(/\s/);
