@@ -3,13 +3,16 @@ package org.github.cidiff;
 import org.apache.commons.io.IOUtils;
 import org.kohsuke.github.*;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -24,10 +27,10 @@ public class GhCiDiff {
         final GitHub github = GitHubBuilder.fromEnvironment().build();
         final GHRepository repository = github.getRepository(repo);
 
-        Optional<GHWorkflow> workflow;
-        if (args.length == 1)
+        Optional<GHWorkflow> workflow = Optional.empty();
+        if (args.length == 1 || (args.length > 1 && !args[2].equals("-o")))
             workflow = repository.listWorkflows().toList().stream().findFirst();
-        else
+        else if (args.length > 1 && !args[1].equals("-o"))
             workflow = Optional.of(repository.getWorkflow(args[1]));
 
         if (workflow.isEmpty()) {
@@ -41,18 +44,31 @@ public class GhCiDiff {
             System.exit(0);
         }
 
-        final List<String> leftLog = getLog(runs.get(1));
-        final Path leftLogFile = Files.createTempFile(null, null);
-        Files.write(leftLogFile, leftLog);
-        final List<String> rightLog = getLog(runs.get(0));
-        final Path rightLogFile = Files.createTempFile(null, null);
-        Files.write(rightLogFile, rightLog);
+        final Path leftLogFile = getLog(runs.get(1));
+        final Path rightLogFile = getLog(runs.get(0));
 
-        CiDiff.main(new String[] {
-                leftLogFile.toString(), rightLogFile.toString(), "-o", "parser", "GITHUB", "-o", "client", "SWING", "-o", "differ", "SEED"}
-        );
+        String[] logFiles = new String[] {
+                leftLogFile.toFile().getAbsolutePath(), rightLogFile.toFile().getAbsolutePath(), "-o", "parser", "GITHUB"
+        };
+        String[] ciDiffArgs = new String[0];
+        if (Arrays.binarySearch(args, "-o") != -1)
+            ciDiffArgs = Arrays.copyOfRange(args, Arrays.binarySearch(args, "-o"), args.length);
+        String[] both = Stream.concat(Arrays.stream(logFiles), Arrays.stream(ciDiffArgs)).toArray(String[]::new);
+
+        System.out.println(Arrays.toString(both));
+
+        CiDiff.main(both);
     }
 
+    private static Path getLog(GHWorkflowRun run) throws IOException {
+        GHWorkflowJob job = run.listJobs().iterator().next();
+        Path log = Files.createTempFile("cidiff", ".log");
+        System.out.println(log.toFile().getAbsolutePath());
+        job.downloadLogs(s -> Files.copy(s, log, java.nio.file.StandardCopyOption.REPLACE_EXISTING));
+        return log;
+    }
+
+    /*
     private static List<String> getLog(String repo, long runId) throws IOException {
         final GitHub github = GitHubBuilder.fromEnvironment().build();
         final GHRepository repository = github.getRepository(repo);
@@ -79,6 +95,7 @@ public class GhCiDiff {
         });
     }
 
+
     private static List<String> getLog(GHWorkflowRun run) throws IOException {
         return run.downloadLogs((InputStream inputStream) -> {
             final ZipInputStream zis = new ZipInputStream(inputStream);
@@ -101,4 +118,5 @@ public class GhCiDiff {
             return null;
         });
     }
+    */
 }

@@ -31,19 +31,19 @@ public final class Options {
 	public Options() {
 		map = new HashMap<>();
 		this.map.put(CLIENT, DiffClient.Type.CONSOLE);
-		this.map.put(DIFFER, LogDiffer.Algorithm.BRUTE_FORCE);
+		this.map.put(DIFFER, LogDiffer.Algorithm.SEED);
 		this.map.put(PARSER, LogParser.Type.TRIMMING);
 		this.map.put(METRIC, Metric.LOGSIM);
 		this.map.put(REWRITE_MIN, 0.5);
 		this.map.put(SKIP_EMPTY_LINES, false);
-		this.map.put(MERGE_ADJACENT_SEEDS, false);
+		this.map.put(MERGE_ADJACENT_SEEDS, true);
 		this.map.put(RECURSIVE_SEARCH, false);
-		this.map.put(EVEN_IDENTICAL, false);
+		this.map.put(EVEN_IDENTICAL, true);
 		this.map.put(DEFAULT_TRIM, 0);
 		this.map.put(DISPLAY_UPDATED, false);
 		this.map.put(DISPLAY_UNCHANGED, false);
 		this.map.put(DISPLAY_ADDED, true);
-		this.map.put(DISPLAY_DELETED, true);
+		this.map.put(DISPLAY_DELETED, false);
 		this.map.put(DISPLAY_SKIPPED_NOTICE, true);
 		this.map.put(DISPLAY_COLUMNS, "");
 	}
