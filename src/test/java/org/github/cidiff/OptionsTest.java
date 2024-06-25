@@ -14,7 +14,7 @@ class OptionsTest {
 		// check defaults
 		Options opt = new Options();
 		assertEquals(DiffClient.Type.CONSOLE, opt.clientType());
-		assertEquals(LogDiffer.Algorithm.BRUTE_FORCE, opt.algorithm());
+		assertEquals(LogDiffer.Algorithm.SEED, opt.algorithm());
 		assertEquals(LogParser.Type.TRIMMING, opt.parser());
 		assertEquals(0.5, opt.rewriteMin());
 		assertEquals(false, opt.skipEmptyLines());
@@ -22,7 +22,7 @@ class OptionsTest {
 		assertEquals(false, opt.consoleDisplayUpdated());
 		assertEquals(false, opt.consoleDisplayUnchanged());
 		assertEquals(true, opt.consoleDisplayAdded());
-		assertEquals(true, opt.consoleDisplayDeleted());
+		assertEquals(false, opt.consoleDisplayDeleted());
 		assertEquals(true, opt.swingDisplaySkippedNotice());
 		assertEquals("", opt.swingColumns());
 		// check custom properties with good values
