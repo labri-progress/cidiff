@@ -47,5 +47,13 @@ tasks.register('benchmark', JavaExec) {
 	classpath = sourceSets.test.runtimeClasspath
 	mainClass = 'org.github.cidiff.benchmark.Benchmark'
 }
+tasks.register('evaluation', JavaExec) {
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass = 'org.github.cidiff.evaluation.GenerateDiffs'
+}
+tasks.register('viewer', JavaExec) {
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass = 'org.github.cidiff.evaluation.GenerateViewers'
+}
 
 build.finalizedBy installShadowDist
