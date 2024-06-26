@@ -23,8 +23,8 @@ public class Benchmark {
 
 	private static final Path DATASET = Path.of("data/breakages/");
 	private static final int LOOPS = 1;
-	private static final String SUCCESS_FILE = "pass.log";
-	private static final String FAILURE_FILE = "fail.log";
+	public static final String SUCCESS_FILE = "pass.log";
+	public static final String FAILURE_FILE = "fail.log";
 
 	public static void main(String[] args) throws IOException {
 		List<Path> directories = collectDirectories();
