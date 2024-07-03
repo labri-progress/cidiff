@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 public final class BruteForceLogDiffer implements LogDiffer {
-	private static final Pattern EMPTY = Pattern.compile("\\s*");
 
 	@Override
 	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines, Options options) {
@@ -32,11 +31,6 @@ public final class BruteForceLogDiffer implements LogDiffer {
 				Line rightLine = rightLines.get(j);
 				if (!rightActions.get(j).isNone()) {
 					continue;
-				}
-
-				if (options.skipEmptyLines() && EMPTY.matcher(leftLine.value()).matches()) {
-					leftActions.set(i, Action.skipped(leftLine));
-					break;
 				}
 				if (leftLine.hasSameValue(rightLine)) {
 					Action action = Action.unchanged(leftLine, rightLine, 1);
@@ -78,13 +72,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 		// Identify added lines
 		IntStream.range(0, rightLines.size())
 				.filter(i -> rightActions.get(i).isNone())
-				.forEach(i -> {
-					if (options.skipEmptyLines() && EMPTY.matcher(rightLines.get(i).value()).matches()) {
-						rightActions.set(i, Action.skipped(rightLines.get(i)));
-					} else {
-						rightActions.set(i, Action.added(rightLines.get(i)));
-					}
-				});
+				.forEach(i -> rightActions.set(i, Action.added(rightLines.get(i))));
 
 		return new Pair<>(leftActions, rightActions);
 	}

@@ -30,8 +30,10 @@ public final class GithubLogParser implements LogParser {
 				if (m.matches()) {
 					// String timestamp = m.group(1) == null ? "" : m.group(1);
 					String content = ANSI_COLOR_REGEXP.matcher(m.group(2)).replaceAll("");
-					log.add(new Line(lineNumber, line, content));
-					lineNumber++;
+					if (!options.skipEmptyLines() || !content.isBlank()) {
+						log.add(new Line(lineNumber, line, content));
+						lineNumber++;
+					}
 				}
 			}
 		} catch (IOException e) {

@@ -14,7 +14,7 @@ public final class Options {
 	public static final Option<LogParser.Type> PARSER = new Option<>("parser", "The parser to use before diffing: TRIMMING, GITHUB", LogParser.Type::valueOf);
 	public static final Option<Metric> METRIC = new Option<>("metric", "The string similarity metric to use: LOGSIM, EQUALITY", Metric::valueOf);
 	public static final Option<Double> REWRITE_MIN = new Option<>("differ.rewrite_min", "The minimum similitude value to accept two string as modified.", Double::parseDouble);
-	public static final Option<Boolean> SKIP_EMPTY_LINES = new Option<>("differ.bf.skip_empty", "If the brute force algorithm should skip empty lines.", Boolean::parseBoolean);
+	public static final Option<Boolean> SKIP_EMPTY_LINES = new Option<>("parser.skip_empty", "If the parser should skip empty lines.", Boolean::parseBoolean);
 	public static final Option<Boolean> MERGE_ADJACENT_SEEDS = new Option<>("differ.seed.merge_seeds", "If the seed-and-extends algorithm should merge adjacent seeds.", Boolean::parseBoolean);
 	public static final Option<Boolean> RECURSIVE_SEARCH = new Option<>("differ.seed.recursive_search", "If the seed-and-extends algorithm should search unique lines recursively.", Boolean::parseBoolean);
 	public static final Option<Boolean> EVEN_IDENTICAL = new Option<>("differ.seed.even", "If the seed-and-extends algorithm should start with even identical lines", Boolean::parseBoolean);

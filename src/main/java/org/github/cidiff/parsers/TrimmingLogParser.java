@@ -22,8 +22,10 @@ public final class TrimmingLogParser implements LogParser {
 			int lineNumber = 0;
 			for (String line; (line = br.readLine()) != null; ) {
 				final String value = line.substring(Math.min(options.parserDefaultTrim(), line.length()));
-				log.add(new Line(lineNumber, line, value));
-				lineNumber++;
+				if (!options.skipEmptyLines() || !value.isBlank()) {
+					log.add(new Line(lineNumber, line, value));
+					lineNumber++;
+				}
 			}
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
