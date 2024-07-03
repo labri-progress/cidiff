@@ -33,8 +33,8 @@ public final class LcsDiffer implements LogDiffer {
 			} else {
 				action = Action.updated(pair.left(), pair.right(), options.metric().sim(pair.left().value(), pair.right().value()));
 			}
-			leftActions.set(pair.left().index() - 1, action);
-			rightActions.set(pair.right().index() - 1, action);
+			leftActions.set(pair.left().index(), action);
+			rightActions.set(pair.right().index(), action);
 		}
 
 

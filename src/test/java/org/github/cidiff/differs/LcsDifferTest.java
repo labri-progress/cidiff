@@ -23,8 +23,8 @@ class LcsDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		assertActions(actions, Pair.of(
-				List.of("UNCHANGED:1", "UNCHANGED:2", "DELETED"),
-				List.of("UNCHANGED:1", "UNCHANGED:2")
+				List.of("UNCHANGED:0", "UNCHANGED:1", "DELETED"),
+				List.of("UNCHANGED:0", "UNCHANGED:1")
 		));
 	}
 
@@ -36,8 +36,8 @@ class LcsDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		assertActions(actions, Pair.of(
-				List.of("UNCHANGED:1", "UNCHANGED:2"),
-				List.of("UNCHANGED:1", "UNCHANGED:2", "ADDED")
+				List.of("UNCHANGED:0", "UNCHANGED:1"),
+				List.of("UNCHANGED:0", "UNCHANGED:1", "ADDED")
 		));
 	}
 
@@ -49,8 +49,8 @@ class LcsDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		assertActions(actions, Pair.of(
-				List.of("UNCHANGED:1", "UNCHANGED:2", "UNCHANGED:3"),
-				List.of("UNCHANGED:1", "UNCHANGED:2", "UNCHANGED:3")
+				List.of("UNCHANGED:0", "UNCHANGED:1", "UNCHANGED:2"),
+				List.of("UNCHANGED:0", "UNCHANGED:1", "UNCHANGED:2")
 		));
 	}
 
@@ -62,8 +62,8 @@ class LcsDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		assertActions(actions, Pair.of(
-				List.of("DELETED", "DELETED", "UNCHANGED:1", "UNCHANGED:2"),
-				List.of("UNCHANGED:3", "UNCHANGED:4")
+				List.of("DELETED", "DELETED", "UNCHANGED:0", "UNCHANGED:1"),
+				List.of("UNCHANGED:2", "UNCHANGED:3")
 		));
 	}
 
@@ -88,8 +88,8 @@ class LcsDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 		// this will work only if the lcs used is myers' algorithm. hirschberg's algorithm doesn't produce the same lcs
 		assertActions(actions, Pair.of(
-				List.of("DELETED", "UNCHANGED:1", "UNCHANGED:2",  "DELETED"),
-				List.of("UNCHANGED:2", "UNCHANGED:3", "ADDED")
+				List.of("DELETED", "UNCHANGED:0", "UNCHANGED:1",  "DELETED"),
+				List.of("UNCHANGED:1", "UNCHANGED:2", "ADDED")
 		));
 	}
 

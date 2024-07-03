@@ -32,7 +32,7 @@ public final class ConsoleClient extends AbstractDiffClient {
 
 			if (action.type() == Action.Type.UPDATED) {
 				if (options.consoleDisplayUpdated()) {
-					boolean newLine = lastDisplayed != 0 && lastDisplayed != leftLine.index() - 1;
+					boolean newLine = lastDisplayed != 0 && lastDisplayed != leftLine.index();
 					if (newLine) {
 						System.out.println();
 					}
@@ -63,7 +63,7 @@ public final class ConsoleClient extends AbstractDiffClient {
 				}
 			} else if (action.type() == Action.Type.UNCHANGED) {
 				if (options.consoleDisplayUnchanged()) {
-					boolean newLine = lastDisplayed != 0 && lastDisplayed != leftLine.index() - 1;
+					boolean newLine = lastDisplayed != 0 && lastDisplayed != leftLine.index();
 					if (newLine) {
 						System.out.println();
 					}
@@ -78,7 +78,7 @@ public final class ConsoleClient extends AbstractDiffClient {
 				}
 			} else if (action.type() == Action.Type.DELETED) {
 				if (options.consoleDisplayDeleted()) {
-					boolean newLine = lastDisplayed != 0 && lastDisplayed != leftLine.index() - 1;
+					boolean newLine = lastDisplayed != 0 && lastDisplayed != leftLine.index();
 					if (newLine) {
 						System.out.println();
 					}
@@ -98,7 +98,7 @@ public final class ConsoleClient extends AbstractDiffClient {
 			Action action = actions.right().get(i);
 			if (action.type() == Action.Type.ADDED) {
 				if (options.consoleDisplayAdded()) {
-					boolean newLine = lastDisplayed == 0 || lastDisplayed != rightLine.index() - 1;
+					boolean newLine = lastDisplayed == 0 || lastDisplayed != rightLine.index();
 					if (newLine) {
 						System.out.println();
 					}

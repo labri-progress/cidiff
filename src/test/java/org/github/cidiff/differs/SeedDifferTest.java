@@ -17,8 +17,8 @@ class SeedDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options());
 
 		assertActions(actions, Pair.of(
-				List.of("UNCHANGED:1", "UNCHANGED:2", "DELETED"),
-				List.of("UNCHANGED:1", "UNCHANGED:2")
+				List.of("UNCHANGED:0", "UNCHANGED:1", "DELETED"),
+				List.of("UNCHANGED:0", "UNCHANGED:1")
 		));
 	}
 
@@ -30,8 +30,8 @@ class SeedDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options());
 
 		assertActions(actions, Pair.of(
-				List.of("UNCHANGED:1", "UNCHANGED:2"),
-				List.of("UNCHANGED:1", "UNCHANGED:2", "ADDED")
+				List.of("UNCHANGED:0", "UNCHANGED:1"),
+				List.of("UNCHANGED:0", "UNCHANGED:1", "ADDED")
 		));
 	}
 
@@ -43,8 +43,8 @@ class SeedDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options());
 
 		assertActions(actions, Pair.of(
-				List.of("UNCHANGED:1", "UNCHANGED:2", "UNCHANGED:3"),
-				List.of("UNCHANGED:1", "UNCHANGED:2", "UNCHANGED:3")
+				List.of("UNCHANGED:0", "UNCHANGED:1", "UNCHANGED:2"),
+				List.of("UNCHANGED:0", "UNCHANGED:1", "UNCHANGED:2")
 		));
 	}
 
@@ -82,8 +82,8 @@ class SeedDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options());
 
 		assertActions(actions, Pair.of(
-				List.of("UNCHANGED:1", "UNCHANGED:2", "UPDATED:3", "DELETED"),
-				List.of("UNCHANGED:1", "UNCHANGED:2", "UPDATED:3", "ADDED")
+				List.of("UNCHANGED:0", "UNCHANGED:1", "UPDATED:2", "DELETED"),
+				List.of("UNCHANGED:0", "UNCHANGED:1", "UPDATED:2", "ADDED")
 		));
 	}
 
@@ -95,8 +95,8 @@ class SeedDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options());
 
 		assertActions(actions, Pair.of(
-				List.of("MOVED_UNCHANGED:4", "MOVED_UPDATED:5", "UNCHANGED:1", "UNCHANGED:2", "UPDATED:3", "UNCHANGED:6"),
-				List.of("UNCHANGED:3", "UNCHANGED:4", "UPDATED:5", "MOVED_UNCHANGED:1", "MOVED_UPDATED:2", "UNCHANGED:6")
+				List.of("MOVED_UNCHANGED:3", "MOVED_UPDATED:4", "UNCHANGED:0", "UNCHANGED:1", "UPDATED:2", "UNCHANGED:5"),
+				List.of("UNCHANGED:2", "UNCHANGED:3", "UPDATED:4", "MOVED_UNCHANGED:0", "MOVED_UPDATED:1", "UNCHANGED:5")
 		));
 	}
 

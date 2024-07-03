@@ -182,13 +182,13 @@ public final class Utils {
 				.filter(action -> action.type().isIn(Type.MOVED_UPDATED, Type.MOVED_UNCHANGED))
 				.forEach(action -> {
 					// remap the moved lines together
-					int ii = action.left().index() - 1; // -1 because the lines are 1-indexed
+					int ii = action.left().index();
 					for (Function<Integer, Boolean> condition : leftConditions) {
 						if (condition.apply(action.left().index())) {
 							ii++;
 						}
 					}
-					int jj = action.right().index() - 1;
+					int jj = action.right().index();
 					for (Function<Integer, Boolean> condition : rightConditions) {
 						if (condition.apply(action.right().index())) {
 							jj++;

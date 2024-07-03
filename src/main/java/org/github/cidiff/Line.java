@@ -69,7 +69,7 @@ public class Line {
 	}
 
 	/**
-	 * @return the index of the line, 1-indexed
+	 * @return the index of the line, 0-indexed
 	 */
 	public int index() {
 		return index;

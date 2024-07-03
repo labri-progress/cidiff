@@ -270,25 +270,25 @@ public class SeedDiffer implements LogDiffer {
 		}
 		l.sort(Comparator.comparingInt(Line::index));
 		r.sort(Comparator.comparingInt(Line::index));
-		List<Pair<Line>> lcs = LCS.myers(l, r, (leftLine, rightLine) -> leftActions[leftLine.index()-1].right().index() == rightLine.index());
+		List<Pair<Line>> lcs = LCS.myers(l, r, (leftLine, rightLine) -> leftActions[leftLine.index()].right().index() == rightLine.index());
 		boolean[] inleft = new boolean[leftLines.size()];
 		boolean[] inright = new boolean[rightLines.size()];
 		for (Pair<Line> pair : lcs) {
-			inleft[pair.left().index() - 1] = true;
-			inright[pair.right().index() - 1] = true;
+			inleft[pair.left().index()] = true;
+			inright[pair.right().index()] = true;
 		}
 		for (int i = 0; i < inleft.length; i++) {
 			if (!inleft[i] && leftActions[i].type().isIn(Action.Type.UNCHANGED, Action.Type.UPDATED)) {
 				Action moved = Action.moved(leftActions[i]);
-				leftActions[moved.left().index() - 1] = moved;
-				rightActions[moved.right().index() - 1] = moved;
+				leftActions[moved.left().index()] = moved;
+				rightActions[moved.right().index()] = moved;
 			}
 		}
 		for (int i = 0; i < inright.length; i++) {
 			if (!inright[i] && rightActions[i].type().isIn(Action.Type.UNCHANGED, Action.Type.UPDATED)) {
 				Action moved = Action.moved(rightActions[i]);
-				leftActions[moved.left().index() - 1] = moved;
-				rightActions[moved.right().index() - 1] = moved;
+				leftActions[moved.left().index()] = moved;
+				rightActions[moved.right().index()] = moved;
 			}
 		}
 

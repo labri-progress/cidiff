@@ -19,15 +19,15 @@ class GithubLogParserTest {
 		assertEquals(6, parsed.size());
 		assertEquals("2021-10-19T13:45:43.6326799Z ##[debug]Starting: Set up job", parsed.get(0).raw());
 		assertEquals("##[debug]Starting: Set up job", parsed.get(0).value());
-		assertEquals(1, parsed.get(0).index());
+		assertEquals(0, parsed.get(0).index());
 		assertEquals("[\u001B[1;34mINFO\u001B[m] Scanning for projects...", parsed.get(3).raw());
 		assertEquals("[INFO] Scanning for projects...", parsed.get(3).value());
-		assertEquals(4, parsed.get(3).index());
+		assertEquals(3, parsed.get(3).index());
 		assertEquals("[\u001B[1;34mINFO\u001B[m] \u001B[1m--- \u001B[0;32mmaven-clean-plugin:3.1.0:clean\u001B[m \u001B[1m(default-clean)\u001B[m @ \u001B[36massertj-core\u001B[0;1m ---\u001B[m", parsed.get(4).raw());
 		assertEquals("[INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ assertj-core ---", parsed.get(4).value());
-		assertEquals(5, parsed.get(4).index());
+		assertEquals(4, parsed.get(4).index());
 		assertEquals("WARNING: All illegal access operations will be denied in a future release", parsed.get(5).raw());
 		assertEquals("WARNING: All illegal access operations will be denied in a future release", parsed.get(5).value());
-		assertEquals(6, parsed.get(5).index());
+		assertEquals(5, parsed.get(5).index());
 	}
 }
