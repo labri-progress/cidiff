@@ -18,7 +18,7 @@ public class Line {
 	private final long hash;
 
 	/**
-	 * @param index the index of the line in the log file, 1-indexed
+	 * @param index the index of the line in the log file, 0-indexed
 	 * @param raw   the raw content of the line (the exact string written in the file)
 	 * @param value the useful information of the line
 	 * @param hash  the hash of the raw content
@@ -31,7 +31,7 @@ public class Line {
 	}
 
 	/**
-	 * @param index the index of the line in the log file, 1-indexed
+	 * @param index the index of the line in the log file, 0-indexed
 	 * @param raw   the raw content of the line (the exact string written in the file)
 	 */
 	public Line(int index, String raw) {
@@ -39,7 +39,7 @@ public class Line {
 	}
 
 	/**
-	 * @param index the index of the line in the log file, 1-indexed
+	 * @param index the index of the line in the log file, 0-indexed
 	 * @param raw   the raw content of the line (the exact string written in the file)
 	 * @param value the useful information of the line
 	 */

@@ -17,7 +17,7 @@ class OptionsTest {
 		assertEquals(LogDiffer.Algorithm.SEED, opt.algorithm());
 		assertEquals(LogParser.Type.TRIMMING, opt.parser());
 		assertEquals(0.5, opt.rewriteMin());
-		assertEquals(false, opt.skipEmptyLines());
+		assertEquals(true, opt.skipEmptyLines());
 		assertEquals(0, opt.parserDefaultTrim());
 		assertEquals(false, opt.consoleDisplayUpdated());
 		assertEquals(false, opt.consoleDisplayUnchanged());
@@ -31,7 +31,7 @@ class OptionsTest {
 		properties.setProperty("differ", "SEED");
 		properties.setProperty("parser", "GITHUB");
 		properties.setProperty("differ.rewrite_min", "0.6");
-		properties.setProperty("parser.skip_empty", "true");
+		properties.setProperty("parser.skip_empty", "false");
 		properties.setProperty("parser.trimming.trim", "19");
 		properties.setProperty("client.console.updated", "true");
 		properties.setProperty("client.console.unchanged", "true");
@@ -44,7 +44,7 @@ class OptionsTest {
 		assertEquals(LogDiffer.Algorithm.SEED, fromProperties.algorithm());
 		assertEquals(LogParser.Type.GITHUB, fromProperties.parser());
 		assertEquals(0.6, fromProperties.rewriteMin());
-		assertEquals(true, fromProperties.skipEmptyLines());
+		assertEquals(false, fromProperties.skipEmptyLines());
 		assertEquals(19, fromProperties.parserDefaultTrim());
 		assertEquals(true, fromProperties.consoleDisplayUpdated());
 		assertEquals(true, fromProperties.consoleDisplayUnchanged());
@@ -60,14 +60,13 @@ class OptionsTest {
 		assertThrows(NumberFormatException.class, () ->Options.from(properties("parser.trimming.trim", "wrong")));
 		// this ones should default to false with "wrong" values
 		Properties wrongProperties = new Properties();
-		wrongProperties.setProperty("differ.bf.skip_empty", "wrong");
+		wrongProperties.setProperty("parser.skip_empty", "wrong");
 		wrongProperties.setProperty("client.console.updated", "wrong");
 		wrongProperties.setProperty("client.console.unchanged", "wrong");
 		wrongProperties.setProperty("client.console.added", "wrong");
 		wrongProperties.setProperty("client.console.deleted", "wrong");
 		wrongProperties.setProperty("client.swing.skipped_notice", "wrong");
 		Options fromWrongProperties = Options.from(wrongProperties);
-		assertEquals(false, fromWrongProperties.skipEmptyLines());
 		assertEquals(false, fromWrongProperties.skipEmptyLines());
 		assertEquals(false, fromWrongProperties.consoleDisplayUpdated());
 		assertEquals(false, fromWrongProperties.consoleDisplayUnchanged());

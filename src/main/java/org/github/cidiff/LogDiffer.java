@@ -2,6 +2,7 @@ package org.github.cidiff;
 
 
 import org.github.cidiff.differs.BruteForceLogDiffer;
+import org.github.cidiff.differs.DeesDiffer;
 import org.github.cidiff.differs.HashDiffer;
 import org.github.cidiff.differs.LcsDiffer;
 import org.github.cidiff.differs.SeedDiffer;
@@ -18,6 +19,7 @@ public interface LogDiffer {
 		BRUTE_FORCE(BruteForceLogDiffer::new),
 		LCS(LcsDiffer::new),
 		SEED(SeedDiffer::new),
+		DEES(DeesDiffer::new),
 		HASH(HashDiffer::new);
 
 		private final Supplier<LogDiffer> constructor;

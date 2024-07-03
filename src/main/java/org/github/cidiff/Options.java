@@ -38,7 +38,7 @@ public final class Options {
 		this.map.put(PARSER, LogParser.Type.TRIMMING);
 		this.map.put(METRIC, Metric.LOGSIM);
 		this.map.put(REWRITE_MIN, 0.5);
-		this.map.put(SKIP_EMPTY_LINES, false);
+		this.map.put(SKIP_EMPTY_LINES, true);
 		this.map.put(MERGE_ADJACENT_SEEDS, true);
 		this.map.put(RECURSIVE_SEARCH, false);
 		this.map.put(SEED_VARIANT, SeedDiffer.Variant.EVEN);

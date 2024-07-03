@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.stream.IntStream;
 
-public class SeedDiffer implements LogDiffer {
+public class DeesDiffer implements LogDiffer {
 
 	public enum Variant {
 		/**
@@ -164,56 +164,17 @@ public class SeedDiffer implements LogDiffer {
 		boolean[] leftHasSeed = new boolean[leftLines.size()];
 		boolean[] rightHasSeed = new boolean[rightLines.size()];
 		// step 1: setup 100% certainty seed: a line on the left is unique appears only once on the right
-		Iterator<Map.Entry<Integer, List<Integer>>> iterator = leftHashes.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Map.Entry<Integer, List<Integer>> entry = iterator.next();
-			if (!rightHashes.containsKey(entry.getKey())) {
-				continue;
+
+		List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> a.value().equals(b.value()));
+		for (Pair<Line> pair : lcs) {
+			if (!leftHasSeed[pair.left().index()] && !rightHasSeed[pair.right().index()]) {
+				seeds.add(new Seed(pair.left().index(), pair.right().index(), 1));
+				leftHasSeed[pair.left().index()] = true;
+				rightHasSeed[pair.right().index()] = true;
 			}
-			switch (options.seedVariant()) {
-				case UNIQUE:
-					if (entry.getValue().size() == 1 && rightHashes.get(entry.getKey()).size() == 1) {
-						int i = entry.getValue().get(0);
-						int j = rightHashes.get(entry.getKey()).get(0);
-						seeds.add(new Seed(i, j, 1));
-						leftHasSeed[i] = true;
-						rightHasSeed[j] = true;
-					}
-					break;
-				case EVEN:
-					if (rightHashes.get(entry.getKey()).size() == entry.getValue().size()) {
-						List<Integer> l = entry.getValue();
-						List<Integer> r = rightHashes.get(entry.getKey());
-						for (int i = 0; i < l.size(); i++) {
-							seeds.add(new Seed(l.get(i), r.get(i), 1));
-							leftHasSeed[l.get(i)] = true;
-							rightHasSeed[r.get(i)] = true;
-						}
-					}
-					break;
-				case UNEVEN: {
-					List<Integer> l = entry.getValue();
-					List<Integer> r = rightHashes.get(entry.getKey());
-					for (int i = 0; i < l.size() && i < r.size(); i++) {
-						seeds.add(new Seed(l.get(i), r.get(i), 1));
-						leftHasSeed[l.get(i)] = true;
-						rightHasSeed[r.get(i)] = true;
-					}
-				}
-				break;
-				case CARTESIAN: {
-					for (Integer i : entry.getValue()) {
-						for (Integer j : rightHashes.get(entry.getKey())) {
-							seeds.add(new Seed(i, j, 1));
-							leftHasSeed[i] = true;
-							rightHasSeed[j] = true;
-						}
-					}
-				}
-				break;
-			}
-			iterator.remove();
 		}
+
+		
 		// step 1.5: (optional) merge unique seeds to produce bigger seeds
 		if (options.mergeAdjacentLines()) {
 			seeds = mergeSeeds(seeds);
@@ -233,26 +194,22 @@ public class SeedDiffer implements LogDiffer {
 			}
 			// step 3: search all remaining identical (not forced to be unique) and create seeds with them
 			List<Seed> newSeeds = new ArrayList<>();
-			//for (Map.Entry<Integer, List<Integer>> entry : leftHashes.entrySet()) {
-			//	if (rightHashes.containsKey(entry.getKey())) {
-			//		for (Integer leftIndex : entry.getValue()) {
-			//			if (!leftHasSeed[leftIndex]) {
-			//				for (Integer rightIndex : rightHashes.get(entry.getKey())) {
-			//					if (!rightHasSeed[rightIndex]) {
-			//						newSeeds.add(new Seed(leftIndex, rightIndex, 1));
-			//					}
-			//				}
-			//			}
-			//		}
-			//	}
-			//}
-
-			final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> a.value().equals(b.value()));
-			for (Pair<Line> pair : lcs) {
-				if (!leftHasSeed[pair.left().index()] && !rightHasSeed[pair.right().index()]) {
-					newSeeds.add(new Seed(pair.left().index(), pair.right().index(), 1));
+			for (var leftEntry: leftHashes.entrySet()) {
+				if (rightHashes.containsKey(leftEntry.getKey())) {
+					var countL = leftEntry.getValue().stream().filter(l -> !leftHasSeed[l]).toList();
+					var countR = rightHashes.get(leftEntry.getKey()).stream().filter(l -> !rightHasSeed[l]).toList();
+					if (countL.size() == countR.size()) {
+						for (int i = 0; i < countL.size(); i++) {
+							newSeeds.add(new Seed(countL.get(i), countR.get(i), 1));
+						}
+					}
 				}
 			}
+			//final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> a.value().equals(b.value()));
+			//for (Pair<Line> pair : lcs) {
+			//	if (!leftHasSeed[pair.left().index()] && !rightHasSeed[pair.right().index()])
+			//		newSeeds.add(new Seed(pair.left().index(), pair.right().index(), 1));
+			//}
 			if (options.mergeAdjacentLines()) {
 				newSeeds = mergeSeeds(newSeeds);
 			}
