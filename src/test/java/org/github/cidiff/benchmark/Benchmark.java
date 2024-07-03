@@ -7,6 +7,7 @@ import org.github.cidiff.LogParser;
 import org.github.cidiff.Metric;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
+import org.github.cidiff.differs.SeedDiffer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,22 +19,25 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Benchmark {
 
-	private static final Path DATASET = Path.of("data/breakages/");
+	private static final Path DATASET = Path.of("/home/ketheroth/these/datasets/florent");
 	private static final int LOOPS = 1;
-	public static final String SUCCESS_FILE = "pass.log";
-	public static final String FAILURE_FILE = "fail.log";
+	public static final String SUCCESS_FILE = "success.log";
+	public static final String FAILURE_FILE = "failure.log";
 
 	public static void main(String[] args) throws IOException {
 		List<Path> directories = collectDirectories();
 
-		File file = new File("build/reports/benchmark.csv");
+		File file = new File("build/reports/benchmark-florent.csv");
+		File skippedfile = new File("build/reports/skipped-benchmark-florent.csv");
 		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
 			throw new IllegalStateException("Cannot create directories for " + file.getParentFile().getAbsolutePath());
 		}
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		BufferedWriter skipped = new BufferedWriter(new FileWriter(skippedfile));
 
 		writer.write("directory,type,duration,lines-left,lines-right,actions,added,deleted,updated,moved-unchanged,moved-updated,similar-groups,similar-groups-left,similar-groups-right\n");
 
@@ -41,24 +45,38 @@ public class Benchmark {
 		LogDiffer seed = LogDiffer.Algorithm.SEED.construct();
 		LogDiffer lcs = LogDiffer.Algorithm.LCS.construct();
 
-		Options options = new Options();
-		Options optionsEven = new Options().with(Options.EVEN_IDENTICAL, true);
-		Options optionsEvenRecurse = new Options().with(Options.EVEN_IDENTICAL, true).with(Options.RECURSIVE_SEARCH, true);
+		Options optionsEven = new Options();
+		Options optionsEvenRecurse = new Options().with(Options.RECURSIVE_SEARCH, true);
+		Options optionsUnique = new Options().with(Options.SEED_VARIANT, SeedDiffer.Variant.UNIQUE);
+		Options optionsUneven = new Options().with(Options.SEED_VARIANT, SeedDiffer.Variant.UNEVEN);
+//		Options optionsCartesian = new Options().with(Options.SEED_VARIANT, SeedDiffer.Variant.CARTESIAN);
 		Options optionsLcs = new Options().with(Options.METRIC, Metric.EQUALITY);
 
-		for (int i = 0; i < directories.size(); i++) {
+		Random random = new Random(123456789);
+
+//		int size = 1000;
+		int size = directories.size();
+		for (int i = 0; i < size; i++) {
+//			int n = random.nextInt(directories.size());
 			Path dir = directories.get(i);
-			List<Line> leftLines = parser.parse(dir.resolve(SUCCESS_FILE).toString(), options);
-			List<Line> rightLines = parser.parse(dir.resolve(FAILURE_FILE).toString(), options);
-			if (!leftLines.isEmpty() && !rightLines.isEmpty()) {
-				compute(i, directories.size(), "seed", dir, seed, leftLines, rightLines, options, writer);
-				compute(i, directories.size(), "seed-even", dir, seed, leftLines, rightLines, optionsEven, writer);
-//				compute(i, directories.size(), "seed-recurse", dir, seed, leftLines, rightLines, optionsEvenRecurse, writer);
-				compute(i, directories.size(), "lcs", dir, lcs, leftLines, rightLines, optionsLcs, writer);
+			List<Line> leftLines = parser.parse(dir.resolve(SUCCESS_FILE).toString(), optionsEven);
+			List<Line> rightLines = parser.parse(dir.resolve(FAILURE_FILE).toString(), optionsEven);
+			if (!leftLines.isEmpty() && !rightLines.isEmpty() && leftLines.size() < 30_000 && rightLines.size() < 30_000) {
+				compute(i, size, "unique", dir, seed, leftLines, rightLines, optionsUnique, writer);
+				compute(i, size, "even", dir, seed, leftLines, rightLines, optionsEven, writer);
+				compute(i, size, "even-recurse", dir, seed, leftLines, rightLines, optionsEvenRecurse, writer);
+				compute(i, size, "uneven", dir, seed, leftLines, rightLines, optionsUneven, writer);
+//				compute(i, size, "cartesian", dir, seed, leftLines, rightLines, optionsCartesian, writer);
+				compute(i, size, "lcs", dir, lcs, leftLines, rightLines, optionsLcs, writer);
+			} else {
+				--i;
+				skipped.write(dir + "," + leftLines.size() + "," + rightLines.size() + "\n");
+				skipped.flush();
 			}
 		}
 
 		writer.close();
+		skipped.close();
 		System.out.println("done");
 	}
 

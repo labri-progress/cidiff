@@ -7,6 +7,7 @@ import org.github.cidiff.LogParser;
 import org.github.cidiff.Metric;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
+import org.github.cidiff.differs.SeedDiffer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -41,9 +42,9 @@ public class BenchmarkParallel {
 		LogDiffer seed = LogDiffer.Algorithm.SEED.construct();
 		LogDiffer lcs = LogDiffer.Algorithm.LCS.construct();
 
-		Options options = new Options();
-		Options optionsEven = new Options().with(Options.EVEN_IDENTICAL, true);
-		Options optionsEvenRecurse = new Options().with(Options.EVEN_IDENTICAL, true).with(Options.RECURSIVE_SEARCH, true);
+		Options options = new Options().with(Options.SEED_VARIANT, SeedDiffer.Variant.UNIQUE);
+		Options optionsEven = new Options();
+		Options optionsEvenRecurse = new Options().with(Options.RECURSIVE_SEARCH, true);
 		Options optionsLcs = new Options().with(Options.METRIC, Metric.EQUALITY);
 
 		int s = directories.size() * 4;

@@ -31,7 +31,7 @@ class OptionsTest {
 		properties.setProperty("differ", "SEED");
 		properties.setProperty("parser", "GITHUB");
 		properties.setProperty("differ.rewrite_min", "0.6");
-		properties.setProperty("differ.bf.skip_empty", "true");
+		properties.setProperty("parser.skip_empty", "true");
 		properties.setProperty("parser.trimming.trim", "19");
 		properties.setProperty("client.console.updated", "true");
 		properties.setProperty("client.console.unchanged", "true");
@@ -90,11 +90,11 @@ class OptionsTest {
 		Set<String> allOptions = Options.allOptions();
 		assertTrue(allOptions.contains("differ"));
 		assertTrue(allOptions.contains("differ.rewrite_min"));
-		assertTrue(allOptions.contains("differ.bf.skip_empty"));
 		assertTrue(allOptions.contains("differ.seed.merge_seeds"));
 		assertTrue(allOptions.contains("differ.seed.recursive_search"));
-		assertTrue(allOptions.contains("differ.seed.even"));
+		assertTrue(allOptions.contains("differ.seed.variant"));
 		assertTrue(allOptions.contains("parser"));
+		assertTrue(allOptions.contains("parser.skip_empty"));
 		assertTrue(allOptions.contains("parser.trimming.trim"));
 		assertTrue(allOptions.contains("client"));
 		assertTrue(allOptions.contains("client.console.updated"));

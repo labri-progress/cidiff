@@ -22,6 +22,27 @@ import java.util.stream.IntStream;
 
 public class SeedDiffer implements LogDiffer {
 
+	public enum Variant {
+		/**
+		 * Create a seed if only the hash is present once and only once in both logs.
+		 */
+		UNIQUE,
+		/**
+		 * Create multiple seeds if the hash is present the same amount in both logs.
+		 */
+		EVEN,
+		/**
+		 * Create multiple seeds if the hash is present multiple times by taking the lines in order.
+		 * Example: left = [a, b, c] and right = [d, e] the seeds will be (a,d) and (b,e). the last line, b, is alone and do not form a seed
+		 */
+		UNEVEN,
+		/**
+		 * Create multiple seeds the hash is present in both logs by doing the cartesian product of its appearance.
+		 * Example: left = [a, b, c] and right = [d, e] the seeds will be (a,d), (a, e), (b,d), (b,e), (c,d), and (c,e).
+		 */
+		CARTESIAN
+	}
+
 	public static Map<Integer, List<Integer>> simpleHash(List<Line> lines) {
 		Map<Integer, List<Integer>> hashes = new HashMap<>();
 		for (int i = 0; i < lines.size(); i++) {
@@ -44,11 +65,13 @@ public class SeedDiffer implements LogDiffer {
 		Queue<Seed> remaining = new ArrayDeque<>(seeds.stream().sorted().toList());
 		while (!remaining.isEmpty()) {
 			Seed current = remaining.poll();
-			for (Seed test : remaining) {
+			Iterator<Seed> iter = remaining.iterator();
+			while (iter.hasNext()) {
+				Seed test = iter.next();
 				if (current.left + current.size == test.left && current.right + current.size == test.right) {
 					// current bottom touch test top
 					current.size += test.size;
-					remaining.remove(test);
+					iter.remove();
 				}
 				// we should check if the current seed should merge with seeds from the top
 				// but because the seeds are sorted, we never reach such case, so no check needed
@@ -144,28 +167,52 @@ public class SeedDiffer implements LogDiffer {
 		Iterator<Map.Entry<Integer, List<Integer>>> iterator = leftHashes.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<Integer, List<Integer>> entry = iterator.next();
-			if (!options.evenIdentical()) {
-				// search seeds by unique identical lines
-				if (entry.getValue().size() == 1 && rightHashes.containsKey(entry.getKey()) && rightHashes.get(entry.getKey()).size() == 1) {
-					int i = entry.getValue().get(0);
-					int j = rightHashes.get(entry.getKey()).get(0);
-					seeds.add(new Seed(i, j, 1));
-					leftHasSeed[i] = true;
-					rightHasSeed[j] = true;
-					iterator.remove();
-					//				rightHashes.remove(entry.getKey());  // it is useless to remove the key-value pair as this map is never iterated on
-				}
-			} else if (rightHashes.containsKey(entry.getKey()) && rightHashes.get(entry.getKey()).size() == entry.getValue().size()) {
-				// search seeds by identical lines appearing the same amount of time in both logs
-				List<Integer> l = entry.getValue();
-				List<Integer> r = rightHashes.get(entry.getKey());
-				for (int i = 0; i < l.size(); i++) {
-					seeds.add(new Seed(l.get(i), r.get(i), 1));
-					leftHasSeed[l.get(i)] = true;
-					rightHasSeed[r.get(i)] = true;
-				}
-				iterator.remove();
+			if (!rightHashes.containsKey(entry.getKey())) {
+				continue;
 			}
+			switch (options.seedVariant()) {
+				case UNIQUE:
+					if (entry.getValue().size() == 1 && rightHashes.get(entry.getKey()).size() == 1) {
+						int i = entry.getValue().get(0);
+						int j = rightHashes.get(entry.getKey()).get(0);
+						seeds.add(new Seed(i, j, 1));
+						leftHasSeed[i] = true;
+						rightHasSeed[j] = true;
+					}
+					break;
+				case EVEN:
+					if (rightHashes.get(entry.getKey()).size() == entry.getValue().size()) {
+						List<Integer> l = entry.getValue();
+						List<Integer> r = rightHashes.get(entry.getKey());
+						for (int i = 0; i < l.size(); i++) {
+							seeds.add(new Seed(l.get(i), r.get(i), 1));
+							leftHasSeed[l.get(i)] = true;
+							rightHasSeed[r.get(i)] = true;
+						}
+					}
+					break;
+				case UNEVEN: {
+					List<Integer> l = entry.getValue();
+					List<Integer> r = rightHashes.get(entry.getKey());
+					for (int i = 0; i < l.size() && i < r.size(); i++) {
+						seeds.add(new Seed(l.get(i), r.get(i), 1));
+						leftHasSeed[l.get(i)] = true;
+						rightHasSeed[r.get(i)] = true;
+					}
+				}
+				break;
+				case CARTESIAN: {
+					for (Integer i : entry.getValue()) {
+						for (Integer j : rightHashes.get(entry.getKey())) {
+							seeds.add(new Seed(i, j, 1));
+							leftHasSeed[i] = true;
+							rightHasSeed[j] = true;
+						}
+					}
+				}
+				break;
+			}
+			iterator.remove();
 		}
 		// step 1.5: (optional) merge unique seeds to produce bigger seeds
 		if (options.mergeAdjacentLines()) {

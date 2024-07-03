@@ -1,5 +1,7 @@
 package org.github.cidiff;
 
+import org.github.cidiff.differs.SeedDiffer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -17,7 +19,7 @@ public final class Options {
 	public static final Option<Boolean> SKIP_EMPTY_LINES = new Option<>("parser.skip_empty", "If the parser should skip empty lines.", Boolean::parseBoolean);
 	public static final Option<Boolean> MERGE_ADJACENT_SEEDS = new Option<>("differ.seed.merge_seeds", "If the seed-and-extends algorithm should merge adjacent seeds.", Boolean::parseBoolean);
 	public static final Option<Boolean> RECURSIVE_SEARCH = new Option<>("differ.seed.recursive_search", "If the seed-and-extends algorithm should search unique lines recursively.", Boolean::parseBoolean);
-	public static final Option<Boolean> EVEN_IDENTICAL = new Option<>("differ.seed.even", "If the seed-and-extends algorithm should start with even identical lines", Boolean::parseBoolean);
+	public static final Option<SeedDiffer.Variant> SEED_VARIANT = new Option<>("differ.seed.variant", "The method used by the seed-and-extends algorithm to choose the initial seeds", SeedDiffer.Variant::valueOf);
 	public static final Option<Integer> DEFAULT_TRIM = new Option<>("parser.trimming.trim", "The amount of character to remove at the start of each lines with the TRIMMING parser", Integer::parseInt);
 	public static final Option<Boolean> DISPLAY_UPDATED = new Option<>("client.console.updated", "If the updated lines should be shown", Boolean::parseBoolean);
 	public static final Option<Boolean> DISPLAY_UNCHANGED = new Option<>("client.console.unchanged", "If the unchanged lines should be shown", Boolean::parseBoolean);
@@ -39,7 +41,7 @@ public final class Options {
 		this.map.put(SKIP_EMPTY_LINES, false);
 		this.map.put(MERGE_ADJACENT_SEEDS, true);
 		this.map.put(RECURSIVE_SEARCH, false);
-		this.map.put(EVEN_IDENTICAL, true);
+		this.map.put(SEED_VARIANT, SeedDiffer.Variant.EVEN);
 		this.map.put(DEFAULT_TRIM, 0);
 		this.map.put(DISPLAY_UPDATED, false);
 		this.map.put(DISPLAY_UNCHANGED, false);
@@ -121,8 +123,8 @@ public final class Options {
 		return this.get(RECURSIVE_SEARCH);
 	}
 
-	public boolean evenIdentical() {
-		return this.get(EVEN_IDENTICAL);
+	public SeedDiffer.Variant seedVariant() {
+		return this.get(SEED_VARIANT);
 	}
 
 	public boolean skipEmptyLines() {
