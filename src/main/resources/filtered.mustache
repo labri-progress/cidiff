@@ -132,26 +132,26 @@
             let sl = ciDiff.left[l].split(/\s/);
             let sr = ciDiff.right[r].split(/\s/);
             let x = 0;
-            let j = 0;
+            let i = 0;
             let arr = [];
-            for (let i = 0; i < sl.length; ++i) {
-                if (sl[i] == "") {
+            for (let j = 0; j < sr.length; ++j) {
+                if (sr[j] == "") {
                     ++x;
                     continue;
                 }
-                if (sr[j] == "") {
-                    --i;
-                    ++j;
+                if (sl[i] == "") {
+                    ++i;
+                    --j;
                     continue;
                 }
                 if (sl[i] != sr[j]) {
                     arr.push({
-                        range: new monaco.Range(r + 1, x + 1, r + 1, x + 1 + sl[i].length),
+                        range: new monaco.Range(r + 1, x + 1, r + 1, x + 1 + sr[j].length),
                         options: {isWholeLine: false, className: type, overviewRuler: {color: getColor(type)}}
                     });
                 }
-                x += sl[i].length + 1;
-                ++j;
+                x += sr[j].length + 1;
+                ++i;
             }
             return arr;
         }
@@ -169,9 +169,7 @@
                             options: {isWholeLine: true, className: a.type, overviewRuler: {color: getColor(a.type)}}
                         });
                     }
-                    //let tmp = ranges(i, left_actions[i].line-1, a.type);
-                    //console.log(i, left_actions[i].line-1, tmp);
-                    arr.push(...ranges(actions[i].left - 1, actions[i].right - 1, a.type));
+                    arr.push(...ranges(actions[i].left, actions[i].right, a.type));
                 } else {
                     arr.push({
                         range: new monaco.Range(i + 1, 1, i + 1, 1),
