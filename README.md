@@ -29,3 +29,10 @@ With `LEFT_LOG_FILE` the path the original log file and `RIGHT_LOG_FILE` the pat
 Options can be provided after these two mandatory arguments using the following syntax: `-o KEY VALUE`.
 
 Available options are described when you run the program without any arguments
+
+## Benchmark
+
+1. modifier le chemin du benchmark dans la variable `DATASET` dans le fichier `src/test/java/org/github/cidiff/benchmark/Benchmark.java`
+2. `./gradlew benchmark` pour executer le benchmark
+3. le résultat est dans le fichier `build/reports/benchmark-florent-timeout.csv`
+

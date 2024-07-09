@@ -17,22 +17,49 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 
 public class Benchmark {
 
-	private static final Path DATASET = Path.of("/home/ketheroth/these/datasets/florent");
-	private static final int LOOPS = 1;
+	private static final Path DATASET = Path.of("dataset");
+	private static final int LOOPS = 5;
 	public static final String SUCCESS_FILE = "success.log";
 	public static final String FAILURE_FILE = "failure.log";
+	public static final int TIMEOUT = 10;
+
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+	private static Pair<List<Action>> callWithTimeout(Supplier<Pair<List<Action>>> func, ExecutorService executor, int duration) {
+		Future<Pair<List<Action>>> future = executor.submit(func::get);
+		try {
+			Pair<List<Action>> r = future.get(duration, TimeUnit.SECONDS);
+			return r;
+		}
+		catch (InterruptedException | ExecutionException | TimeoutException ignored) {
+			future.cancel(true);
+			return new Pair<>(new ArrayList<>(), new ArrayList<>());
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
 		List<Path> directories = collectDirectories();
+//		directories.removeIf(p -> p.toString().contains("netlify-cms"));
 
-		File file = new File("build/reports/benchmark-florent.csv");
-		File skippedfile = new File("build/reports/skipped-benchmark-florent.csv");
+		File file = new File("build/reports/benchmark-florent-timeout.csv");
+		File skippedfile = new File("build/reports/skipped-benchmark-florent-timeout.csv");
 		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
 			throw new IllegalStateException("Cannot create directories for " + file.getParentFile().getAbsolutePath());
 		}
@@ -43,9 +70,11 @@ public class Benchmark {
 
 		LogParser parser = LogParser.Type.GITHUB.construct();
 		LogDiffer seed = LogDiffer.Algorithm.SEED.construct();
+		LogDiffer dees = LogDiffer.Algorithm.DEES.construct();
 		LogDiffer lcs = LogDiffer.Algorithm.LCS.construct();
 
 		Options optionsEven = new Options();
+		Options optionsDees = new Options().with(Options.RECURSIVE_SEARCH, true);
 		Options optionsEvenRecurse = new Options().with(Options.RECURSIVE_SEARCH, true);
 		Options optionsUnique = new Options().with(Options.SEED_VARIANT, SeedDiffer.Variant.UNIQUE);
 		Options optionsUneven = new Options().with(Options.SEED_VARIANT, SeedDiffer.Variant.UNEVEN);
@@ -54,50 +83,67 @@ public class Benchmark {
 
 		Random random = new Random(123456789);
 
+		ExecutorService executor = Executors.newSingleThreadExecutor();
 //		int size = 1000;
 		int size = directories.size();
 		for (int i = 0; i < size; i++) {
 //			int n = random.nextInt(directories.size());
 			Path dir = directories.get(i);
+//			Path dir = directories.get(n);
 			List<Line> leftLines = parser.parse(dir.resolve(SUCCESS_FILE).toString(), optionsEven);
 			List<Line> rightLines = parser.parse(dir.resolve(FAILURE_FILE).toString(), optionsEven);
-			if (!leftLines.isEmpty() && !rightLines.isEmpty() && leftLines.size() < 30_000 && rightLines.size() < 30_000) {
-				compute(i, size, "unique", dir, seed, leftLines, rightLines, optionsUnique, writer);
-				compute(i, size, "even", dir, seed, leftLines, rightLines, optionsEven, writer);
-				compute(i, size, "even-recurse", dir, seed, leftLines, rightLines, optionsEvenRecurse, writer);
-				compute(i, size, "uneven", dir, seed, leftLines, rightLines, optionsUneven, writer);
+			if (!leftLines.isEmpty() && !rightLines.isEmpty()/* && leftLines.size() < 30_000 && rightLines.size() < 30_000*/) {
+//				compute(i, size, "unique", dir, seed, leftLines, rightLines, optionsUnique, writer);
+//				compute(i, size, "even", dir, seed, leftLines, rightLines, optionsEven, writer);
+//				compute(i, size, "even-recurse", dir, seed, leftLines, rightLines, optionsEvenRecurse, writer);
+//				compute(i, size, "uneven", dir, seed, leftLines, rightLines, optionsUneven, writer);
+//				compute(i, size, "dees", dir, dees, leftLines, rightLines, optionsEven, writer);
+				compute(i, size, "dees-recurse", dir, dees, leftLines, rightLines, optionsDees, writer, executor);
 //				compute(i, size, "cartesian", dir, seed, leftLines, rightLines, optionsCartesian, writer);
-				compute(i, size, "lcs", dir, lcs, leftLines, rightLines, optionsLcs, writer);
+				compute(i, size, "lcs", dir, lcs, leftLines, rightLines, optionsLcs, writer, executor);
 			} else {
-				--i;
+				System.out.printf("skipping %s: left=%d, right=%d\n", DATASET.relativize(dir), leftLines.size(), rightLines.size());
 				skipped.write(dir + "," + leftLines.size() + "," + rightLines.size() + "\n");
 				skipped.flush();
+//				--i;
 			}
 		}
+		executor.shutdownNow();
 
 		writer.close();
 		skipped.close();
 		System.out.println("done");
 	}
 
-	private static void compute(int i, int size, String type, Path dir, LogDiffer seed, List<Line> leftLines, List<Line> rightLines, Options options, BufferedWriter writer) throws IOException {
-		System.out.printf("%d/%d (%.1f%%) %s %s", i, size, i*100.0/size, type, DATASET.relativize(dir));
-		long duration = 0;
+	private static void compute(int i, int size, String type, Path dir, LogDiffer seed, List<Line> leftLines, List<Line> rightLines, Options options, BufferedWriter writer, ExecutorService executor) throws IOException {
+		System.out.printf("%d/%d (%.1f%%) %s %s %s", i, size, i * 100.0 / size, type, DATASET.relativize(dir), FORMATTER.format(LocalTime.now()));
+		List<Long> durations = new ArrayList<>();
 		Pair<List<Action>> actions = Pair.of(List.of(), List.of());
 		for (int loop = 0; loop < LOOPS; loop++) {
-			long b = System.currentTimeMillis();
-			actions = seed.diff(leftLines, rightLines, options);
-			long a = System.currentTimeMillis();
-			duration += a-b;
+			long b = System.nanoTime();
+			actions = callWithTimeout(() -> seed.diff(leftLines, rightLines, options), executor, 10);
+			long a = System.nanoTime();
+			durations.add(a - b);
+			if (actions.left().isEmpty() && actions.right().isEmpty()) {
+				break;
+			}
 		}
-		Metrics metrics = metric(actions);
-		System.out.printf("\r%d/%d (%.1f%%) %.2fs %s %s%n", i, size, i*100.0/size, (duration / LOOPS / 1000.0), type, DATASET.relativize(dir));
-		writer.write("\"%s\",%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d%n".formatted(
-				DATASET.relativize(dir).toString(), type, (duration / LOOPS),
-				leftLines.size(), rightLines.size(), metrics.actions, metrics.added, metrics.deleted,
-				metrics.updated, metrics.movedUnchanged, metrics.movedUpdated,
-				(metrics.similarBlockLeft + metrics.similarBlockRight), metrics.similarBlockLeft, metrics.similarBlockRight
-		));
+		if (actions.left().isEmpty() && actions.right().isEmpty()) {
+			System.out.printf("\r%d/%d (%.1f%%) timeout %s %s (%s)%n", i, size, i * 100.0 / size, type, DATASET.relativize(dir), FORMATTER.format(LocalTime.now()));
+			writer.write("\"%s\",%s,%.1f,%d,%d,0,0,0,0,0,0,0,0,0%n".formatted(
+					DATASET.relativize(dir).toString(), type, -1.0, leftLines.size(), rightLines.size()
+			));
+		} else {
+			durations.sort(Long::compareTo);
+			Metrics metrics = metric(actions);
+			System.out.printf("\r%d/%d (%.1f%%) %.2fms %s %s (%s)%n", i, size, i * 100.0 / size, (durations.get(LOOPS / 2) / 1_000_000.0), type, DATASET.relativize(dir), FORMATTER.format(LocalTime.now()));
+			writer.write("\"%s\",%s,%.1f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d%n".formatted(
+					DATASET.relativize(dir).toString(), type, (durations.get(LOOPS / 2) / 1_000_000.0),
+					leftLines.size(), rightLines.size(), metrics.actions, metrics.added, metrics.deleted,
+					metrics.updated, metrics.movedUnchanged, metrics.movedUpdated,
+					(metrics.similarBlockLeft + metrics.similarBlockRight), metrics.similarBlockLeft, metrics.similarBlockRight
+			));
+		}
 		writer.flush();
 	}
 
@@ -169,7 +215,8 @@ public class Benchmark {
 	}
 
 	private record Metrics(int actions, int added, int deleted, int updated, int movedUnchanged, int movedUpdated,
-	                       int similarBlockLeft, int similarBlockRight) {
+						   int similarBlockLeft, int similarBlockRight) {
+
 	}
 
 }
