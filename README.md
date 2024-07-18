@@ -32,7 +32,9 @@ Available options are described when you run the program without any arguments
 
 ## Benchmark
 
-1. modifier le chemin du benchmark dans la variable `DATASET` dans le fichier `src/test/java/org/github/cidiff/benchmark/Benchmark.java`
-2. `./gradlew benchmark` pour executer le benchmark
-3. le résultat est dans le fichier `build/reports/benchmark-florent-timeout.csv`
+Use the following process to run our benchmark:
+
+1. Change the benchmark path using the `DATASET` variable in file `src/test/java/org/github/cidiff/benchmark/Benchmark.java`
+2. Execute the benchmark using `./gradlew benchmark`
+3. The result of the benchmark is in the file `build/reports/benchmark.csv`
 
