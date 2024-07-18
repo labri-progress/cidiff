@@ -3,6 +3,7 @@ package org.github.cidiff.evaluation;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Random;
 
 import org.github.cidiff.Action;
 import org.github.cidiff.DiffClient;
@@ -31,21 +32,23 @@ public class GenerateDiffs {
 		fileSeed.mkdirs();
 		File fileLcs = new File("output/beta/");
 		fileLcs.mkdirs();
-		System.out.printf("directories found: %d", directories.size());
-		for (int i = 0; i < directories.size() && i < 10; i++) {
-			Path dir = directories.get(i);
+		System.out.printf("directories found: %d%n", directories.size());
+		long seed = 123456L;
+		Random random = new Random(seed);
+		for (int i = 0; i < 100; i++) {
+			int n = random.nextInt(directories.size());
+			Path dir = directories.get(n);
 			List<Line> leftLines = parser.parse(dir.resolve(SUCCESS_FILE).toString(), optionsSeed);
 			List<Line> rightLines = parser.parse(dir.resolve(FAILURE_FILE).toString(), optionsSeed);
-			if (!leftLines.isEmpty() && !rightLines.isEmpty()) {
+			if (!leftLines.isEmpty() && !rightLines.isEmpty() && leftLines.size() < 30_000 && rightLines.size() < 30_000) {
 				System.out.printf("%d %s", i, dir.toString());
 				System.out.printf(" seed");
 				diffIt(differSeed, leftLines, rightLines, optionsSeed.with(Options.OUTPUT_PATH, "output/alpha/diff" + i + ".html"));
 				System.out.printf(" lcs");
 				diffIt(differLcs, leftLines, rightLines, optionsLcs.with(Options.OUTPUT_PATH, "output/beta/diff" + i + ".html"));
 				System.out.println();
-			}
-			if (i >= 10) {
-				break;
+			} else {
+				--i;
 			}
 		}
 

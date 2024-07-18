@@ -56,8 +56,8 @@ class SeedDifferTest {
 		final Pair<List<Action>> actions = d.diff(left, right, new Options());
 
 		assertActions(actions, Pair.of(
-				List.of("DELETED", "DELETED", "DELETED", "DELETED"),
-				List.of("ADDED", "ADDED")
+				List.of("DELETED", "DELETED", "UNCHANGED:0", "UNCHANGED:1"),
+				List.of("UNCHANGED:2", "UNCHANGED:3")
 		));
 	}
 

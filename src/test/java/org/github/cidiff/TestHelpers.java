@@ -19,7 +19,7 @@ public class TestHelpers {
 	}
 
 	/**
-	 * @param actual
+	 * @param actual the actions to test
 	 * @param expected string are either "ADDED", "DELETED", or "<action>:<left_index>"
 	 */
 	public static void assertActions(Pair<List<Action>> actual, Pair<List<String>> expected) {

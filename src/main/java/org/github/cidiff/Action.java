@@ -24,19 +24,12 @@ public record Action(Line left, Line right, Type type, double sim) {
 		return new Action(left, right, Type.UPDATED, sim);
 	}
 
-	public static Action skipped(Line line) {
-		return new Action(line, null, Type.SKIPPED);
+	public static Action movedUnchanged(Line left, Line right, double sim) {
+		return new Action(left, right, Type.MOVED_UNCHANGED, sim);
 	}
 
-	public static Action moved(Action action) {
-		if (action.type == Type.UNCHANGED) {
-			return new Action(action.left, action.right, Type.MOVED_UNCHANGED);
-		} else if (action.type == Type.UPDATED) {
-			return new Action(action.left, action.right, Type.MOVED_UPDATED);
-		} else {
-			// this should never happen
-			return action;
-		}
+	public static Action movedUpdated(Line left, Line right, double sim) {
+		return new Action(left, right, Type.MOVED_UPDATED, sim);
 	}
 
 	/**
@@ -61,7 +54,6 @@ public record Action(Line left, Line right, Type type, double sim) {
 		DELETED,
 		UPDATED,
 		UNCHANGED,
-		SKIPPED,
 		MOVED_UNCHANGED,
 		MOVED_UPDATED,
 		NONE;

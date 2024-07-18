@@ -147,7 +147,7 @@ public class LogsPanel extends JPanel {
 		return switch (action.type()) {
 			case ADDED -> isDimmed ? COLOR_ADDED_DIMMED : COLOR_ADDED;
 			case DELETED -> isDimmed ? COLOR_DELETED_DIMMED : COLOR_DELETED;
-			case UNCHANGED, UPDATED, SKIPPED -> null;
+			case UNCHANGED, UPDATED -> null;
 			case NONE -> COLOR_MOVED_DIMMED;
 			case MOVED_UNCHANGED, MOVED_UPDATED -> COLOR_MOVED;
 		};
@@ -230,7 +230,7 @@ public class LogsPanel extends JPanel {
 				case DELETED -> line.displayValue();
 				case UNCHANGED, MOVED_UNCHANGED -> line.displayValue();
 				case UPDATED, MOVED_UPDATED -> toHtml(action, line);
-				case NONE, SKIPPED -> " ";
+				case NONE -> " ";
 			};
 		}
 

@@ -4,6 +4,7 @@ import org.github.cidiff.Action;
 import org.github.cidiff.LCS;
 import org.github.cidiff.Line;
 import org.github.cidiff.LogDiffer;
+import org.github.cidiff.Metric;
 import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
 
@@ -25,13 +26,14 @@ public final class LcsDiffer implements LogDiffer {
 		}
 
 		// Identify unchanged/updated lines
-		final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> options.metric().sim(a.value(), b.value()) >= options.rewriteMin());
+		Metric metric = options.metric();
+		final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> metric.sim(a.value(), b.value()) >= options.rewriteMin());
 		for (Pair<Line> pair : lcs) {
 			Action action;
 			if (pair.left().hasSameValue(pair.right())) {
 				action = Action.unchanged(pair.left(), pair.right(), 1);
 			} else {
-				action = Action.updated(pair.left(), pair.right(), options.metric().sim(pair.left().value(), pair.right().value()));
+				action = Action.updated(pair.left(), pair.right(), metric.sim(pair.left().value(), pair.right().value()));
 			}
 			leftActions.set(pair.left().index(), action);
 			rightActions.set(pair.right().index(), action);

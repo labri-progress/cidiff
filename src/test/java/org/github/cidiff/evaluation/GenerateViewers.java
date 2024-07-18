@@ -17,7 +17,7 @@ public class GenerateViewers {
 		Mustache mustache = factory.compile("evaluation.mustache");
 		File f = new File("output/diff/");
 		f.mkdirs();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter("output/diff/viewer" + i + ".html"));
 				mustache.execute(writer, Map.of("num", i, "next", i + 1, "prev", i - 1));

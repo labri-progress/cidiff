@@ -42,9 +42,9 @@ public class BenchmarkParallel {
 		LogDiffer seed = LogDiffer.Algorithm.SEED.construct();
 		LogDiffer lcs = LogDiffer.Algorithm.LCS.construct();
 
-		Options options = new Options().with(Options.SEED_VARIANT, SeedDiffer.Variant.UNIQUE);
+		Options options = new Options();
 		Options optionsEven = new Options();
-		Options optionsEvenRecurse = new Options().with(Options.RECURSIVE_SEARCH, true);
+		Options optionsEvenRecurse = new Options().with(Options.SECOND_SEARCH, true);
 		Options optionsLcs = new Options().with(Options.METRIC, Metric.EQUALITY);
 
 		int s = directories.size() * 4;
@@ -109,7 +109,7 @@ public class BenchmarkParallel {
 				case UPDATED -> counts[2]++;
 				case MOVED_UNCHANGED -> counts[3]++;
 				case MOVED_UPDATED -> counts[4]++;
-				case ADDED, UNCHANGED, SKIPPED, NONE -> {
+				case ADDED, UNCHANGED, NONE -> {
 				}
 			}
 		});

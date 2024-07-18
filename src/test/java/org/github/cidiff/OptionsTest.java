@@ -90,8 +90,7 @@ class OptionsTest {
 		assertTrue(allOptions.contains("differ"));
 		assertTrue(allOptions.contains("differ.rewrite_min"));
 		assertTrue(allOptions.contains("differ.seed.merge_seeds"));
-		assertTrue(allOptions.contains("differ.seed.recursive_search"));
-		assertTrue(allOptions.contains("differ.seed.variant"));
+		assertTrue(allOptions.contains("differ.seed.second_search"));
 		assertTrue(allOptions.contains("parser"));
 		assertTrue(allOptions.contains("parser.skip_empty"));
 		assertTrue(allOptions.contains("parser.trimming.trim"));
