@@ -18,7 +18,8 @@ public class GhCiDiff {
         }
 
         final String repo = args[0];
-        final GitHub github = GitHubBuilder.fromEnvironment().build();
+        GitHubBuilder.fromPropertyFile();
+        final GitHub github = GitHubBuilder.fromPropertyFile().build();
         final GHRepository repository = github.getRepository(repo);
 
         Optional<GHWorkflow> workflow = Optional.empty();
@@ -42,7 +43,7 @@ public class GhCiDiff {
         final Path rightLogFile = getLog(runs.get(0));
 
         String[] logFiles = new String[] {
-                leftLogFile.toFile().getAbsolutePath(), rightLogFile.toFile().getAbsolutePath(), "-o", "parser", "GITHUB"
+                leftLogFile.toFile().getAbsolutePath(), rightLogFile.toFile().getAbsolutePath(), "-o", "parser", "GITHUB", "-o", "client", "SWING"
         };
         String[] ciDiffArgs = new String[0];
         if (Arrays.binarySearch(args, "-o") != -1)
