@@ -11,15 +11,14 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.github.cidiff.TestHelpers.assertActions;
-import static org.junit.jupiter.api.Assertions.*;
 
-class LcsDifferTest {
+class VariableLcsDifferTest {
 
 	@Test
 	void deleted() {
 		List<Line> left = TestHelpers.makeLog("Foo", "Bar", "Foo");
 		List<Line> right = TestHelpers.makeLog("Foo", "Bar");
-		final var d = new LcsDiffer();
+		final var d = new VariableLcsDiffer();
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		assertActions(actions, Pair.of(
@@ -32,7 +31,7 @@ class LcsDifferTest {
 	void added() {
 		List<Line> left = TestHelpers.makeLog("Foo", "Bar");
 		List<Line> right = TestHelpers.makeLog("Foo", "Bar", "Foo");
-		final var d = new LcsDiffer();
+		final var d = new VariableLcsDiffer();
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		assertActions(actions, Pair.of(
@@ -45,7 +44,7 @@ class LcsDifferTest {
 	void unchanged() {
 		List<Line> left = TestHelpers.makeLog("Foo", "Bar", "Baz");
 		List<Line> right = TestHelpers.makeLog("Foo", "Bar", "Baz");
-		final var d = new LcsDiffer();
+		final var d = new VariableLcsDiffer();
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		assertActions(actions, Pair.of(
@@ -58,7 +57,7 @@ class LcsDifferTest {
 	void unchanged2() {
 		List<Line> left = TestHelpers.makeLog("Foo", "Bar", "Foo", "Bar");
 		List<Line> right = TestHelpers.makeLog("Foo", "Bar");
-		final var d = new LcsDiffer();
+		final var d = new VariableLcsDiffer();
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		assertActions(actions, Pair.of(
@@ -71,7 +70,7 @@ class LcsDifferTest {
 	void empty() {
 		List<Line> left = TestHelpers.makeLog("Foo", "Bar");
 		List<Line> right = TestHelpers.makeLog();
-		final var d = new LcsDiffer();
+		final var d = new VariableLcsDiffer();
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 
 		assertActions(actions, Pair.of(
@@ -84,7 +83,7 @@ class LcsDifferTest {
 	void multi() {
 		List<Line> left = TestHelpers.makeLog("Foo", "Foo", "Bar", "Bar");
 		List<Line> right = TestHelpers.makeLog("Foo", "Bar", "Baz");
-		final var d = new LcsDiffer();
+		final var d = new VariableLcsDiffer();
 		final Pair<List<Action>> actions = d.diff(left, right, new Options().with(Options.METRIC, Metric.EQUALITY));
 		// this will work only if the lcs used is myers' algorithm. hirschberg's algorithm doesn't produce the same lcs
 		assertActions(actions, Pair.of(

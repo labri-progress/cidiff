@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public final class LcsDiffer implements LogDiffer {
+public final class VariableLcsDiffer implements LogDiffer {
 
 	@Override
 	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines, Options options) {
@@ -24,9 +24,14 @@ public final class LcsDiffer implements LogDiffer {
 
 		// Identify unchanged/updated lines
 		Metric metric = options.metric();
-		final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> a.value().equals(b.value()));
+		final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> metric.sim(a.value(), b.value()) >= options.rewriteMin());
 		for (Pair<Line> pair : lcs) {
-			Action action = Action.unchanged(pair.left(), pair.right(), 1);
+			Action action;
+			if (pair.left().hasSameValue(pair.right())) {
+				action = Action.unchanged(pair.left(), pair.right(), 1);
+			} else {
+				action = Action.updated(pair.left(), pair.right(), metric.sim(pair.left().value(), pair.right().value()));
+			}
 			leftActions[pair.left().index()] = action;
 			rightActions[pair.right().index()] = action;
 		}

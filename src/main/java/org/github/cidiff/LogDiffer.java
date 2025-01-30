@@ -1,10 +1,10 @@
 package org.github.cidiff;
 
-
 import org.github.cidiff.differs.BruteForceLogDiffer;
 import org.github.cidiff.differs.HashDiffer;
 import org.github.cidiff.differs.LcsDiffer;
 import org.github.cidiff.differs.SeedDiffer;
+import org.github.cidiff.differs.VariableLcsDiffer;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -17,6 +17,7 @@ public interface LogDiffer {
 	enum Algorithm {
 		BRUTE_FORCE(BruteForceLogDiffer::new),
 		LCS(LcsDiffer::new),
+		VAR_LCS(VariableLcsDiffer::new),
 		SEED(SeedDiffer::new),
 		HASH(HashDiffer::new);
 
