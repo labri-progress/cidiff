@@ -1,5 +1,6 @@
 package org.github.cidiff;
 
+import org.github.cidiff.parsers.DrainParser;
 import org.github.cidiff.parsers.GithubLogParser;
 import org.github.cidiff.parsers.TrimmingLogParser;
 
@@ -16,7 +17,8 @@ public interface LogParser {
 
 	enum Type {
 		TRIMMING(TrimmingLogParser::new),
-		GITHUB(GithubLogParser::new);
+		GITHUB(GithubLogParser::new),
+		DRAIN(DrainParser::new);
 
 		private final Supplier<LogParser> constructor;
 

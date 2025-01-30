@@ -9,6 +9,7 @@ import org.github.cidiff.Options;
 import org.github.cidiff.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -16,14 +17,10 @@ public final class LcsDiffer implements LogDiffer {
 
 	@Override
 	public Pair<List<Action>> diff(List<Line> leftLines, List<Line> rightLines, Options options) {
-		List<Action> leftActions = new ArrayList<>();
-		for (int i = 0; i < leftLines.size(); i++) {
-			leftActions.add(Action.NONE);
-		}
-		List<Action> rightActions = new ArrayList<>();
-		for (int i = 0; i < rightLines.size(); i++) {
-			rightActions.add(Action.NONE);
-		}
+		Action[] leftActions = new Action[leftLines.size()];
+		Arrays.fill(leftActions, Action.NONE);
+		Action[] rightActions = new Action[rightLines.size()];
+		Arrays.fill(rightActions, Action.NONE);
 
 		// Identify unchanged/updated lines
 		Metric metric = options.metric();
@@ -35,21 +32,21 @@ public final class LcsDiffer implements LogDiffer {
 			} else {
 				action = Action.updated(pair.left(), pair.right(), metric.sim(pair.left().value(), pair.right().value()));
 			}
-			leftActions.set(pair.left().index(), action);
-			rightActions.set(pair.right().index(), action);
+			leftActions[pair.left().index()] = action;
+			rightActions[pair.right().index()] = action;
 		}
 
 
 		// Identify deleted lines
 		IntStream.range(0, leftLines.size())
-				.filter(j -> leftActions.get(j).isNone())
-				.forEach(j -> leftActions.set(j, Action.deleted(leftLines.get(j))));
+				.filter(j -> leftActions[j].isNone())
+				.forEach(j -> leftActions[j] = Action.deleted(leftLines.get(j)));
 
 		// Identify added lines
 		IntStream.range(0, rightLines.size())
-				.filter(j -> rightActions.get(j).isNone())
-				.forEach(j -> rightActions.set(j, Action.added(rightLines.get(j))));
+				.filter(j -> rightActions[j].isNone())
+				.forEach(j -> rightActions[j] = Action.added(rightLines.get(j)));
 
-		return new Pair<>(leftActions, rightActions);
+		return new Pair<>(new ArrayList<>(Arrays.asList(leftActions)), new ArrayList<>(Arrays.asList(rightActions)));
 	}
 }

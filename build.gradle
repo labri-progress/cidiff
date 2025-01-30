@@ -1,6 +1,7 @@
 plugins {
 	id 'application'
-	id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id 'com.gradleup.shadow' version '9.0.0-beta4'
+	id 'idea'
 }
 
 group = 'org.github.cidiff'
@@ -15,9 +16,12 @@ dependencies {
 	implementation 'com.github.mpkorstanje:simmetrics-core:4.1.1'
 	implementation 'com.github.spullara.mustache.java:compiler:0.9.10'
 	implementation 'org.kohsuke:github-api:1.322'
+	compileOnly 'org.jetbrains:annotations:25.0.0'
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 test {
 	useJUnitPlatform()
@@ -44,3 +48,11 @@ jar {
 }
 
 build.finalizedBy installShadowDist
+
+// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
+idea {
+	module {
+		downloadSources = true
+		downloadJavadoc = true
+	}
+}

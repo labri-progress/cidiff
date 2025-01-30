@@ -1,6 +1,7 @@
 package org.github.cidiff;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -8,6 +9,8 @@ import java.util.regex.Pattern;
 import org.github.cidiff.Action.Type;
 
 public final class Utils {
+
+	private static HashMap<String, String[]> cache = new HashMap<>();
 
 	private static final Pattern TOKEN_SEPARATORS = Pattern.compile("\\s+");
 
@@ -19,7 +22,18 @@ public final class Utils {
 	}
 
 	public static String[] split(String line) {
-		return TOKEN_SEPARATORS.split(line);
+		if (cache.containsKey(line)) {
+			return cache.get(line);
+		} else {
+			String[] split = TOKEN_SEPARATORS.split(line.trim());
+			cache.put(line, split);
+			return split;
+		}
+	}
+
+	public static void resetCache() {
+		cache.clear();
+		cache = new HashMap<>();
 	}
 
 	public static int lcsLength(char[] left, char[] right) {

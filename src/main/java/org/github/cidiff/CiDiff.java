@@ -1,5 +1,6 @@
 package org.github.cidiff;
 
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -9,7 +10,6 @@ public final class CiDiff {
 	private CiDiff() {}
 
 	public static void main(String[] args) {
-//		System.out.println(Arrays.toString(args));
 		if (args.length == 0 || Arrays.stream(args).anyMatch(arg -> arg.equals("-h") || arg.equals("--help"))) {
 			System.out.println(Options.getDescription());
 			return;
@@ -25,6 +25,7 @@ public final class CiDiff {
 		LogParser parser = options.parser().construct();
 		List<Line> leftLines = parser.parse(leftFile, options);
 		List<Line> rightLines = parser.parse(rightFile, options);
+
 //		for (LogFilter.Type type : Options.getInstance().getFilters()) {
 //			LogFilter filter = LogFilter.get(type);
 //			filter.filter(leftLines);
