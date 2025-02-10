@@ -14,7 +14,7 @@ public class DrainParserTest {
 
 //	@Test
 	public void testParse() {
-		DrainParser parser = new DrainParser();
+		DrainParser parser = new DrainParser(null);
 		List<String> input = """
 				LabSZ sshd[24206]: input_userauth_request: invalid user test9 [preauth]
 				LabSZ sshd[24208]: input_userauth_request: invalid user webmaster [preauth]
@@ -35,7 +35,7 @@ public class DrainParserTest {
 				""".lines().toArray(),
 				// map each lines to their template
 				input.stream()
-						.map(line -> parser.treeSearch(parser.rootNode, Arrays.asList(Utils.split(line))))
+						.map(line -> parser.internal.treeSearch(parser.internal.rootNode, Arrays.asList(Utils.split(line))))
 						.map(c -> String.join(" ", c.logTemplate))
 						.toArray()
 

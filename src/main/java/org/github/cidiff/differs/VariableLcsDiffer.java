@@ -24,7 +24,8 @@ public final class VariableLcsDiffer implements LogDiffer {
 
 		// Identify unchanged/updated lines
 		Metric metric = options.metric();
-		final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> metric.sim(a.value(), b.value()) >= options.rewriteMin());
+		double minSimilarity = options.rewriteMin();
+		final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> metric.sim(a.value(), b.value()) >= minSimilarity);
 		for (Pair<Line> pair : lcs) {
 			Action action;
 			if (pair.left().hasSameValue(pair.right())) {

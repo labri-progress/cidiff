@@ -18,7 +18,10 @@ public interface LogParser {
 	enum Type {
 		TRIMMING(TrimmingLogParser::new),
 		GITHUB(GithubLogParser::new),
-		DRAIN(DrainParser::new);
+		DRAIN(() -> {
+			Drain.INSTANCE = new Drain();
+			return new DrainParser(Drain.INSTANCE);
+		});
 
 		private final Supplier<LogParser> constructor;
 

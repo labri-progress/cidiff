@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.Set;
 
 public final class CiDiff {
+
 	private CiDiff() {}
 
 	public static void main(String[] args) {
