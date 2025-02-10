@@ -87,6 +87,11 @@ public enum Metric {
 			return 0;
 		}
 
+		// if both lines are the same, directly return 1.0. They should have the same template too.
+		if (leftLine.equals(rightLine)) {
+			return 1.0;
+		}
+
 		final String[] leftTokens = Utils.split(leftLine.trim());
 		final String[] rightTokens = Utils.split(rightLine.trim());
 
@@ -97,11 +102,11 @@ public enum Metric {
 		// i.e. a template with 2 or more sightings is assumed to be a valid template.
 		// A wildcard template will not match any template.
 		if (leftCluster == null || rightCluster == null || leftCluster.sightings() <= 1 || rightCluster.sightings() <= 1) {
+			// When one of the line has a wildcard template, we can be sure it is not identical nor similar to the other line
+			// (or else they both would have had the same template)
 			return 0.0;
 		}
-		if (leftLine.equals(rightLine)) {
-			return 1.0;
-		} else if (leftCluster.logTemplate.equals(rightCluster.logTemplate)) {
+		if (leftCluster.logTemplate.equals(rightCluster.logTemplate)) {
 			return 0.75;
 		} else {
 			return 0.0;
