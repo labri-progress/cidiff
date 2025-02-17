@@ -3,31 +3,33 @@ package org.github.cidiff;
 import org.simmetrics.metrics.StringMetrics;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public enum Metric {
 
-	LOGSIM(Metric::logsim),
-	EQUALITY((leftLine, rightLine) -> leftLine.equals(rightLine) ? 1.0 : 0.0),
-	JARO_WINKLER((line, line2) -> (double) StringMetrics.jaroWinkler().compare(line, line2)),
-	LEVENSHTEIN((line, line2) -> (double) StringMetrics.levenshtein().compare(line, line2)),
-	COSINE((line, line2) -> (double) StringMetrics.cosineSimilarity().compare(line, line2)),
-	MONGE_ELKMAN((line, line2) -> (double) StringMetrics.mongeElkan().compare(line, line2)),
-	SMITH_WATERMAN((line, line2) -> (double) StringMetrics.smithWaterman().compare(line, line2)),
-	JACCARD((line, line2) -> (double) StringMetrics.generalizedJaccard().compare(line, line2)),
-	DRAINSIM(Metric::drainsim);
+	LOGSIM((leftLine, rightLine, qgramMinSim) -> logsim(leftLine, rightLine, qgramMinSim)),
+	EQUALITY((leftLine, rightLine, qgramMinSim) -> leftLine.equals(rightLine) ? 1.0 : 0.0),
+	JARO_WINKLER((line, line2, qgramMinSim) -> (double) StringMetrics.jaroWinkler().compare(line, line2)),
+	LEVENSHTEIN((line, line2, qgramMinSim) -> (double) StringMetrics.levenshtein().compare(line, line2)),
+	COSINE((line, line2, qgramMinSim) -> (double) StringMetrics.cosineSimilarity().compare(line, line2)),
+	MONGE_ELKMAN((line, line2, qgramMinSim) -> (double) StringMetrics.mongeElkan().compare(line, line2)),
+	SMITH_WATERMAN((line, line2, qgramMinSim) -> (double) StringMetrics.smithWaterman().compare(line, line2)),
+	JACCARD((line, line2, qgramMinSim) -> (double) StringMetrics.generalizedJaccard().compare(line, line2)),
+	DRAINSIM((leftLine, rightLine, qgramMinSim) -> drainsim(leftLine, rightLine));
 
-	private final BiFunction<String, String, Double> function;
+	private final TriFunction<String, String, Double, Double> function;
 
-	Metric(BiFunction<String, String, Double> function) {
+	Metric(TriFunction<String, String, Double, Double> function) {
 		this.function = function;
 	}
 
-	public double sim(String left, String right) {
-		return this.function.apply(left, right);
+	public double sim(String left, String right, double qgramMinSim) {
+		return this.function.apply(left, right, qgramMinSim);
 	}
 
-	public static double logsim(String leftLine, String rightLine) {
+	public static double logsim(String leftLine, String rightLine, double qgramMinSim) {
 		final String[] leftTokens = Utils.split(leftLine.trim());
 		final String[] rightTokens = Utils.split(rightLine.trim());
 
@@ -45,7 +47,7 @@ public enum Metric {
 				ok = true;
 			} else if (leftTokens[i].length() == rightTokens[i].length()) {
 				count += 0.5;
-			} else if (StringMetrics.qGramsDistance().compare(leftTokens[i], rightTokens[i]) >= 0.6) {
+			} else if (StringMetrics.qGramsDistance().compare(leftTokens[i], rightTokens[i]) >= qgramMinSim) {
 				count += 0.5;
 			}
 		}
@@ -113,4 +115,18 @@ public enum Metric {
 		}
 	}
 
+	@FunctionalInterface
+	public interface TriFunction<S, T, U, R> {
+
+		/**
+		 * Applies this function to the given arguments.
+		 *
+		 * @param s the first function argument
+		 * @param t the second function argument
+		 * @param u the third function argument
+		 * @return the function result
+		 */
+		R apply(S s, T t, U u);
+
+	}
 }

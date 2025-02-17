@@ -1,7 +1,5 @@
 package org.github.cidiff;
 
-import org.github.cidiff.differs.SeedDiffer;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;

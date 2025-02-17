@@ -22,16 +22,18 @@ public final class VariableLcsDiffer implements LogDiffer {
 		Action[] rightActions = new Action[rightLines.size()];
 		Arrays.fill(rightActions, Action.NONE);
 
+		double qgrammin = options.qGramMin();
+
 		// Identify unchanged/updated lines
 		Metric metric = options.metric();
 		double minSimilarity = options.rewriteMin();
-		final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> metric.sim(a.value(), b.value()) >= minSimilarity);
+		final List<Pair<Line>> lcs = LCS.myers(leftLines, rightLines, (a, b) -> metric.sim(a.value(), b.value(), qgrammin) >= minSimilarity);
 		for (Pair<Line> pair : lcs) {
 			Action action;
 			if (pair.left().hasSameValue(pair.right())) {
 				action = Action.unchanged(pair.left(), pair.right(), 1);
 			} else {
-				action = Action.updated(pair.left(), pair.right(), metric.sim(pair.left().value(), pair.right().value()));
+				action = Action.updated(pair.left(), pair.right(), metric.sim(pair.left().value(), pair.right().value(), qgrammin));
 			}
 			leftActions[pair.left().index()] = action;
 			rightActions[pair.right().index()] = action;

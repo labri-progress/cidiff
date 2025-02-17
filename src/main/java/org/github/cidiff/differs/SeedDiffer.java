@@ -60,15 +60,15 @@ public class SeedDiffer implements LogDiffer {
 		return merged;
 	}
 
-	public static void extendsSeed(Seed seed, boolean[] leftHasSeed, boolean[] rightHasSeed, List<Line> leftLines, List<Line> rightLines, Metric metric, double rewriteMin) {
+	public static void extendsSeed(Seed seed, boolean[] leftHasSeed, boolean[] rightHasSeed, List<Line> leftLines, List<Line> rightLines, Metric metric, double minSimilarity, double qgrammin) {
 		while (seed.left > 0 && seed.right > 0
 				&& !leftHasSeed[seed.left - 1] && !rightHasSeed[seed.right - 1]
-				&& metric.sim(leftLines.get(seed.left - 1).value(), rightLines.get(seed.right - 1).value()) >= rewriteMin) {
+				&& metric.sim(leftLines.get(seed.left - 1).value(), rightLines.get(seed.right - 1).value(), qgrammin) >= minSimilarity) {
 			seed.extendsUp();
 		}
 		while (seed.left + seed.size < leftLines.size() && seed.right + seed.size < rightLines.size()
 				&& !leftHasSeed[seed.left + seed.size] && !rightHasSeed[seed.right + seed.size]
-				&& metric.sim(leftLines.get(seed.left + seed.size).value(), rightLines.get(seed.right + seed.size).value()) >= rewriteMin) {
+				&& metric.sim(leftLines.get(seed.left + seed.size).value(), rightLines.get(seed.right + seed.size).value(), qgrammin) >= minSimilarity) {
 			seed.extendsDown();
 		}
 	}
@@ -153,6 +153,8 @@ public class SeedDiffer implements LogDiffer {
 			}
 		}
 
+		double qgrammin = options.qGramMin();
+
 
 		// step 1.5: (optional) merge unique seeds to produce bigger seeds
 		if (options.mergeAdjacentLines()) {
@@ -160,7 +162,7 @@ public class SeedDiffer implements LogDiffer {
 		}
 		// step 2: extends unique seeds without overlapping on other unique lines and merge seeds if touching
 		for (Seed seed : seeds) {
-			extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, options.metric(), options.rewriteMin());
+			extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, options.metric(), options.rewriteMin(), qgrammin);
 		}
 		// step 3: remove overlaps between seeds
 		seeds = reduceSeeds(seeds);
@@ -188,7 +190,7 @@ public class SeedDiffer implements LogDiffer {
 				newSeeds = mergeSeeds(newSeeds);
 			}
 			for (Seed seed : newSeeds) {
-				extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, options.metric(), options.rewriteMin());
+				extendsSeed(seed, leftHasSeed, rightHasSeed, leftLines, rightLines, options.metric(), options.rewriteMin(), qgrammin);
 			}
 			newSeeds = reduceSeeds(newSeeds);
 			seeds.addAll(newSeeds);
@@ -222,6 +224,7 @@ public class SeedDiffer implements LogDiffer {
 		Pair<List<Seed>> selected = backbone(leftLines, rightLines, options);
 		List<Seed> phase1 = selected.left();
 		List<Seed> phase2 = selected.right();
+		double qgrammin = options.qGramMin();
 		// use the seeds to produce unchanged actions
 		for (Seed seed : phase1) {
 			for (int i = 0; i < seed.size; i++) {
@@ -231,7 +234,7 @@ public class SeedDiffer implements LogDiffer {
 				if (left.hasSameValue(right)) {
 					action = Action.unchanged(left, right, 1);
 				} else {
-					action = Action.updated(left, right, options.metric().sim(left.value(), right.value()));
+					action = Action.updated(left, right, options.metric().sim(left.value(), right.value(), qgrammin));
 				}
 				leftActions[seed.left + i] = action;
 				rightActions[seed.right + i] = action;
@@ -245,7 +248,7 @@ public class SeedDiffer implements LogDiffer {
 				if (left.hasSameValue(right)) {
 					action = Action.movedUnchanged(left, right, 1);
 				} else {
-					action = Action.movedUpdated(left, right, options.metric().sim(left.value(), right.value()));
+					action = Action.movedUpdated(left, right, options.metric().sim(left.value(), right.value(), qgrammin));
 				}
 				leftActions[seed.left + i] = action;
 				rightActions[seed.right + i] = action;

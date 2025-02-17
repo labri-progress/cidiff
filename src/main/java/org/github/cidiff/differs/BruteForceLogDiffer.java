@@ -40,6 +40,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 				}
 			}
 		}
+		double qgrammin = options.qGramMin();
 
 		// Identify updated lines
 		for (int i = 0; i < leftLines.size(); i++) {
@@ -54,7 +55,7 @@ public final class BruteForceLogDiffer implements LogDiffer {
 					continue;
 				}
 
-				double sim = options.metric().sim(leftLine.value(), rightLine.value());
+				double sim = options.metric().sim(leftLine.value(), rightLine.value(), qgrammin);
 				if (sim >= options.rewriteMin()) {
 					Action action = Action.updated(leftLine, rightLine, sim);
 					leftActions.set(i, action);
