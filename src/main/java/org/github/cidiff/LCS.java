@@ -1,3 +1,14 @@
+/*
+ * Modified from original work licensed under the Apache License, Version 2.0
+ * Original sources:
+ *   - Hirschberg's algo: https://github.com/apache/commons-text/blob/master/src/main/java/org/apache/commons/text/similarity/LongestCommonSubsequence.java
+ *   - Myers' algo: https://github.com/apache/commons-collections/blob/master/src/main/java/org/apache/commons/collections4/sequence/SequencesComparator.java
+ *
+ * Modifications:
+ *   - Changed the parameters of the functions to take a `List<T>` instead of a `CharSequence`
+ *   - Made `buildScript` stateless, thus changed its parameters
+ *   - Changed the functions to return a `List<T>` instead of their original type
+ */
 package org.github.cidiff;
 
 import java.util.ArrayList;
@@ -41,7 +52,6 @@ public final class LCS {
 	 * the LCS of the two sequences in <i>O(m*n)</i> time and <i>O(n)</i> space.
 	 * The last element of the returned array, is the size of the LCS of the two input sequences.
 	 * <p>
-	 * Adapted from Apache's commons-text library. The original code is available <a href="https://github.com/apache/commons-text/blob/master/src/main/java/org/apache/commons/text/similarity/LongestCommonSubsequence.java">here</a>.
 	 *
 	 * @param left    first input sequence.
 	 * @param right   second input sequence.
@@ -85,7 +95,6 @@ public final class LCS {
 	 * <code>n</code>, this method returns the Longest Common Subsequence (LCS) of the two sequences in
 	 * <i>O(m*n)</i> time and <i>O(m+n)</i> space.
 	 * <p>
-	 * Adapted from Apache's commons-text library. The original code is available <a href="https://github.com/apache/commons-text/blob/master/src/main/java/org/apache/commons/text/similarity/LongestCommonSubsequence.java">here</a>.
 	 *
 	 * @param left      first input sequence.
 	 * @param right     second input sequence.
@@ -151,7 +160,6 @@ public final class LCS {
 	/**
 	 * Build an edit script.
 	 * <p>
-	 * Adapted from Apache's commons-collections4 library. The original code is available <a href="https://github.com/apache/commons-collections/blob/master/src/main/java/org/apache/commons/collections4/sequence/SequencesComparator.java">here</a>.
 	 *
 	 * @param start1 the begin of the first sequence to be compared
 	 * @param end1   the end of the first sequence to be compared
@@ -214,7 +222,6 @@ public final class LCS {
 	 * <a href="http://www.cs.arizona.edu/people/gene/PAPERS/diff.ps">
 	 * An O(ND) Difference Algorithm and Its Variations</a>.
 	 * <p>
-	 * Adapted from Apache's commons-collections4 library. The original code is available <a href="https://github.com/apache/commons-collections/blob/master/src/main/java/org/apache/commons/collections4/sequence/SequencesComparator.java">here</a>.
 	 *
 	 * @param start1 the begin of the first sequence to be compared
 	 * @param end1   the end of the first sequence to be compared
@@ -301,7 +308,6 @@ public final class LCS {
 	/**
 	 * Build a snake.
 	 * <p>
-	 * Adapted from Apache's commons-collections4 library. The original code is available <a href="https://github.com/apache/commons-collections/blob/master/src/main/java/org/apache/commons/collections4/sequence/SequencesComparator.java">here</a>.
 	 *
 	 * @param start the value of the start of the snake
 	 * @param diag  the value of the diagonal of the snake
@@ -324,7 +330,6 @@ public final class LCS {
 	 * This class is a simple placeholder to hold the end part of a path
 	 * under construction in a {@link #myers}.
 	 * <p>
-	 * Adapted from Apache's commons-collections4 library. The original code is available <a href="https://github.com/apache/commons-collections/blob/master/src/main/java/org/apache/commons/collections4/sequence/SequencesComparator.java">here</a>.
 	 *
 	 * @param start Start index.
 	 * @param end   End index.

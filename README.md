@@ -30,11 +30,3 @@ Options can be provided after these two mandatory arguments using the following 
 
 Available options are described when you run the program without any arguments
 
-## Benchmark
-
-Use the following process to run our benchmark:
-
-1. Change the benchmark path using the `DATASET` variable in file `src/test/java/org/github/cidiff/benchmark/Benchmark.java`
-2. Execute the benchmark using `./gradlew benchmark`
-3. The result of the benchmark is in the file `build/reports/benchmark.csv`
-
