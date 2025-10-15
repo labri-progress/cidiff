@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class MonacoClient extends AbstractDiffClient {
+public class HtmlClient extends AbstractDiffClient {
 
-	public MonacoClient(Pair<List<Line>> lines, Pair<List<Action>> actions) {
+	public HtmlClient(Pair<List<Line>> lines, Pair<List<Action>> actions) {
 		super(lines, actions);
 	}
 
@@ -25,7 +25,7 @@ public class MonacoClient extends AbstractDiffClient {
 		DefaultMustacheFactory factory = new DefaultMustacheFactory();
 		Mustache mustache = factory.compile("monaco.mustache");
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(options.monacoOutput()));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(options.htmlOutput()));
 			Pair.Free<Pair<List<Line>>, Pair<List<Action>>> p = Utils.allignLines(this.lines, this.actions);
 			this.lines = p.left();
 			this.actions = p.right();

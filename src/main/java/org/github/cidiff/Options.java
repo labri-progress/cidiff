@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public final class Options {
 
-	public static final Option<DiffClient.Type> CLIENT = new Option<>("client", "The client to use to view the result: CONSOLE, METRICS, JSON, SWING", DiffClient.Type::valueOf);
+	public static final Option<DiffClient.Type> CLIENT = new Option<>("client", "The client to use to view the result: CONSOLE, METRICS, JSON, SWING, HTML, FILTERED_HTML", DiffClient.Type::valueOf);
 	public static final Option<LogDiffer.Algorithm> DIFFER = new Option<>("differ", "The diff algorithm to use: BRUTE_FORCE, LCS, SEED, HASH", LogDiffer.Algorithm::valueOf);
 	public static final Option<LogParser.Type> PARSER = new Option<>("parser", "The parser to use before diffing: TRIMMING, GITHUB", LogParser.Type::valueOf);
 	public static final Option<Metric> METRIC = new Option<>("metric", "The string similarity metric to use: LOGSIM, EQUALITY", Metric::valueOf);
@@ -25,7 +25,7 @@ public final class Options {
 	public static final Option<Boolean> DISPLAY_DELETED = new Option<>("client.console.deleted", "If the deleted lines should be shown", Boolean::parseBoolean);
 	public static final Option<Boolean> DISPLAY_SKIPPED_NOTICE = new Option<>("client.swing.skipped_notice", "If a notice line should be added when some are removed with a filter", Boolean::parseBoolean);
 	public static final Option<String> DISPLAY_COLUMNS = new Option<>("client.swing.columns", "If \"left\" or \"right\", will display only the corresponding column", str -> str);
-	public static final Option<String> OUTPUT_PATH = new Option<>("client.monaco.output", "The path to write the html file to", str -> str);
+	public static final Option<String> OUTPUT_PATH = new Option<>("client.html.output", "The path to write the html file to", str -> str);
 
 	private final Map<Option<?>, Object> map;
 
@@ -157,7 +157,7 @@ public final class Options {
 		return this.get(DISPLAY_COLUMNS);
 	}
 
-	public String monacoOutput() {
+	public String htmlOutput() {
 		return this.get(OUTPUT_PATH);
 	}
 

@@ -1,10 +1,10 @@
 package org.github.cidiff;
 
 import org.github.cidiff.clients.ConsoleClient;
-import org.github.cidiff.clients.FilteredMonacoClient;
+import org.github.cidiff.clients.FilteredHtmlClient;
 import org.github.cidiff.clients.JsonClient;
 import org.github.cidiff.clients.MetricsClient;
-import org.github.cidiff.clients.MonacoClient;
+import org.github.cidiff.clients.HtmlClient;
 import org.github.cidiff.clients.SwingClient;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public interface DiffClient {
 		JSON(JsonClient::new),
 		CONSOLE(ConsoleClient::new),
 		METRICS(MetricsClient::new),
-		MONACO(MonacoClient::new),
-		FILTERED(FilteredMonacoClient::new);
+		HTML(HtmlClient::new),
+		FILTERED_HTML(FilteredHtmlClient::new);
 
 		private final BiFunction<Pair<List<Line>>, Pair<List<Action>>, DiffClient> constructor;
 

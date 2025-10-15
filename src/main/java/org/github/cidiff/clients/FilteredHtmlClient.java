@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class FilteredMonacoClient extends AbstractDiffClient {
+public class FilteredHtmlClient extends AbstractDiffClient {
 
-	public FilteredMonacoClient(Pair<List<Line>> lines, Pair<List<Action>> actions) {
+	public FilteredHtmlClient(Pair<List<Line>> lines, Pair<List<Action>> actions) {
 		super(lines, actions);
 	}
 	
@@ -25,7 +25,7 @@ public class FilteredMonacoClient extends AbstractDiffClient {
 		DefaultMustacheFactory factory = new DefaultMustacheFactory();
 		Mustache mustache = factory.compile("filtered.mustache");
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(options.monacoOutput()));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(options.htmlOutput()));
 			mustache.execute(writer, Map.of(
 				"left-lines", this.lines.left().stream().map(Line::value).map(l -> l.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"").replaceAll("</", "\\\\<\\\\/")).toList(),
 				"right-lines", this.lines.right().stream().map(Line::value).map(l -> l.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"").replaceAll("</", "\\\\<\\\\/")).toList(),
