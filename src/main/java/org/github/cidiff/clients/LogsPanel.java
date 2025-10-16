@@ -66,9 +66,9 @@ public class LogsPanel extends JPanel {
 		constraints.gridwidth = 2;
 		constraints.weightx = 1;
 		this.add(label, constraints);
-		Pair.Free<Pair<List<Line>>,Pair<List<Action>>> alligned = Utils.allignLines(lines, actions);
-		actions = alligned.right();
-		lines = alligned.left();
+		Pair.Free<Pair<List<Line>>,Pair<List<Action>>> aligned = Utils.alignLines(lines, actions);
+		actions = aligned.right();
+		lines = aligned.left();
 		this.actions = actions;
 		Line[] leftData = new Line[lines.left().size()];
 		lines.left().toArray(leftData);

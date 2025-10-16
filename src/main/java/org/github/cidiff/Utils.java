@@ -3,7 +3,6 @@ package org.github.cidiff;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import org.github.cidiff.Action.Type;
@@ -67,14 +66,14 @@ public final class Utils {
 	}
 
 	/**
-	 * Allign unchanged and updated lines by inserting empty lines around
+	 * Align unchanged and updated lines by inserting empty lines around
 	 * added/deleted/moved lines
 	 *
 	 * @param lines   the lines to align
 	 * @param actions the actions of the diff
-	 * @return the alligned lines and actions
+	 * @return the aligned lines and actions
 	 */
-	public static Pair.Free<Pair<List<Line>>, Pair<List<Action>>> allignLines(
+	public static Pair.Free<Pair<List<Line>>, Pair<List<Action>>> alignLines(
 			Pair<List<Line>> lines, Pair<List<Action>> actions) {
 		List<Line> left = new ArrayList<>();
 		List<Line> right = new ArrayList<>();
@@ -83,8 +82,6 @@ public final class Utils {
 
 		int i = 0;
 		int j = 0;
-		List<Function<Integer, Boolean>> leftConditions = new ArrayList<>();
-		List<Function<Integer, Boolean>> rightConditions = new ArrayList<>();
 
 		while (i < lines.left().size() && j < lines.right().size()) {
 			Line leftLine = lines.left().get(i);
@@ -104,13 +101,12 @@ public final class Utils {
 				} else {
 					// deleted line is alone, add a blank line
 					left.add(leftLine);
-					Line pad = new PaddingLine(j);
+					Line pad = new PaddingLine(0);
+					pad.setIndex(right.size());
 					right.add(pad);
 					Action action = new Action(leftLine, pad, Type.DELETED);
 					lActions.add(action);
 					rActions.add(action);
-					int local = j;
-					rightConditions.add((n) -> n >= local);
 					i++;
 				}
 			} else if (leftAction.type() == Type.MOVED_UPDATED || leftAction.type() == Type.MOVED_UNCHANGED) {
@@ -125,13 +121,11 @@ public final class Utils {
 				} else {
 					// moved line is not parallel to itself, add a blank line
 					left.add(leftLine);
-					Line pad = new PaddingLine(j);
+					Line pad = new PaddingLine(0);
 					right.add(pad);
 					Action action = new Action(leftLine, pad, leftAction.type());
-					lActions.add(action);
-					rActions.add(action);
-					int local = j;
-					rightConditions.add((n) -> n >= local);
+					lActions.add(leftAction);  // keep the left-right mapping
+					rActions.add(action);  // but map the right padding line to the left line
 					i++;
 				}
 			} else if (rightAction.type() == Type.ADDED) {
@@ -148,14 +142,12 @@ public final class Utils {
 					j++;
 				} else {
 					// added line is alone, add a blank line
-					Line pad = new PaddingLine(i);
+					Line pad = new PaddingLine(0);
 					left.add(pad);
 					right.add(rightLine);
 					Action action = new Action(pad, rightLine, Type.ADDED);
 					lActions.add(action);
 					rActions.add(action);
-					int local = i;
-					leftConditions.add((n) -> n >= local);
 					j++;
 				}
 			} else if (rightAction.type() == Type.MOVED_UNCHANGED || rightAction.type() == Type.MOVED_UPDATED) {
@@ -169,14 +161,12 @@ public final class Utils {
 					j++;
 				} else {
 					// moved line is not parallel to itself, add a blank line
-					Line pad = new PaddingLine(i);
+					Line pad = new PaddingLine(0);
 					left.add(pad);
 					right.add(rightLine);
 					Action action = new Action(pad, rightLine, rightAction.type());
-					lActions.add(action);
-					rActions.add(action);
-					int local = i;
-					leftConditions.add((n) -> n >= local);
+					lActions.add(action);  // map the right padding line to the left line
+					rActions.add(rightAction);  // but keep the left-right mapping
 					j++;
 				}
 			} else {
@@ -189,29 +179,30 @@ public final class Utils {
 				j++;
 			}
 		}
-		// lines are aligned now but we still need to fix
-		// 1. the moved lines are linked to their padding lines and not their real line
-		// 2. all the lines have the wrong id in their field
-		actions.left().stream()
-				.filter(action -> action.type().isIn(Type.MOVED_UPDATED, Type.MOVED_UNCHANGED))
-				.forEach(action -> {
-					// remap the moved lines together
-					int ii = action.left().index();
-					for (Function<Integer, Boolean> condition : leftConditions) {
-						if (condition.apply(action.left().index())) {
-							ii++;
-						}
-					}
-					int jj = action.right().index();
-					for (Function<Integer, Boolean> condition : rightConditions) {
-						if (condition.apply(action.right().index())) {
-							jj++;
-						}
-					}
-					Action move = new Action(left.get(ii), right.get(jj), action.type());
-					lActions.set(ii, move);
-					rActions.set(jj, move);
-				});
+		// if the logs don't have the same size, there are remaining line in one side, we must not forget them
+		while (i < lines.left().size()) {
+			Line leftLine = lines.left().get(i);
+			Action leftAction = actions.left().get(i);
+			Line pad = new PaddingLine(0);
+			left.add(leftLine);
+			right.add(pad);
+			Action action = new Action(leftLine, pad, leftAction.type());  // keep the old action type
+			lActions.add(action);
+			rActions.add(action);
+			i++;
+		}
+		while (j < lines.right().size()) {
+			Line rightLine = lines.right().get(j);
+			Action rightAction = actions.right().get(j);
+			Line pad = new PaddingLine(0);
+			left.add(pad);
+			right.add(rightLine);
+			Action action = new Action(pad, rightLine, rightAction.type()); // keep the old action type
+			lActions.add(action);
+			rActions.add(action);
+			j++;
+		}
+		// lines are aligned now but we still need to fix the id of the lines in their field
 		for (i = 0; i < left.size(); ++i) {
 			left.get(i).setIndex(i);
 		}

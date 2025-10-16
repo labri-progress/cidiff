@@ -26,7 +26,7 @@ public class HtmlClient extends AbstractDiffClient {
 		Mustache mustache = factory.compile("monaco.mustache");
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(options.htmlOutput()));
-			Pair.Free<Pair<List<Line>>, Pair<List<Action>>> p = Utils.allignLines(this.lines, this.actions);
+			Pair.Free<Pair<List<Line>>, Pair<List<Action>>> p = Utils.alignLines(this.lines, this.actions);
 			this.lines = p.left();
 			this.actions = p.right();
 			mustache.execute(writer, Map.of(
