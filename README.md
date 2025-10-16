@@ -30,3 +30,7 @@ Options can be provided after these two mandatory arguments using the following 
 
 Available options are described when you run the program without any arguments
 
+# Citation
+
+If you CiDiff in an academic work, we would love if you cite the following article:
+- [**What Happened in This Pipeline? Diffing Build Logs with CiDiff**](https://arxiv.org/abs/2504.18182): Nicolas Hubner, Jean-Rémy Falleri, Raluca Uricaru, Thomas Degueule, Thomas Durieux. ISSTA, 2025.
